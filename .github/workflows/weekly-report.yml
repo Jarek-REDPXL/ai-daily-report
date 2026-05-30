@@ -55,7 +55,7 @@ jobs:
             Do NOT git commit or push — a later workflow step handles that.
           claude_args: |
             --max-turns 40
-            --model claude-opus-4-8
+            --model claude-sonnet-4-6
 
       - name: Commit & push
         run: |
