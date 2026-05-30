@@ -17,6 +17,12 @@ venv/
 # scratch
 *.tmp
 
+# Design feedback loop (dev-only tooling — not part of the site)
+shots/
+shots.py
+shot_zoom.py
+functest.py
+
 # stray archives
 ai-daily-report.tar.gz
 *.bundle
