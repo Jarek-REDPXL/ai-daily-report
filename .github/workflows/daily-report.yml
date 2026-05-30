@@ -1,0 +1,68 @@
+name: Daily AI Briefing
+
+# Runs every day. Cron is in UTC.
+# 07:00 UTC ≈ 08:00 Europe/London / 09:00 Europe/Warsaw — adjust to your timezone.
+on:
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch:        # lets you run it on-demand from the Actions tab
+
+permissions:
+  contents: write           # needed so the workflow can commit the new report
+
+concurrency:
+  group: ai-edge-daily
+  cancel-in-progress: false
+
+jobs:
+  daily:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install PDF deps
+        run: pip install --quiet reportlab
+
+      - name: Generate today's briefing with Claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Follow the instructions in docs/prompts/daily.md to produce TODAY's
+            daily report for "The AI Edge".
+
+            Hard requirements:
+            - Use web search to gather AI news from the last ~24 hours.
+            - Cross-check surprising figures against a second source; mark
+              fast-moving/forward-looking numbers as directional.
+            - PREPEND one new report object to the array in
+              reports/data/reports.js (newest first). Do NOT delete or overwrite
+              existing reports. Keep the exact object shape used by the existing
+              entries so the site renders it.
+            - Set type:"daily", today's date as sortDate (YYYY-MM-DD), a
+              dateLabel, a 3-5 bullet tldr, and tight sections.
+            - Validate the file is still valid JavaScript after editing.
+            Do NOT git commit or push — a later workflow step handles that.
+          claude_args: |
+            --max-turns 30
+            --model claude-opus-4-8
+
+      - name: Commit & push
+        run: |
+          git config user.name "AI Edge Bot"
+          git config user.email "bot@users.noreply.github.com"
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No changes — nothing to commit."; exit 0
+          fi
+          git add -A
+          git commit -m "daily: AI briefing for $(date -u +'%Y-%m-%d')"
+          git push origin "${{ github.ref_name }}"

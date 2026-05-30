@@ -1,0 +1,19 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# scratch
+*.tmp
+
+# stray archives
+ai-daily-report.tar.gz
+*.bundle

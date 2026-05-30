@@ -1,0 +1,69 @@
+name: Weekly AI Briefing
+
+# Runs once a week. Cron is in UTC.
+# Sunday 17:00 UTC ≈ Sun 18:00 London / 19:00 Warsaw.
+on:
+  schedule:
+    - cron: "0 17 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ai-edge-weekly
+  cancel-in-progress: false
+
+jobs:
+  weekly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install PDF deps
+        run: pip install --quiet reportlab
+
+      - name: Generate the weekly briefing with Claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Follow the instructions in docs/prompts/weekly.md to produce the
+            WEEKLY report for "The AI Edge".
+
+            Hard requirements:
+            - Review the daily reports already in reports/data/reports.js for the
+              past week, and run fresh web searches to fill gaps.
+            - Cross-check funding/valuation/acquisition/benchmark numbers; mark
+              fast-moving or forward-looking figures as directional.
+            - PREPEND one new report object (type:"weekly") to the array in
+              reports/data/reports.js, matching the existing object shape. Do NOT
+              overwrite older reports.
+            - Update build_report.py's content to match the new weekly report,
+              then run `python3 build_report.py` to regenerate the PDF into
+              reports/pdf/, and set the new object's `pdf:` field to that file.
+            - Validate reports/data/reports.js is still valid JavaScript.
+            Do NOT git commit or push — a later workflow step handles that.
+          claude_args: |
+            --max-turns 40
+            --model claude-opus-4-8
+
+      - name: Commit & push
+        run: |
+          git config user.name "AI Edge Bot"
+          git config user.email "bot@users.noreply.github.com"
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No changes — nothing to commit."; exit 0
+          fi
+          git add -A
+          git commit -m "weekly: AI briefing for week ending $(date -u +'%Y-%m-%d')"
+          git push origin "${{ github.ref_name }}"

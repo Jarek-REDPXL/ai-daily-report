@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The AI Edge — Stay Ahead</title>
+<meta name="description" content="Daily and weekly briefings on everything happening in the AI industry.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+<div id="progressbar"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <button id="menu-btn" aria-label="Toggle archive" title="Toggle archive">☰</button>
+    <span class="logo">⚡</span>
+    <div class="brand-text">
+      <h1>The AI Edge</h1>
+      <p class="tagline">Everything in AI — daily &amp; weekly, so you stay ahead.</p>
+    </div>
+  </div>
+  <div class="topbar-meta">
+    <span class="pill" id="latest-pill">Loading…</span>
+    <button id="theme-toggle" title="Toggle light/dark" aria-label="Toggle theme">🌙</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <span>Archive</span>
+      <input id="search" type="search" placeholder="Filter…" aria-label="Filter reports">
+    </div>
+    <nav id="archive-nav"></nav>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <main id="report-container">
+    <div class="loading">Loading reports…</div>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>The AI Edge · A living briefing archive · Figures for fast-moving deals are directional, not guaranteed.</p>
+  <p class="muted"><span id="report-count"></span></p>
+</footer>
+
+<script src="reports/data/reports.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
