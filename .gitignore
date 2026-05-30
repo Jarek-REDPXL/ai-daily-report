@@ -11,6 +11,9 @@ __pycache__/
 .venv/
 venv/
 
+# Local Claude Code settings
+.claude/
+
 # scratch
 *.tmp
 
