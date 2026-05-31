@@ -173,6 +173,49 @@ window.AI_EDGE_REPORTS = [
     sources: "Anthropic · CNBC (Anthropic tops OpenAI; Google I/O) · TechCrunch · VentureBeat · The New Stack · MarkTechPost · GitHub Changelog · blog.google (I/O 2026; Spark, Antigravity, Omni, Science Skills) · Google Cloud blog (Gemini Enterprise) · 9to5Google / Tom's Guide · Crunchbase News · SD Times · MarketingProfs · YourStory / MindStudio (dreaming; Harvey 6×) · buildfastwithai daily roundups · llm-stats.com / Vellum / BenchLM · Global Policy Watch & White & Case (EU AI Act) · Axios (US EO)."
   },
 
+  /* ===================== DAILY — Sat May 30 ===================== */
+  {
+    id: "2026-05-30-daily",
+    type: "daily",
+    week: "Week of May 24 – 30, 2026",
+    title: "Daily Briefing — Saturday, May 30",
+    dateLabel: "Saturday, May 30, 2026",
+    sortDate: "2026-05-30",
+    tldr: [
+      "<b>The real story this week was cost, not capability.</b> May 2026 is when AI shifted from “what can models do” to “what does deployment actually cost” — and the bills are landing.",
+      "<b>Both CEOs walked back the jobs apocalypse.</b> Sam Altman said he was “pretty wrong” about AI quickly wiping out entry-level white-collar work; Dario Amodei reframed his 50% claim toward augmentation. Yale and Brookings found no meaningful AI unemployment wave through March.",
+      "<b>Enterprises are hitting AI budget walls.</b> Microsoft pulled ~5,000 engineers off Claude Code on cost; Uber burned its entire ~$3.4B 2026 AI budget by April; GitHub Copilot is moving to usage-based billing.",
+      "<b>The price spread is staggering:</b> DeepSeek V4-Flash output (~$0.28/M) vs GPT-5.5 (~$30/M) — roughly 100× on the tokens that dominate production bills."
+    ],
+    sections: [
+      { h: "What changed today",
+        blocks: [
+          { sub: "The jobs narrative reverses", tags:["policy","money"],
+            p: "Sam Altman admitted he was “pretty wrong” that AI would quickly eliminate entry-level white-collar jobs; Dario Amodei softened his earlier “50% of white-collar work” claim toward augmentation (citing a 276,000-seat KPMG deployment). Yale's Budget Lab and Brookings separately found no meaningful unemployment rise in high-AI-exposure roles through March 2026.",
+            why: "The honest read: AI is changing how work gets done faster than it removes workers. Plan for augmentation and rising expectations, not mass layoffs.",
+            doIt: "Stop waiting for an “AI jobs apocalypse” to act — assume your role gets more productive and raise your own bar now." },
+          { sub: "Enterprises hit the cost wall", tags:["money"],
+            p: "Microsoft redirected ~5,000 engineers from Claude Code to GitHub Copilot CLI over per-seat cost ($500–$2,000/engineer/month); Uber reportedly exhausted its ~$3.4B 2026 AI budget by April; GitHub Copilot is shifting all plans to usage-based “AI Credits.”",
+            why: "Unmetered agentic coding is expensive at scale. The winners measure cost-per-task, not seats.",
+            doIt: "Instrument your AI spend per workflow now, and pick the cheapest model that passes your evals for each task." },
+          { sub: "The 100× price spread", tags:["model","money"],
+            p: "On output tokens — where most production cost accrues — DeepSeek V4-Flash (~$0.28/M) undercuts frontier US models like GPT-5.5 (~$30/M) by roughly 100×.",
+            why: "Model choice is now a budget decision as much as a quality one." },
+          { sub: "Glasswing: AI as security researcher", tags:["research"],
+            p: "Anthropic's first Project Glasswing update reported Claude Mythos Preview plus ~50 partners surfaced 10,000+ high/critical vulnerabilities across 1,000+ open-source projects in ~30 days (1,726 confirmed valid true positives).",
+            why: "Frontier models are now credible offensive AND defensive security tools — a dual-use shift defenders must track." }
+        ]
+      },
+      { h: "Sharpen your edge",
+        blocks: [
+          { sub: "Build a one-page “model router”",
+            p: "List your recurring AI tasks, then assign each the cheapest model that passes a quick eval: a fast cheap model (DeepSeek V4-Flash, Gemini 3.5 Flash) for high-volume/low-stakes work, a frontier model only where quality justifies 50–100× the price. Re-check monthly — prices and rankings move weekly." }
+        ]
+      }
+    ],
+    sources: "buildfastwithai (May 30 roundup) · Anthropic (Project Glasswing) · CNBC · The Information · Yale Budget Lab · Brookings (figures reported same-day; treat as directional)."
+  },
+
   /* ===================== DAILY — Fri May 29 ===================== */
   {
     id: "2026-05-29-daily",
@@ -327,6 +370,199 @@ window.AI_EDGE_REPORTS = [
       }
     ],
     sources: "buildfastwithai (May 25 roundup) · The Information · Axios · crescendo.ai · agilebrandguide.com (several figures reported same-day; treat as directional)."
+  },
+
+  /* ===================== DAILY — Sun May 24 ===================== */
+  {
+    id: "2026-05-24-daily",
+    type: "daily",
+    week: "Week of May 24 – 30, 2026",
+    title: "Daily Briefing — Sunday, May 24",
+    dateLabel: "Sunday, May 24, 2026",
+    sortDate: "2026-05-24",
+    tldr: [
+      "<b>DeepSeek made its 75% V4-Pro price cut permanent</b> — frontier-class reasoning at ~¼ the cost of comparable US tokens.",
+      "<b>Claude Code escaped the terminal</b> — now usable from any browser and on iPhone.",
+      "<b>“Claude Mythos” launch code surfaced on GitHub</b>, hinting at a sooner-than-expected release of Anthropic's advanced security model."
+    ],
+    sections: [
+      { h: "What changed today",
+        blocks: [
+          { sub: "DeepSeek's price cut goes permanent", tags:["model","money"],
+            p: "DeepSeek confirmed the temporary 75% discount on V4-Pro is now permanent — roughly a quarter the cost of equivalent OpenAI/Anthropic tokens.",
+            doIt: "Re-run your build-vs-buy and inference-cost math; an ultra-cheap open-weight option changes the calculus for high-volume tasks." },
+          { sub: "Claude Code on web + mobile", tags:["tool"],
+            p: "Anthropic shipped Claude Code to the browser and iPhone for the first time, moving agentic coding beyond the terminal.",
+            why: "Shrinking the surface area expands who can run agents — and from where.",
+            doIt: "Kick off a task from your phone and review the diff later; treat agents as async coworkers." },
+          { sub: "Claude Mythos signals", tags:["research","policy"],
+            p: "Launch code for Claude Mythos surfaced on GitHub, suggesting an earlier release; reporting also noted US intelligence agencies keep using Claude even after Anthropic was flagged as a national-security concern over Mythos's cyber capabilities.",
+            why: "The most capable security models are becoming geopolitically sensitive, dual-use assets." }
+        ]
+      }
+    ],
+    sources: "buildfastwithai (May 24 roundup) · DeepSeek · Anthropic · GitHub (figures directional where noted)."
+  },
+
+  /* ===================== DAILY — Sat May 23 ===================== */
+  {
+    id: "2026-05-23-daily",
+    type: "daily",
+    week: "Week of May 17 – 23, 2026",
+    title: "Daily Briefing — Saturday, May 23",
+    dateLabel: "Saturday, May 23, 2026",
+    sortDate: "2026-05-23",
+    tldr: [
+      "<b>OpenAI's internal model disproved an 80-year-old math conjecture</b> (the Erdős unit-distance problem) with a 125-page proof — Fields medalist Tim Gowers called it “a milestone in AI mathematics.”",
+      "<b>OpenAI filed for IPO;</b> Anthropic reported its first-ever profit (~$10.9B revenue), and a SpaceX S-1 revealed a ~$1.25B/month Anthropic compute deal.",
+      "<b>Governance whiplash:</b> the White House scrapped its AI safety executive order after calls from Zuckerberg, Musk, and Sacks; leaked audio showed Meta tracking employees to train AI the same day it cut ~8,000 staff."
+    ],
+    sections: [
+      { h: "What changed today",
+        blocks: [
+          { sub: "AI does original mathematics", tags:["research"],
+            p: "An internal OpenAI reasoning model autonomously disproved the Erdős unit-distance conjecture using algebraic number theory (a 125-page proof). Mathematician Tim Gowers called it a milestone.",
+            why: "Models are crossing from “solving known problems” to “producing new knowledge” — the leading indicator everyone watches.",
+            doIt: "If you do quantitative or research work, start testing frontier models on genuinely open problems, not just textbook tasks." },
+          { sub: "The money turns real", tags:["money"],
+            p: "OpenAI filed for IPO; Anthropic reported its first operating profit on ~$10.9B revenue; a SpaceX S-1 disclosed a ~$1.25B/month compute commitment to Anthropic.",
+            why: "Labs are becoming scaled, public-market businesses — and compute contracts are now balance-sheet-sized." },
+          { sub: "Policy & trust whiplash", tags:["policy"],
+            p: "The Trump White House canceled a planned AI safety executive order (a 90-day model-review framework) after direct lobbying from Zuckerberg, Musk, and Sacks. Separately, leaked audio showed Meta had tracked employees' Gmail, coding, and tools to train AI — the same day it laid off ~8,000.",
+            why: "Don't bank on near-term US federal AI rules; plan around state law (CA, CO) and the EU timeline." }
+        ]
+      }
+    ],
+    sources: "buildfastwithai (May 23 roundup) · OpenAI · Anthropic · CNBC · The Information (several figures reported same-day; treat as directional)."
+  },
+
+  /* ===================== DAILY — Fri May 22 ===================== */
+  {
+    id: "2026-05-22-daily",
+    type: "daily",
+    week: "Week of May 17 – 23, 2026",
+    title: "Daily Briefing — Friday, May 22",
+    dateLabel: "Friday, May 22, 2026",
+    sortDate: "2026-05-22",
+    tldr: [
+      "<b>A trojanized “Nx Console” VS Code extension</b> harvested credentials across AI firms — ~3,800 internal repos stolen while the malicious build was live just ~18 minutes.",
+      "<b>Cheap, fast multimodal piled up:</b> Gemini 3.5 Flash GA ($1.50/$9 per 1M, 76.2% Terminal-Bench), a Gemini 3.1 Flash-Lite preview, and NVIDIA's open Nemotron 3 Nano Omni (30B MoE, ~9× throughput).",
+      "<b>Money kept moving:</b> SAP to acquire Prior Labs (>$1.18B over 4 yrs), Legora's $550M Series D at $5.55B, and a new $300M BMW i Ventures agentic-AI fund."
+    ],
+    sections: [
+      { h: "What changed today",
+        blocks: [
+          { sub: "Supply-chain breach via a dev extension", tags:["policy","tool"],
+            p: "A trojanized Nx Console VS Code extension harvested developer credentials across multiple AI firms — ~3,800 internal repos exfiltrated despite the malicious build being live only ~18 minutes.",
+            why: "Agentic dev tooling massively expands the attack surface; a single poisoned extension can drain an org.",
+            doIt: "Pin and verify IDE extensions, rotate tokens, and treat your editor as production infrastructure." },
+          { sub: "The fast-and-cheap tier fills out", tags:["model"],
+            p: "Gemini 3.5 Flash hit GA ($1.50/$9 per 1M tokens, ~1M context, 76.2% Terminal-Bench 2.1, beating 3.1 Pro on coding/agents); Google previewed 3.1 Flash-Lite; NVIDIA released open-weight Nemotron 3 Nano Omni (30B MoE, ~9× throughput).",
+            why: "“Good enough, fast, cheap” is becoming the default production tier — reserve frontier models for the hard 10%.",
+            doIt: "Benchmark a Flash-class model on your highest-volume task this week." },
+          { sub: "Funding flows to applied AI", tags:["money"],
+            p: "SAP agreed to acquire Prior Labs (>$1.18B over four years) to build a structured-business-data lab; legal-AI Legora raised $550M (Series D) at $5.55B; BMW i Ventures launched a $300M fund for agentic, physical, and industrial AI." }
+        ]
+      }
+    ],
+    sources: "llm-stats.com · crescendo.ai · digitalapplied tracker · company announcements (figures directional where noted)."
+  },
+
+  /* ===================== DAILY — Thu May 21 ===================== */
+  {
+    id: "2026-05-21-daily",
+    type: "daily",
+    week: "Week of May 17 – 23, 2026",
+    title: "Daily Briefing — Thursday, May 21",
+    dateLabel: "Thursday, May 21, 2026",
+    sortDate: "2026-05-21",
+    tldr: [
+      "<b>Andrej Karpathy joined Anthropic</b> to rebuild its pretraining research team — arguably the highest-profile AI talent move of the year.",
+      "<b>Anthropic was closing a ~$30B round at a $900B+ valuation</b>, as execs across Google/OpenAI/Anthropic call the frontier race “neck-and-neck.”",
+      "<b>The strategic frame (Axios):</b> Google's plan to win leans on cheap, fast models deployed across products used by billions."
+    ],
+    sections: [
+      { h: "What changed today",
+        blocks: [
+          { sub: "Karpathy → Anthropic", tags:["research"],
+            p: "Andrej Karpathy — OpenAI co-founder, former Tesla Autopilot lead, and the field's most beloved educator — joined Anthropic to rebuild its pretraining research team from the inside.",
+            why: "Pretraining talent is the scarcest resource at the frontier; where it concentrates signals who leads next.",
+            doIt: "Follow what Karpathy publishes and teaches — his explanations are among the fastest ways to level up your own mental models." },
+          { sub: "The capital race", tags:["money"],
+            p: "Anthropic was reported closing a ~$30B round at a $900B+ valuation (figures varied by source and moved fast through the month — treat as directional). Leaders increasingly call the frontier effectively neck-and-neck, differing mainly on cost, speed, and compute tradeoffs." },
+          { sub: "Google's deployment bet", tags:["tool"],
+            p: "Axios framed Google's strategy as staying at the frontier while prioritizing models cheap and fast enough to ship to billions of users — distribution as the moat." }
+        ]
+      }
+    ],
+    sources: "Axios · CNBC · The Information · llm-stats.com (valuations reported same-day; treat as directional)."
+  },
+
+  /* ===================== DAILY — Wed May 20 ===================== */
+  {
+    id: "2026-05-20-daily",
+    type: "daily",
+    week: "Week of May 17 – 23, 2026",
+    title: "Daily Briefing — Wednesday, May 20",
+    dateLabel: "Wednesday, May 20, 2026",
+    sortDate: "2026-05-20",
+    tldr: [
+      "<b>Jack Clark's Oxford lecture</b>: Anthropic's co-founder predicted a Nobel-worthy AI-assisted discovery within 12 months and a 60%+ chance of recursive self-improvement by end of 2028 — while naming a non-zero tail risk.",
+      "<b>Google I/O after-shocks:</b> Antigravity 2.0 had launch-day issues (IDE restored May 23); GitHub Copilot Chat purged Gemini and several GPT models from its web surface."
+    ],
+    sections: [
+      { h: "What changed today",
+        blocks: [
+          { sub: "Big predictions, stated plainly", tags:["research","policy"],
+            p: "At Oxford, Jack Clark forecast a Nobel-level discovery with AI within 12 months and a 60%+ probability that AI helps train its successor (recursive self-improvement) by end of 2028 — alongside an explicit acknowledgment of tail risk.",
+            why: "The people closest to the frontier are planning for very fast capability gains; calibrate your own timeline accordingly.",
+            doIt: "Build skills that compound with stronger models (orchestration, evals, judgment) rather than skills they replace." },
+          { sub: "Launch turbulence", tags:["tool"],
+            p: "Google's Antigravity 2.0 shipped with day-one problems (the IDE was restored May 23); GitHub Copilot Chat removed all Gemini models plus GPT-5.2 Codex and GPT-5.4 nano from its web surface (VS Code/JetBrains unaffected).",
+            why: "Platform model availability changes weekly — don't hard-couple a workflow to one vendor's lineup.",
+            doIt: "Keep an abstraction layer between your tools and any single model." }
+        ]
+      }
+    ],
+    sources: "buildfastwithai (May 20 roundup) · Anthropic · GitHub Changelog · Google (forward-looking claims are directional)."
+  },
+
+  /* ===================== DAILY — Tue May 19 ===================== */
+  {
+    id: "2026-05-19-daily",
+    type: "daily",
+    week: "Week of May 17 – 23, 2026",
+    title: "Daily Briefing — Tuesday, May 19",
+    dateLabel: "Tuesday, May 19, 2026",
+    sortDate: "2026-05-19",
+    tldr: [
+      "<b>Google I/O 2026 went all-in on agents</b> (~100 announcements): Gemini 3.5 Flash, Omni Flash, Antigravity 2.0, Managed Agents in the API, and <b>Spark</b>, a general-purpose personal agent in the Gemini app.",
+      "<b>Anthropic answered with infrastructure:</b> self-hosted sandboxes (run agents inside your own VPC; Cloudflare/Daytona/Modal/Vercel on day one) and MCP Tunnels for private tool access.",
+      "<b>Creative suites came to Gemini:</b> Adobe, Canva, and CapCut integrations; Blackstone–Google announced a ~$5B TPU joint venture (May 18)."
+    ],
+    sections: [
+      { h: "What changed today",
+        blocks: [
+          { sub: "Google I/O: the agent platform", tags:["model","tool"],
+            p: "Google shipped Gemini 3.5 Flash (GA, frontier-ish at Flash price), Omni Flash (any-input → any-output, SynthID-watermarked), Antigravity 2.0 (desktop + CLI + SDK), Managed Agents (remote Linux execution in the Gemini API), and Spark, a general personal agent that reasons across your connected apps.",
+            why: "Google is packaging the whole agent stack — model, runtime, and a consumer agent — for its billions of users.",
+            doIt: "If you live in Google's ecosystem, pilot Spark and Managed Agents on one real workflow before defaulting elsewhere." },
+          { sub: "Anthropic's enterprise counter", tags:["tool"],
+            p: "Anthropic launched self-hosted sandboxes (agents execute inside the customer's VPC; Cloudflare, Daytona, Modal, and Vercel as day-one providers) and a research preview of MCP Tunnels (outbound-only access to private MCP servers).",
+            why: "The enterprise blocker is data residency and control — Anthropic is selling exactly that.",
+            doIt: "For sensitive workloads, evaluate VPC-local agent execution instead of sending data to a vendor cloud." },
+          { sub: "Ecosystem & compute", tags:["money"],
+            p: "Adobe (Firefly agent), Canva (Magic Layers), and CapCut are integrating into Gemini; Blackstone and Google announced a ~$5B TPU joint venture (May 18) — more evidence that compute and capital are the real battleground." }
+        ]
+      },
+      { h: "Sharpen your edge",
+        blocks: [
+          { sub: "Learn the agent runtime, not just the model",
+            p: "This week's pattern is unmistakable: every lab now ships a <i>runtime</i> (sandboxes, managed agents, tunnels), not just a model. The durable skill is wiring agents to your real tools and data safely — MCP servers, scoped permissions, VPC execution. Pick one workflow and stand up a minimal, permissioned agent end-to-end; those reps will outlast any single model release." }
+        ]
+      }
+    ],
+    sources: "blog.google (I/O 2026) · CNBC · Anthropic · digitalapplied tracker (figures directional where noted)."
   }
 
 ];
