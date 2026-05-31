@@ -1,10 +1,12 @@
 name: Weekly AI Briefing
 
-# Runs once a week. Cron is in UTC.
-# Sunday 17:00 UTC ≈ Sun 18:00 London / 19:00 Warsaw.
+# SCHEDULE DISABLED. The weekly edition is produced by the Claude "AI NEWS"
+# routine on Sundays (free under Max) and committed to this repo. This workflow
+# is an OPTIONAL API-billed backup — manual-only so it never auto-runs. To
+# re-enable the schedule, restore:
+#   schedule:
+#     - cron: "0 17 * * 0"   # Sunday 17:00 UTC
 on:
-  schedule:
-    - cron: "0 17 * * 0"
   workflow_dispatch:
 
 permissions:

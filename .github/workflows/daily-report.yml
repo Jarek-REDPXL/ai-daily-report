@@ -1,11 +1,14 @@
 name: Daily AI Briefing
 
-# Runs every day. Cron is in UTC.
-# 06:00 UTC ≈ 07:00 Europe/London / 08:00 Europe/Warsaw — adjust to your timezone.
+# SCHEDULE DISABLED. Daily generation is handled by the Claude "AI NEWS" routine
+# (free under your Max plan) which commits straight to this repo. This workflow
+# is an OPTIONAL backup that bills the Anthropic API — kept manual-only so it
+# never auto-runs or double-generates. To use it, add the ANTHROPIC_API_KEY
+# secret and run it from the Actions tab. To re-enable the schedule, restore:
+#   schedule:
+#     - cron: "0 6 * * *"   # 06:00 UTC ≈ 07:00 Europe/London
 on:
-  schedule:
-    - cron: "0 6 * * *"
-  workflow_dispatch:        # lets you run it on-demand from the Actions tab
+  workflow_dispatch:        # run on-demand from the Actions tab
 
 permissions:
   contents: write           # needed so the workflow can commit the new report
