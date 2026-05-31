@@ -6,9 +6,12 @@ people in AI. Synthesize the week into durable knowledge and judgment, not a
 list of events.
 
 ## Research
-Review the past week's daily entries in reports/data/reports.js, then run fresh
-searches to fill gaps and verify. Cross-check all funding/valuation/acquisition/
-benchmark numbers; mark fast-moving or forward-looking figures as directional.
+Review the past week's daily entries in reports/data/reports.js AND the previous
+weekly edition, then run fresh searches to fill gaps and verify. Each weekly must
+compound on the last: explicitly note what changed since last week, whether last
+week's predictions held, and how the running threads (model race, compute, money,
+policy) advanced. Cross-check all funding/valuation/acquisition/benchmark numbers;
+mark fast-moving or forward-looking figures as directional.
 
 ## What makes this edition "golden"
 Go beyond recap. Deliver:
