@@ -108,28 +108,44 @@
     return h + "</div>";
   }
 
+  // Split a section heading like "1 · Model Releases" into number + title so we
+  // can give the number an oversized editorial treatment. Falls back gracefully.
+  function sectionHead(h) {
+    const m = String(h).match(/^\s*(\d+)\s*[·.\-)]\s*(.+)$/);
+    if (m) {
+      const num = m[1].padStart(2, "0");
+      return `<h3 class="numbered"><span class="sec-num">${num}</span><span class="sec-title">${m[2]}</span></h3>`;
+    }
+    return `<h3><span class="sec-title">${h}</span></h3>`;
+  }
+
   function render(r) {
     const idx = ALL.indexOf(r);
     const newer = ALL[idx - 1], older = ALL[idx + 1];
-    let html = `<div class="report-head"><div>
-        <div class="kicker ${r.type}">${r.type === "weekly" ? "Weekly Summary" : "Daily Briefing"}</div>
-        <h2>${r.title}</h2><div class="date">${r.dateLabel}</div></div>`;
-    if (r.pdf) html += `<a class="btn" href="${r.pdf}" target="_blank" rel="noopener">⬇ Download PDF</a>`;
-    html += `</div>`;
+    const editionLabel = r.type === "weekly" ? "Weekly Edition" : "Daily Briefing";
 
-    html += `<div class="report-nav">
-        <button data-go="${newer ? newer.id : ""}" ${newer ? "" : "disabled"}>← Newer</button>
-        <button data-go="${older ? older.id : ""}" ${older ? "" : "disabled"}>Older →</button>
-      </div>`;
+    let html = `<article class="masthead">
+        <div class="kicker ${r.type}"><span class="kicker-rule"></span>${editionLabel}</div>
+        <h2>${r.title}</h2>
+        <div class="dateline">
+          <span class="dateline-date">${r.dateLabel}</span>
+          ${r.pdf ? `<a class="btn" href="${r.pdf}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg> Download PDF</a>` : ``}
+        </div>
+      </article>`;
 
-    if (r.tldr) html += `<div class="tldr"><h3>${r.type === "weekly" ? "The 60-second version" : "Today in 30 seconds"}</h3><ul>${r.tldr.map(t => `<li>${t}</li>`).join("")}</ul></div>`;
+    html += `<nav class="report-nav" aria-label="Edition navigation">
+        <button data-go="${newer ? newer.id : ""}" ${newer ? "" : "disabled"}><span class="rn-arrow">←</span> Newer</button>
+        <button data-go="${older ? older.id : ""}" ${older ? "" : "disabled"}>Older <span class="rn-arrow">→</span></button>
+      </nav>`;
+
+    if (r.tldr) html += `<aside class="tldr"><h3>${r.type === "weekly" ? "The 60-Second Version" : "Today in 30 Seconds"}</h3><ul>${r.tldr.map(t => `<li>${t}</li>`).join("")}</ul></aside>`;
 
     (r.sections || []).forEach(s => {
-      html += `<section class="section"><h3>${s.h}</h3>`;
+      html += `<section class="section">${sectionHead(s.h)}`;
       if (s.intro) html += `<p class="intro">${s.intro}</p>`;
       (s.blocks || []).forEach(b => html += renderBlock(b));
       if (s.checklist) html += `<ul class="checklist">${s.checklist.map((c, i) =>
-        `<li><input type="checkbox" data-ck="${r.id}-${i}"><span>${c}</span></li>`).join("")}</ul>`;
+        `<li><input type="checkbox" id="ck-${r.id}-${i}" data-ck="${r.id}-${i}"><label for="ck-${r.id}-${i}">${c}</label></li>`).join("")}</ul>`;
       html += `</section>`;
     });
 

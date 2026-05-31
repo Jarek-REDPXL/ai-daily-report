@@ -4,36 +4,44 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The AI Edge — Stay Ahead</title>
-<meta name="description" content="Daily and weekly briefings on everything happening in the AI industry.">
+<meta name="description" content="A premium daily &amp; weekly AI intelligence briefing. Signal over noise.">
+<meta name="theme-color" content="#ffffff">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/styles.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%234f7cff'/><stop offset='0.5' stop-color='%239168f0'/><stop offset='1' stop-color='%23e0688b'/></linearGradient></defs><circle cx='50' cy='50' r='42' fill='url(%23g)'/></svg>">
 </head>
 <body>
 <div id="progressbar"></div>
 
 <header class="topbar">
-  <div class="brand">
-    <button id="menu-btn" aria-label="Toggle archive" title="Toggle archive">☰</button>
-    <span class="logo">⚡</span>
-    <div class="brand-text">
-      <h1>The AI Edge</h1>
-      <p class="tagline">Everything in AI — daily &amp; weekly, so you stay ahead.</p>
+  <div class="topbar-inner">
+    <div class="brand">
+      <button id="menu-btn" aria-label="Toggle archive" title="Toggle archive">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <span class="logo" aria-hidden="true"></span>
+      <div class="brand-text">
+        <h1>The&nbsp;AI&nbsp;Edge</h1>
+        <p class="tagline">Daily &amp; weekly intelligence — so you stay ahead</p>
+      </div>
     </div>
-  </div>
-  <div class="topbar-meta">
-    <span class="pill" id="latest-pill">Loading…</span>
-    <button id="theme-toggle" title="Toggle light/dark" aria-label="Toggle theme">🌙</button>
+    <div class="topbar-meta">
+      <span class="pill" id="latest-pill">Loading…</span>
+      <button id="theme-toggle" title="Toggle light/dark" aria-label="Toggle theme">🌙</button>
+    </div>
   </div>
 </header>
 
 <div class="layout">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-head">
-      <span>Archive</span>
-      <input id="search" type="search" placeholder="Filter…" aria-label="Filter reports">
+      <span>The Archive</span>
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="search" type="search" placeholder="Filter editions…" aria-label="Filter reports">
+      </div>
     </div>
     <nav id="archive-nav"></nav>
   </aside>
@@ -45,8 +53,11 @@
 </div>
 
 <footer class="site-footer">
-  <p>The AI Edge · A living briefing archive · Figures for fast-moving deals are directional, not guaranteed.</p>
-  <p class="muted"><span id="report-count"></span></p>
+  <div class="footer-inner">
+    <span class="footer-brand"><span class="footer-mark" aria-hidden="true"></span> The AI Edge</span>
+    <span class="footer-note">An automated intelligence briefing · figures for fast-moving deals are directional.</span>
+    <span class="footer-count" id="report-count"></span>
+  </div>
 </footer>
 
 <script src="reports/data/reports.js"></script>
