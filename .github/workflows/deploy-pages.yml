@@ -1,10 +1,17 @@
 name: Deploy site to GitHub Pages
 
-# OPTIONAL: serves the site live at https://redpxl.github.io/ai-daily-report/
-# Enable Pages first: repo Settings → Pages → Source: "GitHub Actions".
+# DISABLED by default. GitHub Pages cannot publish a PRIVATE repo on the free
+# plan, so this deploy fails on every push. The site runs fine locally
+# (`python -m http.server`) — a live URL is optional.
+#
+# To turn the live site ON later, do ONE of:
+#   - make this repo public (Settings -> General -> Change visibility), or
+#   - upgrade to GitHub Pro (private Pages),
+# then Settings -> Pages -> Source: "GitHub Actions", restore the `push`
+# trigger below, and re-run.
 on:
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
   workflow_dispatch:
 
 permissions:
