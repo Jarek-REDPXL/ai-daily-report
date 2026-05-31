@@ -8,7 +8,7 @@ from reportlab.lib.enums import TA_CENTER
 from reportlab.platypus import (BaseDocTemplate, PageTemplate, Frame, Paragraph,
                                 Spacer, Table, TableStyle, HRFlowable)
 
-OUT = "/home/user/ai-reports/weekly-ai-report-2026-05-30.pdf"
+OUT = "/home/user/ai-daily-report/reports/pdf/weekly-ai-report-2026-05-31.pdf"
 
 NAVY = colors.HexColor("#0b1f3a")
 BLUE = colors.HexColor("#2b6cb0")
@@ -38,6 +38,9 @@ cell = S("cell", fontName="Helvetica", fontSize=8.3, leading=10.5)
 cellh = S("cellh", fontName="Helvetica-Bold", fontSize=8.3, leading=10.5, textColor=colors.white)
 foot = S("foot", fontName="Helvetica", fontSize=7.5, leading=10, textColor=GREY, alignment=TA_CENTER)
 srcst = S("srcst", fontName="Helvetica", fontSize=8, leading=11.5, textColor=colors.HexColor("#444"))
+code = S("code", fontName="Courier", fontSize=8.5, leading=12, leftIndent=12,
+         textColor=colors.HexColor("#333"), backColor=colors.HexColor("#f2f4f7"),
+         borderPadding=(4,4,4,4), spaceAfter=4)
 
 story = []
 
@@ -66,16 +69,16 @@ def mk_table(header, rows, widths):
 # ---------- Header ----------
 para("The AI Edge &mdash; Weekly Briefing", h1)
 para("Everything that mattered in AI this week, and what you should do about it.", sub)
-para("Week of May 24 &ndash; May 30, 2026 &nbsp;|&nbsp; Prepared for Jaroslaw &nbsp;|&nbsp; Issue #1", meta)
+para("Week of May 25 &ndash; May 31, 2026 &nbsp;|&nbsp; Prepared for Jaroslaw &nbsp;|&nbsp; Issue #2", meta)
 story.append(HRFlowable(width="100%", thickness=2.5, color=BLUE, spaceBefore=2, spaceAfter=12))
 
 # ---------- TLDR ----------
 tldr_items = [
- "<b>Anthropic released Claude Opus 4.8</b> (May 28) with <b>Dynamic Workflows</b> &mdash; one agent can plan and run up to <b>1,000 parallel subagents</b>, do codebase-scale migrations, then self-verify. Fast mode is 3&times; cheaper.",
- "<b>Anthropic became the world's most valuable AI startup</b> &mdash; a <b>$65B Series H</b> at ~<b>$965B</b>, passing OpenAI and nearing $1T.",
- "<b>Google I/O 2026</b> (May 19) went all-in on agents: <b>Gemini 3.5 Flash</b>, plus <b>Spark</b> (a 24/7 personal agent) and <b>Antigravity</b>, an agent-first dev platform.",
- "<b>The industry pivoted to \"the agent.\"</b> Three major labs changed their default model within a month. The battleground is autonomous, long-running, multi-agent work &mdash; not chat.",
- "<b>Learn this week:</b> context engineering, sub-agent orchestration, and writing <b>Skills</b> (markdown runbooks for agents). See Section 2.",
+ "<b>The week in one idea: the agent grew up.</b> Autonomy's two missing pieces landed at once &mdash; <b>money</b> (agents can now transact) and the dawning <b>reliability/governance</b> reckoning. The race moved from <i>can the model do it</i> to <i>can we operationalize and monetize it</i>.",
+ "<b>Agents got wallets.</b> AWS <b>Bedrock AgentCore Payments</b> (with Coinbase + Stripe) + OpenAI's <b>Agentic Commerce Protocol</b> turned \"agentic commerce\" from slideware into rails: stablecoin micropayments with spending guardrails.",
+ "<b>&hellip;and a reliability problem.</b> Surveys put <b>&lt;2%</b> of enterprises running agents at full production scale; the blocker is integration + durable execution, not model IQ.",
+ "<b>The map consolidated.</b> Four labs made four acqui-hires/licenses in five days; <b>Andrej Karpathy joined Anthropic</b>; Anthropic's run-rate reportedly went ~$14B&rarr;~$30B in ~12 weeks.",
+ "<b>Learn this week:</b> agentic-payment guardrails (x402), <b>durable/idempotent execution</b>, planner&rarr;worker&rarr;verifier orchestration, and element-level citations. See Section 3.",
 ]
 tl = [[Paragraph("<b>The 60-second version</b>", tldr)]]
 for it in tldr_items:
@@ -92,111 +95,105 @@ story.append(tt)
 gap(8)
 
 # ===== Section 1 =====
-section("1.&nbsp; Model Releases &amp; Updates")
-
-para("Claude Opus 4.8 + Dynamic Workflows", h3)
-para("Anthropic shipped Opus 4.8 on <b>May 28</b>, just 41 days after 4.7. Headline features:")
-blt("<b>Dynamic Workflows (research preview):</b> Claude plans a large task, spins up <b>hundreds of parallel subagents</b> (capped at 1,000) in one session, runs them longer, then <b>verifies its own outputs</b>. Demoed codebase-scale migrations across 100,000s of lines &mdash; kickoff to merge &mdash; using the test suite as the bar.")
-blt("<b>Effort controls:</b> a new control next to the model selector dials how much reasoning effort Claude spends.")
-blt("<b>Cheaper fast mode:</b> ~2.5&times; speed, now <b>3&times; cheaper</b> than on prior models. Pricing unchanged (~$5 / $25 per 1M tokens).")
-blt("GA in GitHub Copilot day one; positioned with better honesty / less deception.")
-why("This is the clearest sign yet that the unit of work is shifting from \"a chat turn\" to \"a supervised fleet of agents.\" Your job becomes <i>orchestration + verification</i>, not line-by-line prompting.")
-do("In Claude Code, try a real migration/refactor with planning enabled and watch the decomposition into subagents. Use <b>low effort</b> for routine edits, <b>high</b> for architecture.")
-
-para("GPT-5.5 Instant becomes ChatGPT's default", h3)
-para("On May 5, OpenAI made <b>GPT-5.5 Instant</b> the default across every ChatGPT tier, replacing GPT-5.3. Reported to cut hallucinated claims by 50%+ in some high-stakes scenarios.")
-do("Re-test saved prompts/automations against the new default &mdash; behavior and refusal boundaries shift on model swaps.")
-
-para("Google's Gemini: 3.5 Flash + Spark", h3)
-para("At I/O (May 19) Google launched <b>Gemini 3.5 Flash</b> (beats 3.1 Pro on coding/agentic/multimodal, ~4&times; faster output), and <b>Spark</b> &mdash; a 24/7 personal agent that acts across your digital life (Gemini app, soon email/chat). 3.5 Pro arrives next month.")
-why("Google is using its distribution (billions of devices) to make agents ambient. Spark is the most direct consumer-agent challenge to ChatGPT yet.")
-
-para("Where the models stand (selected benchmarks)", h3)
-story.append(mk_table(
-    ["Benchmark / area", "Leader", "Note"],
-    [["Scientific reasoning (GPQA Diamond)", "Gemini 3.1 Pro &mdash; 94.3%", "Top scientific reasoner"],
-     ["SWE-bench Pro (coding)", "GLM-5.1 (Z.AI) &mdash; 58.4%", "First <b>open-weight</b> model to hit #1 (Apr 7), since contested"],
-     ["Reasoning leaderboards", "Claude Opus 4.8 (93), Qwen3.7 Max (92)", "Best open-weight: DeepSeek V4 Pro (87)"],
-     ["Research / grounded synthesis", "GPT-5.5 Pro", "Retrieval + attribution + multi-doc synthesis"]],
-    [5.3*cm, 5.6*cm, 6.1*cm]))
-para("Leaderboard scores vary by source and methodology &mdash; treat as directional. \"Claude Mythos Preview\" tops some boards but is an unreleased preview.", small)
+section("1.&nbsp; The Week in One Idea")
+para("From \"can it think\" to \"can it transact and be trusted\"", h3)
+para("Issue #1's thesis was that the industry pivoted to <i>the agent</i> &mdash; from chat turns to fleets of subagents. This week the agent got <b>operationalized and monetized</b>. The two things that had been missing both arrived: agents can now <b>pay</b> (AWS AgentCore Payments, OpenAI's Agentic Commerce Protocol), and the field openly admitted they mostly can't yet <b>run reliably in production</b> (&lt;2% at full scale). The frontier is no longer just intelligence &mdash; it's <b>commerce + control</b>.")
+para("Did last week's calls hold?", h3)
+blt("<b>Held:</b> we called Gemini Spark the sharpest consumer-agent challenge to ChatGPT &mdash; it <b>went live May 29</b> for US AI Ultra users.")
+blt("<b>Held:</b> \"compute is THE bottleneck\" &mdash; reaffirmed by ByteDance's reported ~$70B infra plan and Anthropic's ~$200B cloud/chip commitments.")
+blt("<b>Escalated:</b> the May 30 jobs-narrative reversal hardened into open labor conflict across four jurisdictions this week (see Section 6).")
 
 # ===== Section 2 =====
-section("2.&nbsp; New Techniques, Skills &amp; Best Practices")
-para("This is the section to actually study &mdash; it's where your day-to-day leverage comes from.", body)
-
-para("\"Skills\" &mdash; the highest-leverage thing to learn now", h3)
-para("A <b>Skill</b> is a markdown file an agent loads for a specific task &mdash; an <b>onboarding doc / runbook for an AI</b>. Encode the procedure once; the agent follows it instead of you re-prompting. (Google also shipped <b>Science Skills</b> at I/O &mdash; the pattern is going mainstream.)")
-para("<b>How to write a good Skill:</b>", body)
-blt("<b>Write a runbook, not a question.</b> Anticipate failure modes, define which tool to use when, and specify <b>when to stop</b>.")
-blt("<b>Structure with sections + tags:</b> XML/Markdown headers like <font face='Courier'>&lt;background&gt;</font>, <font face='Courier'>## instructions</font>, <font face='Courier'>## tool_guidance</font>, <font face='Courier'>## output</font>. Models follow delineated structure far more reliably.")
-blt("<b>Include 2&ndash;5 canonical few-shot examples</b> of the exact behavior wanted. Few-shot is still top-tier even with frontier models.")
-blt("<b>Be explicit about memory:</b> state what to remember across steps and what to discard.")
-
-para("Context engineering &gt; prompt engineering", h3)
-para("The 2026 consensus (Anthropic engineering): treat <b>context as a finite, precious resource</b>. Smarter models need <i>less</i> prescriptive prompting but <i>better</i> context curation. Don't dump everything in &mdash; give the agent exactly what it needs, when it needs it.")
-
-para("Sub-agents, planning &amp; \"dreaming\"", h3)
-blt("<b>Force a planning phase before generation.</b> Practitioners report success on complex coding tasks jumping from ~1/3 to ~2/3 just by planning first.")
-blt("<b>Use specialized sub-agents</b> with single, well-defined jobs. One session doing everything causes \"context pollution\" and worse output.")
-blt("<b>Anthropic's \"dreaming\" (May 6):</b> a scheduled, asynchronous memory-curation process &mdash; agents review past sessions, merge duplicate memories, drop stale ones, and surface recurring mistakes/preferences. Legal AI platform Harvey reported a <b>6&times;</b> improvement in task completion after enabling it. Points toward agents that genuinely learn your workflow.")
-
-para("The core prompting toolkit (keep these sharp)", h3)
-blt("<b>Chain-of-Thought</b> &mdash; reason step-by-step before answering.")
-blt("<b>Self-Consistency</b> &mdash; sample multiple reasoning paths, take the majority; ~2&ndash;3&times; accuracy over plain CoT on hard problems.")
-blt("<b>ReAct</b> &mdash; interleave reasoning + tool actions; the backbone of most agents.")
-blt("<b>Few-shot + role prompting</b> &mdash; still reliable accuracy boosters.")
+section("2.&nbsp; Model &amp; Capability Landscape &mdash; what to use for what")
+para("Late-May release cadence slowed; the labs shifted from shipping models to <b>productizing agents</b>. The practical map:", body)
+story.append(mk_table(
+    ["When you need&hellip;", "Reach for", "Why"],
+    [["Hard reasoning, codebase-scale refactor, self-checking", "Claude Opus 4.8", "Dynamic Workflows + effort control; reported ~4&times; less likely than 4.7 to pass its own buggy code"],
+     ["High-volume / latency-sensitive / cheap", "Gemini 3.5 Flash", "Flagship-ish quality at Flash price/speed; now powers Spark"],
+     ["Consumer \"just do it for me\"", "Gemini Spark / ChatGPT agent mode", "Ambient, background, cross-app &mdash; Spark just shipped"],
+     ["Selling / shopping / ads inside chat", "ChatGPT (ACP) + Ads Manager", "Agentic Commerce Protocol makes ChatGPT a storefront and ad surface"],
+     ["Cheapest tokens / self-host leaning", "DeepSeek V4 &middot; Qwen 3.7-Max (API)", "Open-weight price pressure continues; Qwen 3.7-Max is API-only, not open"]],
+    [5.3*cm, 4.4*cm, 7.3*cm]))
+para("Benchmarks vary by source &mdash; directional. The week's story isn't a new #1; it's that capability is now table stakes and <b>integration + reliability</b> decide winners.", small)
 
 # ===== Section 3 =====
-section("3.&nbsp; Tools &amp; Agentic Platforms")
-blt("<b>Google Antigravity</b> &mdash; agent-first dev platform (desktop app, <font face='Courier'>agy</font> CLI, SDK, Managed Agents). <b>Multi-agent orchestration</b> from day one: multiple agents on different parts of a codebase at once.")
-blt("<b>Anthropic Managed Agents</b> &mdash; added public-beta self-hosted sandboxes and a research-preview \"MCP tunnels\" feature (May 19).")
-blt("<b>MCP (Model Context Protocol)</b> is the standard way to connect agents to GitHub, Slack, Drive, Asana, etc. Wire up 1&ndash;2 MCP servers to your coding agent this week.")
-blt("<b>Claude Code vs Cursor:</b> Claude Code = terminal-native, autonomous multi-step + full-codebase work; Cursor = inline editing + autocomplete. Most shipping teams use <b>both</b>.")
-do("Pick one repetitive weekly workflow and turn it into a Skill + sub-agent. Best ROI move right now.")
+section("3.&nbsp; Techniques &amp; Skills to Learn (your leverage)")
+para("Study this section &mdash; it's where the compounding edge is.", body)
+
+para("Agentic payments &amp; spend guardrails (learn \"x402\")", h3)
+para("<b>x402</b> revives HTTP's dormant \"402 Payment Required\" for machine-to-machine commerce: an agent hits a paid endpoint, gets a price, settles (often in stablecoin), and proceeds &mdash; no human in the billing loop. Powerful and dangerous.")
+blt("Give every spending agent a <b>corporate card, not a blank check</b>: hard total budget, per-transaction cap, and an <b>allowlist</b> of payable endpoints.")
+blt("Require <b>human approval above a threshold</b> (e.g., any single charge &gt; $X).")
+blt("Attach <b>idempotency keys</b> to every payment so a crash-and-retry can't double-charge.")
+blt("Log every transaction with the triggering reasoning step for audit.")
+
+para("Durable, resumable agents (why demos die in prod)", h3)
+para("The top reason production agents survive and demos don't is <b>durable execution</b> &mdash; treat agents like workflow engines, not scripts.")
+blt("<b>Persist each step's result</b> to durable storage before starting the next.")
+blt("Make every external action <b>idempotent</b> (safe to retry).")
+blt("On restart, <b>replay from the last checkpoint</b>, never from scratch.")
+
+para("Planner &rarr; Worker &rarr; Verifier orchestration", h3)
+para("The reliable multi-agent shape: a <b>planner</b> decomposes, specialized <b>workers</b> (single, well-defined jobs) execute, an explicit <b>verifier</b> checks against a hard bar (a test suite, a rubric), then results <b>merge</b>. Opus 4.8's self-verification and new research (MAS-Orchestra / MASBENCH) are formalizing exactly this loop. Don't let one session do everything &mdash; that causes context pollution and worse output.")
+
+para("Kill attribution hallucination with element-level citations", h3)
+para("New benchmarks (e.g., CiteVQA) push models to return <b>fine-grained, element-level</b> citations &mdash; page+line or bounding box &mdash; not just a source name. Copy this into any RAG/research agent:")
+para("For every claim, cite the exact source span (document + page + line / element). If you cannot locate a span, label the claim \"unverified\" instead of asserting it.", code)
 
 # ===== Section 4 =====
-section("4.&nbsp; Market, Money &amp; Business")
-story.append(mk_table(
-    ["Event", "Details", "Why it matters"],
-    [["Anthropic Series H", "$65B raised; ~$965B valuation; passed OpenAI, nears $1T (tripled from $380B in Feb)", "Capital consolidating around frontier-lab leaders"],
-     ["Anthropic &times; xAI compute", "$1.25B/month through May 2029; potentially $40B+ to xAI", "Compute is the real bottleneck &mdash; even rivals buy from each other"],
-     ["Cognition", "Raised $1B at $26B valuation", "Agentic dev tooling is a top funding magnet"],
-     ["Shield AI", "$1.5B Series G, $12.7B valuation (+140% YoY)", "Defense AI is surging"],
-     ["JPMorgan", "~$19.8B tech budget; AI reclassified R&amp;D &rarr; <b>core infrastructure</b>", "Enterprise AI: experiment &rarr; infrastructure"],
-     ["Novo Nordisk &times; OpenAI", "AI across drug discovery, trials, manufacturing, supply chain", "Vertical full-stack AI adoption in pharma"],
-     ["Apple (reported)", "May let users pick 3rd-party providers (Google, Anthropic) for Apple Intelligence in OS 27", "Apple conceding the model layer; distribution play"]],
-    [3.6*cm, 7.2*cm, 6.2*cm]))
-para("Big picture: Q1 2026 venture funding hit record highs (~$300B+ globally), heavily AI-driven &mdash; flowing to frontier research, agent infrastructure, defense, and vertical tools for regulated industries. Some mega-deal figures (SpaceX/xAI structuring, a reported SpaceX IPO) are fast-moving and forward-looking &mdash; treat as developing.", small)
+section("4.&nbsp; Tools Worth Your Time")
+blt("<b>Adopt/learn now:</b> AWS <b>Bedrock AgentCore Payments</b> (preview) &mdash; wire one paid API behind a budgeted, allowlisted wallet in a <i>sandbox</i> first.")
+blt("<b>Adopt if you sell online:</b> OpenAI's <b>Agentic Commerce Protocol</b> &mdash; turns ChatGPT into a storefront; start treating discovery as \"agent optimization,\" not just SEO.")
+blt("<b>Skip the infra pain:</b> <b>Managed Agents in the Gemini API</b> deliver the Antigravity harness without you standing up infrastructure.")
+blt("<b>Watch:</b> <b>ChatGPT Ads Manager</b> (new monetization + a new attention game) and the <b>AWS/Visa</b> agent-commerce blueprints.")
+blt("<b>Don't over-rotate</b> on frameworks that merely promise \"reliability\" &mdash; verify durable execution + observability yourself. &lt;2% reach production for a reason.")
+do("Put one paid API your agents already call behind a budgeted, allowlisted wallet in a sandbox &mdash; you'll meet the new failure modes before they hit your real card.")
 
 # ===== Section 5 =====
-section("5.&nbsp; Policy &amp; Regulation")
-para("EU AI Act \"omnibus\" political agreement (May 7) &mdash; first major amendments since adoption:", body)
-blt("High-risk (Annex III) obligations <b>delayed</b> from Aug 2026 &rarr; <b>Dec 2027</b>.")
-blt("Two <b>new prohibitions</b>: AI generating non-consensual intimate imagery and CSAM.")
-blt("Synthetic-content marking delayed to Dec 2026; transparency rules still arrive <b>Aug 2026</b>.")
-para("US: the Dec 11, 2025 Executive Order aims to consolidate AI oversight federally and push back on state-law patchwork. State laws still landing: California's frontier-AI transparency act (Jan 1, 2026) and Colorado AI Act (Jun 30, 2026). A reported White House EO would create a <b>voluntary</b> framework for pre-release government model access.", body)
-do("EU-facing teams: the <b>Aug 2026</b> transparency rules (label AI-generated content) are the near-term deadline. US teams: track state-level laws, not just federal.")
+section("5.&nbsp; Market, Money &amp; The Strategic Read")
+story.append(mk_table(
+    ["Move", "Detail", "Signal"],
+    [["Consolidation wave", "4 labs, 4 deals in ~5 days &mdash; Anthropic&rarr;Stainless, DeepMind&rarr;Contextual AI (Douwe Kiela +20), Meta&rarr;Dreamer, Mistral&rarr;Emmi AI &mdash; mostly licenses / acqui-hires to dodge antitrust", "Buying a capability now beats building it; M&amp;A disguised as licensing"],
+     ["Talent magnet", "Andrej Karpathy joined Anthropic's pre-training team &mdash; to use Claude to accelerate pretraining research", "Elite talent pooling at the perceived leader"],
+     ["Revenue velocity", "Anthropic run-rate reportedly ~$14B (Feb) &rarr; ~$30B (Apr); OpenAI launched a reported ~$4B enterprise consulting arm", "Labs monetizing services, not just tokens"],
+     ["Compute land-grab", "ByteDance reportedly plans up to ~$70B AI infra; Anthropic ~$200B cloud/chips", "Compute + power remain the gating moat"]],
+    [3.6*cm, 7.4*cm, 6.0*cm]))
+para("Funding / valuation / infra figures are fast-moving &mdash; directional. The pattern is durable: capability, capital, and talent are concentrating.", small)
+para("What it signals for the next 6&ndash;12 months", h3)
+para("Winners will be decided less by the next benchmark and more by who can <b>secure compute</b>, <b>buy missing capabilities cheaply</b> (license/acqui-hire instead of multi-year builds), and <b>operationalize agents</b> &mdash; payments + reliability &mdash; for paying enterprises. The \"license, don't merge\" pattern also signals labs expect antitrust scrutiny and are routing around it.")
 
 # ===== Section 6 =====
-section("6.&nbsp; This Week's Action List")
+section("6.&nbsp; Policy &amp; Risk (only what affects what you build)")
+para("EU AI Act omnibus &mdash; still the binding clock", h3)
+blt("High-risk (Annex III) obligations <b>delayed</b> to <b>Dec 2027</b>; product-regulated high-risk to Aug 2028.")
+blt("Two <b>new prohibitions</b>: AI-generated non-consensual intimate imagery and CSAM.")
+blt("Synthetic-content / transparency labeling still arrives <b>Aug 2026</b> &mdash; that's the near deadline.")
+para("The new front: labor &amp; legitimacy", h3)
+para("Worker pushback went structural this week &mdash; strikes, gamed AI rankings, courts barring AI-justified layoffs, calls for worker say. Governance of <i>how</i> AI is rolled out is now a compliance + reputational risk, not just an HR question.")
+para("Agentic payments = a new liability surface", h3)
+para("Once agents spend money, ask: who's liable when one overspends, gets defrauded, or pays a sanctioned party? KYC/AML checks, hard spend caps, and immutable audit logs move from nice-to-have to build requirement.")
+
+# ===== Section 7 =====
+section("7.&nbsp; This Week's Action List")
 for t in [
-    "Try Claude Opus 4.8 on a real multi-step task; learn the <b>effort control</b>.",
-    "Convert one recurring workflow into a <b>Skill</b> (markdown runbook + few-shot examples).",
-    "Add a <b>planning phase</b> to agent prompts; split big jobs into <b>sub-agents</b>.",
-    "Wire up <b>1&ndash;2 MCP servers</b> to your coding agent.",
-    "Re-test critical prompts against GPT-5.5 / Gemini Spark defaults.",
-    "If EU-facing: plan for <b>Aug 2026</b> synthetic-content transparency labeling.",
+    "Put one paid API behind a <b>budgeted, allowlisted agent wallet</b> in a sandbox; learn <b>x402</b>.",
+    "Add <b>durable execution</b> to your top agent: checkpoint state + idempotency keys (also blocks double-payments).",
+    "Insert an explicit <b>verifier sub-agent</b> (planner &rarr; workers &rarr; verifier &rarr; merge; tests as the bar).",
+    "If you sell online, evaluate OpenAI's <b>Agentic Commerce Protocol</b>; think <b>agent optimization</b>, not just SEO.",
+    "Re-test consumer workflows on <b>Gemini Spark</b> vs ChatGPT agent mode.",
+    "Demand <b>element-level citations</b> in every RAG/research prompt.",
+    "EU-facing: map AI-generated outputs for the <b>Aug 2026</b> transparency labeling deadline.",
+    "Co-design internal AI rollouts with affected teams; report <b>augmentation</b>, not headcount.",
 ]:
     story.append(Paragraph("&#9744;&nbsp;&nbsp; " + t, bullet))
 
 # ===== Sources =====
 section("Sources")
-para("Anthropic (Opus 4.8; context-engineering; dreaming) &middot; TechCrunch &middot; VentureBeat &middot; The New Stack &middot; MarkTechPost &middot; GitHub Changelog &middot; blog.google (I/O 2026: 100 announcements, Spark, Antigravity, Science Skills) &middot; 9to5Google / Tom's Guide &middot; Tech Startups (Anthropic $965B) &middot; Crunchbase News (funding rounds) &middot; SD Times &middot; MarketingProfs (GPT-5.5, JPMorgan, Novo Nordisk, Apple) &middot; YourStory / MindStudio (dreaming; Harvey 6&times;) &middot; llm-stats.com / Vellum / BenchLM (benchmarks) &middot; Global Policy Watch &amp; White &amp; Case (EU AI Act + US EO) &middot; f22labs / Totalum (Claude Code productivity).", srcst)
+para("AWS ML Blog (Bedrock AgentCore Payments, with Coinbase + Stripe) &middot; OpenAI (Agentic Commerce Protocol; AWS partnership) &middot; Axios (ChatGPT Ads; Karpathy) &middot; TechCrunch / CNBC (Karpathy &rarr; Anthropic) &middot; VentureBeat (agent reliability rebuild; AWS/Visa blueprints) &middot; StartupHub.ai (four-lab consolidation) &middot; Crunchbase News (funding / run-rate) &middot; unrot.co &amp; crescendo.ai (May 30&ndash;31 roundups: Gemini Spark live, ByteDance infra, OpenAI consulting, labor conflicts) &middot; Global Policy Watch / Inside Privacy (EU AI Act omnibus) &middot; arXiv (MAS-Orchestra / MASBENCH; CiteVQA). Fast-moving funding/infra figures are directional.", srcst)
 
 story.append(Spacer(1, 14))
 story.append(HRFlowable(width="100%", thickness=0.5, color=LINEGREY, spaceAfter=5))
-para("The AI Edge &middot; Issue #1 &middot; Week of May 24&ndash;30, 2026 &middot; Compiled from multiple cross-checked sources. Figures for fast-moving deals are directional, not guaranteed.", foot)
+para("The AI Edge &middot; Issue #2 &middot; Week of May 25&ndash;31, 2026 &middot; Compiled from multiple cross-checked sources. Figures for fast-moving deals are directional, not guaranteed.", foot)
 
 # ---------- Build with page numbers ----------
 def on_page(canvas, doc):
@@ -209,7 +206,7 @@ def on_page(canvas, doc):
 doc = BaseDocTemplate(OUT, pagesize=A4,
                       leftMargin=1.7*cm, rightMargin=1.7*cm,
                       topMargin=1.5*cm, bottomMargin=1.5*cm,
-                      title="The AI Edge - Weekly Briefing (May 24-30, 2026)",
+                      title="The AI Edge - Weekly Briefing (May 25-31, 2026)",
                       author="The AI Edge")
 frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id="main")
 doc.addPageTemplates([PageTemplate(id="main", frames=[frame], onPage=on_page)])

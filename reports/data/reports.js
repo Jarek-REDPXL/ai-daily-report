@@ -19,6 +19,187 @@
    ============================================================ */
 window.AI_EDGE_REPORTS = [
 
+  /* ===================== WEEKLY SUMMARY — Issue #2 ===================== */
+  {
+    id: "2026-05-31-weekly",
+    type: "weekly",
+    week: "Week of May 31 – Jun 6, 2026",
+    title: "Weekly Briefing — Issue #2",
+    dateLabel: "Week of May 25 – May 31, 2026",
+    sortDate: "2026-05-31",
+    pdf: "reports/pdf/weekly-ai-report-2026-05-31.pdf",
+    tldr: [
+      "<b>The week in one idea: the agent grew up.</b> Autonomy's two missing pieces landed at once — <b>money</b> (agents can now transact) and the dawning <b>reliability/governance</b> reckoning. The race moved from <i>can the model do it</i> to <i>can we operationalize and monetize it</i>.",
+      "<b>Agents got wallets.</b> AWS <b>Bedrock AgentCore Payments</b> (with Coinbase + Stripe) + OpenAI's <b>Agentic Commerce Protocol</b> + AWS/Visa blueprints turned “agentic commerce” from slideware into rails: stablecoin micropayments with spending guardrails.",
+      "<b>…and a reliability problem.</b> Surveys put <b>&lt;2%</b> of enterprises running agents at full production scale; the blocker is integration + durable execution, not model IQ.",
+      "<b>The map consolidated.</b> Four labs made four acqui-hires/licenses in five days; <b>Andrej Karpathy joined Anthropic</b>; Anthropic's run-rate reportedly went ~$14B→~$30B in ~12 weeks. Capability, capital, and talent are pooling around a few names.",
+      "<b>Learn this week:</b> agentic-payment guardrails (x402), <b>durable/idempotent execution</b>, planner→worker→verifier orchestration, and demanding <b>element-level citations</b> to kill attribution hallucination."
+    ],
+    sections: [
+      {
+        h: "1 · The week in one idea",
+        blocks: [
+          { sub: "From “can it think” to “can it transact and be trusted”",
+            p: "Issue #1's thesis was that the industry pivoted to <i>the agent</i> — from chat turns to fleets of subagents. This week the agent got <b>operationalized and monetized</b>. The two things that had been missing both arrived: agents can now <b>pay</b> (AWS AgentCore Payments, OpenAI's Agentic Commerce Protocol), and the field openly admitted they mostly can't yet <b>run reliably in production</b> (&lt;2% at full scale). The frontier is no longer just intelligence — it's <b>commerce + control</b>." },
+          { sub: "Did last week's calls hold?",
+            list: [
+              "<b>Held:</b> we called Gemini Spark the sharpest consumer-agent challenge to ChatGPT — it <b>went live May 29</b> for US AI Ultra users.",
+              "<b>Held:</b> “compute is THE bottleneck” — reaffirmed by ByteDance's reported ~$70B infra plan and Anthropic's ~$200B cloud/chip commitments.",
+              "<b>Escalated:</b> the May 30 jobs-narrative reversal hardened into open labor conflict across four jurisdictions this week (see Policy)."
+            ] }
+        ]
+      },
+      {
+        h: "2 · Model & Capability Landscape — what to use for what",
+        intro: "Late-May release cadence slowed; the labs shifted from shipping models to <b>productizing agents</b>. The practical map:",
+        blocks: [
+          { table: {
+            head: ["When you need…", "Reach for", "Why"],
+            rows: [
+              ["Hard reasoning, codebase-scale refactor, self-checking", "Claude Opus 4.8", "Dynamic Workflows + effort control; reported ~4× less likely than 4.7 to pass its own buggy code"],
+              ["High-volume / latency-sensitive / cheap", "Gemini 3.5 Flash", "Flagship-ish quality at Flash price/speed; now powers Spark"],
+              ["Consumer “just do it for me”", "Gemini Spark / ChatGPT agent mode", "Ambient, background, cross-app — Spark just shipped"],
+              ["Selling / shopping / ads inside chat", "ChatGPT (ACP) + Ads Manager", "Agentic Commerce Protocol makes ChatGPT a storefront and ad surface"],
+              ["Cheapest tokens / self-host leaning", "DeepSeek V4 · Qwen 3.7-Max (API)", "Open-weight price pressure continues; Qwen 3.7-Max is API-only, not open"]
+            ]
+          },
+          note: "Benchmarks vary by source — directional. The week's story isn't a new #1; it's that capability is now table stakes and <b>integration + reliability</b> decide winners." }
+        ]
+      },
+      {
+        h: "3 · Techniques & Skills to Learn (your leverage)",
+        intro: "Study this section — it's where the compounding edge is.",
+        blocks: [
+          { sub: "Agentic payments & spend guardrails (learn “x402”)", tags:["skill","tool"],
+            p: "<b>x402</b> revives HTTP's dormant “402 Payment Required” for machine-to-machine commerce: an agent hits a paid endpoint, gets a price, settles (often in stablecoin), and proceeds — no human in the billing loop. Powerful and dangerous.",
+            list: [
+              "Give every spending agent a <b>corporate card, not a blank check</b>: hard total budget, per-transaction cap, and an <b>allowlist</b> of payable endpoints.",
+              "Require <b>human approval above a threshold</b> (e.g., any single charge &gt; $X).",
+              "Attach <b>idempotency keys</b> to every payment so a crash-and-retry can't double-charge.",
+              "Log every transaction with the triggering reasoning step for audit."
+            ] },
+          { sub: "Durable, resumable agents (why demos die in prod)", tags:["skill"],
+            p: "The top reason production agents survive and demos don't is <b>durable execution</b> — treat agents like workflow engines, not scripts.",
+            list: [
+              "<b>Persist each step's result</b> to durable storage before starting the next.",
+              "Make every external action <b>idempotent</b> (safe to retry).",
+              "On restart, <b>replay from the last checkpoint</b>, never from scratch."
+            ] },
+          { sub: "Planner → Worker → Verifier orchestration", tags:["practice"],
+            p: "The reliable multi-agent shape: a <b>planner</b> decomposes, specialized <b>workers</b> (single, well-defined jobs) execute, an explicit <b>verifier</b> checks against a hard bar (a test suite, a rubric), then results <b>merge</b>. Opus 4.8's self-verification and new research (MAS-Orchestra / MASBENCH) are formalizing exactly this loop. Don't let one session do everything — that causes context pollution and worse output." },
+          { sub: "Kill attribution hallucination with element-level citations", tags:["skill"],
+            p: "New benchmarks (e.g., CiteVQA) push models to return <b>fine-grained, element-level</b> citations — page+line or bounding box — not just a source name. Copy this into any RAG/research agent:",
+            list: [
+              "<code>For every claim, cite the exact source span (document + page + line / element). If you cannot locate a span, label the claim “unverified” instead of asserting it.</code>"
+            ] }
+        ]
+      },
+      {
+        h: "4 · Tools Worth Your Time",
+        blocks: [
+          { tags:["tool"], list: [
+            "<b>Adopt/learn now:</b> AWS <b>Bedrock AgentCore Payments</b> (preview) — wire one paid API behind a budgeted, allowlisted wallet in a <i>sandbox</i> first.",
+            "<b>Adopt if you sell online:</b> OpenAI's <b>Agentic Commerce Protocol</b> — turns ChatGPT into a storefront; start treating discovery as “agent optimization,” not just SEO.",
+            "<b>Skip the infra pain:</b> <b>Managed Agents in the Gemini API</b> deliver the Antigravity harness without you standing up infrastructure.",
+            "<b>Watch:</b> <b>ChatGPT Ads Manager</b> (new monetization + a new attention game) and the <b>AWS/Visa</b> agent-commerce blueprints.",
+            "<b>Don't over-rotate</b> on frameworks that merely promise “reliability” — verify durable execution + observability yourself. &lt;2% reach production for a reason."
+          ],
+          doIt: "Put one paid API your agents already call behind a budgeted, allowlisted wallet in a sandbox — you'll meet the new failure modes before they hit your real card." }
+        ]
+      },
+      {
+        h: "5 · Market, Money & The Strategic Read",
+        blocks: [
+          { table: {
+            head: ["Move", "Detail", "Signal"],
+            rows: [
+              ["Consolidation wave", "4 labs, 4 deals in ~5 days — Anthropic→Stainless, DeepMind→Contextual AI (Douwe Kiela +20 researchers), Meta→Dreamer, Mistral→Emmi AI — mostly structured as licenses / acqui-hires to dodge antitrust", "Buying a capability now beats building it; M&A disguised as licensing"],
+              ["Talent magnet", "Andrej Karpathy joined Anthropic's pre-training team — to use Claude to accelerate pretraining research", "Elite talent pooling at the perceived leader"],
+              ["Revenue velocity", "Anthropic run-rate reportedly ~$14B (Feb) → ~$30B (Apr); OpenAI launched a reported ~$4B enterprise consulting arm", "Labs monetizing services, not just tokens"],
+              ["Compute land-grab", "ByteDance reportedly plans up to ~$70B AI infra; Anthropic ~$200B cloud/chips", "Compute + power remain the gating moat"]
+            ]
+          },
+          note: "Funding / valuation / infra figures are fast-moving — directional. The pattern is durable: capability, capital, and talent are concentrating." },
+          { sub: "What it signals for the next 6–12 months",
+            p: "Winners will be decided less by the next benchmark and more by who can <b>secure compute</b>, <b>buy missing capabilities cheaply</b> (license/acqui-hire instead of multi-year builds), and <b>operationalize agents</b> — payments + reliability — for paying enterprises. The “license, don't merge” pattern also signals labs expect antitrust scrutiny and are routing around it." }
+        ]
+      },
+      {
+        h: "6 · Policy & Risk (only what affects what you build)",
+        blocks: [
+          { sub: "EU AI Act omnibus — still the binding clock", tags:["policy"],
+            list: [
+              "High-risk (Annex III) obligations <b>delayed</b> to <b>Dec 2027</b>; product-regulated high-risk to Aug 2028.",
+              "Two <b>new prohibitions</b>: AI-generated non-consensual intimate imagery and CSAM.",
+              "Synthetic-content / transparency labeling still arrives <b>Aug 2026</b> — that's the near deadline."
+            ] },
+          { sub: "The new front: labor & legitimacy", tags:["policy"],
+            p: "Worker pushback went structural this week — strikes, gamed AI rankings, courts barring AI-justified layoffs, calls for worker say. Governance of <i>how</i> AI is rolled out is now a compliance + reputational risk, not just an HR question." },
+          { sub: "Agentic payments = a new liability surface", tags:["policy"],
+            p: "Once agents spend money, ask: who's liable when one overspends, gets defrauded, or pays a sanctioned party? KYC/AML checks, hard spend caps, and immutable audit logs move from nice-to-have to build requirement." }
+        ]
+      },
+      {
+        h: "7 · This Week's Action List",
+        checklist: [
+          "Put one paid API behind a <b>budgeted, allowlisted agent wallet</b> in a sandbox; learn <b>x402</b>.",
+          "Add <b>durable execution</b> to your top agent: checkpoint state + idempotency keys (also blocks double-payments).",
+          "Insert an explicit <b>verifier sub-agent</b> (planner → workers → verifier → merge; tests as the bar).",
+          "If you sell online, evaluate OpenAI's <b>Agentic Commerce Protocol</b> and start thinking <b>agent optimization</b>, not just SEO.",
+          "Re-test consumer workflows on <b>Gemini Spark</b> vs ChatGPT agent mode.",
+          "Demand <b>element-level citations</b> in every RAG/research prompt.",
+          "EU-facing: map your AI-generated outputs for the <b>Aug 2026</b> transparency labeling deadline.",
+          "Co-design internal AI rollouts with affected teams; report <b>augmentation</b>, not headcount."
+        ]
+      }
+    ],
+    sources: "AWS ML Blog (Bedrock AgentCore Payments, with Coinbase + Stripe) · OpenAI (Agentic Commerce Protocol; AWS partnership) · Axios (ChatGPT Ads; Karpathy) · TechCrunch / CNBC (Karpathy → Anthropic) · VentureBeat (agent reliability rebuild; AWS/Visa blueprints) · StartupHub.ai (four-lab consolidation) · Crunchbase News (funding / run-rate) · unrot.co & crescendo.ai (May 30–31 roundups: Gemini Spark live, ByteDance infra, OpenAI consulting, labor conflicts) · Global Policy Watch / Inside Privacy (EU AI Act omnibus) · arXiv (MAS-Orchestra / MASBENCH; CiteVQA). Fast-moving funding/infra figures are directional."
+  },
+
+  /* ===================== DAILY — Sun May 31 ===================== */
+  {
+    id: "2026-05-31-daily",
+    type: "daily",
+    week: "Week of May 31 – Jun 6, 2026",
+    title: "Daily Briefing — Sunday, May 31",
+    dateLabel: "Sunday, May 31, 2026",
+    sortDate: "2026-05-31",
+    tldr: [
+      "<b>Agents just got wallets.</b> AWS launched <b>Bedrock AgentCore Payments</b> (preview, built with Coinbase + Stripe) — agents autonomously pay for APIs, MCP servers, even other agents via <b>stablecoin micropayments</b> with budget guardrails. It lands alongside OpenAI's <b>Agentic Commerce Protocol</b> + ChatGPT Ads Manager. The agent economy now has rails.",
+      "<b>Gemini Spark went live</b> (May 29) for US AI Ultra subscribers — last Sunday's call that Spark is the most direct consumer-agent challenge to ChatGPT is now testable.",
+      "<b>The AI-and-work fight broke into the open</b> across four jurisdictions in one week (Wikipedia strike, Amazon staff gaming an internal AI ranking, Chinese courts barring AI-justified layoffs, a UK push for worker say).",
+      "<b>Reality check:</b> &lt;2% of enterprises run agents at full production scale — the blocker is reliability and integration, not model IQ."
+    ],
+    sections: [
+      { h: "What changed today",
+        blocks: [
+          { sub: "Agents that transact", tags:["tool","money","model"],
+            p: "AWS opened a preview of <b>Bedrock AgentCore Payments</b>, built with <b>Coinbase and Stripe</b>: agents can instantly pay for web content, APIs, MCP servers, and even other agents, with <b>stablecoin support</b> that makes sub-cent microtransactions viable and <b>configurable spending guardrails</b> (budgets, per-transaction limits). It arrives the same week OpenAI's <b>Agentic Commerce Protocol</b> and self-serve <b>ChatGPT Ads Manager</b> expanded, and AWS + Visa published agent-coordination blueprints.",
+            why: "Money was autonomy's last missing loop. Once an agent can pay, it can chain paid tools, data, and sub-agents with no human in the billing path — and your customer increasingly becomes <i>another agent</i>. The threat model shifts from <i>what can it say</i> to <i>what can it spend</i>.",
+            doIt: "Before giving any agent a wallet, set three limits like a corporate card: a hard total budget, a per-transaction cap, and an <b>allowlist</b> of payable endpoints — plus human approval above a threshold. Learn the term <b>x402</b> (HTTP's old “402 Payment Required”, reborn for machine-to-machine payments)." },
+          { sub: "Gemini Spark ships — prediction check", tags:["model","tool"],
+            p: "A week after I/O, <b>Gemini Spark</b> quietly went live (May 29) for US Google AI Ultra subscribers — a personal agent that reasons across your connected apps, acts on your behalf, and runs in the background.",
+            why: "Last Sunday we called Spark the most direct consumer-agent challenge to ChatGPT. It's now live, so the real question opens: does Google's ambient distribution beat ChatGPT's mindshare?",
+            doIt: "Ultra subscriber? Give Spark one recurring job (inbox triage + draft replies) and race it against ChatGPT's agent mode; note exactly where each breaks — that gap is your edge for now." },
+          { sub: "The work fight goes public", tags:["policy","money"],
+            p: "In one week the AI-and-labor conflict surfaced across four jurisdictions: Wikipedia editors organizing a strike over Wikimedia layoffs, Amazon staff reportedly gaming an internal AI performance ranking into uselessness, Chinese courts enforcing rules that bar AI-justified layoffs, and a UK thinktank pushing for workers to get a say in AI rollouts.",
+            why: "Saturday's data showed no unemployment wave yet — but the friction is moving to <i>legitimacy</i>: how AI gets imposed. The binding constraint on deployment is becoming organizational and political, not technical.",
+            doIt: "Rolling out AI internally? Co-design with the affected team and report augmentation metrics, not headcount cuts — top-down mandates are now visibly producing backlash and gaming." },
+          { sub: "The reliability reality check", tags:["research","tool"],
+            p: "Even as agents get wallets, industry surveys put <b>fewer than 2%</b> of enterprises running agents at full production scale, with <b>46%</b> naming integration with existing systems as the top blocker. The emerging consensus: reliability is a <i>systems-engineering</i> problem — long-running agents must survive crashes, persist state, recover, and stay governed.",
+            why: "Capability isn't the bottleneck; <b>durable execution</b> is. That's the chasm between a slick demo and something you'd trust with a budget (see today's first item)." }
+        ]
+      },
+      { h: "Sharpen your edge",
+        blocks: [
+          { sub: "Make your agents resumable, not just smart",
+            p: "The single biggest reason production agents survive and demos don't is <b>durable execution</b>. Three moves: (1) <b>persist each step's result</b> to durable storage before starting the next; (2) make every external action <b>idempotent</b> — attach an idempotency key so a retry can't double-charge or double-send; (3) on restart, <b>replay from the last checkpoint</b>, not from scratch. Bonus, now that agents can spend money (today's lead): idempotency keys are exactly what stop a crashed-then-retried agent from paying twice." }
+        ]
+      }
+    ],
+    sources: "AWS ML Blog (Bedrock AgentCore Payments) · OpenAI (Agentic Commerce Protocol) · Axios (ChatGPT Ads) · VentureBeat (agent reliability; AWS/Visa) · unrot.co + crescendo.ai (May 30–31 roundups: Gemini Spark live, labor conflicts). Fast-moving items flagged directional."
+  },
+
   /* ===================== WEEKLY SUMMARY ===================== */
   {
     id: "2026-05-30-weekly",
