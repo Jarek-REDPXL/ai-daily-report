@@ -19,9 +19,9 @@ venv/
 
 # Design feedback loop (dev-only tooling — not part of the site)
 shots/
-shots.py
-shot_zoom.py
+shot*.py
 functest.py
+reports_probe.py
 
 # stray archives
 ai-daily-report.tar.gz
