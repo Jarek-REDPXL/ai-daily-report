@@ -19,6 +19,51 @@
    ============================================================ */
 window.AI_EDGE_REPORTS = [
 
+  /* ===================== DAILY — Mon Jun 1 ===================== */
+  {
+    id: "2026-06-01-daily",
+    type: "daily",
+    week: "Week of May 31 – Jun 6, 2026",
+    title: "Daily Briefing — Monday, June 1",
+    dateLabel: "Monday, June 1, 2026",
+    sortDate: "2026-06-01",
+    tldr: [
+      "<b>The agent economy's meter starts running — on YOU.</b> GitHub Copilot flips <b>all plans to usage-based billing today</b> (June 1): premium-request units are gone, replaced by <b>AI Credits</b> burned by token usage at each model's API rate. Yesterday agents got wallets; today developers got an inference meter. Same force, pointed inward.",
+      "<b>The number to internalize:</b> an agent that's 85% reliable <i>per step</i> is only <b>~27% reliable over 8 steps</b> (0.85⁸). That compounding-error math — not model IQ — is why only an estimated <b>11–14%</b> of agent pilots reach production. Yesterday's “&lt;2% at full scale” has a mechanism.",
+      "<b>The frontier took a breath.</b> No new flagship this weekend; the action is open-weight, where <b>DeepSeek V4 Pro</b> leads the agentic open tier and the best open model now trails the best closed one by ~4 task-points at ~30× lower price. Capability is commoditizing; <b>cost-per-task is the new battleground</b>.",
+      "<b>Thread update — a prediction shifted:</b> the EU's synthetic-content labeling deadline we flagged as “Aug 2026” has been pushed to <b>Dec 2, 2026</b> under the Digital Omnibus. The near clock moved; don't deprioritize, but re-plan."
+    ],
+    sections: [
+      { h: "What changed today",
+        blocks: [
+          { sub: "Copilot's metered era begins — what flat-rate hid is now on your invoice", tags:["tool","money"],
+            p: "As of <b>today</b>, every GitHub Copilot plan moves to <b>usage-based billing</b>. Premium-request units (PRUs) are replaced by <b>AI Credits</b> consumed by <b>token usage</b> — input, output, and cached — at each model's published API rate. GitHub's stated rationale: Copilot became an <i>agentic</i> platform running long multi-step sessions, and absorbing that inference cost under a flat fee was “no longer sustainable.” Developer projections circulating since the May 30 reporting are alarming but self-reported and <b>directional</b> — e.g., one team's estimate jumping from $29→$750/mo, another $50→$3,000 — driven mostly by heavy agent-mode loops on premium models.",
+            why: "This is the same shift as yesterday's agent-wallets story, turned around: once work is done by token-hungry agents instead of autocomplete, <b>compute is the product and the price is variable</b>. You're no longer buying “Copilot” — you're buying a monthly allowance against an inference bill. The winners won't be whoever has the smartest model; they'll be whoever wastes the fewest tokens per unit of work.",
+            doIt: "Three moves today: (1) Set a <b>hard spend cap</b> — Copilot lets you set it to <b>$0</b>, which makes a surprise bill literally impossible (it just stops when included credits run out). (2) <b>Route by difficulty</b>: keep a cheap/fast model as default and escalate to a premium model only for genuinely hard steps — don't run Opus-class reasoning on a one-line edit. (3) Start <b>measuring cost-per-task</b>, not cost-per-seat; that ratio is now your real efficiency metric." },
+          { sub: "The reliability math that explains the production chasm", tags:["research","skill"],
+            p: "Yesterday's stat — &lt;2% of enterprises run agents at full production scale — got a clean mechanism this week. If an agent succeeds <b>85% of the time at each step</b>, an 8-step workflow completes correctly only <b>~27%</b> of the time (0.85⁸ ≈ 0.272). Roughly three of four runs break <i>somewhere</i>. That's why analyses put only <b>~11–14%</b> of agent pilots into real production. A related failure mode: <b>memory degradation</b> — over a long task the agent's grip on the <i>original</i> requirements erodes as early constraints get summarized away, so the ending is locally coherent but globally off-spec.",
+            why: "Compounding error means reliability is <b>multiplicative, not additive</b>. Shaving steps and raising per-step accuracy both pay off geometrically: cut the chain from 8 steps to 4 at the same 85% and you jump from 27%→52%; push each step to 95% over 8 steps and you hit 66%. This reframes agent design as an <i>error-budget</i> problem, like SRE.",
+            doIt: "Set a target end-to-end success rate, then back out the per-step bar you need (for 90% over 6 steps you need ~98.3% per step — usually unreachable without verification gates). Practically: <b>shorten chains</b>, add a <b>verifier</b> after fragile steps, and <b>re-inject the original spec</b> at checkpoints so memory drift can't silently move the goalposts." },
+          { sub: "Frontier pause, open-weight surge — the map shifts toward cost", tags:["model"],
+            p: "No new flagship dropped over the weekend; late-May cadence has clearly slowed as labs productize agents rather than ship models. The live action is open-weight: roughly <b>nine frontier-class open models in six weeks</b>, with <b>DeepSeek V4 Pro</b> (MIT-licensed, 1M context) topping the agentic open tier and <b>Qwen 3.6</b> close behind on coding. The headline ratio making the rounds: the best open model now trails the best closed flagship by about <b>4 task-points at ~30× lower token price</b> — directional, but the direction is unmistakable.",
+            why: "When capability converges, <b>price and openness become the differentiators</b> — which is exactly why metered billing (today's lead) bites: if a frontier model costs 30× an open one for ~4 points, paying premium rates on easy tasks is pure waste. Last week we called integration + reliability the real moat; add <b>token economics</b> to that list.",
+            doIt: "Build a two-tier routing policy now: a cheap open-weight (or Flash-class) model as the workhorse, a frontier model reserved for the hard 10–20% of steps. Benchmark <i>your</i> tasks, not leaderboards — a 4-point gap may be invisible on your workload and a 30× cost gap never is." },
+          { sub: "Thread update: the EU's “Aug 2026” transparency clock moved to December", tags:["policy"],
+            p: "Correction to our own running call. The weekly flagged Aug 2, 2026 as the near deadline for synthetic-content/AI-output transparency labeling. Under the <b>Digital Omnibus</b> provisional agreement, that marking obligation is <b>postponed to Dec 2, 2026</b> (and the new prohibition on AI-generated non-consensual intimate imagery + CSAM also takes effect Dec 2, 2026). High-risk Annex III obligations remain pushed to Dec 2027.",
+            why: "Deadlines moving is itself signal: the binding near-term constraint slipped ~4 months, which buys breathing room but also tells you the regime is still in flux — building to a moving target. The labeling requirement is <i>delayed, not dead</i>.",
+            doIt: "If you ship AI-generated content into the EU, keep machine-readable provenance/labeling on the roadmap but re-baseline to <b>Dec 2, 2026</b>. Don't quietly drop it — re-confirm at final adoption (expected to formalize in the coming weeks)." }
+        ]
+      },
+      { h: "Sharpen your edge",
+        blocks: [
+          { sub: "Right-size the model to the task — and prove it with a number",
+            p: "Today's billing flip makes this a money skill, not a hobby. The pattern is <b>model routing</b>: classify each step's difficulty and send only the hard ones to the expensive model. A cheap, reliable router beats a giant model run on everything. Concrete prompt-level move — make the model self-triage before it works: <code>First rate this task's difficulty 1–5 and name the single hardest sub-step. If ≤2, solve it directly and briefly. If ≥4, outline a plan first, then execute step-by-step with a check after each step.</code> Pair it with one metric you start logging today: <b>cost-per-completed-task</b> (total tokens × rate ÷ tasks that passed verification). Optimize that ratio and you'll cut spend without cutting capability — because most steps never needed the flagship in the first place." }
+        ]
+      }
+    ],
+    sources: "GitHub Blog (Copilot usage-based billing, AI Credits, June 1) · TechCrunch (May 30: Copilot token-billing backlash) · Visual Studio Magazine / Windows Forum (cost-projection reactions — directional, self-reported) · Inovabeing & Stanford Digital Economy Lab (agent reliability gap; pilot-to-production rates) · WhatLLM / digitalapplied / llm-stats (open-weight leaderboard: DeepSeek V4 Pro, Qwen 3.6; frontier cadence) · Global Policy Watch / EU Commission (Digital Omnibus: transparency labeling → Dec 2, 2026). Fast-moving cost and benchmark figures flagged directional."
+  },
+
   /* ===================== WEEKLY SUMMARY — Issue #2 ===================== */
   {
     id: "2026-05-31-weekly",
