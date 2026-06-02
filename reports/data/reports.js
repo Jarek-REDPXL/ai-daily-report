@@ -19,6 +19,51 @@
    ============================================================ */
 window.AI_EDGE_REPORTS = [
 
+  /* ===================== DAILY — Tue Jun 2 ===================== */
+  {
+    id: "2026-06-02-daily",
+    type: "daily",
+    week: "Week of May 31 – Jun 6, 2026",
+    title: "Daily Briefing — Tuesday, June 2",
+    dateLabel: "Tuesday, June 2, 2026",
+    sortDate: "2026-06-02",
+    tldr: [
+      "<b>Open-weight frontier doubled down in one day.</b> China's <b>MiniMax M3</b> (Jun 1) claims the first open model to fuse frontier coding, a <b>1M-token context</b>, and native image/video — built on a new <b>sparse-attention</b> design that cuts per-token compute at 1M context to ~1/20th. API live; weights in ~10 days.",
+      "<b>NVIDIA fired back the same day:</b> <b>Nemotron 3 Ultra</b> (~500–550B MoE, ~50B active) ships open weights <i>plus training recipes and data</i> — the best US open model on the intelligence index, yet reviewers say it still trails the Chinese open pack.",
+      "<b>Prediction check — it played out:</b> GitHub Copilot's move to usage-based billing (flagged May 30) <b>went live Jun 1</b> as “AI Credits” (1 credit = $0.01, token-metered, per-user budgets). Developer “meter shock” is already loud.",
+      "<b>Consolidation continues:</b> OpenAI acqui-hired personal-finance startup <b>Hiro Finance</b> — its reported <b>7th</b> acquisition of 2026, stacking vertical expertise.",
+      "<b>Learn today:</b> the <b>“Rule of Two”</b> for agent security — the single most important mental model now that agents can spend money <i>and</i> drive a desktop."
+    ],
+    sections: [
+      { h: "What changed today",
+        blocks: [
+          { sub: "MiniMax M3 — and why “sparse attention” is the real headline", tags:["model","research"],
+            p: "MiniMax released <b>M3</b> (Jun 1): an open-weight model positioned as the first to combine frontier-grade agentic coding, a <b>1M-token context</b>, and native image/video understanding — even operating a desktop. It reports <b>~59% on SWE-bench Pro</b> (edging GPT-5.5 / Gemini 3.1 Pro, approaching Opus 4.7) at <b>~$0.60/M input</b>. API is live now; open weights + a technical report land within ~10 days. The architecture is the story: <b>MiniMax Sparse Attention (MSA)</b> reportedly cuts per-token compute at 1M context to ~<b>1/20th</b> of the prior generation, with &gt;9× faster prefill and &gt;15× faster decode.",
+            why: "Standard attention costs scale ~quadratically with context, so “1M tokens” has been technically possible but economically silly. <b>Sparse attention</b> — letting each token attend to a learned subset instead of everything — is what makes million-token context <i>cheap enough to actually use</i>. When long context gets cheap, the design default flips: you can shove an entire repo, deal room, or codebase into the prompt instead of building a fragile RAG pipeline to chunk it.",
+            doIt: "Take one workflow where you currently retrieve-and-chunk (a long contract, a whole service's code) and re-test it as a single long-context call on a cheap long-context model. Measure quality vs. your RAG setup — many mid-size corpora no longer need retrieval. (Benchmarks here are vendor-reported; treat as directional until the weights and third-party evals land.)" },
+          { sub: "Nemotron 3 Ultra — NVIDIA sells the recipe, not just the model", tags:["model","money"],
+            p: "At Computex (Jun 1), NVIDIA announced <b>Nemotron 3 Ultra</b>: a ~500–550B Mixture-of-Experts model (~50B active/token), shipping <b>open weights plus the training recipes and much of the data</b>. Artificial Analysis pegs it at <b>48</b> on its Intelligence Index — top among US open-weight models — at 300+ tokens/sec. Reviewers' verdict: best US open model, still a step behind the Chinese open pack (MiniMax, DeepSeek, Kimi).",
+            why: "NVIDIA giving away a frontier-ish model <i>and its training playbook</i> is classic “commoditize your complement”: the cheaper and more open models become, the more GPUs everyone buys to run and fine-tune them. The second-order read is geopolitical — two open-weight frontier drops in one day, and the US flagship still trails China's. The open-weight race is now a national-competitiveness storyline, not just a price war.",
+            doIt: "If you self-host or fine-tune, the value isn't only the weights — read NVIDIA's published <b>training recipe</b>. Recipes + data transfer transferable know-how (data mix, curricula, eval harnesses) you can apply to your own smaller models." },
+          { sub: "Copilot “AI Credits” go live — the per-seat era is ending", tags:["tool","money"],
+            p: "As flagged May 30, GitHub Copilot's shift to usage-based billing <b>landed Jun 1</b>. Every plan now includes a monthly pool of <b>AI Credits</b> (1 credit = $0.01), metered on input/output/cached tokens at each model's API rate; admins get budgets at enterprise, cost-center, and <b>per-user</b> levels. Completions and Next Edit Suggestions stay unlimited; everything agentic is metered. Predictable backlash (“meter shock”) is underway.",
+            why: "This confirms last week's thesis: flat per-seat pricing can't survive agentic workloads where one heavy user can out-consume a hundred light ones. Cost-per-task and budget governance are becoming first-class product features — exactly the instrumentation we said to build.",
+            doIt: "Before the first surprise invoice: set per-user budgets, then route routine edits to a cheap model and reserve frontier models for hard tasks. The “model router” from May 30 is now a literal billing control, not just good hygiene." },
+          { sub: "OpenAI buys vertical expertise again", tags:["money"],
+            p: "OpenAI acqui-hired <b>Hiro Finance</b>, a personal-finance startup — reportedly its <b>7th</b> acquisition of 2026, continuing the pattern of absorbing domain teams rather than building verticals in-house.",
+            why: "Extends the consolidation thread from this week's weekly: the frontier labs are assembling vertical depth (finance, health, dev tooling) via talent purchases. For the rest of us, the playbook is the opposite — the moat is the proprietary workflow and data the labs <i>can't</i> buy, not generic model wrappers they'll soon out-feature." }
+        ]
+      },
+      { h: "Sharpen your edge",
+        blocks: [
+          { sub: "The “Rule of Two” — your agent-security mental model",
+            p: "Now that agents can <b>pay</b> (last week's AgentCore Payments) and <b>drive a desktop</b> (today's M3), prompt injection stops being theoretical. The sharpest framework to internalize is Meta's <b>Agents Rule of Two</b> (building on Simon Willison's “lethal trifecta”): in a single session, an agent should satisfy at most <b>two</b> of these three — (A) ingests <b>untrusted input</b> (web pages, emails, docs), (B) has access to <b>sensitive systems/data</b>, (C) can <b>change state or communicate externally</b> (spend money, send mail, write to prod). Hold all three and a poisoned web page can quietly weaponize the agent. The discipline: if a task needs all three, <b>break the trifecta</b> — sandbox the untrusted-input step in a separate agent with no credentials and no outbound powers, then pass only sanitized, structured results to the privileged agent. Audit your own agents against this today; most “it can do everything” agents fail it." }
+        ]
+      }
+    ],
+    sources: "MarkTechPost · the-decoder · TechTimes (MiniMax M3 — vendor benchmarks flagged unverified) · Artificial Analysis · Decrypt (Nemotron 3 Ultra, Computex 2026) · GitHub Changelog + GitHub Blog (Copilot AI Credits, Jun 1) · AI funding trackers (OpenAI/Hiro Finance) · Meta AI blog + simonwillison.net (Agents Rule of Two / lethal trifecta). Fast-moving and forward-looking figures are directional."
+  },
+
   /* ===================== WEEKLY SUMMARY — Issue #2 ===================== */
   {
     id: "2026-05-31-weekly",
