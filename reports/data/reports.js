@@ -19,6 +19,65 @@
    ============================================================ */
 window.AI_EDGE_REPORTS = [
 
+  /* ===================== DAILY — Wed Jun 3 ===================== */
+  {
+    id: "2026-06-03-daily",
+    type: "daily",
+    week: "Week of May 31 – Jun 6, 2026",
+    title: "Daily Briefing — Wednesday, June 3",
+    dateLabel: "Wednesday, June 3, 2026",
+    sortDate: "2026-06-03",
+    tldr: [
+      "<b>Microsoft just declared independence from OpenAI.</b> At Build (Jun 2–3) it shipped <b>Project Polaris</b> — its own MoE coding model that replaces GPT-4 as Copilot's default by <b>August</b> — plus <b>Windows Agent Framework v1.0 (MIT-licensed)</b>, <b>Azure Agent Mesh</b>, and the <b>Agent Control Specification</b>. The OS is now an agent platform.",
+      "<b>Anthropic confidentially filed an S-1 (Jun 1)</b> — beating OpenAI to the IPO door at a ~$965B post-money. The trillion-dollar AI listing is now a question of months, not years.",
+      "<b>Trump signed a narrowed AI executive order (Jun 2)</b>: a <i>voluntary</i> 30-day government review of frontier models, plus an AI cybersecurity clearinghouse. No licensing, no mandates. Read the fine print before you assume nothing changed.",
+      "<b>MiniMax M3 (Jun 1) is the new open-weight frontier:</b> 1M-context, native multimodal, <b>tops open-weight SWE-Bench Pro at 59%</b>, beats GPT-5.5 / Gemini 3.1 Pro on coding. The architecture trick — <b>MiniMax Sparse Attention</b> — uses ~1/20 the compute and runs input ~9× faster.",
+      "<b>Learn today:</b> policy-as-code for agents (the Agent Control Spec pattern) and how to survive silent model swaps under your feet."
+    ],
+    sections: [
+      { h: "What changed today",
+        blocks: [
+          { sub: "Microsoft owns the agent stack — and cuts the OpenAI cord", tags:["tool","model","money"],
+            p: "Build 2026 was the most consequential vendor event of the year so far. <b>Project Polaris</b> — Microsoft's in-house mixture-of-experts coding model — replaces GPT-4 as the default in GitHub Copilot by <b>August 2026</b>, with a 3-month opt-back-to-GPT-4 fallback. <b>Windows Agent Framework v1.0</b> (shipped April 2) is now <b>MIT-licensed</b> and explicitly model-agnostic — it runs Claude, Gemini, MAI, or anything else, across local Windows, Windows 365 Cloud PCs, and Azure Arc edges. <b>Azure Agent Mesh</b> (GA Q4 2026) federates execution across those targets. <b>Aion 1.0 Plan</b> — a 14B reasoning + tool-calling model with 32K context — ships in-box with Windows for local inference. And the <b>Agent Control Specification</b> is an open YAML policy spec for input/LLM/state/tool/output checkpoints, with day-one plugins for LangChain, OpenAI Agents SDK, Anthropic Agents SDK, AutoGen, CrewAI, Semantic Kernel, and MCP.",
+            why: "This is a strategic pivot, not a product launch. Microsoft is hedging across every layer: it has its own model (Polaris/MAI), it open-sources the runtime so Claude/Gemini run natively on Windows anyway, and it standardizes the <i>governance</i> layer so it owns the control plane whichever model wins. \"Operating system as agent host\" is the bet — and it's specifically designed to survive an OpenAI breakup. Last week's thread (frontier capital pooling around a few names) just got more complex: the value is moving into the runtime + governance layer, where Microsoft, AWS, and Google are all racing.",
+            doIt: "Three concrete moves: (1) If you ship via GitHub Copilot, plan an evaluator sweep <b>before August</b> — your prompts have been tuned to GPT-4 quirks and Polaris will behave differently. (2) Read the <b>Agent Control Specification</b> repo on github.com/microsoft and adopt its YAML policy shape even if you stay on LangChain or a custom stack — it's the closest thing to a portable agent-policy standard. (3) If you build on Windows, prototype against <b>Aion 1.0 Plan</b> for offline / privacy-sensitive paths." },
+          { sub: "Anthropic beats OpenAI to the IPO door", tags:["money"],
+            p: "Anthropic <b>confidentially submitted a draft S-1 to the SEC on June 1</b>, following last week's $65B Series H that lifted post-money to ~$965B. Revenue run-rate is reportedly ~$47B as of May (vs ~$10B a year prior — directional but corroborated). OpenAI is rumored to be targeting a Q4 2026 listing near $1T.",
+            why: "Filing first is a tactical land-grab: Anthropic captures the \"pure-play AI IPO\" narrative, sets the comparable, and locks in capital before OpenAI can. The bigger signal — combined with Microsoft's Polaris move today — is that the OpenAI-centric universe is decomposing in real time. Capital, distribution, and models are all routing around Sam.",
+            doIt: "If you've been treating OpenAI as a default substrate, write down what would break if pricing, model behavior, or terms changed mid-quarter. Then pick a second-source model and ship one workload on it this week — even at a small percentage of traffic. Optionality is the cheapest insurance you can buy right now." },
+          { sub: "Trump's narrowed AI executive order — read it before you celebrate or panic", tags:["policy"],
+            p: "Signed Tuesday: a <b>voluntary</b> regime where labs can engage the government to classify a model as a \"covered frontier model\" and offer <b>up to 30 days</b> of pre-release access to selected federal partners. Down from a planned 90 days. The order <b>explicitly forbids</b> creating any licensing, preclearance, or permitting requirement. It also directs federal agencies to build benchmarks for model cyber capability and stand up an <b>AI Cybersecurity Clearinghouse</b> for vulnerability sharing.",
+            why: "It looks toothless — and structurally it is — but it does two real things. First, it normalizes pre-release government review as a US industry posture (matters when the next administration tightens the screws). Second, it pulls cyber benchmarks into federal procurement, which is a back door to <i>de facto</i> standards: if your model wants government contracts, it'll be measured by them. Pair this with last week's read on the EU AI Act August 2 transparency deadline — the US has moved from regulation-by-rule to regulation-by-benchmark.",
+            doIt: "If you build at frontier scale, get on the cyber-evaluation list now while terms are soft. If you don't, the practical to-do is to start citing cyber-eval scores in your security review docs — buyers will start asking within 90 days." },
+          { sub: "MiniMax M3 — the open-weight frontier reset", tags:["model","research"],
+            p: "China's MiniMax dropped <b>M3</b> on June 1: open-weight (weights + tech report on HF/GitHub within ~10 days), 1M-token context, native multimodal, and a new architecture called <b>MiniMax Sparse Attention (MSA)</b> that only attends to relevant data blocks — reportedly ~1/20 the compute and >9× faster on input processing. On <b>SWE-Bench Pro</b> it scores <b>59.0%</b>, beating GPT-5.5 and Gemini 3.1 Pro and approaching Claude Opus 4.7. It tops the open-weight coding leaderboard.",
+            why: "Two compounding edges in one release. First, the benchmark: open-weight just caught the second-tier frontier on coding, which is the most commercially valuable axis. Second, the architecture: sparse attention has been theoretical for years; MSA is the first 1M-context production model where the math actually shakes out. If MSA-style attention generalizes, the next 12 months get cheaper at long context across the board — and \"give the model your whole repo / case file / customer history\" becomes a default pattern, not a luxury. This continues the thread we've tracked since DeepSeek's price cut: the open-weight tier keeps eating the proprietary middle.",
+            doIt: "If you have a real >100K-context use case (codebase Q&A, contract review, multi-doc research), benchmark M3 against your incumbent this week — wait for HF weights if you self-host, hit the API today. Mark MSA as a concept to track: papers will start appearing within a quarter." },
+          { sub: "Anthropic Mythos expands via Glasswing", tags:["research"],
+            p: "Anthropic extended access to its cyber-capable <b>Mythos</b> model to ~150 more organizations across 15+ countries via <b>Project Glasswing</b>, reaching power, water, healthcare, communications, and hardware sectors. Last weekend's report flagged 10,000+ high/critical vulnerabilities surfaced in the first 30 days.",
+            why: "Dual-use is now operational. The same model is offensive enough to find criticality bugs at scale <i>and</i> defensive enough to be trusted inside utility operators. The market that opens here — AI-native vulnerability discovery as a managed service — is going to consolidate fast.",
+            doIt: "If you operate or audit critical infrastructure, the conversation with your CISO this week should be: are we on Glasswing or an equivalent? If you're a security vendor, your next 6 months are about coexistence with these models, not competition." }
+        ]
+      },
+      { h: "Sharpen your edge",
+        blocks: [
+          { sub: "Policy-as-code for your agents — adopt the pattern before the standard hardens",
+            p: "The Agent Control Spec's real insight is that <b>agent permissions should be a versioned YAML artifact</b> — not scattered across prompt strings, code, and config. Steal the pattern today, even if you don't use the spec:",
+            list: [
+              "Define one <code>agent-policy.yaml</code> per agent with five sections: <b>input</b> (allowed prompt sources + content filters), <b>llm</b> (model + max effort/tokens), <b>state</b> (what persists, where, retention), <b>tools</b> (allowlist + per-tool spend/rate caps), <b>output</b> (PII filters, citation requirements).",
+              "Make it the <b>only</b> source of truth for permissions — your code reads from it, your reviewer reviews it, your auditor diffs it across deploys.",
+              "Add a <b>kill switch</b>: a single boolean that drops the agent into read-only / approve-everything mode.",
+              "Bonus tie-in to yesterday's payments thread: encode your <b>x402 spend caps and idempotency requirements</b> in the same YAML, so finance reviews a file instead of a screenshot."
+            ],
+            note: "Why this matters: the moment your agent crosses to production, the question \"what is this thing allowed to do?\" must have a one-line answer. Right now, for most teams, it doesn't. Fix it before someone in compliance asks." },
+          { sub: "Bonus tip — survive a silent model swap",
+            p: "Copilot users will get auto-migrated from GPT-4 to Polaris this summer. The same kind of swap will hit you on every managed platform eventually. Protect yourself: pin every production prompt to a <b>frozen eval set</b> of 20–50 golden cases with pass/fail criteria, run it on every model version bump, and gate rollout on the diff. Five minutes of CI vs. a week of \"why did the agent get weirder?\" — choose accordingly." }
+        ]
+      }
+    ],
+    sources: "Microsoft Build 2026 (devblogs.microsoft.com, news.microsoft.com) · TechCrunch (Agent Control Spec) · ChatForest / aitoolsrecap (Build recap) · CNBC + TechCrunch + Anthropic (S-1 filing) · whitehouse.gov + NPR + CNBC (Trump EO Jun 2) · MiniMax research blog + the-decoder + The Information (M3) · Investing.com (Mythos/Glasswing expansion). Revenue and SWE-Bench figures are directional."
+  },
+
   /* ===================== WEEKLY SUMMARY — Issue #2 ===================== */
   {
     id: "2026-05-31-weekly",
