@@ -23,7 +23,7 @@ window.AI_EDGE_REPORTS = [
   {
     id: "2026-06-06-daily",
     type: "daily",
-    week: "Week of May 31 – Jun 6, 2026",
+    week: "Week of Jun 1 – 7, 2026",
     title: "Daily Briefing — Saturday, June 6",
     dateLabel: "Saturday, June 6, 2026",
     sortDate: "2026-06-06",
@@ -84,7 +84,7 @@ window.AI_EDGE_REPORTS = [
   {
     id: "2026-06-05-daily",
     type: "daily",
-    week: "Week of May 31 – Jun 6, 2026",
+    week: "Week of Jun 1 – 7, 2026",
     title: "Daily Briefing — Friday, June 5",
     dateLabel: "Friday, June 5, 2026",
     sortDate: "2026-06-05",
@@ -125,7 +125,7 @@ window.AI_EDGE_REPORTS = [
   {
     id: "2026-06-04-daily",
     type: "daily",
-    week: "Week of May 31 – Jun 6, 2026",
+    week: "Week of Jun 1 – 7, 2026",
     title: "Daily Briefing — Thursday, June 4",
     dateLabel: "Thursday, June 4, 2026",
     sortDate: "2026-06-04",
@@ -179,7 +179,7 @@ window.AI_EDGE_REPORTS = [
   {
     id: "2026-06-03-daily",
     type: "daily",
-    week: "Week of May 31 – Jun 6, 2026",
+    week: "Week of Jun 1 – 7, 2026",
     title: "Daily Briefing — Wednesday, June 3",
     dateLabel: "Wednesday, June 3, 2026",
     sortDate: "2026-06-03",
@@ -214,7 +214,7 @@ window.AI_EDGE_REPORTS = [
   {
     id: "2026-06-02-daily",
     type: "daily",
-    week: "Week of May 31 – Jun 6, 2026",
+    week: "Week of Jun 1 – 7, 2026",
     title: "Daily Briefing — Tuesday, June 2",
     dateLabel: "Tuesday, June 2, 2026",
     sortDate: "2026-06-02",
@@ -253,7 +253,7 @@ window.AI_EDGE_REPORTS = [
   {
     id: "2026-06-01-daily",
     type: "daily",
-    week: "Week of May 31 – Jun 6, 2026",
+    week: "Week of Jun 1 – 7, 2026",
     title: "Daily Briefing — Monday, June 1",
     dateLabel: "Monday, June 1, 2026",
     sortDate: "2026-06-01",
@@ -293,7 +293,7 @@ window.AI_EDGE_REPORTS = [
   {
     id: "2026-05-31-weekly",
     type: "weekly",
-    week: "Week of May 31 – Jun 6, 2026",
+    week: "Week of May 25 – 31, 2026",
     title: "Weekly Briefing — Issue #2",
     dateLabel: "Week of May 25 – May 31, 2026",
     sortDate: "2026-05-31",
@@ -430,7 +430,7 @@ window.AI_EDGE_REPORTS = [
   {
     id: "2026-05-31-daily",
     type: "daily",
-    week: "Week of May 31 – Jun 6, 2026",
+    week: "Week of May 25 – 31, 2026",
     title: "Daily Briefing — Sunday, May 31",
     dateLabel: "Sunday, May 31, 2026",
     sortDate: "2026-05-31",
@@ -470,165 +470,11 @@ window.AI_EDGE_REPORTS = [
     sources: "AWS ML Blog (Bedrock AgentCore Payments) · OpenAI (Agentic Commerce Protocol) · Axios (ChatGPT Ads) · VentureBeat (agent reliability; AWS/Visa) · unrot.co + crescendo.ai (May 30–31 roundups: Gemini Spark live, labor conflicts). Fast-moving items flagged directional."
   },
 
-  /* ===================== WEEKLY SUMMARY ===================== */
-  {
-    id: "2026-05-30-weekly",
-    type: "weekly",
-    week: "Week of May 24 – 30, 2026",
-    title: "Weekly Briefing — Issue #1",
-    dateLabel: "Week of May 24 – May 30, 2026",
-    sortDate: "2026-05-30",
-    pdf: "reports/pdf/weekly-ai-report-2026-05-30.pdf",
-    tldr: [
-      "<b>Anthropic released Claude Opus 4.8</b> (May 28) with <b>Dynamic Workflows</b> — one agent can plan and run up to <b>1,000 parallel subagents</b>, do codebase-scale migrations, then self-verify. Fast mode is 3× cheaper.",
-      "<b>Anthropic became the world's most valuable AI startup</b> — a <b>$65B Series H</b> at ~<b>$965B</b> (May 27), passing OpenAI and nearing $1T.",
-      "<b>Google I/O 2026</b> (May 19) went all-in on agents: <b>Gemini 3.5 Flash</b>, plus <b>Spark</b> (a 24/7 personal agent) and <b>Antigravity</b>, an agent-first dev platform.",
-      "<b>The industry pivoted to “the agent.”</b> Three major labs changed their default model within a month. The battleground is autonomous, long-running, multi-agent work — not chat.",
-      "<b>Learn this week:</b> context engineering, sub-agent orchestration, and writing <b>Skills</b> (markdown runbooks for agents)."
-    ],
-    sections: [
-      {
-        h: "1 · Model Releases & Updates",
-        blocks: [
-          { sub: "Claude Opus 4.8 + Dynamic Workflows", tags:["model","tool"],
-            p: "Anthropic shipped Opus 4.8 on <b>May 28</b>, just 41 days after 4.7.",
-            list: [
-              "<b>Dynamic Workflows (research preview):</b> Claude plans a large task, spins up <b>hundreds of parallel subagents</b> (capped at 1,000) in one session, runs them longer, then <b>verifies its own outputs</b>. Demoed codebase-scale migrations across 100,000s of lines — kickoff to merge — using the test suite as the bar.",
-              "<b>Effort controls:</b> a new control next to the model selector dials how much reasoning effort Claude spends.",
-              "<b>Cheaper fast mode:</b> ~2.5× speed, now <b>3× cheaper</b> than on prior models. Pricing unchanged (~$5 / $25 per 1M tokens).",
-              "GA in GitHub Copilot day one; positioned with better honesty / less deception."
-            ],
-            why: "This is the clearest sign yet that the unit of work is shifting from “a chat turn” to “a supervised fleet of agents.” Your job becomes <i>orchestration + verification</i>, not line-by-line prompting.",
-            doIt: "In Claude Code, try a real migration/refactor with planning enabled and watch the decomposition into subagents. Use <b>low effort</b> for routine edits, <b>high</b> for architecture."
-          },
-          { sub: "GPT-5.5 Instant becomes ChatGPT's default", tags:["model"],
-            p: "On May 5, OpenAI made <b>GPT-5.5 Instant</b> the default across every ChatGPT tier, replacing GPT-5.3. Reported to cut hallucinated claims by 50%+ in some high-stakes scenarios.",
-            doIt: "Re-test saved prompts/automations against the new default — behavior and refusal boundaries shift on model swaps."
-          },
-          { sub: "Google's Gemini: 3.5 Flash + Spark + Omni", tags:["model"],
-            p: "At I/O (May 19) Google launched <b>Gemini 3.5 Flash</b> (beats 3.1 Pro on coding/agentic/multimodal, ~4× faster output, ~⅓ the price of comparable frontier models), <b>Omni</b> (any-input→any-output multimodal), and <b>Spark</b> — a 24/7 personal agent that acts across your digital life. 3.5 Pro arrives next month.",
-            why: "Google is using distribution (billions of devices) to make agents ambient, and competing on <i>price/speed</i> rather than chasing the top of the benchmark. Spark is the most direct consumer-agent challenge to ChatGPT yet."
-          },
-          { sub: "DeepSeek makes its price cut permanent", tags:["model","money"],
-            p: "DeepSeek made its <b>75% price cut on V4-Pro permanent</b> (May 24) — frontier-class Chinese reasoning at roughly a quarter the cost of equivalent OpenAI/Anthropic tokens.",
-            why: "Open-weight + ultra-cheap keeps brutal downward pressure on inference pricing. Factor it into any build-vs-buy math."
-          },
-          { sub: "Where the models stand (selected benchmarks)", tags:["research"],
-            table: {
-              head: ["Benchmark / area", "Leader", "Note"],
-              rows: [
-                ["Scientific reasoning (GPQA Diamond)", "Gemini 3.1 Pro — 94.3%", "Top scientific reasoner"],
-                ["SWE-bench Pro (coding)", "GLM-5.1 (Z.AI) — 58.4%", "First <b>open-weight</b> model to hit #1 (Apr 7), since contested"],
-                ["Reasoning leaderboards", "Claude Opus 4.8 (93), Qwen3.7 Max (92)", "Best open-weight: DeepSeek V4 Pro (87)"],
-                ["Research / grounded synthesis", "GPT-5.5 Pro", "Retrieval + attribution + multi-doc synthesis"]
-              ]
-            },
-            note: "Leaderboard scores vary by source and methodology — treat as directional. “Claude Mythos Preview” tops some boards but is a restricted preview."
-          }
-        ]
-      },
-      {
-        h: "2 · New Techniques, Skills & Best Practices",
-        intro: "This is the section to actually study — it's where your day-to-day leverage comes from.",
-        blocks: [
-          { sub: "“Skills” — the highest-leverage thing to learn now", tags:["skill"],
-            p: "A <b>Skill</b> is a markdown file an agent loads for a specific task — an <b>onboarding doc / runbook for an AI</b>. Encode the procedure once; the agent follows it instead of you re-prompting. (Google also shipped <b>Science Skills</b> at I/O — the pattern is going mainstream.)",
-            list: [
-              "<b>Write a runbook, not a question.</b> Anticipate failure modes, define which tool to use when, and specify <b>when to stop</b>.",
-              "<b>Structure with sections + tags:</b> XML/Markdown headers like <code>&lt;background&gt;</code>, <code>## instructions</code>, <code>## tool_guidance</code>, <code>## output</code>. Models follow delineated structure far more reliably.",
-              "<b>Include 2–5 canonical few-shot examples</b> of the exact behavior wanted. Few-shot is still top-tier even with frontier models.",
-              "<b>Be explicit about memory:</b> state what to remember across steps and what to discard."
-            ]
-          },
-          { sub: "Context engineering > prompt engineering", tags:["practice"],
-            p: "The 2026 consensus (Anthropic engineering): treat <b>context as a finite, precious resource</b>. Smarter models need <i>less</i> prescriptive prompting but <i>better</i> context curation. Don't dump everything in — give the agent exactly what it needs, when it needs it."
-          },
-          { sub: "Sub-agents, planning & “dreaming”", tags:["practice"],
-            list: [
-              "<b>Force a planning phase before generation.</b> Practitioners report success on complex coding tasks jumping from ~1/3 to ~2/3 just by planning first.",
-              "<b>Use specialized sub-agents</b> with single, well-defined jobs. One session doing everything causes “context pollution” and worse output.",
-              "<b>Anthropic's “dreaming” (May 6):</b> a scheduled, asynchronous memory-curation process — agents review past sessions, merge duplicate memories, drop stale ones, and surface recurring mistakes/preferences. Legal AI platform Harvey reported a <b>6×</b> improvement in task completion after enabling it."
-            ]
-          },
-          { sub: "The core prompting toolkit (keep these sharp)",
-            list: [
-              "<b>Chain-of-Thought</b> — reason step-by-step before answering.",
-              "<b>Self-Consistency</b> — sample multiple reasoning paths, take the majority; ~2–3× accuracy over plain CoT on hard problems.",
-              "<b>ReAct</b> — interleave reasoning + tool actions; the backbone of most agents.",
-              "<b>Few-shot + role prompting</b> — still reliable accuracy boosters."
-            ]
-          }
-        ]
-      },
-      {
-        h: "3 · Tools & Agentic Platforms",
-        blocks: [
-          { tags:["tool"], list: [
-            "<b>Google Antigravity</b> — agent-first dev platform (desktop app, <code>agy</code> CLI, SDK, Managed Agents). <b>Multi-agent orchestration</b> from day one.",
-            "<b>Gemini Enterprise</b> — unified platform to build/orchestrate/govern agents, with partner agents from Salesforce, ServiceNow, Oracle, Adobe, Workday.",
-            "<b>Anthropic Managed Agents</b> — added public-beta self-hosted sandboxes and a research-preview “MCP tunnels” feature (May 19).",
-            "<b>MCP (Model Context Protocol)</b> is the standard way to connect agents to GitHub, Slack, Drive, Asana, etc. Wire up 1–2 MCP servers to your coding agent this week.",
-            "<b>Claude Code vs Cursor:</b> Claude Code = terminal-native, autonomous multi-step + full-codebase work; Cursor = inline editing + autocomplete. Most shipping teams use <b>both</b>."
-          ],
-          doIt: "Pick one repetitive weekly workflow and turn it into a Skill + sub-agent. Best ROI move right now." }
-        ]
-      },
-      {
-        h: "4 · Market, Money & Business",
-        blocks: [
-          { table: {
-            head: ["Event", "Details", "Why it matters"],
-            rows: [
-              ["Anthropic Series H", "$65B raised; ~$965B valuation; passed OpenAI, nears $1T (led by Altimeter, Dragoneer, Greenoaks, Sequoia)", "Capital consolidating around frontier-lab leaders"],
-              ["Anthropic financials", "On track for first quarterly operating profit; ~$10.9B Q2 revenue projected (+130% QoQ)", "The leading labs are starting to look like real businesses"],
-              ["Compute mega-contracts", "Anthropic reportedly paying ~$1.25B/month for GPU compute through 2029 (~$45B); ~$200B committed to cloud + chips", "Compute is THE bottleneck and cost center"],
-              ["Cognition", "Raised $1B at $26B valuation", "Agentic dev tooling is a top funding magnet"],
-              ["OpenAI", "Raised $122B; preparing a confidential S-1 (IPO path)", "The capital arms race keeps escalating"],
-              ["NextEra × Dominion", "$67B utility merger — largest in US history — driven by AI power demand", "AI's real-world constraint is now electricity"],
-              ["Apple (reported)", "May let users pick 3rd-party providers (Google, Anthropic) for Apple Intelligence in OS 27", "Apple conceding the model layer; distribution play"]
-            ]
-          },
-          note: "Big picture: Q1 2026 venture funding hit record highs (~$300B+ globally), heavily AI-driven. Several mega-figures (SpaceX/xAI structuring, the $1.25B/mo compute deal's counterparty, OpenAI's $122B) are fast-moving and were reported across the week — treat as directional and expect revisions." }
-        ]
-      },
-      {
-        h: "5 · Policy & Regulation",
-        blocks: [
-          { sub: "EU AI Act “omnibus” political agreement (May 7)", tags:["policy"],
-            p: "First major amendments since adoption:",
-            list: [
-              "High-risk (Annex III) obligations <b>delayed</b> from Aug 2026 → <b>Dec 2027</b>.",
-              "Two <b>new prohibitions</b>: AI generating non-consensual intimate imagery and CSAM.",
-              "Synthetic-content marking delayed to Dec 2026; transparency rules still arrive <b>Aug 2026</b>."
-            ]
-          },
-          { sub: "US: the executive order that didn't get signed", tags:["policy"],
-            p: "President Trump <b>canceled</b> a planned AI executive order (reported May 25), with sources citing direct calls from tech leaders arguing it risked America's competitive edge. State laws still landing regardless: California's frontier-AI transparency act (Jan 1, 2026) and Colorado AI Act (Jun 30, 2026).",
-            doIt: "EU-facing teams: the <b>Aug 2026</b> transparency rules (label AI-generated content) are the near-term deadline. US teams: track state-level laws — the federal picture is unsettled."
-          }
-        ]
-      },
-      {
-        h: "6 · This Week's Action List",
-        checklist: [
-          "Try Claude Opus 4.8 on a real multi-step task; learn the <b>effort control</b>.",
-          "Convert one recurring workflow into a <b>Skill</b> (markdown runbook + few-shot examples).",
-          "Add a <b>planning phase</b> to agent prompts; split big jobs into <b>sub-agents</b>.",
-          "Wire up <b>1–2 MCP servers</b> to your coding agent.",
-          "Re-test critical prompts against GPT-5.5 / Gemini Spark defaults.",
-          "Re-run your inference cost math against DeepSeek V4-Pro's permanent price cut.",
-          "If EU-facing: plan for <b>Aug 2026</b> synthetic-content transparency labeling."
-        ]
-      }
-    ],
-    sources: "Anthropic · CNBC (Anthropic tops OpenAI; Google I/O) · TechCrunch · VentureBeat · The New Stack · MarkTechPost · GitHub Changelog · blog.google (I/O 2026; Spark, Antigravity, Omni, Science Skills) · Google Cloud blog (Gemini Enterprise) · 9to5Google / Tom's Guide · Crunchbase News · SD Times · MarketingProfs · YourStory / MindStudio (dreaming; Harvey 6×) · buildfastwithai daily roundups · llm-stats.com / Vellum / BenchLM · Global Policy Watch & White & Case (EU AI Act) · Axios (US EO)."
-  },
-
   /* ===================== DAILY — Sat May 30 ===================== */
   {
     id: "2026-05-30-daily",
     type: "daily",
-    week: "Week of May 24 – 30, 2026",
+    week: "Week of May 25 – 31, 2026",
     title: "Daily Briefing — Saturday, May 30",
     dateLabel: "Saturday, May 30, 2026",
     sortDate: "2026-05-30",
@@ -671,7 +517,7 @@ window.AI_EDGE_REPORTS = [
   {
     id: "2026-05-29-daily",
     type: "daily",
-    week: "Week of May 24 – 30, 2026",
+    week: "Week of May 25 – 31, 2026",
     title: "Daily Briefing — Friday, May 29",
     dateLabel: "Friday, May 29, 2026",
     sortDate: "2026-05-29",
@@ -704,7 +550,7 @@ window.AI_EDGE_REPORTS = [
   {
     id: "2026-05-28-daily",
     type: "daily",
-    week: "Week of May 24 – 30, 2026",
+    week: "Week of May 25 – 31, 2026",
     title: "Daily Briefing — Thursday, May 28",
     dateLabel: "Thursday, May 28, 2026",
     sortDate: "2026-05-28",
@@ -732,7 +578,7 @@ window.AI_EDGE_REPORTS = [
   {
     id: "2026-05-27-daily",
     type: "daily",
-    week: "Week of May 24 – 30, 2026",
+    week: "Week of May 25 – 31, 2026",
     title: "Daily Briefing — Wednesday, May 27",
     dateLabel: "Wednesday, May 27, 2026",
     sortDate: "2026-05-27",
@@ -762,7 +608,7 @@ window.AI_EDGE_REPORTS = [
   {
     id: "2026-05-26-daily",
     type: "daily",
-    week: "Week of May 24 – 30, 2026",
+    week: "Week of May 25 – 31, 2026",
     title: "Daily Briefing — Tuesday, May 26",
     dateLabel: "Tuesday, May 26, 2026",
     sortDate: "2026-05-26",
@@ -793,7 +639,7 @@ window.AI_EDGE_REPORTS = [
   {
     id: "2026-05-25-daily",
     type: "daily",
-    week: "Week of May 24 – 30, 2026",
+    week: "Week of May 25 – 31, 2026",
     title: "Daily Briefing — Monday, May 25",
     dateLabel: "Monday, May 25, 2026",
     sortDate: "2026-05-25",
@@ -823,11 +669,116 @@ window.AI_EDGE_REPORTS = [
     sources: "buildfastwithai (May 25 roundup) · The Information · Axios · crescendo.ai · agilebrandguide.com (several figures reported same-day; treat as directional)."
   },
 
+  /* ===================== WEEKLY SUMMARY — Issue #1 ===================== */
+  {
+    id: "2026-05-24-weekly",
+    type: "weekly",
+    week: "Week of May 18 – 24, 2026",
+    title: "Weekly Briefing — Issue #1",
+    dateLabel: "Week of May 18 – 24, 2026",
+    sortDate: "2026-05-24",
+    pdf: "reports/pdf/weekly-ai-report-2026-05-24.pdf",
+    tldr: [
+      "<b>The week in one idea: the industry pivoted to “the agent.”</b> At Google I/O and across the labs, the unit of work shifted from a chat turn to a supervised <i>fleet of agents</i> — model + runtime + a consumer agent, shipped together.",
+      "<b>Google I/O 2026 (May 19) went all-in on agents</b> (~100 announcements): <b>Gemini 3.5 Flash</b> (frontier-ish at Flash price/speed), <b>Omni</b> (any-input→any-output), <b>Antigravity 2.0</b> (agent-first dev platform), Managed Agents in the API, and <b>Spark</b> — a 24/7 personal agent.",
+      "<b>Anthropic answered with enterprise infrastructure:</b> self-hosted sandboxes (run agents inside your own VPC) and MCP Tunnels for private tool access — the data-residency story enterprises were blocked on.",
+      "<b>DeepSeek made its 75% V4-Pro price cut permanent (May 24)</b> — frontier-class open-weight reasoning at ~¼ the cost of comparable US tokens; brutal downward pressure on inference pricing.",
+      "<b>Learn this week:</b> writing <b>Skills</b> (markdown runbooks for agents), <b>context engineering</b> over prompt engineering, and <b>sub-agent + planning</b> orchestration — the durable leverage as models get stronger."
+    ],
+    sections: [
+      {
+        h: "1 · The week in one idea",
+        blocks: [
+          { sub: "From “a better chatbot” to “a supervised fleet of agents”",
+            p: "The throughline of the week — anchored by Google I/O on May 19 — was that every major lab now ships an <i>agent stack</i>, not just a model: a frontier model, a <b>runtime</b> to run it autonomously (sandboxes, managed agents, tunnels), and increasingly a <b>consumer agent</b> (Spark). The job is moving from line-by-line prompting to <b>orchestration + verification</b>." },
+          { sub: "What to watch from here",
+            list: [
+              "<b>Consumer agents go mainstream:</b> Gemini Spark is the most direct challenge to ChatGPT yet — expect a wider rollout within weeks.",
+              "<b>Compute stays THE bottleneck:</b> the Blackstone–Google ~$5B TPU JV (May 18) is one more sign capital + power gate the frontier.",
+              "<b>Open-weight price pressure intensifies:</b> DeepSeek's permanent cut resets build-vs-buy math for high-volume workloads."
+            ] }
+        ]
+      },
+      {
+        h: "2 · Model & Capability Landscape — what to use for what",
+        intro: "I/O reframed the competition around <b>price/speed + distribution</b>, not just top-of-benchmark. The practical map this week:",
+        blocks: [
+          { table: {
+            head: ["When you need…", "Reach for", "Why"],
+            rows: [
+              ["High-volume / latency-sensitive / cheap", "Gemini 3.5 Flash", "Frontier-ish quality at Flash price/speed (~⅓ the cost of comparable frontier models); powers Spark"],
+              ["Consumer “just do it for me”", "Gemini Spark", "Ambient 24/7 personal agent that reasons across your connected apps"],
+              ["Any-input → any-output multimodal", "Gemini Omni", "Generates across modalities (SynthID-watermarked output)"],
+              ["Cheapest tokens / self-host leaning", "DeepSeek V4-Pro", "75% cut now permanent — ~¼ the cost of equivalent US tokens"],
+              ["Agent-first dev workflow", "Google Antigravity 2.0 · Anthropic sandboxes", "Multi-agent orchestration + VPC-local execution for sensitive data"]
+            ]
+          },
+          note: "Leaderboard scores vary by source — treat as directional. The week's story isn't a new #1; it's that the <b>runtime</b> around the model is now the battleground." }
+        ]
+      },
+      {
+        h: "3 · Techniques & Skills to Learn (your leverage)",
+        intro: "Study this section — it's where the compounding edge is as models get stronger.",
+        blocks: [
+          { sub: "“Skills” — the highest-leverage thing to learn now", tags:["skill"],
+            p: "A <b>Skill</b> is a markdown file an agent loads for a specific task — an onboarding doc / runbook for an AI. Encode the procedure once; the agent follows it instead of you re-prompting. (Google also shipped <b>Science Skills</b> at I/O — the pattern is going mainstream.)",
+            list: [
+              "<b>Write a runbook, not a question.</b> Anticipate failure modes, say which tool to use when, and specify <b>when to stop</b>.",
+              "<b>Structure with sections + tags</b> (<code>## instructions</code>, <code>## tool_guidance</code>, <code>## output</code>) — models follow delineated structure far more reliably.",
+              "<b>Include 2–5 canonical few-shot examples</b> of the exact behavior wanted."
+            ] },
+          { sub: "Context engineering > prompt engineering", tags:["practice"],
+            p: "Treat <b>context as a finite, precious resource.</b> Smarter models need <i>less</i> prescriptive prompting but <i>better</i> context curation — give the agent exactly what it needs, when it needs it, not everything." },
+          { sub: "Sub-agents + a forced planning phase", tags:["practice"],
+            p: "Force a <b>planning phase before generation</b> (practitioners report complex-coding success jumping from ~⅓ to ~⅔ just by planning first), and use specialized <b>sub-agents</b> with single jobs — one session doing everything causes context pollution." }
+        ]
+      },
+      {
+        h: "4 · Tools & Agentic Platforms",
+        blocks: [
+          { tags:["tool"], list: [
+            "<b>Google Antigravity 2.0</b> — agent-first dev platform (desktop app, CLI, SDK, Managed Agents) with multi-agent orchestration.",
+            "<b>Anthropic self-hosted sandboxes</b> (public beta) — run agents inside your own VPC (Cloudflare/Daytona/Modal/Vercel day one) + <b>MCP Tunnels</b> for private tool access.",
+            "<b>MCP (Model Context Protocol)</b> — the standard way to connect agents to GitHub, Slack, Drive, etc. Wire up 1–2 MCP servers to your coding agent this week.",
+            "<b>Gemini creative integrations</b> — Adobe (Firefly), Canva (Magic Layers), CapCut now inside Gemini."
+          ],
+          doIt: "Pick one repetitive weekly workflow and turn it into a Skill + sub-agent. Best ROI move right now." }
+        ]
+      },
+      {
+        h: "5 · Market, Money & Business",
+        blocks: [
+          { table: {
+            head: ["Move", "Detail", "Signal"],
+            rows: [
+              ["Compute land-grab", "Blackstone–Google ~$5B TPU joint venture (May 18)", "Capital + power remain the gating moat"],
+              ["Open-weight pricing", "DeepSeek V4-Pro 75% cut made permanent (May 24)", "Downward pressure on inference cost is structural, not promotional"],
+              ["Distribution as moat", "Google pushing agents to billions of devices via Gemini/Android", "Reach, not just benchmarks, decides consumer-agent winners"]
+            ]
+          },
+          note: "Fast-moving figures are directional. The durable pattern: capability is becoming table stakes; <b>distribution + runtime + price</b> decide outcomes." }
+        ]
+      },
+      {
+        h: "6 · This Week's Action List",
+        checklist: [
+          "Convert one recurring workflow into a <b>Skill</b> (markdown runbook + few-shot examples).",
+          "Add a <b>planning phase</b> to your agent prompts; split big jobs into <b>sub-agents</b>.",
+          "Wire up <b>1–2 MCP servers</b> to your coding agent.",
+          "Pilot <b>Gemini Spark</b> (or ChatGPT agent mode) on one real personal workflow.",
+          "Re-run your inference cost math against DeepSeek V4-Pro's now-permanent price.",
+          "For sensitive data, evaluate <b>VPC-local agent execution</b> (Anthropic sandboxes) over vendor-cloud."
+        ]
+      }
+    ],
+    sources: "blog.google (I/O 2026: Gemini 3.5 Flash, Omni, Spark, Antigravity, Science Skills) · CNBC · Anthropic (self-hosted sandboxes; MCP Tunnels) · DeepSeek · digitalapplied tracker · buildfastwithai daily roundups (May 18–24) · llm-stats.com (figures directional where noted)."
+  },
+
   /* ===================== DAILY — Sun May 24 ===================== */
   {
     id: "2026-05-24-daily",
     type: "daily",
-    week: "Week of May 24 – 30, 2026",
+    week: "Week of May 18 – 24, 2026",
     title: "Daily Briefing — Sunday, May 24",
     dateLabel: "Sunday, May 24, 2026",
     sortDate: "2026-05-24",
@@ -859,7 +810,7 @@ window.AI_EDGE_REPORTS = [
   {
     id: "2026-05-23-daily",
     type: "daily",
-    week: "Week of May 17 – 23, 2026",
+    week: "Week of May 18 – 24, 2026",
     title: "Daily Briefing — Saturday, May 23",
     dateLabel: "Saturday, May 23, 2026",
     sortDate: "2026-05-23",
@@ -891,7 +842,7 @@ window.AI_EDGE_REPORTS = [
   {
     id: "2026-05-22-daily",
     type: "daily",
-    week: "Week of May 17 – 23, 2026",
+    week: "Week of May 18 – 24, 2026",
     title: "Daily Briefing — Friday, May 22",
     dateLabel: "Friday, May 22, 2026",
     sortDate: "2026-05-22",
@@ -923,7 +874,7 @@ window.AI_EDGE_REPORTS = [
   {
     id: "2026-05-21-daily",
     type: "daily",
-    week: "Week of May 17 – 23, 2026",
+    week: "Week of May 18 – 24, 2026",
     title: "Daily Briefing — Thursday, May 21",
     dateLabel: "Thursday, May 21, 2026",
     sortDate: "2026-05-21",
@@ -953,7 +904,7 @@ window.AI_EDGE_REPORTS = [
   {
     id: "2026-05-20-daily",
     type: "daily",
-    week: "Week of May 17 – 23, 2026",
+    week: "Week of May 18 – 24, 2026",
     title: "Daily Briefing — Wednesday, May 20",
     dateLabel: "Wednesday, May 20, 2026",
     sortDate: "2026-05-20",
@@ -982,7 +933,7 @@ window.AI_EDGE_REPORTS = [
   {
     id: "2026-05-19-daily",
     type: "daily",
-    week: "Week of May 17 – 23, 2026",
+    week: "Week of May 18 – 24, 2026",
     title: "Daily Briefing — Tuesday, May 19",
     dateLabel: "Tuesday, May 19, 2026",
     sortDate: "2026-05-19",
@@ -1014,6 +965,40 @@ window.AI_EDGE_REPORTS = [
       }
     ],
     sources: "blog.google (I/O 2026) · CNBC · Anthropic · digitalapplied tracker (figures directional where noted)."
+  },
+
+  /* ===================== DAILY — Mon May 18 ===================== */
+  {
+    id: "2026-05-18-daily",
+    type: "daily",
+    week: "Week of May 18 – 24, 2026",
+    title: "Daily Briefing — Monday, May 18",
+    dateLabel: "Monday, May 18, 2026",
+    sortDate: "2026-05-18",
+    tldr: [
+      "<b>The pre-I/O positioning week opened with infrastructure.</b> <b>Blackstone and Google announced a ~$5B TPU joint venture</b> — capital + power locking in ahead of the model news.",
+      "<b>Cursor shipped Composer 2.5</b> (built on Moonshot's Kimi K2.5) — agentic coding competition kept widening beyond the frontier labs.",
+      "<b>The market set up for Google I/O (May 19):</b> expectations centered on agents, cheaper/faster Gemini, and a consumer personal agent."
+    ],
+    sections: [
+      { h: "What changed today",
+        blocks: [
+          { sub: "Compute land-grab before the keynotes", tags:["money"],
+            p: "Blackstone and Google announced a ~$5B TPU joint venture — financial capital pairing with a hyperscaler's silicon to lock in AI compute capacity.",
+            why: "The week's model news would grab headlines, but the durable story is upstream: whoever secures compute + power sets the pace. Infra deals are a leading indicator of who ships next." },
+          { sub: "Agentic coding competition widens", tags:["tool","model"],
+            p: "Cursor shipped Composer 2.5 (built on Moonshot's Kimi K2.5), pushing IDE-native agentic coding forward — another sign the coding-agent race isn't just an Anthropic/OpenAI/Google story.",
+            doIt: "If you code daily, keep a standing eval of 2–3 real tasks so you can objectively compare a new coding model (Composer, Claude Code, Copilot) the day it ships." }
+        ]
+      },
+      { h: "Sharpen your edge",
+        blocks: [
+          { sub: "Read infra deals as a leading indicator",
+            p: "Before a big launch week, watch the compute/power deals, not just the model teasers. A ~$5B TPU JV tells you who can afford to train and serve the next frontier model — often a better predictor of the next 6–12 months than any single benchmark. Keep a running note of who's securing compute; it's the cheapest forecast you'll ever get." }
+        ]
+      }
+    ],
+    sources: "blog.google · Bloomberg (Blackstone–Google TPU JV) · Cursor (Composer 2.5) · digitalapplied tracker (figures directional where noted)."
   }
 
 ];

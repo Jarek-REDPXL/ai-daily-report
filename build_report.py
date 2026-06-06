@@ -2,11 +2,12 @@
 """
 Weekly AI briefing PDF generator (reportlab) — DATA-DRIVEN.
 
-It reads the NEWEST type:"weekly" object straight from reports/data/reports.js
-and renders it to reports/pdf/weekly-ai-report-<sortDate>.pdf. You never hand-edit
-this file per week — write the weekly into reports.js, then just run:
+It reads a type:"weekly" object straight from reports/data/reports.js and renders
+it to reports/pdf/weekly-ai-report-<sortDate>.pdf. You never hand-edit this file
+per week — write the weekly into reports.js, then just run:
 
-    python3 build_report.py
+    python3 build_report.py                # newest weekly
+    python3 build_report.py 2026-05-24     # a specific weekly by sortDate
 
 Prints the output path on success. Requires: reportlab, and `node` on PATH
 (used to safely evaluate reports.js, which is JS, not JSON).
@@ -28,14 +29,17 @@ from reportlab.platypus import (BaseDocTemplate, PageTemplate, Frame, Paragraph,
 REPO = os.path.dirname(os.path.abspath(__file__))
 REPORTS_JS = os.path.join(REPO, "reports", "data", "reports.js")
 
-def load_newest_weekly():
-    """Use node to evaluate reports.js and emit the newest weekly as JSON."""
+def load_newest_weekly(want_sort_date=None):
+    """Use node to evaluate reports.js and emit a weekly as JSON.
+    Default = newest weekly. Pass a sortDate (YYYY-MM-DD) to pick a specific one."""
+    pick = ("const want=%r;" % want_sort_date) if want_sort_date else "const want=null;"
     node_script = (
         "const fs=require('fs');global.window={};"
-        "eval(fs.readFileSync(process.argv[1],'utf8'));"
-        "const w=(window.AI_EDGE_REPORTS||[]).filter(r=>r.type==='weekly')"
-        ".sort((a,b)=>a.sortDate<b.sortDate?1:-1)[0];"
-        "if(!w){console.error('no weekly found');process.exit(2);} "
+        "eval(fs.readFileSync(process.argv[1],'utf8'));" + pick +
+        "const ws=(window.AI_EDGE_REPORTS||[]).filter(r=>r.type==='weekly')"
+        ".sort((a,b)=>a.sortDate<b.sortDate?1:-1);"
+        "const w=want?ws.find(r=>r.sortDate===want):ws[0];"
+        "if(!w){console.error('no matching weekly found');process.exit(2);} "
         "process.stdout.write(JSON.stringify(w));"
     )
     try:
@@ -48,7 +52,8 @@ def load_newest_weekly():
         sys.exit("ERROR reading reports.js: " + msg)
     return json.loads(out.stdout.decode("utf-8", "replace"))
 
-W = load_newest_weekly()
+_arg = sys.argv[1] if len(sys.argv) > 1 else None
+W = load_newest_weekly(_arg)
 SORT_DATE = W.get("sortDate", "unknown")
 OUT = os.path.join(REPO, "reports", "pdf", "weekly-ai-report-%s.pdf" % SORT_DATE)
 os.makedirs(os.path.dirname(OUT), exist_ok=True)

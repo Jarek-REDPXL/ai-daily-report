@@ -26,14 +26,17 @@ below). It runs unattended; nothing on your computer needs to be on.
    - `docs/knowledge/predictions.md` — open/resolved forward calls
    - recent entries in `reports/data/reports.js`
 2. Researches the last ~24h (web search, cross-checked, figures flagged directional).
-3. Follows `docs/prompts/daily.md` (and `weekly.md` on Sundays) to write the report.
+3. Follows `docs/prompts/daily.md` (and `weekly.md` on Mondays, for the week just
+   ended) to write the report.
 4. **Prepends** one dated object to `reports/data/reports.js` (newest first; never
    overwrites). One dated entry **every** run — even quiet days get a short one.
 5. **Updates the knowledge files** in the same commit (advance threads, resolve
    predictions, distil new lessons). This is what makes it compound.
-6. On Sundays: `python3 build_report.py` (data-driven — reads the newest weekly
-   from reports.js and writes `reports/pdf/weekly-ai-report-<sortDate>.pdf`; no
-   hand-editing) and sets the weekly's `pdf` field.
+6. On Mondays (covering the prior Mon–Sun week): `python3 build_report.py`
+   (data-driven — reads the newest weekly from reports.js and writes
+   `reports/pdf/weekly-ai-report-<sortDate>.pdf`; no hand-editing) and sets the
+   weekly's `pdf` field. Weeks are Monday–Sunday; the weekly's sortDate = the
+   week's Sunday.
 7. **Quality gate:** `python3 scripts/check_reports.py` must pass (valid JS,
    schema, unique ids, sorted, PDFs present) before committing.
 8. Commits + pushes → Vercel deploys → live site current within ~1 minute.
@@ -68,7 +71,8 @@ everything learned so far and adds to it.
 > 3. PREPEND one new daily object to reports/data/reports.js (newest first; exact
 >    existing shape; never overwrite; keep valid JS). One dated entry every run,
 >    even on quiet days.
-> 4. If today is SUNDAY, also follow docs/prompts/weekly.md, then run
+> 4. If today is MONDAY, also follow docs/prompts/weekly.md for the week that just
+>    ended (Mon–Sun; weekly sortDate = that Sunday), then run
 >    `python3 build_report.py` and set the weekly's pdf field.
 > 5. UPDATE docs/knowledge/digest.md + docs/knowledge/predictions.md (advance
 >    threads, resolve predictions, add new lessons/calls).

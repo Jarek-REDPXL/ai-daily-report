@@ -41,11 +41,26 @@
     bar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100 || 0) + "%";
   });
 
-  // ---- build sidebar grouped by week (weekly entry first within each week) ----
+  // ---- sidebar grouping: derive the Mon–Sun week label from each report's
+  //      sortDate, so the archive is ALWAYS grouped Monday→Sunday regardless of
+  //      what the stored `week` field says. Within a week the existing sort puts
+  //      the weekly first, then days newest→oldest (Sun on top, Mon on bottom). ----
+  const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function weekLabel(sortDate) {
+    const [y, m, d] = String(sortDate).split("-").map(Number);
+    const dt = new Date(Date.UTC(y, m - 1, d));
+    const dow = (dt.getUTCDay() + 6) % 7;           // 0 = Monday
+    const mon = new Date(dt); mon.setUTCDate(dt.getUTCDate() - dow);
+    const sun = new Date(mon); sun.setUTCDate(mon.getUTCDate() + 6);
+    const m1 = mon.getUTCMonth(), m2 = sun.getUTCMonth();
+    const base = "Week of " + MONTHS[m1] + " " + mon.getUTCDate() + " – ";
+    return base + (m1 === m2 ? "" : MONTHS[m2] + " ") + sun.getUTCDate() + ", " + sun.getUTCFullYear();
+  }
+
   const weeks = [];
   const byWeek = {};
   ALL.forEach(r => {
-    const w = r.week || r.dateLabel;
+    const w = weekLabel(r.sortDate);
     if (!byWeek[w]) { byWeek[w] = []; weeks.push(w); }
     byWeek[w].push(r);
   });

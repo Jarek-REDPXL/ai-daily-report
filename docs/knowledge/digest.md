@@ -42,4 +42,5 @@
 buildfastwithai (daily roundups) · The Neuron · crescendo.ai · llm-stats.com · digitalapplied tracker · CNBC · Axios · The Information · blog.google · Anthropic / OpenAI / Microsoft AI official · arXiv. Always cross-check funding/valuation/benchmark figures against a 2nd source; mark fast-moving ones directional.
 
 ## Changelog (one line per run — newest first)
+- 2026-06-06: restructured archive to Monday–Sunday weeks; weekly now written on Monday for the prior full week. Issue #1 = Week of May 18–24 (Google I/O), Issue #2 = Week of May 25–31. Added Mon May 18 daily. Sidebar derives week grouping from sortDate.
 - 2026-06-06: digest seeded from May 19 – Jun 6 reports (backfill + autonomous runs).

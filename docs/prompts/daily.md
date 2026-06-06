@@ -70,9 +70,10 @@ able to get from a generic news feed.
    "Friday, May 29, 2026", a punchy 3–5 bullet tldr ("Today in 30 seconds"),
    and sections. Use a "What changed today" section plus a final
    "Sharpen your edge" section. End with a sources string.
-   - week field: the Sunday-anchored range matching existing entries, e.g.
-     "Week of May 31 – Jun 6, 2026". All entries in the same week MUST share the
-     identical week string so the sidebar groups them.
+   - week field: the MONDAY–SUNDAY range the date falls in, e.g.
+     "Week of Jun 1 – 7, 2026" (same-month) or "Week of May 25 – 31, 2026". All
+     entries in the same Mon–Sun week MUST share the identical week string. (The
+     site also derives Mon–Sun grouping from sortDate, so set sortDate correctly.)
 2. Keep older reports intact (prepend, never overwrite). Match the exact object
    shape used by existing entries and keep reports/data/reports.js valid JS.
 3. Update docs/knowledge/digest.md and docs/knowledge/predictions.md per the

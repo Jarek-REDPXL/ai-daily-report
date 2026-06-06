@@ -37,13 +37,22 @@ Go beyond recap. Deliver:
 Filter aggressively: a few deeply useful insights beat twenty shallow facts.
 Connect threads across days into a coherent narrative.
 
+## Weeks run MONDAY–SUNDAY; the weekly is written on MONDAY for the week just ended
+- A "week" is **Monday 00:00 → Sunday 23:59**. The weekly edition is produced on
+  **Monday**, covering the **previous** Mon–Sun week (which is now complete).
+- The weekly's **sortDate = that week's Sunday** (e.g. for the week of Jun 1–7,
+  sortDate is "2026-06-07"). This pins it to the top of that week's group, above
+  the seven daily entries.
+- The **week field** must be the Mon–Sun label, e.g. "Week of Jun 1 – 7, 2026"
+  (same-month) or "Week of May 25 – 31, 2026". Use the SAME week string as that
+  week's seven dailies. (The site also derives Mon–Sun grouping from each entry's
+  sortDate, so getting sortDate right is what matters most.)
+
 ## Output
 1. Prepend a new object (type:"weekly") to the array in reports/data/reports.js:
-   week's sortDate (last day of the week), dateLabel like
-   "Week of <start> – <end>, <year>", a strong 5-bullet tldr, and rich sections
+   sortDate = the Sunday of the week just ended, dateLabel like
+   "Week of <Mon> – <Sun>, <year>", a strong 5-bullet tldr, and rich sections
    ending with an action checklist. End with a sources string.
-   - week field: the SAME string as that week's daily entries so it groups and
-     pins to the top.
 2. Regenerate the PDF: run `python3 build_report.py` — it reads the newest weekly
    object straight from reports/data/reports.js and writes
    reports/pdf/weekly-ai-report-<sortDate>.pdf automatically. Set the new object's
