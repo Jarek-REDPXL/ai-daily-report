@@ -67,31 +67,27 @@ As shipped they use `anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}`, which
 subscription token with `claude setup-token` and swap the action input to
 `claude_code_oauth_token` (tokens expire and must be refreshed periodically).
 
-## Make the site live (private repo, free, auto-updating)
+## The live site (Vercel — private repo, free, auto-updating)
 
-GitHub Pages can't host a **private** repo for free, so we use **Netlify** instead.
-It connects to the private repo and **auto-deploys on every push** — so each time
-the AI NEWS routine pushes a new report, the live site updates ~1 minute later,
-with no PC needed. A `netlify.toml` in the repo root preconfigures everything
-(no build step; just publishes the files).
+The site is hosted on **Vercel**, connected to this private GitHub repo. Every
+push to `main` **auto-deploys** — so each time the AI NEWS routine pushes a new
+report, the live site updates within ~1 minute, no PC needed. `vercel.json` in
+the repo root preconfigures it (no build step; `no-cache` on the report data so
+new dailies appear the instant you refresh).
 
-One-time setup (~3 min):
-1. Go to **https://app.netlify.com** → sign up / log in with **GitHub**.
-2. **Add new site → Import an existing project → GitHub**.
-3. Authorize Netlify, then pick **`Jarek-REDPXL/ai-daily-report`** (grant access
-   to that private repo when prompted).
-4. Netlify reads `netlify.toml` → build command empty, publish dir `.`. Click
-   **Deploy**. Your live URL appears (e.g. `https://<name>.netlify.app`) — rename
-   it under **Site settings → Change site name** if you like.
-5. Done. Every routine push now redeploys automatically. The repo stays private;
-   only the rendered site is served.
+Already set up. To manage it: **https://vercel.com** → the `ai-daily-report`
+project. The live URL is on that project's dashboard (rename under
+**Settings → Domains / Project Name**).
 
-> Cloudflare Pages works the same way if you prefer it (connect repo, build
-> command empty, output dir `/`).
+Flow: `AI NEWS routine → push to GitHub → Vercel auto-deploys → live URL current`.
+The repo stays **private**; only the rendered page is served.
 
-> Alternative (GitHub Pages) — only if you make the repo **public**: repo →
-> Settings → Pages → Source → "GitHub Actions", then re-enable the `push` trigger
-> in `.github/workflows/deploy-pages.yml`.
+> Bookmark the Vercel URL as your real page — NOT `127.0.0.1:5500`, which is just
+> the frozen local copy on your PC.
+
+> Alternatives that work identically: Netlify or Cloudflare Pages (connect repo,
+> empty build command, output dir `.`). GitHub Pages only works if the repo is
+> made **public**.
 
 ## Editing content by hand
 
