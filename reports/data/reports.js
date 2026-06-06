@@ -27,6 +27,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Saturday, June 6",
     dateLabel: "Saturday, June 6, 2026",
     sortDate: "2026-06-06",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>Anthropic published a coordinated-pause proposal on June 4</b> (“When AI builds itself”) — the kicker: <b>Claude now authors >80% of code contributions to its own codebase</b>, and Anthropic engineers absorb ~8× more merged code daily than two years ago. Altman's response: “build the bomb, then sell people the shelter.” The IPO-track frontier lab just publicly raised the recursive-self-improvement alarm.",
       "<b>The bipartisan “Great American AI Act” discussion draft dropped (June 4)</b> — Obernolte (R-CA) + Trahan (D-MA), 269 pages. <b>3-year preemption of state laws that regulate model DEVELOPMENT</b> (deployment laws are NOT preempted), mandatory safety frameworks + semi-annual third-party audits + incident reports for labs >$500M revenue, codifies Commerce's CAISI. This directly invalidates last week's “plan around state laws” advice.",
@@ -88,6 +89,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Friday, June 5",
     dateLabel: "Friday, June 5, 2026",
     sortDate: "2026-06-05",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>A quieter day — the week's big moves (Trump EO, Microsoft Build, the AI Act draft, Anthropic's S-1) all landed Jun 1–4; Friday was the market digesting them.</b>",
       "<b>Colorado's AI Act takes effect June 30</b> — and the new federal “Great American AI Act” draft would freeze it on the development side. The state-vs-federal collision is now the thing to watch.",
@@ -129,6 +131,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Thursday, June 4",
     dateLabel: "Thursday, June 4, 2026",
     sortDate: "2026-06-04",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>The story this week: frontier AI got geopoliticized.</b> In 72 hours we got a US executive order asking labs to hand over pre-release models, Microsoft cutting the OpenAI cord with its own foundation models, Anthropic's IPO filing, China consolidating around DeepSeek, and Mythos shipping to NATO. Capability is no longer the differentiator — sovereignty, distribution, and trust are.",
       "<b>Trump's June 2 AI EO flips last week's narrative.</b> The order he <i>canceled</i> on May 25 returned, reframed as a <b>“voluntary” 30-day pre-release review</b> for any “covered frontier model.” Voluntary in name; coercive once your competitors opt in.",
@@ -183,6 +186,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Wednesday, June 3",
     dateLabel: "Wednesday, June 3, 2026",
     sortDate: "2026-06-03",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>DeepSeek's first-ever outside funding broke cover</b> — ~<b>$7.4B</b> (≈¥50B) at a <b>$52–59B</b> valuation, with founder Liang Wenfeng reportedly putting in ~40% himself, alongside Tencent and CATL.",
       "<b>China is consolidating around one open-weight champion</b> rather than a portfolio of labs — and explicitly prioritizing research/AGI over near-term commercialization.",
@@ -218,6 +222,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Tuesday, June 2",
     dateLabel: "Tuesday, June 2, 2026",
     sortDate: "2026-06-02",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>Trump signed the AI executive order</b> he'd canceled on May 25 — reframed as a <b>“voluntary” 30-day pre-release review</b> for “covered frontier models,” with no licensing but a new Treasury/NSA/CISA security clearinghouse.",
       "<b>Microsoft Build: in-house foundation models.</b> <b>MAI-Thinking-1</b> (reasoning) and <b>MAI-Code-1-Flash</b> (5B, default-eligible in GitHub Copilot) — trained without OpenAI data. Redmond is hedging its OpenAI dependence.",
@@ -257,6 +262,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Monday, June 1",
     dateLabel: "Monday, June 1, 2026",
     sortDate: "2026-06-01",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>MiniMax M3 launched</b> — an <b>open-weight</b> model claiming <b>SWE-Bench Pro 59</b> (ahead of GPT-5.5 & Gemini 3.1 Pro), a <b>1M-token context</b>, and native multimodality, at ~5–10% of frontier pricing. A second Chinese lab in frontier-class tier.",
       "<b>Anthropic confidentially filed its S-1</b> (IPO path) at a reported ~$47B revenue run-rate — ~5× year-over-year.",
@@ -297,6 +303,7 @@ window.AI_EDGE_REPORTS = [
     title: "Weekly Briefing — Issue #2",
     dateLabel: "Week of May 25 – May 31, 2026",
     sortDate: "2026-05-31",
+    domains: ["ai-tooling"],
     pdf: "reports/pdf/weekly-ai-report-2026-05-31.pdf",
     tldr: [
       "<b>The week in one idea: the agent grew up.</b> Autonomy's two missing pieces landed at once — <b>money</b> (agents can now transact) and the dawning <b>reliability/governance</b> reckoning. The race moved from <i>can the model do it</i> to <i>can we operationalize and monetize it</i>.",
@@ -434,6 +441,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Sunday, May 31",
     dateLabel: "Sunday, May 31, 2026",
     sortDate: "2026-05-31",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>Agents just got wallets.</b> AWS launched <b>Bedrock AgentCore Payments</b> (preview, built with Coinbase + Stripe) — agents autonomously pay for APIs, MCP servers, even other agents via <b>stablecoin micropayments</b> with budget guardrails. It lands alongside OpenAI's <b>Agentic Commerce Protocol</b> + ChatGPT Ads Manager. The agent economy now has rails.",
       "<b>Gemini Spark went live</b> (May 29) for US AI Ultra subscribers — last Sunday's call that Spark is the most direct consumer-agent challenge to ChatGPT is now testable.",
@@ -478,6 +486,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Saturday, May 30",
     dateLabel: "Saturday, May 30, 2026",
     sortDate: "2026-05-30",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>The real story this week was cost, not capability.</b> May 2026 is when AI shifted from “what can models do” to “what does deployment actually cost” — and the bills are landing.",
       "<b>Both CEOs walked back the jobs apocalypse.</b> Sam Altman said he was “pretty wrong” about AI quickly wiping out entry-level white-collar work; Dario Amodei reframed his 50% claim toward augmentation. Yale and Brookings found no meaningful AI unemployment wave through March.",
@@ -521,6 +530,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Friday, May 29",
     dateLabel: "Friday, May 29, 2026",
     sortDate: "2026-05-29",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>Gemini 3.5 Flash is now generally available</b> (Antigravity + Gemini API) — flagship-level intelligence at Flash speed/price; beats 3.1 Pro on coding & agentic benchmarks.",
       "<b>Google Flow Agent</b> can now take on <b>multi-step</b> tasks, not just single prompts.",
@@ -554,6 +564,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Thursday, May 28",
     dateLabel: "Thursday, May 28, 2026",
     sortDate: "2026-05-28",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>Claude Opus 4.8 shipped</b> — Dynamic Workflows (up to 1,000 parallel subagents + self-verification), effort controls, and fast mode 3× cheaper. GA in GitHub Copilot day one.",
       "<b>Anthropic confirmed as the world's most valuable AI startup</b> at ~$965B (CNBC), nearing $1T.",
@@ -582,6 +593,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Wednesday, May 27",
     dateLabel: "Wednesday, May 27, 2026",
     sortDate: "2026-05-27",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>Anthropic announced its $65B Series H at a $965B valuation</b> (led by Altimeter, Dragoneer, Greenoaks, Sequoia) — overtaking OpenAI.",
       "<b>Anthropic opened a Milan office</b> for European enterprise/research/devs.",
@@ -612,6 +624,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Tuesday, May 26",
     dateLabel: "Tuesday, May 26, 2026",
     sortDate: "2026-05-26",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>Gemini Enterprise</b> launched at Google Cloud Next '26 — a unified platform to build/orchestrate/govern agents, with partner agents from Salesforce, ServiceNow, Oracle, Adobe, Workday.",
       "<b>Gemini Omni</b> debuted — any-input→any-output multimodal generation, starting with video.",
@@ -643,6 +656,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Monday, May 25",
     dateLabel: "Monday, May 25, 2026",
     sortDate: "2026-05-25",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>DeepSeek's 75% price cut on V4-Pro is now permanent</b> — frontier-class reasoning at ~¼ the cost of OpenAI/Anthropic tokens.",
       "<b>Anthropic on track for its first quarterly operating profit</b>; ~$10.9B projected Q2 revenue (+130% QoQ). <b>OpenAI</b> preparing a confidential S-1.",
@@ -677,6 +691,7 @@ window.AI_EDGE_REPORTS = [
     title: "Weekly Briefing — Issue #1",
     dateLabel: "Week of May 18 – 24, 2026",
     sortDate: "2026-05-24",
+    domains: ["ai-tooling"],
     pdf: "reports/pdf/weekly-ai-report-2026-05-24.pdf",
     tldr: [
       "<b>The week in one idea: the industry pivoted to “the agent.”</b> At Google I/O and across the labs, the unit of work shifted from a chat turn to a supervised <i>fleet of agents</i> — model + runtime + a consumer agent, shipped together.",
@@ -782,6 +797,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Sunday, May 24",
     dateLabel: "Sunday, May 24, 2026",
     sortDate: "2026-05-24",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>DeepSeek made its 75% V4-Pro price cut permanent</b> — frontier-class reasoning at ~¼ the cost of comparable US tokens.",
       "<b>Claude Code escaped the terminal</b> — now usable from any browser and on iPhone.",
@@ -814,6 +830,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Saturday, May 23",
     dateLabel: "Saturday, May 23, 2026",
     sortDate: "2026-05-23",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>OpenAI's internal model disproved an 80-year-old math conjecture</b> (the Erdős unit-distance problem) with a 125-page proof — Fields medalist Tim Gowers called it “a milestone in AI mathematics.”",
       "<b>OpenAI filed for IPO;</b> Anthropic reported its first-ever profit (~$10.9B revenue), and a SpaceX S-1 revealed a ~$1.25B/month Anthropic compute deal.",
@@ -846,6 +863,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Friday, May 22",
     dateLabel: "Friday, May 22, 2026",
     sortDate: "2026-05-22",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>A trojanized “Nx Console” VS Code extension</b> harvested credentials across AI firms — ~3,800 internal repos stolen while the malicious build was live just ~18 minutes.",
       "<b>Cheap, fast multimodal piled up:</b> Gemini 3.5 Flash GA ($1.50/$9 per 1M, 76.2% Terminal-Bench), a Gemini 3.1 Flash-Lite preview, and NVIDIA's open Nemotron 3 Nano Omni (30B MoE, ~9× throughput).",
@@ -878,6 +896,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Thursday, May 21",
     dateLabel: "Thursday, May 21, 2026",
     sortDate: "2026-05-21",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>Andrej Karpathy joined Anthropic</b> to rebuild its pretraining research team — arguably the highest-profile AI talent move of the year.",
       "<b>Anthropic was closing a ~$30B round at a $900B+ valuation</b>, as execs across Google/OpenAI/Anthropic call the frontier race “neck-and-neck.”",
@@ -908,6 +927,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Wednesday, May 20",
     dateLabel: "Wednesday, May 20, 2026",
     sortDate: "2026-05-20",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>Jack Clark's Oxford lecture</b>: Anthropic's co-founder predicted a Nobel-worthy AI-assisted discovery within 12 months and a 60%+ chance of recursive self-improvement by end of 2028 — while naming a non-zero tail risk.",
       "<b>Google I/O after-shocks:</b> Antigravity 2.0 had launch-day issues (IDE restored May 23); GitHub Copilot Chat purged Gemini and several GPT models from its web surface."
@@ -937,6 +957,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Tuesday, May 19",
     dateLabel: "Tuesday, May 19, 2026",
     sortDate: "2026-05-19",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>Google I/O 2026 went all-in on agents</b> (~100 announcements): Gemini 3.5 Flash, Omni Flash, Antigravity 2.0, Managed Agents in the API, and <b>Spark</b>, a general-purpose personal agent in the Gemini app.",
       "<b>Anthropic answered with infrastructure:</b> self-hosted sandboxes (run agents inside your own VPC; Cloudflare/Daytona/Modal/Vercel on day one) and MCP Tunnels for private tool access.",
@@ -975,6 +996,7 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Monday, May 18",
     dateLabel: "Monday, May 18, 2026",
     sortDate: "2026-05-18",
+    domains: ["ai-tooling"],
     tldr: [
       "<b>The pre-I/O positioning week opened with infrastructure.</b> <b>Blackstone and Google announced a ~$5B TPU joint venture</b> — capital + power locking in ahead of the model news.",
       "<b>Cursor shipped Composer 2.5</b> (built on Moonshot's Kimi K2.5) — agentic coding competition kept widening beyond the frontier labs.",

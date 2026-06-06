@@ -24,8 +24,24 @@ from datetime import date, timedelta
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPORTS_JS = os.path.join(REPO, "reports", "data", "reports.js")
+DOMAINS_JS = os.path.join(REPO, "scripts", "domains.js")
 
-REQUIRED = ["id", "type", "week", "title", "dateLabel", "sortDate", "tldr", "sections"]
+REQUIRED = ["id", "type", "week", "title", "dateLabel", "sortDate", "tldr", "sections", "domains"]
+
+
+def valid_domains():
+    """Read the canonical slug list from scripts/domains.js (single source of
+    truth) via node, so this gate and build-data.js never drift."""
+    node_script = "process.stdout.write(JSON.stringify(require(process.argv[1]).DOMAINS||[]));"
+    try:
+        out = subprocess.run(["node", "-e", node_script, DOMAINS_JS],
+                             capture_output=True, check=True)
+        slugs = json.loads(out.stdout.decode("utf-8", "replace"))
+        if slugs:
+            return set(slugs)
+    except Exception:
+        pass
+    sys.exit("FAIL: could not load valid domain slugs from scripts/domains.js")
 
 def load():
     node_script = (
@@ -47,6 +63,7 @@ def main():
     errors = []
     warnings = []
     reports = load()
+    valid = valid_domains()
 
     if not reports:
         sys.exit("FAIL: no reports found in reports.js")
@@ -60,6 +77,15 @@ def main():
                 errors.append("%s missing/empty field: %s" % (where, f))
         if r.get("type") not in ("daily", "weekly"):
             errors.append("%s type must be 'daily' or 'weekly'" % where)
+        # domains: non-empty array of valid slugs
+        doms = r.get("domains")
+        if not isinstance(doms, list) or not doms:
+            errors.append("%s domains must be a non-empty array" % where)
+        else:
+            bad = [d for d in doms if d not in valid]
+            if bad:
+                errors.append("%s invalid domain slug(s): %s (valid: %s)"
+                              % (where, ", ".join(map(str, bad)), ", ".join(sorted(valid))))
         if not isinstance(r.get("tldr", []), list) or len(r.get("tldr", [])) < 2:
             errors.append("%s tldr should be a list of >=2 items" % where)
         if not isinstance(r.get("sections", []), list) or not r.get("sections"):
@@ -98,8 +124,11 @@ def main():
             if not os.path.exists(p):
                 errors.append("weekly %s pdf missing on disk: %s" % (r.get("id"), r["pdf"]))
 
-    # knowledge files exist (the self-learning layer)
-    for kf in ["docs/knowledge/digest.md", "docs/knowledge/predictions.md"]:
+    # knowledge files exist (the self-learning layer) — now per-domain digests
+    # under docs/knowledge/digest/ plus the shared house file + predictions ledger.
+    kfiles = ["docs/knowledge/digest/_house.md", "docs/knowledge/predictions.md"]
+    kfiles += ["docs/knowledge/digest/%s.md" % d for d in sorted(valid)]
+    for kf in kfiles:
         if not os.path.exists(os.path.join(REPO, kf)):
             warnings.append("knowledge file missing: %s" % kf)
 

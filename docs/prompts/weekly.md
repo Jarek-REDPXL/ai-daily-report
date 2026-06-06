@@ -20,8 +20,11 @@ joined by ` · `. Never fabricate a URL; drop or flag what you can't verify.
 
 ## Research & self-learning loop
 First READ the project's memory, then research:
-- `docs/knowledge/digest.md` (active threads + durable lessons)
-- `docs/knowledge/predictions.md` (open + resolved forward calls)
+- `docs/knowledge/digest/_house.md` (shared mission + sourcing) + the per-domain
+  digest file(s) you're covering, `docs/knowledge/digest/<domain>.md` (active
+  threads + durable lessons)
+- `docs/knowledge/sources.md` (source-scoring ledger — mine high scorers first)
+- `docs/knowledge/predictions.md` (open + resolved forward calls, domain-tagged)
 - the past week's daily entries in reports/data/reports.js AND the previous weekly.
 Then run fresh searches to fill gaps and verify. Each weekly must compound on the
 last: explicitly note what changed since last week, **which of last week's
@@ -30,9 +33,11 @@ race, compute, money, policy, agents) advanced. Cross-check all
 funding/valuation/acquisition/benchmark numbers; mark fast-moving or forward-looking
 figures as directional.
 
-AFTER writing, UPDATE both knowledge files in the same commit: refresh the digest's
-active threads + durable lessons (this is the week's distilled judgment), and in
-predictions.md resolve what closed and log the week's new forward calls.
+AFTER writing, UPDATE the knowledge files in the same commit: refresh the relevant
+per-domain digest(s) `docs/knowledge/digest/<domain>.md` (active threads + durable
+lessons — the week's distilled judgment), resolve what closed and log the week's
+new forward calls (domain-tagged) in predictions.md, and promote/decay sources in
+docs/knowledge/sources.md.
 
 ## What makes this edition "golden"
 Go beyond recap. Deliver:
@@ -66,14 +71,15 @@ Connect threads across days into a coherent narrative.
 ## Output
 1. Prepend a new object (type:"weekly") to the array in reports/data/reports.js:
    sortDate = the Sunday of the week just ended, dateLabel like
-   "Week of <Mon> – <Sun>, <year>", a strong 5-bullet tldr, and rich sections
-   ending with an action checklist. End with a sources string.
+   "Week of <Mon> – <Sun>, <year>", a `domains` array (≥1 valid slug from
+   docs/DOMAINS.md covering the week's content), a strong 5-bullet tldr, and rich
+   sections ending with an action checklist. End with a sources string.
 2. Regenerate the PDF: run `python3 build_report.py` — it reads the newest weekly
    object straight from reports/data/reports.js and writes
    reports/pdf/weekly-ai-report-<sortDate>.pdf automatically. Set the new object's
    `pdf` field to that path. (You no longer hand-edit build_report.py.)
-3. Update docs/knowledge/digest.md and docs/knowledge/predictions.md per the
-   self-learning loop above.
+3. Update the relevant docs/knowledge/digest/<domain>.md file(s), docs/knowledge/
+   predictions.md, and docs/knowledge/sources.md per the self-learning loop above.
 4. Run `python3 scripts/check_reports.py` — it must pass before committing.
 5. Keep reports/data/reports.js valid JS and don't overwrite older reports.
 6. Commit "weekly: AI briefing for week ending <date>" (knowledge files + PDF in

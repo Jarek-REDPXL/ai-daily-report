@@ -59,10 +59,13 @@ because it overlaps earlier coverage — advance the thread or note "quiet day."
 This briefing compounds. Two repo files are its memory; use them on every run.
 
 **BEFORE writing today's report, READ:**
-- `docs/knowledge/digest.md` — active threads + durable lessons. Use it so today
-  advances the running story and never repeats earlier coverage.
-- `docs/knowledge/predictions.md` — open forward-looking calls. Check if any
-  resolved in the last ~24h.
+- `docs/knowledge/digest/_house.md` — shared mission + sourcing standard, then the
+  per-domain digest file(s) for whatever you're covering
+  (`docs/knowledge/digest/<domain>.md`, e.g. `ai-tooling.md`) — active threads +
+  durable lessons. Use them so today advances the running story and never repeats.
+- `docs/knowledge/sources.md` — source-scoring ledger; mine the high scorers first.
+- `docs/knowledge/predictions.md` — open forward-looking calls (domain-tagged).
+  Check if any resolved in the last ~24h.
 - The most recent ~5 entries in `reports/data/reports.js`.
 
 Then write a report that:
@@ -73,11 +76,14 @@ Then write a report that:
   regulation, agents).
 
 **AFTER writing (in the SAME commit), UPDATE:**
-- `docs/knowledge/digest.md` — add/advance/close active threads, add any genuinely
-  new durable lesson, append one Changelog line (`YYYY-MM-DD: …`). Keep it tight.
+- `docs/knowledge/digest/<domain>.md` — for each domain you covered: add/advance/close
+  active threads, add any genuinely new durable lesson, append one Changelog line
+  (`YYYY-MM-DD: …`). Keep each tight. (Shared mission/sourcing lives in `_house.md`.)
 - `docs/knowledge/predictions.md` — move any resolved prediction to "Resolved" with
-  the outcome; add any new falsifiable forward call you made today (with a date and
-  rough due window).
+  the outcome; add any new falsifiable forward call you made today (with a date,
+  a `[domain]` tag, and a rough due window).
+- `docs/knowledge/sources.md` — promote sources that sat behind a synthesized item
+  or a validated prediction; decay stale ones.
 Keeping these current is REQUIRED, not optional — it is what makes the briefing
 get smarter over time.
 
@@ -101,7 +107,10 @@ able to get from a generic news feed.
 ## Output
 1. Prepend a new object to the TOP of the array in reports/data/reports.js with:
    type:"daily", today's sortDate (YYYY-MM-DD), a dateLabel like
-   "Friday, May 29, 2026", a punchy 3–5 bullet tldr ("Today in 30 seconds"),
+   "Friday, May 29, 2026", a `domains` array (≥1 valid slug from docs/DOMAINS.md —
+   e.g. ["ai-tooling"], or multiple like ["paid","growth"] when the day spans them;
+   paid-platform granularity goes in block `tags`, not domains), a punchy 3–5 bullet
+   tldr ("Today in 30 seconds"),
    and sections. Use a "What changed today" section, include a "Markets & money"
    item whenever there's a relevant finance/stock/investment signal, and a final
    "Sharpen your edge" section. End with a `sources` string of EXACT clickable
@@ -112,8 +121,8 @@ able to get from a generic news feed.
      site also derives Mon–Sun grouping from sortDate, so set sortDate correctly.)
 2. Keep older reports intact (prepend, never overwrite). Match the exact object
    shape used by existing entries and keep reports/data/reports.js valid JS.
-3. Update docs/knowledge/digest.md and docs/knowledge/predictions.md per the
-   self-learning loop above.
+3. Update the relevant docs/knowledge/digest/<domain>.md file(s), docs/knowledge/
+   predictions.md, and docs/knowledge/sources.md per the self-learning loop above.
 4. Run the quality self-check: `python3 scripts/check_reports.py` — it must pass
    (valid JS, correct schema, no duplicate ids, today's entry present). It also
    auto-regenerates the site's derived data (reports/data/index.json + entries/)

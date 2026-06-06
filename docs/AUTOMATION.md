@@ -13,7 +13,7 @@ Claude "AI NEWS" routine  (daily 08:00, free under the Max plan)
 GitHub (private: Jarek-REDPXL/ai-daily-report)
         │  auto-deploy on push
         ▼
-Vercel  →  https://ai-daily-report-beta.vercel.app   (public, always current)
+Vercel  →  https://redpxlnews.com   (team-password protected, always current)
 ```
 
 The routine has the repo attached and these instructions (see "Routine prompt"
@@ -22,8 +22,10 @@ below). It runs unattended; nothing on your computer needs to be on.
 ## What each run does
 
 1. **Reads the project's memory first** (this is the self-learning part):
-   - `docs/knowledge/digest.md` — active threads + durable lessons
-   - `docs/knowledge/predictions.md` — open/resolved forward calls
+   - `docs/knowledge/digest/_house.md` (shared mission/sourcing) + the per-domain
+     digests `docs/knowledge/digest/<domain>.md` — active threads + durable lessons
+   - `docs/knowledge/sources.md` — source-scoring ledger
+   - `docs/knowledge/predictions.md` — open/resolved forward calls (domain-tagged)
    - recent entries in `reports/data/reports.js`
 2. Researches the last ~24h (web search, cross-checked, figures flagged directional).
 3. Follows `docs/prompts/daily.md` (and `weekly.md` on Mondays, for the week just
@@ -43,11 +45,15 @@ below). It runs unattended; nothing on your computer needs to be on.
 
 ## The self-learning loop (why it improves)
 
-Two in-repo files give the autonomous run a memory it can read AND write:
-- **`docs/knowledge/digest.md`** — the running distilled judgment (threads +
-  evergreen lessons). Each run builds on it and prunes it.
-- **`docs/knowledge/predictions.md`** — every forward-looking call, with outcomes
-  logged when they resolve. Public accountability = the edge a news feed can't fake.
+In-repo files give the autonomous run a memory it can read AND write:
+- **`docs/knowledge/digest/`** — per-domain running judgment: `_house.md` (shared
+  mission/sourcing) + one file per domain (`ai-tooling.md`, `web.md`, …) with that
+  domain's threads + evergreen lessons. Each run builds on the relevant file(s).
+- **`docs/knowledge/sources.md`** — source-scoring ledger; high scorers get mined
+  first, sources behind validated items get promoted, stale ones decay.
+- **`docs/knowledge/predictions.md`** — every forward-looking call (domain-tagged),
+  with outcomes logged when they resolve. Public accountability = the edge a news
+  feed can't fake.
 
 Because these live in the repo (not in any one chat), every scheduled run inherits
 everything learned so far and adds to it.
@@ -63,19 +69,21 @@ everything learned so far and adds to it.
 ## Routine prompt (paste into the "AI NEWS" routine instructions)
 
 > Every run, produce "The AI Edge" briefing IN THIS REPOSITORY and publish it.
-> 1. READ docs/knowledge/digest.md + docs/knowledge/predictions.md + the recent
+> 1. READ docs/knowledge/digest/_house.md + the relevant docs/knowledge/digest/<domain>.md
+>    file(s) + docs/knowledge/sources.md + docs/knowledge/predictions.md + the recent
 >    entries in reports/data/reports.js (the project's memory).
 > 2. Follow docs/prompts/daily.md exactly to create TODAY's daily report; research
 >    the last ~24h with web search, cross-check surprising figures, mark
 >    fast-moving numbers directional.
 > 3. PREPEND one new daily object to reports/data/reports.js (newest first; exact
->    existing shape; never overwrite; keep valid JS). One dated entry every run,
->    even on quiet days.
+>    existing shape incl. a `domains` array of ≥1 valid slug from docs/DOMAINS.md;
+>    never overwrite; keep valid JS). One dated entry every run, even on quiet days.
 > 4. If today is MONDAY, also follow docs/prompts/weekly.md for the week that just
 >    ended (Mon–Sun; weekly sortDate = that Sunday), then run
 >    `python3 build_report.py` and set the weekly's pdf field.
-> 5. UPDATE docs/knowledge/digest.md + docs/knowledge/predictions.md (advance
->    threads, resolve predictions, add new lessons/calls).
+> 5. UPDATE the relevant docs/knowledge/digest/<domain>.md file(s) +
+>    docs/knowledge/predictions.md + docs/knowledge/sources.md (advance threads,
+>    resolve predictions, add new lessons/calls, promote/decay sources).
 > 6. Run `python3 scripts/check_reports.py` — it must pass.
 > 7. git add -A, commit, and push to origin main yourself.
 > Bar: golden value, not boring facts — what happened, why it matters, what to do
