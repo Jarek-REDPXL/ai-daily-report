@@ -26,7 +26,7 @@ window.AI_EDGE_CARDS = [
 
   {
     id: "card-web-view-transitions",
-    domains: ["web"],
+    domains: ["web-dev", "web-design"],
     title: "Use the View Transitions API for app-like page navigation",
     summary: "The browser-native View Transitions API animates between pages/states with CSS, giving app-like polish without a SPA framework.",
     why: "Client builds get smooth, premium navigation at near-zero JS cost — a real differentiator on the sites we ship, and it degrades gracefully where unsupported.",

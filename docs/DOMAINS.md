@@ -9,7 +9,8 @@ them aligned (the quality gate parses `domains.js`, so that file wins on conflic
 
 | Slug | Label | Scope (one line) |
 |------|-------|------------------|
-| `web` | Web design & development | Sites, apps, UX/UI, front/back-end build, performance, CMS/dev tooling. |
+| `web-design` | Web design (UI/UX & frontend craft) | UI/UX, interaction & motion, accessibility, type/layout, design systems for the web. |
+| `web-dev` | Web development (build, code, performance) | Build & code, frameworks, performance, architecture, tooling, APIs, CMS/deployment. |
 | `graphic` | Graphic design & brand | Visual identity, logos, layout, typography, brand systems and assets. |
 | `email` | Email & retention | Lifecycle/CRM, newsletters, automation flows, deliverability, retention metrics. |
 | `social` | Social media (organic) | Organic content, community, platform-native formats, creators, engagement. |
@@ -27,6 +28,23 @@ as a separate domain. Use these exact tag slugs:
 | `google-ads` | Google Ads |
 | `meta-ads` | Meta (Facebook/Instagram) Ads |
 | `snap-ads` | Snapchat Ads |
+
+## Hubs (how domains roll up for the site)
+
+The site groups the 8 domains into 4 **hubs** — the navigable craft areas a
+teammate browses. This is the single reference for the mapping (UI is built against
+it):
+
+| Hub | Domains |
+|-----|---------|
+| **Design** | `web-design`, `graphic` |
+| **Development** | `web-dev` |
+| **Marketing** | `email`, `social`, `paid`, `growth` |
+| **AI** | `ai-tooling` |
+
+Cards and reports can be multi-tagged, so a cross-craft item (e.g. a card tagged
+`["web-dev","web-design"]`) legitimately appears in more than one hub. Domains stay
+the atomic unit; hubs are just the rollup for navigation.
 
 ## Notes
 

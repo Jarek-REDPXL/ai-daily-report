@@ -8,9 +8,11 @@ what it is, how it runs, every moving part, how to change things, and what's nex
 ## 1. What this is (in one paragraph)
 
 **RedPxl News** is a self-running, self-improving intelligence platform for the
-RedPxl team across the disciplines the team works in — **web, graphic, email,
-social, paid, growth**, plus **ai-tooling** (AI tools, skills & techniques applied
-to all of the above). A private knowledge base (not just a news feed) that
+RedPxl team across the disciplines the team works in — **web design, web dev,
+graphic, email, social, paid, growth**, plus **ai-tooling** (AI tools, skills &
+techniques applied to all of the above). These 8 domains roll up into 4 navigable
+**hubs** — Design, Development, Marketing, AI (mapping in §4 / docs/DOMAINS.md). A
+private knowledge base (not just a news feed) that
 researches these fields every morning, writes a daily briefing (and a weekly
 synthesis on Mondays), grades its own past predictions, compounds what it learns in
 an in-repo memory that is now **per-domain** (each discipline has its own threads +
@@ -155,8 +157,15 @@ Weekly summary pinned on top → 7 days listed Sunday→Monday.
 - `scripts/domains.js` — machine source of truth for valid domain slugs +
   labels (`DOMAINS`, `DOMAIN_LABELS`, `DOMAIN_LABELS_SHORT`, `PAID_PLATFORM_TAGS`);
   imported by build-data.js and parsed by the gate.
-- `docs/DOMAINS.md` — human-readable taxonomy: the 7 slugs + labels + scopes + the
-  paid platform tags (`google-ads`, `meta-ads`, `snap-ads`).
+- `docs/DOMAINS.md` — human-readable taxonomy: the **8** slugs + labels + scopes +
+  the paid platform tags (`google-ads`, `meta-ads`, `snap-ads`) + the **hub mapping**.
+- **8 domains:** `web-design`, `web-dev`, `graphic`, `email`, `social`, `paid`,
+  `growth`, `ai-tooling` (web was split into design + dev so the Design and
+  Development hubs are sharp).
+- **Hubs (rollup for navigation):** Design = `web-design` + `graphic`;
+  Development = `web-dev`; Marketing = `email` + `social` + `paid` + `growth`;
+  AI = `ai-tooling`. Items can be multi-tagged, so a cross-craft card appears in
+  more than one hub.
 
 ### The "brain" (self-learning memory, in-repo so the routine can read+write it)
 - `docs/knowledge/digest/` — per-domain running judgment. `_house.md` holds the
@@ -175,12 +184,14 @@ Weekly summary pinned on top → 7 days listed Sunday→Monday.
   machine source of truth for valid slugs; the gate parses it).
 
 ### Prompts (the editorial spec the routine follows)
-- `docs/prompts/daily.md` — daily briefing instructions (canonical): the 7-domain
-  cadence (scan all 7 → deep-beat web + the 2 least-recently-covered non-web domains
-  → promote anything urgent), per-domain sourcing, the source-scoring loop, the
-  exact-clickable-link rule, self-learning loop, output format, quality gate step.
+- `docs/prompts/daily.md` — daily briefing instructions (canonical): the 8-domain
+  cadence (scan all 8 → deep-beat exactly one web slug daily, alternating
+  web-design/web-dev, + the 2 least-recently-covered non-web domains → promote
+  anything urgent), per-domain sourcing, the source-scoring loop, the
+  exact-clickable-link rule, self-learning loop, the card-extraction step, output
+  format, quality gate step.
 - `docs/prompts/weekly.md` — weekly synthesis instructions (Mon–Sun, written Monday;
-  synthesizes across all 7 domains).
+  synthesizes across all 8 domains).
 
 ### Tooling
 - `scripts/check_reports.py [YYYY-MM-DD]` — QUALITY GATE. Validates reports.js (valid
@@ -229,11 +240,13 @@ Configured in the Claude web/app (Routines), NOT in this repo. Key settings:
 - **Permissions:** allow git push to the repo; web search; Bash. Runs unattended.
 
 Its Instructions tell it to: read the per-domain knowledge files + recent reports →
-research the last ~24h on the **7-domain cadence** (scan all 7 domains → deep-beat
-**web** + the **2 least-recently-covered non-web domains** + promote anything urgent
-a scan surfaces) → mine/update the **source-scoring loop** (`sources.md`) → prepend
-one dated daily to reports.js with its `domains` array (one EVERY run, even quiet
-days) → on Mondays also write the weekly + run build_report.py → update the
+research the last ~24h on the **8-domain cadence** (scan all 8 domains → deep-beat
+**exactly one web slug** daily, alternating **web-design/web-dev**, + the **2
+least-recently-covered non-web domains** + promote anything urgent a scan surfaces) →
+mine/update the **source-scoring loop** (`sources.md`) → CREATE/UPDATE durable
+**cards** for plays that emerge → prepend one dated daily to reports.js with its
+`domains` array (one EVERY run, even quiet days) → on Mondays also write the weekly +
+run build_report.py → update the
 per-domain digests + predictions + sources → run check_reports.py (must pass) →
 commit + push. The canonical, up-to-date version of this cadence lives in
 `docs/prompts/daily.md`; the paste-able routine prompt is in
@@ -323,9 +336,10 @@ Deploy = `git push origin main` (Vercel auto-deploys in ~1 min). Verify a deploy
 
 `docs/KNOWLEDGE-BASE-ROADMAP.md` has the detail. Summary:
 - **Phase 1 (DONE):** split data + lazy-load + auto-regen. Scales to years.
-- **Domain expansion (DONE):** the platform now covers all 7 team disciplines —
-  `domains` field on every report (gate-validated), per-domain ledgers, the
-  source-scoring ledger, the 7-domain daily cadence, and the sidebar domain filter.
+- **Domain expansion (DONE):** the platform now covers all 8 team domains (web split
+  into web-design + web-dev) rolling up into 4 hubs — `domains` field on every report
+  (gate-validated), per-domain ledgers, the source-scoring ledger, the 8-domain daily
+  cadence, the durable **card layer**, and the sidebar domain filter.
 - **Phase 2 (when needed):** Postgres (Vercel Postgres / Supabase, free tier) for
   cross-year full-text + structured filtering (by ticker/company/topic) + an API.
 - **Phase 3 (the big one):** semantic / vector search (pgvector) — "ask it

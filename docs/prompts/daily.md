@@ -4,17 +4,18 @@
 Compounding intelligence edge for the RedPxl team across our disciplines — using AI to stay ahead of everyone in our fields. This is a knowledge base, not a news feed: golden, usable judgment that compounds, never raw headlines. Shared standards live in docs/knowledge/digest/_house.md.
 
 ## Domains (canonical — scripts/domains.js / docs/DOMAINS.md)
-web (FLAGSHIP), graphic, email, social, paid, growth, ai-tooling.
+web-design (FLAGSHIP), web-dev (FLAGSHIP), graphic, email, social, paid, growth, ai-tooling.
+(Web is the flagship craft, split into the design and dev halves — see the cadence below.)
 Paid platform granularity is BLOCK-level tags, not domains: google-ads, meta-ads, snap-ads.
 
 ## Daily cadence — breadth without dilution
-- SCAN all 7 domains every run: one tight line each, surfaced ONLY if something genuinely moved. Per-domain silence is allowed; never skip the whole run.
+- SCAN all 8 domains every run: one tight line each, surfaced ONLY if something genuinely moved. Per-domain silence is allowed; never skip the whole run.
 - DEEP-BEAT exactly 3 domains:
-  1. web — always (flagship).
-  2. The 2 NON-web domains gone longest without a deep beat. Determine by scanning the `domains` arrays of the last ~10 reports and picking the 2 least-recently-present non-web domains. Self-balances even if a day was missed.
+  1. EXACTLY ONE web slug — the least-recently-covered of {`web-design`, `web-dev`}. Web is the flagship craft and gets a beat EVERY day; the two halves ALTERNATE (so if today is web-dev, tomorrow leans web-design). A single item that genuinely serves both can be tagged with both, but still only "spends" the one guaranteed web slot.
+  2. The 2 NON-web domains gone longest without a deep beat. Determine by scanning the `domains` arrays of the last ~10 reports and picking the 2 least-recently-present non-web domains (treat web-design + web-dev as the web pair, excluded here). Self-balances even if a day was missed.
   - PROMOTE: if a scan surfaces something genuinely actionable in an unscheduled domain, cover it properly and add it to today's deep set.
 - A deep beat = real research + golden block(s): what changed, why it matters to this discipline, the technique/do-it, exact link(s); plus any new prediction and a digest update for that domain.
-- The report's `domains` array = every domain that earned a SUBSTANTIVE block today. One-line scans that surfaced nothing do NOT earn a tag.
+- The report's `domains` array = every domain that earned a SUBSTANTIVE block today (valid slugs incl. `web-design`/`web-dev`). One-line scans that surfaced nothing do NOT earn a tag.
 
 ## Card extraction (the compounding library — do this on every deep beat)
 The daily is the INTAKE feed; cards are the durable LIBRARY of plays the team keeps. Whenever a deep beat surfaces a durable play/technique/tool (not just news — something a teammate would DO), capture it as a card in `reports/data/cards.js` (`window.AI_EDGE_CARDS`):
@@ -26,7 +27,8 @@ The daily is the INTAKE feed; cards are the durable LIBRARY of plays the team ke
 ## Sourcing (non-negotiable)
 1. EVERY source is an exact clickable link. No bare-text sources. If you can't link it, don't cite it — never fabricate links.
 2. Source widely, per domain:
-   - web: framework release notes, GitHub releases/changelogs, RFCs, spec/MDN updates, strong conf/YouTube deep-dives, practitioner blogs.
+   - web-design: UI/UX patterns, interaction & motion, accessibility, type/layout, design-system + frontend-craft sources, showcases for TECHNIQUE.
+   - web-dev: framework release notes, GitHub releases/changelogs, RFCs, spec/MDN/Baseline updates, performance & architecture, strong conf/YouTube deep-dives, practitioner blogs.
    - graphic: Adobe/Figma + other tool releases, design-system/type/brand sources, showcases for TECHNIQUE not just visuals.
    - email: ESP changelogs (Klaviyo et al.), deliverability/auth (DMARC/BIMI), lifecycle & retention case studies with real numbers.
    - social: platform product/algorithm changes, new formats, credible creator-economy analysis.
@@ -48,7 +50,7 @@ The daily is the INTAKE feed; cards are the durable LIBRARY of plays the team ke
 Publish only what clears all three: (1) what changed, (2) why it matters to THIS discipline / our work, (3) the technique / do-it / link. "A thing happened" gets cut. Teach concepts the team can use Monday. A quiet day is a short, sharp briefing — never padding.
 
 ## Web flagship — the quality standard (worked example)
-A model `web` block, tags:["web"]: sub = "Chrome ships cross-document View Transitions". What changed: native page-to-page transitions without a JS framework. Why it matters: client sites get app-like polish with near-zero bundle cost — a real differentiator on builds we ship. Do-it: opt in with the view-transition CSS + a one-line meta; start on a hero-to-detail navigation; link the exact spec/release note. This depth and "so-what-for-us" framing is the bar every domain emulates.
+Web is the flagship craft, split into the **web-design** and **web-dev** halves (it gets a beat every day, alternating focus). A model web block, domains include `web-dev` (and `web-design` when the design payoff is real): sub = "Chrome ships cross-document View Transitions". What changed: native page-to-page transitions without a JS framework. Why it matters: client sites get app-like polish with near-zero bundle cost — a real differentiator on builds we ship. Do-it: opt in with the view-transition CSS + a one-line meta; start on a hero-to-detail navigation; link the exact spec/release note. This depth and "so-what-for-us" framing is the bar every domain emulates.
 
 ## Output
 - Prepend ONE dated daily object to reports/data/reports.js (newest first, exact existing shape, never overwrite, valid JS). One entry EVERY run, even quiet days.

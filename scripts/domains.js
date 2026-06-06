@@ -10,10 +10,11 @@
  * Paid-platform granularity (google-ads / meta-ads / snap-ads) is a BLOCK-level
  * tag, NOT a domain — see PAID_PLATFORM_TAGS below and docs/DOMAINS.md.
  */
-const DOMAINS = ["web", "graphic", "email", "social", "paid", "growth", "ai-tooling"];
+const DOMAINS = ["web-design", "web-dev", "graphic", "email", "social", "paid", "growth", "ai-tooling"];
 
 const DOMAIN_LABELS = {
-  "web": "Web design & development",
+  "web-design": "Web design (UI/UX & frontend craft)",
+  "web-dev": "Web development (build, code, performance)",
   "graphic": "Graphic design & brand",
   "email": "Email & retention",
   "social": "Social media (organic)",
@@ -26,7 +27,8 @@ const DOMAIN_LABELS = {
 // chip text — the facet (index.meta.json) carries these so the browser never
 // mirrors them.
 const DOMAIN_LABELS_SHORT = {
-  "web": "Web",
+  "web-design": "Web Design",
+  "web-dev": "Web Dev",
   "graphic": "Graphic",
   "email": "Email",
   "social": "Social",

@@ -1,8 +1,8 @@
-# Digest — Web design & development (`web`)
+# Digest — Web development (`web-dev`)
 
-> Domain scope: sites, apps, UX/UI, front/back-end build, performance, CMS & dev
-> tooling. Shared mission + sourcing standard live in [`_house.md`](./_house.md);
-> read that first, then this file.
+> Domain scope: build & code, frameworks, performance, architecture, tooling,
+> APIs, CMS & deployment for the web. Shared mission + sourcing standard live in
+> [`_house.md`](./_house.md); read that first, then this file.
 
 ## How to use this file (instructions for each run)
 1. **Before writing:** read `_house.md` + the "Active threads" and "Durable
