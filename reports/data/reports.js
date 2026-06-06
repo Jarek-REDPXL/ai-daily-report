@@ -80,6 +80,47 @@ window.AI_EDGE_REPORTS = [
     sources: "Anthropic Institute (“When AI builds itself,” Jun 4 — Jack Clark + Marina Favaro) · Al Jazeera / Quartz / Business Standard / Crypto Briefing (Anthropic pause proposal; Altman “bomb / shelter” response) · Roll Call / Axios / Nextgov / Public Citizen / ITI / Bloomberg Law (Great American AI Act discussion draft, Obernolte–Trahan, Jun 4) · OpenAI / Windows News / gHacks / TechTimes (ChatGPT Dreaming V3 rollout, ~5× compute cut, memory summary page) · VentureBeat / The Decoder / Kingy AI / Codersera (MiniMax M3; SWE-Bench Pro 59 claim; 1M context; MSA attention) · The Robot Report / SiliconANGLE / Bloomberg / Bezos Expeditions (Generalist AI $400M at $2B) · SiliconANGLE / TechFundingNews / The Next Web (Flourish $500M at $2.5B; Cortex AI; ~20-watt brain target) · Crunchbase News (Jun 5 weekly funding roundup). Benchmark, valuation, and run-rate figures are directional until independently verified."
   },
 
+  /* ===================== DAILY — Fri Jun 5 ===================== */
+  {
+    id: "2026-06-05-daily",
+    type: "daily",
+    week: "Week of May 31 – Jun 6, 2026",
+    title: "Daily Briefing — Friday, June 5",
+    dateLabel: "Friday, June 5, 2026",
+    sortDate: "2026-06-05",
+    tldr: [
+      "<b>A quieter day — the week's big moves (Trump EO, Microsoft Build, the AI Act draft, Anthropic's S-1) all landed Jun 1–4; Friday was the market digesting them.</b>",
+      "<b>Colorado's AI Act takes effect June 30</b> — and the new federal “Great American AI Act” draft would freeze it on the development side. The state-vs-federal collision is now the thing to watch.",
+      "<b>A Claude Sonnet 4.8 leak keeps gaining credibility</b> — treat as rumor until Anthropic confirms, but a mid-tier refresh would reset the price/performance map again.",
+      "<b>NVIDIA signaled a push to “reinvent the Windows PC”</b> around on-device AI — the on-device/edge thread continues."
+    ],
+    sections: [
+      { h: "What changed today",
+        blocks: [
+          { sub: "Slow news day — and that's worth naming", tags:["practice"],
+            p: "After a packed Jun 1–4 (Anthropic's S-1, Trump's AI EO, Microsoft's in-house MAI models, the Great American AI Act draft, MiniMax M3), Friday was mostly second-day analysis rather than new launches. No major model shipped.",
+            why: "Most of the value on a quiet day is consolidation: the smart move is to act on the week's big shifts, not chase a thin headline.",
+            doIt: "Use quiet days to do the homework the busy days created — today that means reading the actual Great American AI Act provisions if you're >$500M revenue, or benchmarking a cheap model while nothing new is competing for your attention." },
+          { sub: "The state-vs-federal regulation collision sharpens", tags:["policy"],
+            p: "Colorado's AI Act is set to take effect <b>June 30</b>; California's frontier-transparency rules are live. The Obernolte–Trahan federal draft (Jun 4) would preempt state laws that regulate model <i>development</i> for three years — but explicitly not <i>deployment</i>. Friday was largely legal teams parsing which of their obligations survive.",
+            why: "This is the practical fault line for anyone building on AI in the US: your fine-tuning/training pipeline may fall on the (preempted) development side while your shipped product stays under state deployment law.",
+            doIt: "Draw the development-vs-deployment boundary on your own stack now, so you know which obligations are federal-ceiling'd and which remain state-by-state." },
+          { sub: "Rumor watch: Claude Sonnet 4.8 + NVIDIA's Windows PC play", tags:["model","tool"],
+            p: "A <b>Claude Sonnet 4.8</b> leak gained traction (unconfirmed). Separately, NVIDIA signaled an initiative to “reinvent the Windows PC” around local AI acceleration.",
+            why: "A Sonnet refresh would reprice the mid-tier (the workhorse for most production traffic); NVIDIA's PC push is another data point that inference is migrating toward the edge.",
+            note: "Both are directional — leak + signal, not shipped product. Don't re-architect on a rumor; just keep your eval harness ready to re-run when Sonnet 4.8 actually lands." }
+        ]
+      },
+      { h: "Sharpen your edge",
+        blocks: [
+          { sub: "Keep a “re-run on release” eval kit ready",
+            p: "Weeks like this one show models reprice fast and often. The teams that benefit aren't the ones who read every leak — they're the ones who can drop a new model into a standing eval the day it ships and get a verdict in an hour. Maintain 3–5 of your real tasks as a fixed, scored eval set so any new model (Sonnet 4.8, MiniMax M3 weights, DeepSeek V4) gets an objective, same-day yes/no instead of vibes." }
+        ]
+      }
+    ],
+    sources: "buildfastwithai (Jun 5 roundup) · NeuralBuddies (Jun 5 recap) · Roll Call / Axios (Great American AI Act; Colorado AI Act effective Jun 30) · The Decoder (Sonnet 4.8 leak chatter) · NVIDIA. Quiet-day briefing; unconfirmed items flagged as directional."
+  },
+
   /* ===================== DAILY — Thu Jun 4 ===================== */
   {
     id: "2026-06-04-daily",
@@ -132,6 +173,120 @@ window.AI_EDGE_REPORTS = [
       }
     ],
     sources: "White House (Promoting Advanced AI Innovation and Security EO, Jun 2) · CNBC / JURIST / Lawfare / Ropes & Gray / Crowell & Moring (EO analysis) · Microsoft AI / GitHub Changelog (MAI-Thinking-1; MAI-Code-1-Flash; Build 2026) · CNBC (Microsoft AI models lessen reliance on OpenAI) · Anthropic (confidential S-1; Expanding Project Glasswing) · TechCrunch / NPR / Yahoo Finance (Anthropic IPO) · Cybersecurity Dive / SecurityWeek (Glasswing → NATO, ENISA, Samsung, Okta) · Bloomberg / SCMP / Tech Startups (DeepSeek ¥50B round) · AWS News Blog / OpenAI (GPT-5.5 + Codex GA on Bedrock). Run-rate, valuation, and benchmark figures are directional."
+  },
+
+  /* ===================== DAILY — Wed Jun 3 ===================== */
+  {
+    id: "2026-06-03-daily",
+    type: "daily",
+    week: "Week of May 31 – Jun 6, 2026",
+    title: "Daily Briefing — Wednesday, June 3",
+    dateLabel: "Wednesday, June 3, 2026",
+    sortDate: "2026-06-03",
+    tldr: [
+      "<b>DeepSeek's first-ever outside funding broke cover</b> — ~<b>$7.4B</b> (≈¥50B) at a <b>$52–59B</b> valuation, with founder Liang Wenfeng reportedly putting in ~40% himself, alongside Tencent and CATL.",
+      "<b>China is consolidating around one open-weight champion</b> rather than a portfolio of labs — and explicitly prioritizing research/AGI over near-term commercialization.",
+      "<b>Microsoft Build Day 2</b> continued the in-house-model push from the day before (MAI-Thinking-1 / MAI-Code-1-Flash)."
+    ],
+    sections: [
+      { h: "What changed today",
+        blocks: [
+          { sub: "DeepSeek raises ~$7.4B — and picks a side", tags:["model","money"],
+            p: "Bloomberg/CNBC reported (Jun 3) DeepSeek is closing its first outside round at <b>~$7.4B</b> (≈¥50B), valuing it at <b>$52–59B</b>. Backers: founder Liang Wenfeng (~40% of the round himself), <b>Tencent</b>, battery giant <b>CATL</b>, the state-backed National AI Industry Investment Fund, NetEase, and JD. Management told investors it will prioritize <b>groundbreaking research and AGI</b> over short-term revenue, and keep models open-weight.",
+            why: "DeepSeek built V3/R1/V4 without outside capital. Taking state-fund-aligned money is a strategic pivot: to scale under US compute restrictions, it's plugging into China's national champions. The contrast with the US (many labs, distributed cap tables) is now stark — China is backing <b>one</b> open-weight standard-bearer with tens of billions. Saturday's “DeepSeek 100× cheaper output” price-pressure thread is now funded to widen, not close.",
+            doIt: "If you'd parked a DeepSeek V4 eval over “company fragility,” drop that thesis — capitalization is no longer the risk. The remaining risk for Western teams is <b>jurisdictional</b> (EU/US data flows; the Trump EO's covered-model logic if you fine-tune). Evaluate on merits; gate on jurisdiction." },
+          { sub: "Microsoft Build, Day 2: the in-house stack continues", tags:["model","tool"],
+            p: "Build's second day kept the spotlight on Microsoft's own foundation models (MAI-Thinking-1, MAI-Code-1-Flash now default-eligible in GitHub Copilot) and the broader “model-agnostic Copilot” direction.",
+            why: "Reinforces Tuesday's read: the hyperscaler is decoupling from a single model supplier. Copilot is becoming a picker, not a pipe to one lab." }
+        ]
+      },
+      { h: "Sharpen your edge",
+        blocks: [
+          { sub: "Separate ‘can I use this model’ from ‘should I, here’",
+            p: "DeepSeek's raise is a clean example of why model selection now needs two independent gates. <b>Gate 1 (capability/cost):</b> does it pass your eval at an acceptable price? <b>Gate 2 (jurisdiction/provenance):</b> where do the weights live, where does data flow, and does any regulation (EU AI Act, Trump EO covered-model rules) attach if you fine-tune? A model can ace Gate 1 and still fail Gate 2 for a given product. Write both gates into your model-router doc so the decision is explicit, not accidental." }
+        ]
+      }
+    ],
+    sources: "Bloomberg / CNBC / Tech Startups / American Bazaar (DeepSeek ~$7.4B first round, $52–59B valuation, Tencent + CATL + founder) · Microsoft Build Day 2 coverage. Valuation/figures reported same-week; treat as directional."
+  },
+
+  /* ===================== DAILY — Tue Jun 2 ===================== */
+  {
+    id: "2026-06-02-daily",
+    type: "daily",
+    week: "Week of May 31 – Jun 6, 2026",
+    title: "Daily Briefing — Tuesday, June 2",
+    dateLabel: "Tuesday, June 2, 2026",
+    sortDate: "2026-06-02",
+    tldr: [
+      "<b>Trump signed the AI executive order</b> he'd canceled on May 25 — reframed as a <b>“voluntary” 30-day pre-release review</b> for “covered frontier models,” with no licensing but a new Treasury/NSA/CISA security clearinghouse.",
+      "<b>Microsoft Build: in-house foundation models.</b> <b>MAI-Thinking-1</b> (reasoning) and <b>MAI-Code-1-Flash</b> (5B, default-eligible in GitHub Copilot) — trained without OpenAI data. Redmond is hedging its OpenAI dependence.",
+      "<b>OpenAI shipped GPT-5.5 + Codex GA on AWS Bedrock</b> — OpenAI is now on every major cloud (Azure, AWS, Oracle) right before its IPO path."
+    ],
+    sections: [
+      { h: "What changed today",
+        blocks: [
+          { sub: "Trump's AI EO: “voluntary” review with coercive gravity", tags:["policy","model"],
+            p: "On Jun 2 the White House issued <i>Promoting Advanced AI Innovation and Security</i> — the order pulled on May 25, redesigned. Treasury + NSA + DHS get a classified process to label models with “advanced cyber capabilities” as <b>covered frontier models</b>; labs that opt in submit them for review <b>30 days before public release</b> and choose “trusted partners” for early access. Explicitly <b>no licensing or permitting</b>, plus an AI cybersecurity clearinghouse via Treasury/NSA/CISA.",
+            why: "Last week's “US federal picture is unsettled” call flipped fast: this is a <b>soft licensing regime in voluntary clothing</b>. Once the big three opt in (early access wins government contracts), smaller labs face an implicit “opt in or look reckless.” It's also the public-sector mirror of Anthropic's Glasswing — government wants the same dual-use security access labs are selling.",
+            doIt: "If you ship anything plausibly a “covered frontier model” (any agent strong at code/security), start the audit artifacts now: model card, eval suite, red-team report, training-data provenance — the same package the EU AI Act needs by Aug 2026. Build once, file twice." },
+          { sub: "Microsoft Build: the hyperscaler that no longer needs OpenAI's models", tags:["model","money"],
+            p: "At Build (Jun 2) Microsoft shipped its first in-house models — <b>MAI-Thinking-1</b> (reasoning) and <b>MAI-Code-1-Flash</b> (5B coding model, rolling out as a default-eligible option in <b>GitHub Copilot</b>), both trained on commercially-licensed data, no OpenAI distillation.",
+            why: "The April Microsoft–OpenAI exclusivity drop wasn't a one-off — it was the starting gun. Copilot is now a <b>model-agnostic product</b>, and “built on clean data” is becoming an enterprise selling point as IP suits pile up.",
+            doIt: "If you build on Copilot, instrument <b>per-task model attribution</b> in your logs now — default routing will start silently sending cheap requests to MAI-Code-1-Flash, and you want to catch quality regressions before users do." },
+          { sub: "OpenAI GPT-5.5 + Codex GA on AWS Bedrock", tags:["tool","model"],
+            p: "Also Jun 2: GPT-5.5, GPT-5.4, and Codex went GA on Amazon Bedrock (spend applies against AWS commits). Codex reportedly passed 5M weekly users.",
+            why: "Enterprises with AWS commits lose their last procurement excuse to skip OpenAI. Shipping on AWS the same day Microsoft ships in-house models is both sides publicly de-coupling — right before OpenAI's IPO." }
+        ]
+      },
+      { h: "Sharpen your edge",
+        blocks: [
+          { sub: "Learn “covered frontier model” — the new regulatory chess piece",
+            p: "The EO defines scope by <b>capability</b> (advanced cyber ability, classified benchmark), not parameter count or FLOPs. That means a small fine-tuned open-weight model could qualify if it gets too good at finding vulnerabilities — you can't know at training time. Build your eval pipeline so you can <i>measure</i> cyber-offensive capability (CTF/vuln-discovery task suites) the way you measure benchmarks. And treat “voluntary” as a future market floor: voluntary frameworks (HIPAA Safe Harbor, SOC 2) become customer-demanded badges within ~24 months. Plan to be compliant by mid-2027." }
+        ]
+      }
+    ],
+    sources: "White House (Promoting Advanced AI Innovation and Security EO, Jun 2) · CNBC / NBC News / A&O Shearman (EO analysis) · Microsoft AI / GitHub Changelog (MAI-Thinking-1, MAI-Code-1-Flash, Build 2026) · GuruFocus (Trump EO + MAI-Code-1-Flash) · AWS News Blog / OpenAI (GPT-5.5 + Codex GA on Bedrock). Figures directional."
+  },
+
+  /* ===================== DAILY — Mon Jun 1 ===================== */
+  {
+    id: "2026-06-01-daily",
+    type: "daily",
+    week: "Week of May 31 – Jun 6, 2026",
+    title: "Daily Briefing — Monday, June 1",
+    dateLabel: "Monday, June 1, 2026",
+    sortDate: "2026-06-01",
+    tldr: [
+      "<b>MiniMax M3 launched</b> — an <b>open-weight</b> model claiming <b>SWE-Bench Pro 59</b> (ahead of GPT-5.5 & Gemini 3.1 Pro), a <b>1M-token context</b>, and native multimodality, at ~5–10% of frontier pricing. A second Chinese lab in frontier-class tier.",
+      "<b>Anthropic confidentially filed its S-1</b> (IPO path) at a reported ~$47B revenue run-rate — ~5× year-over-year.",
+      "<b>GitHub Copilot's token-based billing kicked in</b> June 1, drawing developer backlash over cost increases."
+    ],
+    sections: [
+      { h: "What changed today",
+        blocks: [
+          { sub: "MiniMax M3: open-weight, 1M-context, frontier-class — at a fraction of the price", tags:["model","money"],
+            p: "MiniMax (Shanghai) launched <b>M3</b> on Jun 1 (weights + technical report to follow within ~10 days — <b>treat benchmarks as directional until independent reproduction</b>). Claims: <b>SWE-Bench Pro 59</b> (ahead of GPT-5.5 and Gemini 3.1 Pro), <b>1M-token context</b> (5× M2.7), native image/video understanding, and OpenRouter pricing around <b>5–10%</b> of frontier proprietary tokens. The novelty is <b>MiniMax Sparse Attention (MSA)</b> — ~15.6× faster decode and ~9.7× faster prefill at 1M context vs M2.",
+            why: "Saturday's price-spread thread (DeepSeek 100× cheaper output) just got a <i>second</i> Chinese open-weight entrant in frontier-class tier — it's now a tier, not a model. And <b>1M context as a commodity</b> erodes a lot of RAG complexity: if your retrieval pipeline mainly exists to compress context, sparse-attention long-context models are the architectural shift that eats it.",
+            doIt: "When M3 weights ship (~Jun 11), run your hardest <b>long-context</b> tasks against M3 vs DeepSeek V4-Pro vs Opus 4.8: a ~500K-token monorepo refactor, a 200-page document synthesis, a 50-file PR review. Pick the winner <b>per task class</b>, not per app." },
+          { sub: "Anthropic files its S-1", tags:["money","policy"],
+            p: "Anthropic confidentially filed a draft S-1 with the SEC (Jun 1) after the $65B Series H, on a reported ~$47B revenue run-rate (up from ~$10B a year ago — fast-moving, directional).",
+            why: "This is the <b>first major frontier-lab IPO path</b>. Once it prices, Anthropic's compute spend and gross margins become public — permanently changing how the whole industry is benchmarked.",
+            doIt: "Watch for the eventual public financials: they'll be the first real, audited look at frontier-lab unit economics — gold for anyone modeling AI build-vs-buy costs." },
+          { sub: "GitHub Copilot's token billing lands", tags:["tool","money"],
+            p: "Copilot's shift to token-based “AI Credits” took effect Jun 1, with developers reporting sharp cost increases versus the old flat fee.",
+            why: "Continues last week's cost-reckoning thread: unmetered agentic coding is being repriced toward usage. The winners measure cost-per-task, not seats.",
+            doIt: "Instrument per-workflow AI spend now, and route cheap/high-volume tasks to a Flash-class or open-weight model so a billing change doesn't blindside your budget." }
+        ]
+      },
+      { h: "Sharpen your edge",
+        blocks: [
+          { sub: "Treat unverified benchmark claims as hypotheses, not facts",
+            p: "M3's SWE-Bench Pro 59 is a vendor claim before the weights and report are out. The disciplined move: log such claims as <b>hypotheses with a verification date</b> (here, ~Jun 11 when weights land), then confirm against your own eval before changing any default. This habit — never repricing your stack on a pre-release number — is what separates teams that ride the cheap-model wave from teams that get burned by a benchmark that didn't reproduce." }
+        ]
+      }
+    ],
+    sources: "DataNorth / WinBuzzer / MLQ.ai / TechTimes / Codersera (MiniMax M3; SWE-Bench Pro 59 claim; 1M context; MSA) · The Neuron (Jun 1 recap) · CNBC / TechCrunch (Anthropic confidential S-1; ~$47B run-rate) · buildfastwithai (Jun 1 roundup; Copilot token billing). Benchmark and run-rate figures directional until independently verified."
   },
 
   /* ===================== WEEKLY SUMMARY — Issue #2 ===================== */
