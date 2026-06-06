@@ -115,8 +115,11 @@ able to get from a generic news feed.
 3. Update docs/knowledge/digest.md and docs/knowledge/predictions.md per the
    self-learning loop above.
 4. Run the quality self-check: `python3 scripts/check_reports.py` — it must pass
-   (valid JS, correct schema, no duplicate ids, today's entry present). Fix any
-   failure before committing.
+   (valid JS, correct schema, no duplicate ids, today's entry present). It also
+   auto-regenerates the site's derived data (reports/data/index.json + entries/)
+   from reports.js — so just keep writing to reports.js as the single source of
+   truth; the gate handles the rest. `git add -A` includes those generated files.
+   Fix any failure before committing.
 5. Commit "daily: AI briefing for <date>" (include the knowledge-file updates in
    the same commit) and push. Do this yourself.
 

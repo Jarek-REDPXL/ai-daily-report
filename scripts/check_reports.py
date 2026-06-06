@@ -113,6 +113,18 @@ def main():
         print("\n%d error(s). reports.js is NOT safe to publish." % len(errors))
         sys.exit(1)
 
+    # Regenerate the browser-facing derived data (index.json + entries/<id>.json)
+    # from the validated reports.js, so the routine never needs a separate step.
+    try:
+        subprocess.run(["node", os.path.join(REPO, "scripts", "build-data.js")],
+                       check=True, capture_output=True)
+        print("OK: regenerated index.json + entries/ from reports.js")
+    except Exception as e:
+        msg = getattr(e, "stderr", b"")
+        if isinstance(msg, bytes):
+            msg = msg.decode("utf-8", "replace")
+        print("WARN: build-data.js did not run (%s) — derived files may be stale" % (msg or e))
+
     print("OK: %d reports (%d daily, %d weekly), valid JS, unique ids, sorted, "
           "pdfs present." % (len(reports), n_daily, n_weekly))
 

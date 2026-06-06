@@ -1,8 +1,9 @@
-/* The AI Edge — renderer. Builds the archive + reports from window.AI_EDGE_REPORTS. */
+/* RedPxl News — renderer.
+   Loads a lightweight index.json (metadata + search blob), then lazy-loads each
+   full report from reports/data/entries/<id>.json on demand (cached). Falls back
+   to the legacy single-file window.AI_EDGE_REPORTS if the fetch path fails, so the
+   site never hard-breaks. */
 (function () {
-  const ALL = (window.AI_EDGE_REPORTS || []).slice()
-    .sort((a, b) => (a.sortDate < b.sortDate ? 1 : (a.sortDate > b.sortDate ? -1 : (a.type === "weekly" ? -1 : 1))));
-
   const container = document.getElementById("report-container");
   const nav = document.getElementById("archive-nav");
   const latestPill = document.getElementById("latest-pill");
@@ -11,15 +12,60 @@
   const sidebar = document.getElementById("sidebar");
   const scrim = document.getElementById("scrim");
 
-  if (!ALL.length) {
-    container.innerHTML = '<div class="loading">No reports yet. Add one to <code>reports/data/reports.js</code>.</div>';
-    latestPill.textContent = "No reports";
-    return;
+  let META = [];                 // lightweight metadata array (newest-first)
+  const cache = {};              // id -> full report object (lazy)
+  let legacy = null;             // window.AI_EDGE_REPORTS if we fall back
+
+  const sortFn = (a, b) => (a.sortDate < b.sortDate ? 1 : (a.sortDate > b.sortDate ? -1 : (a.type === "weekly" ? -1 : 1)));
+
+  // ---------- data loading (with legacy fallback) ----------
+  async function loadIndex() {
+    try {
+      const res = await fetch("reports/data/index.json", { cache: "no-cache" });
+      if (!res.ok) throw new Error("index " + res.status);
+      const idx = await res.json();
+      if (Array.isArray(idx) && idx.length) return idx.slice().sort(sortFn);
+      throw new Error("empty index");
+    } catch (e) {
+      // fallback: load the legacy single file and derive metadata from it
+      legacy = await loadLegacy();
+      if (legacy && legacy.length) {
+        legacy.forEach(r => { cache[r.id] = r; });
+        return legacy.slice().sort(sortFn).map(r => ({
+          id: r.id, type: r.type, sortDate: r.sortDate, week: r.week,
+          dateLabel: r.dateLabel, title: r.title, pdf: r.pdf || null,
+          q: (r.title + " " + r.dateLabel + " " + (r.tldr || []).join(" ") + " " + JSON.stringify(r.sections || "")).replace(/<[^>]+>/g, " ").toLowerCase()
+        }));
+      }
+      return [];
+    }
+  }
+  function loadLegacy() {
+    if (window.AI_EDGE_REPORTS) return Promise.resolve(window.AI_EDGE_REPORTS);
+    return new Promise(resolve => {
+      const s = document.createElement("script");
+      s.src = "reports/data/reports.js";
+      s.onload = () => resolve(window.AI_EDGE_REPORTS || []);
+      s.onerror = () => resolve([]);
+      document.head.appendChild(s);
+    });
+  }
+  async function getEntry(id) {
+    if (cache[id]) return cache[id];
+    try {
+      const res = await fetch("reports/data/entries/" + id + ".json", { cache: "no-cache" });
+      if (!res.ok) throw new Error("entry " + res.status);
+      const r = await res.json();
+      cache[id] = r; return r;
+    } catch (e) {
+      legacy = legacy || await loadLegacy();
+      const r = (legacy || []).find(x => x.id === id);
+      if (r) { cache[id] = r; return r; }
+      return null;
+    }
   }
 
   // ---- theme (RedPxl defaults to DARK; toggle opts into light) ----
-  // The no-flash init in <head> already applies data-theme="light" if stored.
-  // Sun/moon icons swap via CSS based on the attribute — no emoji.
   const tt = document.getElementById("theme-toggle");
   tt.addEventListener("click", () => {
     const isLight = document.documentElement.getAttribute("data-theme") === "light";
@@ -32,12 +78,11 @@
   document.getElementById("menu-btn").addEventListener("click", () => setSidebar(!sidebar.classList.contains("open")));
   scrim.addEventListener("click", () => setSidebar(false));
 
-  // ---- scroll progress (rAF-throttled for smoothness) ----
+  // ---- scroll progress (rAF-throttled) ----
   const bar = document.getElementById("progressbar");
   let ticking = false;
   window.addEventListener("scroll", () => {
-    if (ticking) return;
-    ticking = true;
+    if (ticking) return; ticking = true;
     requestAnimationFrame(() => {
       const h = document.documentElement;
       bar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100 || 0) + "%";
@@ -45,70 +90,57 @@
     });
   }, { passive: true });
 
-  // ---- sidebar grouping: derive the Mon–Sun week label from each report's
-  //      sortDate, so the archive is ALWAYS grouped Monday→Sunday regardless of
-  //      what the stored `week` field says. Within a week the existing sort puts
-  //      the weekly first, then days newest→oldest (Sun on top, Mon on bottom). ----
+  // ---- Mon–Sun week label derived from sortDate ----
   const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   function weekLabel(sortDate) {
     const [y, m, d] = String(sortDate).split("-").map(Number);
     const dt = new Date(Date.UTC(y, m - 1, d));
-    const dow = (dt.getUTCDay() + 6) % 7;           // 0 = Monday
+    const dow = (dt.getUTCDay() + 6) % 7;
     const mon = new Date(dt); mon.setUTCDate(dt.getUTCDate() - dow);
     const sun = new Date(mon); sun.setUTCDate(mon.getUTCDate() + 6);
     const m1 = mon.getUTCMonth(), m2 = sun.getUTCMonth();
-    const base = "Week of " + MONTHS[m1] + " " + mon.getUTCDate() + " – ";
-    return base + (m1 === m2 ? "" : MONTHS[m2] + " ") + sun.getUTCDate() + ", " + sun.getUTCFullYear();
+    return "Week of " + MONTHS[m1] + " " + mon.getUTCDate() + " – " + (m1 === m2 ? "" : MONTHS[m2] + " ") + sun.getUTCDate() + ", " + sun.getUTCFullYear();
   }
 
-  const weeks = [];
-  const byWeek = {};
-  ALL.forEach(r => {
-    const w = weekLabel(r.sortDate);
-    if (!byWeek[w]) { byWeek[w] = []; weeks.push(w); }
-    byWeek[w].push(r);
-  });
-
-  function navItemHTML(r) {
-    const typeCls = r.type === "weekly" ? "weekly" : "daily";
-    return `<button class="nav-item ${typeCls}" data-id="${r.id}">
-        <span class="ni-type ${typeCls}">${r.type === "weekly" ? "Week" : "Day"}</span>
-        <span class="ni-title">${navTitle(r)}</span>
-      </button>`;
+  let weeks = [], byWeek = {};
+  function groupWeeks() {
+    weeks = []; byWeek = {};
+    META.forEach(r => {
+      const w = weekLabel(r.sortDate);
+      if (!byWeek[w]) { byWeek[w] = []; weeks.push(w); }
+      byWeek[w].push(r);
+    });
   }
+
   function navTitle(r) {
     if (r.type === "weekly") return "Weekly summary";
-    // e.g. "Friday, May 29, 2026" -> "Fri · May 29"
     const m = r.dateLabel.match(/^(\w{3})\w*,\s*(\w+ \d+)/);
     return m ? `${m[1]} · ${m[2]}` : r.dateLabel;
   }
-
+  function navItemHTML(r) {
+    const c = r.type === "weekly" ? "weekly" : "daily";
+    return `<button class="nav-item ${c}" data-id="${r.id}">
+        <span class="ni-type ${c}">${r.type === "weekly" ? "Week" : "Day"}</span>
+        <span class="ni-title">${navTitle(r)}</span>
+      </button>`;
+  }
   function buildNav(filter) {
     nav.innerHTML = "";
     const f = (filter || "").trim().toLowerCase();
     weeks.forEach(w => {
-      const items = byWeek[w].filter(r => !f || matches(r, f));
+      const items = byWeek[w].filter(r => !f || (r.q || "").includes(f));
       if (!items.length) return;
       const grp = document.createElement("div");
       grp.className = "week-group";
       grp.innerHTML = `<div class="week-label">${w}</div>` + items.map(navItemHTML).join("");
       nav.appendChild(grp);
     });
-    nav.querySelectorAll(".nav-item").forEach(b => b.addEventListener("click", () => {
-      show(b.dataset.id); setSidebar(false);
-    }));
+    nav.querySelectorAll(".nav-item").forEach(b => b.addEventListener("click", () => { show(b.dataset.id); setSidebar(false); }));
     markActive();
   }
-
-  function matches(r, f) {
-    const hay = (r.title + " " + r.dateLabel + " " + (r.tldr || []).join(" ") +
-      " " + JSON.stringify(r.sections || "")).toLowerCase();
-    return hay.includes(f);
-  }
-
   searchEl.addEventListener("input", () => buildNav(searchEl.value));
 
-  // ---- rendering a report ----
+  // ---- rendering ----
   const tags = a => (!a || !a.length) ? "" : `<span class="tags">${a.map(t => `<span class="tag ${t}">${t}</span>`).join("")}</span>`;
   const list = a => `<ul>${a.map(li => `<li>${li}</li>`).join("")}</ul>`;
   const table = t => `<div class="tbl-wrap"><table><thead><tr>${t.head.map(h => `<th>${h}</th>`).join("")}</tr></thead>` +
@@ -126,21 +158,15 @@
     if (b.note) h += `<p class="note">${b.note}</p>`;
     return h + "</div>";
   }
-
-  // Split a section heading like "1 · Model Releases" into number + title so we
-  // can give the number an oversized editorial treatment. Falls back gracefully.
   function sectionHead(h) {
     const m = String(h).match(/^\s*(\d+)\s*[·.\-)]\s*(.+)$/);
-    if (m) {
-      const num = m[1].padStart(2, "0");
-      return `<h3 class="numbered"><span class="sec-num">${num}</span><span class="sec-title">${m[2]}</span></h3>`;
-    }
+    if (m) return `<h3 class="numbered"><span class="sec-num">${m[1].padStart(2, "0")}</span><span class="sec-title">${m[2]}</span></h3>`;
     return `<h3><span class="sec-title">${h}</span></h3>`;
   }
 
   function render(r) {
-    const idx = ALL.indexOf(r);
-    const newer = ALL[idx - 1], older = ALL[idx + 1];
+    const idx = META.findIndex(x => x.id === r.id);
+    const newer = META[idx - 1], older = META[idx + 1];
     const editionLabel = r.type === "weekly" ? "Weekly Edition" : "Daily Briefing";
 
     let html = `<article class="masthead">
@@ -171,10 +197,7 @@
     if (r.sources) html += `<div class="sources"><h3>Sources</h3><p>${r.sources}</p></div>`;
     container.innerHTML = html;
 
-    // orchestrated staggered reveal — set the index each direct child animates on
-    Array.prototype.forEach.call(container.children, (el, i) => {
-      el.style.setProperty("--i", Math.min(i, 8));
-    });
+    Array.prototype.forEach.call(container.children, (el, i) => el.style.setProperty("--i", Math.min(i, 8)));
 
     container.querySelectorAll(".report-nav button[data-go]").forEach(btn => {
       if (btn.dataset.go) btn.addEventListener("click", () => show(btn.dataset.go));
@@ -189,48 +212,57 @@
     });
   }
 
-  let current = null;
-  function show(id) {
-    const r = ALL.find(x => x.id === id) || ALL[0];
-    current = r;
-    render(r);
+  let currentId = null;
+  async function show(id) {
+    const meta = META.find(x => x.id === id) || META[0];
+    if (!meta) return;
+    currentId = meta.id;
     markActive();
-    if (location.hash.slice(1) !== r.id) history.replaceState(null, "", "#" + r.id);
+    if (location.hash.slice(1) !== meta.id) history.replaceState(null, "", "#" + meta.id);
+    container.innerHTML = '<div class="loading">Loading…</div>';
+    const full = await getEntry(meta.id);
+    if (currentId !== meta.id) return; // a newer navigation superseded this one
+    if (!full) { container.innerHTML = '<div class="loading">Could not load this report.</div>'; return; }
+    render(full);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
   function markActive() {
     let activeEl = null;
     nav.querySelectorAll(".nav-item").forEach(b => {
-      const on = current && b.dataset.id === current.id;
+      const on = b.dataset.id === currentId;
       b.classList.toggle("active", on);
       if (on) activeEl = b;
     });
-    // keep the current edition visible in the archive (only if off-screen)
     if (activeEl && activeEl.scrollIntoView) {
       const r = activeEl.getBoundingClientRect(), sb = sidebar.getBoundingClientRect();
-      if (r.top < sb.top + 70 || r.bottom > sb.bottom - 10) {
-        activeEl.scrollIntoView({ block: "center", behavior: "smooth" });
-      }
+      if (r.top < sb.top + 70 || r.bottom > sb.bottom - 10) activeEl.scrollIntoView({ block: "center", behavior: "smooth" });
     }
   }
+  window.addEventListener("hashchange", () => { const id = location.hash.slice(1); if (id && id !== currentId) show(id); });
 
-  window.addEventListener("hashchange", () => { const id = location.hash.slice(1); if (id && id !== (current && current.id)) show(id); });
-
-  // ---- keyboard navigation (Apple-grade: arrows between editions, / to search) ----
+  // ---- keyboard nav ----
   document.addEventListener("keydown", (e) => {
     const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
     if (e.key === "/" && !typing) { e.preventDefault(); searchEl.focus(); return; }
     if (e.key === "Escape" && document.activeElement === searchEl) { searchEl.blur(); return; }
     if (typing) return;
-    const idx = ALL.indexOf(current);
-    if (e.key === "ArrowLeft" && ALL[idx - 1]) { e.preventDefault(); show(ALL[idx - 1].id); }   // newer
-    else if (e.key === "ArrowRight" && ALL[idx + 1]) { e.preventDefault(); show(ALL[idx + 1].id); } // older
+    const idx = META.findIndex(x => x.id === currentId);
+    if (e.key === "ArrowLeft" && META[idx - 1]) { e.preventDefault(); show(META[idx - 1].id); }
+    else if (e.key === "ArrowRight" && META[idx + 1]) { e.preventDefault(); show(META[idx + 1].id); }
   });
 
   // ---- init ----
-  latestPill.textContent = "Latest: " + ALL[0].dateLabel.replace(/,? 2026$/, "");
-  const days = ALL.filter(r => r.type === "daily").length, wks = ALL.filter(r => r.type === "weekly").length;
-  countEl.textContent = `${days} daily · ${wks} weekly · ${ALL.length} total`;
-  buildNav("");
-  show(location.hash.slice(1) || ALL[0].id);
+  (async function init() {
+    META = await loadIndex();
+    if (!META.length) {
+      container.innerHTML = '<div class="loading">No reports yet.</div>';
+      latestPill.textContent = "No reports"; return;
+    }
+    groupWeeks();
+    latestPill.textContent = "Latest: " + META[0].dateLabel.replace(/,? 2026$/, "");
+    const days = META.filter(r => r.type === "daily").length, wks = META.filter(r => r.type === "weekly").length;
+    countEl.textContent = `${days} daily · ${wks} weekly · ${META.length} total`;
+    buildNav("");
+    show(location.hash.slice(1) || META[0].id);
+  })();
 })();
