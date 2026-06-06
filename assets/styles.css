@@ -360,7 +360,14 @@ td b,td strong{color:var(--fg)}
   border-radius:var(--r-md);max-width:var(--measure)}
 .sources h3{margin:0 0 var(--md);font-family:var(--mono);font-size:10.5px;text-transform:uppercase;
   letter-spacing:.12em;color:var(--fg-40);font-weight:600}
-.sources p{margin:0;font-size:12.5px;color:var(--fg-40);line-height:1.8}
+.sources p{margin:0;font-size:12.5px;color:var(--fg-40);line-height:1.9}
+.sources a{color:var(--fg-70);text-decoration:none;border-bottom:1px solid var(--line-2);
+  transition:color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease)}
+.sources a:hover{color:var(--red);border-bottom-color:var(--red)}
+/* source links inside body blocks too (inline citations) */
+.block a,.tldr a,.why a,.do a{color:var(--fg);text-decoration:none;border-bottom:1px solid var(--red);
+  transition:color var(--t-fast) var(--ease),background-color var(--t-fast) var(--ease)}
+.block a:hover,.tldr a:hover,.why a:hover,.do a:hover{color:var(--red)}
 
 /* footer */
 .site-footer{border-top:1px solid var(--line);margin-top:var(--xxl)}
