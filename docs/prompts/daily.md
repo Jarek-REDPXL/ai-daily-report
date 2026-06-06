@@ -13,15 +13,31 @@ entry; a missing day is a failure. If almost nothing happened, say so plainly in
 the entry and lead with the "Sharpen your edge" tip instead. Do not skip a day
 because it overlaps earlier coverage — advance the thread or note "quiet day."
 
-## Build on what we've already published (compounding edge)
-Before writing, skim the most recent entries already in reports/data/reports.js.
-Then:
-- Do NOT repeat what earlier days already covered — advance the story instead
-  ("Following Monday's DeepSeek price cut, today…").
-- Track ongoing threads week over week (model races, funding, compute, regulation)
-  and explicitly connect today's items to that running narrative.
-- When you made a forward-looking call in a prior report, note whether it played
-  out. The reader should feel the briefing is getting smarter and remembering.
+## Self-learning loop — READ then UPDATE the knowledge files (do this every run)
+This briefing compounds. Two repo files are its memory; use them on every run.
+
+**BEFORE writing today's report, READ:**
+- `docs/knowledge/digest.md` — active threads + durable lessons. Use it so today
+  advances the running story and never repeats earlier coverage.
+- `docs/knowledge/predictions.md` — open forward-looking calls. Check if any
+  resolved in the last ~24h.
+- The most recent ~5 entries in `reports/data/reports.js`.
+
+Then write a report that:
+- Advances ongoing threads instead of repeating them ("Following Monday's DeepSeek
+  price cut, today…").
+- Explicitly notes any prediction that resolved (✅ held / ❌ missed / ⚖️ partial).
+- Connects today's items to the running narrative (model races, compute, money,
+  regulation, agents).
+
+**AFTER writing (in the SAME commit), UPDATE:**
+- `docs/knowledge/digest.md` — add/advance/close active threads, add any genuinely
+  new durable lesson, append one Changelog line (`YYYY-MM-DD: …`). Keep it tight.
+- `docs/knowledge/predictions.md` — move any resolved prediction to "Resolved" with
+  the outcome; add any new falsifiable forward call you made today (with a date and
+  rough due window).
+Keeping these current is REQUIRED, not optional — it is what makes the briefing
+get smarter over time.
 
 ## Research (last ~24h)
 Search widely across: frontier + open-weight model releases/updates; agentic
@@ -59,7 +75,13 @@ able to get from a generic news feed.
      identical week string so the sidebar groups them.
 2. Keep older reports intact (prepend, never overwrite). Match the exact object
    shape used by existing entries and keep reports/data/reports.js valid JS.
-3. Commit "daily: AI briefing for <date>" and push. Do this yourself.
+3. Update docs/knowledge/digest.md and docs/knowledge/predictions.md per the
+   self-learning loop above.
+4. Run the quality self-check: `python3 scripts/check_reports.py` — it must pass
+   (valid JS, correct schema, no duplicate ids, today's entry present). Fix any
+   failure before committing.
+5. Commit "daily: AI briefing for <date>" (include the knowledge-file updates in
+   the same commit) and push. Do this yourself.
 
 Voice: a sharp, generous expert briefing a smart friend. Skimmable, confident,
 zero filler. Lead with what to DO or LEARN, not just what occurred.

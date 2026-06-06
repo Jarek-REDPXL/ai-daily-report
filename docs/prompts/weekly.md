@@ -5,13 +5,21 @@ piece that, if the reader read nothing else, would keep them ahead of 95% of
 people in AI. Synthesize the week into durable knowledge and judgment, not a
 list of events.
 
-## Research
-Review the past week's daily entries in reports/data/reports.js AND the previous
-weekly edition, then run fresh searches to fill gaps and verify. Each weekly must
-compound on the last: explicitly note what changed since last week, whether last
-week's predictions held, and how the running threads (model race, compute, money,
-policy) advanced. Cross-check all funding/valuation/acquisition/benchmark numbers;
-mark fast-moving or forward-looking figures as directional.
+## Research & self-learning loop
+First READ the project's memory, then research:
+- `docs/knowledge/digest.md` (active threads + durable lessons)
+- `docs/knowledge/predictions.md` (open + resolved forward calls)
+- the past week's daily entries in reports/data/reports.js AND the previous weekly.
+Then run fresh searches to fill gaps and verify. Each weekly must compound on the
+last: explicitly note what changed since last week, **which of last week's
+predictions held/missed** (cite the ledger), and how the running threads (model
+race, compute, money, policy, agents) advanced. Cross-check all
+funding/valuation/acquisition/benchmark numbers; mark fast-moving or forward-looking
+figures as directional.
+
+AFTER writing, UPDATE both knowledge files in the same commit: refresh the digest's
+active threads + durable lessons (this is the week's distilled judgment), and in
+predictions.md resolve what closed and log the week's new forward calls.
 
 ## What makes this edition "golden"
 Go beyond recap. Deliver:
@@ -36,11 +44,16 @@ Connect threads across days into a coherent narrative.
    ending with an action checklist. End with a sources string.
    - week field: the SAME string as that week's daily entries so it groups and
      pins to the top.
-2. Update build_report.py's content to match this weekly report, run
-   `python3 build_report.py` to regenerate the PDF into reports/pdf/, and set the
-   new object's pdf field to that file.
-3. Keep reports/data/reports.js valid JS and don't overwrite older reports.
-4. Commit "weekly: AI briefing for week ending <date>" and push. Do this yourself.
+2. Regenerate the PDF: run `python3 build_report.py` — it reads the newest weekly
+   object straight from reports/data/reports.js and writes
+   reports/pdf/weekly-ai-report-<sortDate>.pdf automatically. Set the new object's
+   `pdf` field to that path. (You no longer hand-edit build_report.py.)
+3. Update docs/knowledge/digest.md and docs/knowledge/predictions.md per the
+   self-learning loop above.
+4. Run `python3 scripts/check_reports.py` — it must pass before committing.
+5. Keep reports/data/reports.js valid JS and don't overwrite older reports.
+6. Commit "weekly: AI briefing for week ending <date>" (knowledge files + PDF in
+   the same commit) and push. Do this yourself.
 
 Voice: a brilliant analyst who respects the reader's time and ambition. Teach,
 synthesize, and tell them exactly what to do. No filler, no hype.

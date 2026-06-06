@@ -26,3 +26,5 @@ reports_probe.py
 # stray archives
 ai-daily-report.tar.gz
 *.bundle
+
+.vercel
