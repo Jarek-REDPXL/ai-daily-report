@@ -22,7 +22,20 @@ const DOMAIN_LABELS = {
   "ai-tooling": "AI tools, skills & techniques",
 };
 
+// Short labels for compact UI (e.g. sidebar filter chips). Source of truth for
+// chip text — the facet (index.meta.json) carries these so the browser never
+// mirrors them.
+const DOMAIN_LABELS_SHORT = {
+  "web": "Web",
+  "graphic": "Graphic",
+  "email": "Email",
+  "social": "Social",
+  "paid": "Paid",
+  "growth": "Growth",
+  "ai-tooling": "AI Tooling",
+};
+
 // Platform granularity for the `paid` domain — lives in block-level tags.
 const PAID_PLATFORM_TAGS = ["google-ads", "meta-ads", "snap-ads"];
 
-module.exports = { DOMAINS, DOMAIN_LABELS, PAID_PLATFORM_TAGS };
+module.exports = { DOMAINS, DOMAIN_LABELS, DOMAIN_LABELS_SHORT, PAID_PLATFORM_TAGS };

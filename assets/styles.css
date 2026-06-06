@@ -209,6 +209,26 @@ b,strong{font-weight:700;color:var(--fg)}
 .nav-item.active .ni-title{font-weight:700}
 .nav-item.active .ni-type{background:var(--red);color:#fff;border-color:transparent}
 
+/* ---- domain filter chips (additive; rendered only when the facet loads) ---- */
+.domain-filter{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:var(--lg)}
+.domain-filter-label{flex-basis:100%;font-family:var(--mono);font-size:10.5px;font-weight:600;
+  color:var(--fg-40);text-transform:uppercase;letter-spacing:.08em;padding:0 0 1px}
+.dchip{
+  display:inline-flex;align-items:center;gap:6px;cursor:pointer;
+  font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;
+  padding:6px 11px;border-radius:var(--r-pill);
+  background:var(--panel-2);border:1px solid var(--line);color:var(--fg-55);
+  transition:background-color var(--t-fast) var(--ease),color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease),transform var(--t-fast) var(--ease-out);
+}
+.dchip:hover{color:var(--fg);border-color:var(--line-2)}
+.dchip:active{transform:translateX(1px) scale(.98)}
+.dchip-count{font-weight:600;color:var(--fg-40)}
+/* active chip: red-glow fill + the brand's square red-dot motif */
+.dchip.active{background:var(--red-glow);border-color:transparent;color:var(--fg);position:relative;padding-left:16px}
+.dchip.active::before{content:"";position:absolute;left:7px;top:50%;transform:translateY(-50%);
+  width:5px;height:5px;background:var(--red)}
+.dchip.active .dchip-count{color:var(--red)}
+
 .scrim{display:none}
 
 /* ---------------- main column ---------------- */

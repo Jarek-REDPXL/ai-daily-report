@@ -12,7 +12,7 @@
  */
 const fs = require("fs");
 const path = require("path");
-const { DOMAINS } = require("./domains.js"); // single source of truth for valid slugs
+const { DOMAINS, DOMAIN_LABELS, DOMAIN_LABELS_SHORT } = require("./domains.js"); // single source of truth for slugs + labels
 
 const REPO = path.resolve(__dirname, "..");
 const SRC = path.join(REPO, "reports", "data", "reports.js");
@@ -53,7 +53,11 @@ fs.writeFileSync(OUT_INDEX, JSON.stringify(index, null, 0));
 // UI round can fold this into index.json when app.js is updated alongside it.
 const counts = {};
 for (const r of all) for (const d of (r.domains || [])) counts[d] = (counts[d] || 0) + 1;
-const domainsFacet = DOMAINS.filter(d => counts[d]).map(d => ({ slug: d, count: counts[d] }));
+const domainsFacet = DOMAINS.filter(d => counts[d]).map(d => ({
+  slug: d, count: counts[d],
+  label: DOMAIN_LABELS_SHORT[d] || d,   // short chip text (domains.js is sole source)
+  fullLabel: DOMAIN_LABELS[d] || d,     // full label for tooltips
+}));
 fs.writeFileSync(OUT_META, JSON.stringify({ domains: domainsFacet }, null, 0));
 
 // one file per full report

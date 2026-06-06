@@ -16,7 +16,27 @@
   const cache = {};              // id -> full report object (lazy)
   let legacy = null;             // window.AI_EDGE_REPORTS if we fall back
 
+  // ---- domain filter state (purely additive; off unless the facet loads) ----
+  // Chip labels come from the facet (index.meta.json), which is built from
+  // scripts/domains.js — the single source of truth. Nothing is mirrored here.
+  let domainFacet = [];          // [{slug,count,label,fullLabel}] from index.meta.json (empty = no chips)
+  let domainFilter = null;       // selected slug, or null for "All"
+
   const sortFn = (a, b) => (a.sortDate < b.sortDate ? 1 : (a.sortDate > b.sortDate ? -1 : (a.type === "weekly" ? -1 : 1)));
+
+  // Sidecar facet load — own try/catch so any failure leaves the site exactly as
+  // it is today (no chips, base rendering untouched). Never throws.
+  async function loadDomainFacet() {
+    try {
+      const res = await fetch("reports/data/index.meta.json", { cache: "no-cache" });
+      if (!res.ok) throw new Error("meta " + res.status);
+      const m = await res.json();
+      const d = m && Array.isArray(m.domains) ? m.domains : [];
+      return d.filter(x => x && x.slug);
+    } catch (e) {
+      return [];
+    }
+  }
 
   // ---------- data loading (with legacy fallback) ----------
   async function loadIndex() {
@@ -34,6 +54,7 @@
         return legacy.slice().sort(sortFn).map(r => ({
           id: r.id, type: r.type, sortDate: r.sortDate, week: r.week,
           dateLabel: r.dateLabel, title: r.title, pdf: r.pdf || null,
+          domains: r.domains || [],
           q: (r.title + " " + r.dateLabel + " " + (r.tldr || []).join(" ") + " " + JSON.stringify(r.sections || "")).replace(/<[^>]+>/g, " ").toLowerCase()
         }));
       }
@@ -128,8 +149,11 @@
     nav.innerHTML = "";
     const f = (filter || "").trim().toLowerCase();
     weeks.forEach(w => {
-      const items = byWeek[w].filter(r => !f || (r.q || "").includes(f));
-      if (!items.length) return;
+      // visible set = matches search AND selected domain (domain off => no constraint)
+      const items = byWeek[w].filter(r =>
+        (!f || (r.q || "").includes(f)) &&
+        (!domainFilter || (r.domains || []).includes(domainFilter)));
+      if (!items.length) return; // hide weeks with no matching entries
       const grp = document.createElement("div");
       grp.className = "week-group";
       grp.innerHTML = `<div class="week-label">${w}</div>` + items.map(navItemHTML).join("");
@@ -139,6 +163,43 @@
     markActive();
   }
   searchEl.addEventListener("input", () => buildNav(searchEl.value));
+
+  // ---- domain filter chips (only built when the facet loaded) ----
+  function setDomain(slug) {
+    domainFilter = slug || null;
+    try {
+      if (domainFilter) localStorage.setItem("redpxl-domain", domainFilter);
+      else localStorage.removeItem("redpxl-domain");
+    } catch (e) { /* storage may be unavailable; filter still works in-session */ }
+    markChips();
+    buildNav(searchEl.value);
+  }
+  function markChips() {
+    nav.parentNode && nav.parentNode.querySelectorAll(".dchip").forEach(c => {
+      c.classList.toggle("active", (c.dataset.domain || null) === (domainFilter || null));
+    });
+  }
+  function renderChips() {
+    if (!domainFacet.length) return; // fail-safe: no facet => no chips, behave as today
+    const wrap = document.createElement("div");
+    wrap.className = "domain-filter";
+    wrap.setAttribute("role", "group");
+    wrap.setAttribute("aria-label", "Filter editions by domain");
+    let html = `<span class="domain-filter-label">Domains</span>`;
+    html += `<button class="dchip" data-domain="">All</button>`;
+    domainFacet.forEach(d => {
+      const label = d.label || d.slug;
+      const full = d.fullLabel || label;
+      html += `<button class="dchip" data-domain="${d.slug}" title="${full}">${label} <span class="dchip-count">${d.count}</span></button>`;
+    });
+    wrap.innerHTML = html;
+    nav.parentNode.insertBefore(wrap, nav); // sits above the archive nav, below the search
+    wrap.querySelectorAll(".dchip").forEach(c => c.addEventListener("click", () => {
+      const slug = c.dataset.domain || null;
+      setDomain(slug === domainFilter ? null : slug); // re-click active or "All" clears
+    }));
+    markChips();
+  }
 
   // ---- rendering ----
   const tags = a => (!a || !a.length) ? "" : `<span class="tags">${a.map(t => `<span class="tag ${t}">${t}</span>`).join("")}</span>`;
@@ -253,7 +314,11 @@
 
   // ---- init ----
   (async function init() {
-    META = await loadIndex();
+    // Load the index and the (optional) domain facet together; the facet has its
+    // own try/catch and can never block the index or base rendering.
+    const [meta, facet] = await Promise.all([loadIndex(), loadDomainFacet()]);
+    META = meta;
+    domainFacet = facet;
     if (!META.length) {
       container.innerHTML = '<div class="loading">No reports yet.</div>';
       latestPill.textContent = "No reports"; return;
@@ -262,6 +327,12 @@
     latestPill.textContent = "Latest: " + META[0].dateLabel.replace(/,? 2026$/, "");
     const days = META.filter(r => r.type === "daily").length, wks = META.filter(r => r.type === "weekly").length;
     countEl.textContent = `${days} daily · ${wks} weekly · ${META.length} total`;
+    // restore persisted domain selection, but only if it's a domain actually present
+    try {
+      const saved = localStorage.getItem("redpxl-domain");
+      if (saved && domainFacet.some(d => d.slug === saved)) domainFilter = saved;
+    } catch (e) { /* storage unavailable — ignore */ }
+    renderChips();
     buildNav("");
     show(location.hash.slice(1) || META[0].id);
   })();
