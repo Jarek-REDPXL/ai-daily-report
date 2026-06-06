@@ -1,0 +1,17 @@
+# The AI Edge is a no-build static site — just publish the repo root as-is.
+# Netlify reads this on connect, so there are no build settings to get wrong.
+[build]
+  publish = "."
+  command = ""
+
+# Long-cache static assets; always revalidate the data + html so new daily
+# reports appear immediately after each routine push.
+[[headers]]
+  for = "/reports/data/reports.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"

@@ -67,10 +67,31 @@ As shipped they use `anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}`, which
 subscription token with `claude setup-token` and swap the action input to
 `claude_code_oauth_token` (tokens expire and must be refreshed periodically).
 
-## Make the public site go live
+## Make the site live (private repo, free, auto-updating)
 
-GitHub Pages deploys fail until you set the source:
-**repo → Settings → Pages → Build and deployment → Source → "GitHub Actions"**.
+GitHub Pages can't host a **private** repo for free, so we use **Netlify** instead.
+It connects to the private repo and **auto-deploys on every push** — so each time
+the AI NEWS routine pushes a new report, the live site updates ~1 minute later,
+with no PC needed. A `netlify.toml` in the repo root preconfigures everything
+(no build step; just publishes the files).
+
+One-time setup (~3 min):
+1. Go to **https://app.netlify.com** → sign up / log in with **GitHub**.
+2. **Add new site → Import an existing project → GitHub**.
+3. Authorize Netlify, then pick **`Jarek-REDPXL/ai-daily-report`** (grant access
+   to that private repo when prompted).
+4. Netlify reads `netlify.toml` → build command empty, publish dir `.`. Click
+   **Deploy**. Your live URL appears (e.g. `https://<name>.netlify.app`) — rename
+   it under **Site settings → Change site name** if you like.
+5. Done. Every routine push now redeploys automatically. The repo stays private;
+   only the rendered site is served.
+
+> Cloudflare Pages works the same way if you prefer it (connect repo, build
+> command empty, output dir `/`).
+
+> Alternative (GitHub Pages) — only if you make the repo **public**: repo →
+> Settings → Pages → Source → "GitHub Actions", then re-enable the `push` trigger
+> in `.github/workflows/deploy-pages.yml`.
 
 ## Editing content by hand
 
