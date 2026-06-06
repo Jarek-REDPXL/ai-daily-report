@@ -68,26 +68,15 @@ everything learned so far and adds to it.
 
 ## Routine prompt (paste into the "AI NEWS" routine instructions)
 
-> Every run, produce "The AI Edge" briefing IN THIS REPOSITORY and publish it.
-> 1. READ docs/knowledge/digest/_house.md + the relevant docs/knowledge/digest/<domain>.md
->    file(s) + docs/knowledge/sources.md + docs/knowledge/predictions.md + the recent
->    entries in reports/data/reports.js (the project's memory).
-> 2. Follow docs/prompts/daily.md exactly to create TODAY's daily report; research
->    the last ~24h with web search, cross-check surprising figures, mark
->    fast-moving numbers directional.
-> 3. PREPEND one new daily object to reports/data/reports.js (newest first; exact
->    existing shape incl. a `domains` array of ≥1 valid slug from docs/DOMAINS.md;
->    never overwrite; keep valid JS). One dated entry every run, even on quiet days.
-> 4. If today is MONDAY, also follow docs/prompts/weekly.md for the week that just
->    ended (Mon–Sun; weekly sortDate = that Sunday), then run
->    `python3 build_report.py` and set the weekly's pdf field.
-> 5. UPDATE the relevant docs/knowledge/digest/<domain>.md file(s) +
->    docs/knowledge/predictions.md + docs/knowledge/sources.md (advance threads,
->    resolve predictions, add new lessons/calls, promote/decay sources).
-> 6. Run `python3 scripts/check_reports.py` — it must pass.
-> 7. git add -A, commit, and push to origin main yourself.
-> Bar: golden value, not boring facts — what happened, why it matters, what to do
-> or learn. Teach new concepts. End each daily with a "Sharpen your edge" tip.
+> Every run, produce the RedPxl News daily briefing IN THIS REPOSITORY and publish it.
+>
+> READ first (the project's memory): docs/knowledge/digest/_house.md, the per-domain digests in docs/knowledge/digest/ for the domains you'll deep-beat today, docs/knowledge/predictions.md, docs/knowledge/sources.md, and recent entries in reports/data/reports.js.
+> Follow docs/prompts/daily.md EXACTLY. Scan all 7 domains; deep-beat web + the 2 non-web domains least-recently covered (check recent reports' domains arrays) + promote anything urgent a scan surfaces. Research the last ~24h with web search; mine high-scoring sources from sources.md first and sample new ones; every source must be an exact clickable link.
+> PREPEND one daily object to reports/data/reports.js (newest first, exact shape, never overwrite, valid JS). One dated entry every run, even quiet days. Set the domains array to today's substantive domains (valid slugs only).
+> If MONDAY, also follow docs/prompts/weekly.md for the week just ended (Mon–Sun; weekly sortDate = that Sunday), then run python build_report.py and set the weekly's pdf field.
+> UPDATE the per-domain digests you touched, predictions.md (resolve due calls, log new ones), and sources.md (promote/decay sources).
+> Run python scripts/check_reports.py — it must pass. Then git add -A, commit, push origin main.
+> Bar: golden value, kill 95% — what changed, why it matters to our disciplines, what to do or learn. Teach concepts. End each daily with a "Sharpen your edge" tip.
 
 ## Manual / local fallback
 
