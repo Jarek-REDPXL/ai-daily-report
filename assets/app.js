@@ -17,16 +17,14 @@
     return;
   }
 
-  // ---- theme ----
+  // ---- theme (RedPxl defaults to DARK; toggle opts into light) ----
+  // The no-flash init in <head> already applies data-theme="light" if stored.
+  // Sun/moon icons swap via CSS based on the attribute — no emoji.
   const tt = document.getElementById("theme-toggle");
-  if (localStorage.getItem("aiedge-theme") === "dark") { document.documentElement.setAttribute("data-theme", "dark"); tt.textContent = "☀️"; }
   tt.addEventListener("click", () => {
-    const dark = document.documentElement.getAttribute("data-theme") === "dark";
-    document.documentElement.toggleAttribute("data-theme", !dark);
-    if (dark) { document.documentElement.removeAttribute("data-theme"); }
-    else { document.documentElement.setAttribute("data-theme", "dark"); }
-    tt.textContent = dark ? "🌙" : "☀️";
-    localStorage.setItem("aiedge-theme", dark ? "light" : "dark");
+    const isLight = document.documentElement.getAttribute("data-theme") === "light";
+    if (isLight) { document.documentElement.removeAttribute("data-theme"); localStorage.setItem("redpxl-theme", "dark"); }
+    else { document.documentElement.setAttribute("data-theme", "light"); localStorage.setItem("redpxl-theme", "light"); }
   });
 
   // ---- mobile sidebar ----
