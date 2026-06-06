@@ -32,12 +32,18 @@
   document.getElementById("menu-btn").addEventListener("click", () => setSidebar(!sidebar.classList.contains("open")));
   scrim.addEventListener("click", () => setSidebar(false));
 
-  // ---- scroll progress ----
+  // ---- scroll progress (rAF-throttled for smoothness) ----
   const bar = document.getElementById("progressbar");
+  let ticking = false;
   window.addEventListener("scroll", () => {
-    const h = document.documentElement;
-    bar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100 || 0) + "%";
-  });
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const h = document.documentElement;
+      bar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100 || 0) + "%";
+      ticking = false;
+    });
+  }, { passive: true });
 
   // ---- sidebar grouping: derive the Mon–Sun week label from each report's
   //      sortDate, so the archive is ALWAYS grouped Monday→Sunday regardless of
@@ -165,6 +171,11 @@
     if (r.sources) html += `<div class="sources"><h3>Sources</h3><p>${r.sources}</p></div>`;
     container.innerHTML = html;
 
+    // orchestrated staggered reveal — set the index each direct child animates on
+    Array.prototype.forEach.call(container.children, (el, i) => {
+      el.style.setProperty("--i", Math.min(i, 8));
+    });
+
     container.querySelectorAll(".report-nav button[data-go]").forEach(btn => {
       if (btn.dataset.go) btn.addEventListener("click", () => show(btn.dataset.go));
     });
@@ -188,10 +199,33 @@
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
   function markActive() {
-    nav.querySelectorAll(".nav-item").forEach(b => b.classList.toggle("active", current && b.dataset.id === current.id));
+    let activeEl = null;
+    nav.querySelectorAll(".nav-item").forEach(b => {
+      const on = current && b.dataset.id === current.id;
+      b.classList.toggle("active", on);
+      if (on) activeEl = b;
+    });
+    // keep the current edition visible in the archive (only if off-screen)
+    if (activeEl && activeEl.scrollIntoView) {
+      const r = activeEl.getBoundingClientRect(), sb = sidebar.getBoundingClientRect();
+      if (r.top < sb.top + 70 || r.bottom > sb.bottom - 10) {
+        activeEl.scrollIntoView({ block: "center", behavior: "smooth" });
+      }
+    }
   }
 
   window.addEventListener("hashchange", () => { const id = location.hash.slice(1); if (id && id !== (current && current.id)) show(id); });
+
+  // ---- keyboard navigation (Apple-grade: arrows between editions, / to search) ----
+  document.addEventListener("keydown", (e) => {
+    const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+    if (e.key === "/" && !typing) { e.preventDefault(); searchEl.focus(); return; }
+    if (e.key === "Escape" && document.activeElement === searchEl) { searchEl.blur(); return; }
+    if (typing) return;
+    const idx = ALL.indexOf(current);
+    if (e.key === "ArrowLeft" && ALL[idx - 1]) { e.preventDefault(); show(ALL[idx - 1].id); }   // newer
+    else if (e.key === "ArrowRight" && ALL[idx + 1]) { e.preventDefault(); show(ALL[idx + 1].id); } // older
+  });
 
   // ---- init ----
   latestPill.textContent = "Latest: " + ALL[0].dateLabel.replace(/,? 2026$/, "");

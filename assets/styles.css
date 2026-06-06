@@ -47,6 +47,11 @@
   --shadow-subtle:0 2px 8px rgba(10,13,18,.4);
   --shadow-medium:0 4px 16px rgba(10,13,18,.5);
   --shadow-bold:0 8px 32px rgba(10,13,18,.6);
+
+  /* unified motion language (Apple/Samsung-grade: one easing, consistent timing) */
+  --ease:cubic-bezier(.32,.72,0,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --t-fast:.14s; --t-med:.28s; --t-slow:.5s;
 }
 [data-theme="light"]{
   --bg:#F0F4FA;
@@ -384,4 +389,56 @@ td b,td strong{color:var(--fg)}
   .masthead h2{font-size:1.9rem}
   .footer-count{margin-left:0}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto}}
+/* ===========================================================================
+   Motion & interaction polish (orchestrated load, micro-interactions)
+   =========================================================================== */
+
+/* one orchestrated entrance: masthead → pager → tldr → sections → sources,
+   staggered via --i set per child. High-impact single page-load reveal. */
+#report-container > *{
+  opacity:0;transform:translateY(14px);
+  animation:reveal var(--t-slow) var(--ease-out) forwards;
+  animation-delay:calc(var(--i,0) * 70ms);
+}
+@keyframes reveal{to{opacity:1;transform:none}}
+
+/* nav items: subtle press + a red tick that grows in on hover (brand dot motion) */
+.nav-item{transition:background-color var(--t-fast) var(--ease),color var(--t-fast) var(--ease),transform var(--t-fast) var(--ease)}
+.nav-item:active{transform:translateX(1px) scale(.995)}
+.nav-item.active{transform:none}
+
+/* buttons: springy press */
+.btn,.report-nav button,#theme-toggle,#menu-btn{transition:
+  background-color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease),
+  color var(--t-fast) var(--ease),transform var(--t-fast) var(--ease-out),box-shadow var(--t-fast) var(--ease)}
+.btn:active{transform:translateY(0) scale(.97)}
+
+/* cards lift a hair on hover — restrained, not bouncy */
+.block{transition:border-color var(--t-med) var(--ease),transform var(--t-med) var(--ease-out),background-color var(--t-med) var(--ease)}
+.block:hover{border-color:var(--line-2);transform:translateY(-2px)}
+
+/* theme-toggle icon cross-fade/rotate */
+#theme-toggle svg{transition:opacity var(--t-med) var(--ease),transform var(--t-med) var(--ease-out)}
+#theme-toggle:hover svg{transform:rotate(12deg)}
+
+/* checklist tick spring */
+.checklist input{transition:background var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease),transform var(--t-fast) var(--ease-out)}
+.checklist input:active{transform:scale(.9)}
+
+/* keyboard-only focus ring, crisp and consistent (Apple-like) */
+:focus{outline:none}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:var(--r-sm)}
+
+/* smooth theme transition on the big surfaces only (avoid jank on everything) */
+body,.topbar,.sidebar,.panel,.block,.tldr,.nav-item{
+  transition-property:background-color,border-color,color;
+  transition-duration:var(--t-med);transition-timing-function:var(--ease)}
+
+/* search clears its own webkit decoration for a cleaner field */
+#search::-webkit-search-cancel-button{-webkit-appearance:none}
+
+/* respect reduced motion — kill all of the above */
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;scroll-behavior:auto;animation:none !important}
+  #report-container > *{opacity:1;transform:none}
+}
