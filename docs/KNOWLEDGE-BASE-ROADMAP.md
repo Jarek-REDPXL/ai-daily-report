@@ -18,6 +18,14 @@ scales and stays low-cost as it grows.
 Result: the browser no longer downloads every report on every visit → scales to
 years of data. **Git remains the free, versioned database** (full history forever).
 
+**Domain expansion — DONE.** The platform now spans all 7 team disciplines (web,
+graphic, email, social, paid, growth, ai-tooling). Every report carries a
+gate-validated `domains` array; `scripts/domains.js` is the slug/label source of
+truth; the digest is now per-domain (`docs/knowledge/digest/`), with a
+source-scoring ledger (`docs/knowledge/sources.md`) and a sidebar domain filter fed
+by the `reports/data/index.meta.json` facet. Phase 2's schema should add a
+`domains` column / join table when it lands.
+
 ## Phase 2 — Database (add only when we need DB-only powers)
 
 Trigger: when we want full-text search across years, structured filtering

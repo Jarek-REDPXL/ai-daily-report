@@ -7,7 +7,7 @@ to run itself and **get smarter over time**.
 ## The live pipeline (current)
 
 ```
-Claude "AI NEWS" routine  (daily 08:00, free under the Max plan)
+Claude "AI NEWS" routine  (daily ~08:00 BST, free under the Max plan)
         │  reads prompts + knowledge, researches, writes, self-checks
         ▼  git push to main
 GitHub (private: Jarek-REDPXL/ai-daily-report)
@@ -88,7 +88,7 @@ powershell -ExecutionPolicy Bypass -File scripts\run-report.ps1 -Type weekly
 
 ## Notes / gotchas
 
-- **Search is freshest mid-morning** — an 08:00 run indexes "yesterday" well.
+- **Search is freshest mid-morning** — a ~08:00 BST run indexes "yesterday" well.
 - **Verify big numbers.** Funding/valuation/benchmark figures move fast; the
   prompts require cross-checking and flagging directional.
 - **Prepend, never overwrite.** The archive grows; the quality gate enforces it.
