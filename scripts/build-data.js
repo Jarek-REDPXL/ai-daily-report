@@ -16,9 +16,11 @@ const { DOMAINS, DOMAIN_LABELS, DOMAIN_LABELS_SHORT } = require("./domains.js");
 
 const REPO = path.resolve(__dirname, "..");
 const SRC = path.join(REPO, "reports", "data", "reports.js");
+const CARDS_SRC = path.join(REPO, "reports", "data", "cards.js");
 const OUT_INDEX = path.join(REPO, "reports", "data", "index.json");
 const OUT_META = path.join(REPO, "reports", "data", "index.meta.json");
 const OUT_DIR = path.join(REPO, "reports", "data", "entries");
+const OUT_CARDS_DIR = path.join(REPO, "reports", "data", "cards");
 
 global.window = {};
 eval(fs.readFileSync(SRC, "utf8"));
@@ -47,18 +49,52 @@ const index = all.map(r => ({
 }));
 fs.writeFileSync(OUT_INDEX, JSON.stringify(index, null, 0));
 
-// Sidecar facet for a future sidebar filter: which valid domains are present and
-// how many reports carry each (only non-zero domains, in canonical slug order).
-// Kept OUT of index.json so app.js's array-shaped reader stays untouched; the
-// UI round can fold this into index.json when app.js is updated alongside it.
-const counts = {};
-for (const r of all) for (const d of (r.domains || [])) counts[d] = (counts[d] || 0) + 1;
-const domainsFacet = DOMAINS.filter(d => counts[d]).map(d => ({
-  slug: d, count: counts[d],
-  label: DOMAIN_LABELS_SHORT[d] || d,   // short chip text (domains.js is sole source)
-  fullLabel: DOMAIN_LABELS[d] || d,     // full label for tooltips
-}));
-fs.writeFileSync(OUT_META, JSON.stringify({ domains: domainsFacet }, null, 0));
+// ---- CARDS (durable knowledge atoms) ----
+// cards.js is a second source of truth (window.AI_EDGE_CARDS). We derive one
+// lazy-loadable file per domain (a card with N domains appears in each), plus a
+// per-domain count facet. Guarded so build-data still works if cards.js is absent.
+let cards = [];
+if (fs.existsSync(CARDS_SRC)) {
+  global.window = {};
+  eval(fs.readFileSync(CARDS_SRC, "utf8"));
+  cards = (global.window.AI_EDGE_CARDS || []).slice();
+}
+// newest-updated first within each domain file (handy for the future hubs)
+cards.sort((a, b) => ((a.updated || "") < (b.updated || "") ? 1 : ((a.updated || "") > (b.updated || "") ? -1 : 0)));
+
+function facetFor(countMap) {
+  return DOMAINS.filter(d => countMap[d]).map(d => ({
+    slug: d, count: countMap[d],
+    label: DOMAIN_LABELS_SHORT[d] || d,   // short chip text (domains.js is sole source)
+    fullLabel: DOMAIN_LABELS[d] || d,     // full label for tooltips
+  }));
+}
+
+// Sidecar facet for the sidebar filter: which valid domains are present and how
+// many reports carry each (only non-zero domains, in canonical slug order). Kept
+// OUT of index.json so app.js's array-shaped reader stays untouched. The `cards`
+// facet mirrors the same shape for the upcoming hubs (count per domain). Adding
+// the `cards` key is ignored by the current app.js (it reads `domains` only).
+const reportCounts = {};
+for (const r of all) for (const d of (r.domains || [])) reportCounts[d] = (reportCounts[d] || 0) + 1;
+const cardCounts = {};
+for (const c of cards) for (const d of (c.domains || [])) cardCounts[d] = (cardCounts[d] || 0) + 1;
+const domainsFacet = facetFor(reportCounts);
+const cardsFacet = facetFor(cardCounts);
+fs.writeFileSync(OUT_META, JSON.stringify({ domains: domainsFacet, cards: cardsFacet }, null, 0));
+
+// one lazy-loadable file per domain that has cards; prune domains that no longer do
+fs.mkdirSync(OUT_CARDS_DIR, { recursive: true });
+const keepCards = new Set();
+for (const d of DOMAINS) {
+  const inDomain = cards.filter(c => (c.domains || []).includes(d));
+  if (!inDomain.length) continue;
+  keepCards.add(d + ".json");
+  fs.writeFileSync(path.join(OUT_CARDS_DIR, d + ".json"), JSON.stringify(inDomain, null, 0));
+}
+for (const f of fs.readdirSync(OUT_CARDS_DIR)) {
+  if (f.endsWith(".json") && !keepCards.has(f)) fs.unlinkSync(path.join(OUT_CARDS_DIR, f));
+}
 
 // one file per full report
 const keep = new Set();
@@ -72,4 +108,6 @@ for (const f of fs.readdirSync(OUT_DIR)) {
 }
 
 console.log("build-data: wrote index.json (" + index.length + ") + index.meta.json ("
-  + domainsFacet.length + " domains) + " + keep.size + " entry files");
+  + domainsFacet.length + " domains, " + cardsFacet.length + " card-domains) + "
+  + keep.size + " entry files + " + keepCards.size + " card files ("
+  + cards.length + " cards)");

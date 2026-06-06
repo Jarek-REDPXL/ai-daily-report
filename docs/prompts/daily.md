@@ -16,6 +16,13 @@ Paid platform granularity is BLOCK-level tags, not domains: google-ads, meta-ads
 - A deep beat = real research + golden block(s): what changed, why it matters to this discipline, the technique/do-it, exact link(s); plus any new prediction and a digest update for that domain.
 - The report's `domains` array = every domain that earned a SUBSTANTIVE block today. One-line scans that surfaced nothing do NOT earn a tag.
 
+## Card extraction (the compounding library — do this on every deep beat)
+The daily is the INTAKE feed; cards are the durable LIBRARY of plays the team keeps. Whenever a deep beat surfaces a durable play/technique/tool (not just news — something a teammate would DO), capture it as a card in `reports/data/cards.js` (`window.AI_EDGE_CARDS`):
+- **One canonical card per play. Update in place, never duplicate.** Before creating, search cards.js for an existing card on the same play. If it exists, UPDATE it: bump `updated` to today, adjust `confidence` as evidence grows (speculative → emerging → confirmed), add the new exact source to `sources`, and refine `how`/`why`. If it's genuinely new, CREATE one.
+- If a new play REPLACES an older one, set the old card's `status:"superseded"` and list its id in the new card's `supersedes:[...]`; cross-link peers via `related:[...]`.
+- Card shape (gate-validated): `{ id (stable slug, e.g. "card-paid-meta-advantage-plus"), domains:[≥1 valid slug], title, summary, why, how:[steps], confidence:"confirmed|emerging|speculative", status:"active|superseded", supersedes:[ids], related:[ids], sources (exact links joined by ' · '), tags:[...], created, updated }`.
+- Cards do NOT replace the daily entry — write both: the daily covers the news; the card distils the reusable play. Not every deep beat yields a card (only durable plays do), but most should advance at least one.
+
 ## Sourcing (non-negotiable)
 1. EVERY source is an exact clickable link. No bare-text sources. If you can't link it, don't cite it — never fabricate links.
 2. Source widely, per domain:

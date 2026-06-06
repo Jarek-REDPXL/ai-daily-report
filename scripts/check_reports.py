@@ -24,9 +24,16 @@ from datetime import date, timedelta
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPORTS_JS = os.path.join(REPO, "reports", "data", "reports.js")
+CARDS_JS = os.path.join(REPO, "reports", "data", "cards.js")
 DOMAINS_JS = os.path.join(REPO, "scripts", "domains.js")
 
 REQUIRED = ["id", "type", "week", "title", "dateLabel", "sortDate", "tldr", "sections", "domains"]
+
+# cards (durable knowledge atoms) — domains validated separately below.
+CARD_REQUIRED = ["id", "title", "summary", "why", "how", "confidence", "status",
+                 "sources", "created", "updated"]
+CARD_CONFIDENCE = {"confirmed", "emerging", "speculative"}
+CARD_STATUS = {"active", "superseded"}
 
 
 def valid_domains():
@@ -43,21 +50,29 @@ def valid_domains():
         pass
     sys.exit("FAIL: could not load valid domain slugs from scripts/domains.js")
 
-def load():
+def _eval_global(js_path, global_name, label):
     node_script = (
         "const fs=require('fs');global.window={};"
         "eval(fs.readFileSync(process.argv[1],'utf8'));"
-        "process.stdout.write(JSON.stringify(window.AI_EDGE_REPORTS||[]));"
+        "process.stdout.write(JSON.stringify(window.%s||[]));" % global_name
     )
     try:
-        out = subprocess.run(["node", "-e", node_script, REPORTS_JS],
+        out = subprocess.run(["node", "-e", node_script, js_path],
                              capture_output=True, check=True)
     except FileNotFoundError:
-        sys.exit("FAIL: `node` not found on PATH (needed to evaluate reports.js).")
+        sys.exit("FAIL: `node` not found on PATH (needed to evaluate %s)." % label)
     except subprocess.CalledProcessError as e:
         msg = (e.stderr or b"").decode("utf-8", "replace") or str(e)
-        sys.exit("FAIL: reports.js is not valid JavaScript:\n" + msg)
+        sys.exit("FAIL: %s is not valid JavaScript:\n%s" % (label, msg))
     return json.loads(out.stdout.decode("utf-8", "replace"))
+
+def load():
+    return _eval_global(REPORTS_JS, "AI_EDGE_REPORTS", "reports.js")
+
+def load_cards():
+    if not os.path.exists(CARDS_JS):
+        return None
+    return _eval_global(CARDS_JS, "AI_EDGE_CARDS", "cards.js")
 
 def main():
     errors = []
@@ -96,6 +111,45 @@ def main():
     dupes = set(x for x in ids if ids.count(x) > 1)
     if dupes:
         errors.append("duplicate ids: %s" % ", ".join(sorted(map(str, dupes))))
+
+    # ---- CARDS (durable knowledge atoms) — validate cards.js if present ----
+    cards = load_cards()
+    n_cards = 0
+    if cards is not None:
+        n_cards = len(cards)
+        card_ids = [c.get("id") for c in cards]
+        card_id_set = set(card_ids)
+        for i, c in enumerate(cards):
+            cw = "card[%d] id=%r" % (i, c.get("id", "?"))
+            for f in CARD_REQUIRED:
+                if f not in c or c[f] in (None, "", [], {}):
+                    errors.append("%s missing/empty field: %s" % (cw, f))
+            cdoms = c.get("domains")
+            if not isinstance(cdoms, list) or not cdoms:
+                errors.append("%s domains must be a non-empty array" % cw)
+            else:
+                cbad = [d for d in cdoms if d not in valid]
+                if cbad:
+                    errors.append("%s invalid domain slug(s): %s (valid: %s)"
+                                  % (cw, ", ".join(map(str, cbad)), ", ".join(sorted(valid))))
+            if c.get("confidence") not in CARD_CONFIDENCE:
+                errors.append("%s confidence must be one of %s" % (cw, sorted(CARD_CONFIDENCE)))
+            if c.get("status") not in CARD_STATUS:
+                errors.append("%s status must be one of %s" % (cw, sorted(CARD_STATUS)))
+            for ref_field in ("supersedes", "related"):
+                refs = c.get(ref_field) or []
+                if not isinstance(refs, list):
+                    errors.append("%s %s must be an array" % (cw, ref_field))
+                    continue
+                missing = [r for r in refs if r not in card_id_set]
+                if missing:
+                    errors.append("%s %s references unknown card id(s): %s"
+                                  % (cw, ref_field, ", ".join(map(str, missing))))
+        cdupes = set(x for x in card_ids if card_ids.count(x) > 1)
+        if cdupes:
+            errors.append("duplicate card ids: %s" % ", ".join(sorted(map(str, cdupes))))
+    else:
+        warnings.append("cards.js not found — card layer not validated")
 
     # sorted newest-first by sortDate
     dates = [r.get("sortDate", "") for r in reports]
@@ -154,8 +208,8 @@ def main():
             msg = msg.decode("utf-8", "replace")
         print("WARN: build-data.js did not run (%s) — derived files may be stale" % (msg or e))
 
-    print("OK: %d reports (%d daily, %d weekly), valid JS, unique ids, sorted, "
-          "pdfs present." % (len(reports), n_daily, n_weekly))
+    print("OK: %d reports (%d daily, %d weekly) + %d cards, valid JS, unique ids, "
+          "sorted, pdfs present." % (len(reports), n_daily, n_weekly, n_cards))
 
 if __name__ == "__main__":
     main()
