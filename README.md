@@ -73,3 +73,5 @@ Background on the design is in [`docs/AUTOMATION.md`](docs/AUTOMATION.md).
 
 ---
 *Figures for fast-moving deals are directional, not guaranteed. Each report lists its sources.*
+
+<!-- auto-deploy pipeline verified 2026-06-06 -->
