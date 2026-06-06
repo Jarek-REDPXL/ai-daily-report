@@ -38,8 +38,22 @@
 - **Planner → worker → verifier → merge** is the reliable multi-agent shape; never let one session do everything (context pollution).
 - **The durable skills compound with stronger models:** orchestration, evals, judgment, context engineering, writing Skills (markdown runbooks).
 
+## Mission (RedPxl News = team knowledge base, not just news)
+Be ahead of even the top 1%. All-in-one intelligence: AI models, agentic tools,
+**new Claude features/skills/connectors**, new skills to learn (with how-to),
+research, **finance & stock market** (AI/tech tickers, funding, M&A, smart-money
+moves), **job market**, policy, deployment lessons. Teach what to adopt + how to
+connect it. Compounds over years — this digest + predictions ledger are the memory.
+
+## Sourcing standard (the edge)
+Go wider than press releases: official blogs/changelogs/docs, SEC filings, arXiv,
+top journalism, trackers, **YouTube (+transcripts)**, **credible social** (X,
+LinkedIn, Reddit, HN, GitHub). **Every source = exact clickable link** to the
+specific article/video/post/filing — never a homepage or bare name. Cross-check
+surprising/financial figures against a 2nd source; never fabricate a URL.
+
 ## Recurring high-quality sources (cross-check, don't single-source)
-buildfastwithai (daily roundups) · The Neuron · crescendo.ai · llm-stats.com · digitalapplied tracker · CNBC · Axios · The Information · blog.google · Anthropic / OpenAI / Microsoft AI official · arXiv. Always cross-check funding/valuation/benchmark figures against a 2nd source; mark fast-moving ones directional.
+buildfastwithai (daily roundups) · The Neuron · crescendo.ai · llm-stats.com · digitalapplied tracker · CNBC · Bloomberg · Axios · The Information · Reuters · blog.google · Anthropic / OpenAI / Microsoft AI official · arXiv · GitHub releases · company IR/SEC filings · earnings-call transcripts (YouTube). Always cross-check funding/valuation/benchmark figures against a 2nd source; mark fast-moving ones directional.
 
 ## Changelog (one line per run — newest first)
 - 2026-06-06: restructured archive to Monday–Sunday weeks; weekly now written on Monday for the prior full week. Issue #1 = Week of May 18–24 (Google I/O), Issue #2 = Week of May 25–31. Added Mon May 18 daily. Sidebar derives week grouping from sortDate.
