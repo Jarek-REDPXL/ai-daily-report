@@ -1,5 +1,7 @@
 # Daily Briefing — Editorial Spec (RedPxl News)
 
+Mission & standard: see docs/NORTH-STAR.md — read before writing.
+
 ## Mission
 Compounding intelligence edge for the RedPxl team across our disciplines — using AI to stay ahead of everyone in our fields. This is a knowledge base, not a news feed: golden, usable judgment that compounds, never raw headlines. Shared standards live in docs/knowledge/digest/_house.md.
 
