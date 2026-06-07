@@ -10,7 +10,7 @@
  * Paid-platform granularity (google-ads / meta-ads / snap-ads) is a BLOCK-level
  * tag, NOT a domain — see PAID_PLATFORM_TAGS below and docs/DOMAINS.md.
  */
-const DOMAINS = ["web-design", "web-dev", "graphic", "email", "social", "paid", "growth", "ai-tooling"];
+const DOMAINS = ["web-design", "web-dev", "graphic", "email", "social", "paid", "growth", "ai-tooling", "news"];
 
 const DOMAIN_LABELS = {
   "web-design": "Web design (UI/UX & frontend craft)",
@@ -21,6 +21,7 @@ const DOMAIN_LABELS = {
   "paid": "Paid ads",
   "growth": "Marketing & growth strategy",
   "ai-tooling": "AI tools, skills & techniques",
+  "news": "News (markets & the AI landscape)",
 };
 
 // Short labels for compact UI (e.g. sidebar filter chips). Source of truth for
@@ -35,6 +36,7 @@ const DOMAIN_LABELS_SHORT = {
   "paid": "Paid",
   "growth": "Growth",
   "ai-tooling": "AI Tooling",
+  "news": "News",
 };
 
 // Platform granularity for the `paid` domain — lives in block-level tags.
@@ -49,7 +51,8 @@ const HUBS = {
   development: { label: "Development", scope: "Build, code, performance, architecture & tooling.", domains: ["web-dev"] },
   marketing:   { label: "Marketing",   scope: "Email, social, paid and growth strategy.",          domains: ["email", "social", "paid", "growth"] },
   ai:          { label: "AI",          scope: "AI tools, skills & techniques for every craft.",    domains: ["ai-tooling"] },
+  news:        { label: "News",        scope: "Markets, what companies are building, what to expect & the AI landscape.", domains: ["news"] },
 };
-const HUB_ORDER = ["design", "development", "marketing", "ai"];
+const HUB_ORDER = ["design", "development", "marketing", "ai", "news"];
 
 module.exports = { DOMAINS, DOMAIN_LABELS, DOMAIN_LABELS_SHORT, PAID_PLATFORM_TAGS, HUBS, HUB_ORDER };

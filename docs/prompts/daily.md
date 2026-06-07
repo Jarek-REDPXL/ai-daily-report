@@ -12,13 +12,20 @@ The team writes back — feedback (share / ask / learn_next) and per-card/report
 - **If input WAS read:** prioritise requests — any `ask` / `learn_next` topics become first-class research targets for today's deep beats (cover them as run-it-today plays); and fold in the rating signal — highly-rated cards/sources → trust and reinforce (resurface, build on, keep their sources high in sources.md); low-rated ones → reconsider (revisit the play, lower the source's score, or supersede the card).
 - **Close the loop (best-effort):** if you acted on new items, `POST /api/intake` with `{ "ids": [...] }` (same Bearer auth) to mark them `reviewed` so they aren't re-processed. This too is fail-soft — a failed mark-reviewed must never block or fail the run; just continue.
 
+## Read harvested signals FIRST (the ingestion funnel — breadth in, filter before synthesis)
+Before this step runs, `scripts/collectors/ingest.py` harvests hundreds of items from the curated registry (RSS, Hacker News, arXiv, GitHub, Product Hunt, markets/EDGAR) into `scripts/collectors/harvest-digest.md` (a domain-grouped, ranked shortlist) + `harvest.json` (the full set). **Read `harvest-digest.md` FIRST**, before any web search.
+- The harvest is BREADTH; your job is the FILTER. Skim it, pick the few leads per deep-beat domain that are genuinely real, corroborated, and matter to our crafts — then web-search those to go deeper and verify.
+- Corroboration = trust: if several independent sources in the harvest carry the same story, that's a strong signal it's real (and Phase 2 will score this automatically). A lone item is a lead to verify, not a fact to publish.
+- This is an ENHANCEMENT, fail-soft: if `harvest-digest.md` is missing or thin, do NOT abort — research normally via web search. Never let ingestion block the run.
+
 ## Domains (canonical — scripts/domains.js / docs/DOMAINS.md)
-web-design (FLAGSHIP), web-dev (FLAGSHIP), graphic, email, social, paid, growth, ai-tooling.
+web-design (FLAGSHIP), web-dev (FLAGSHIP), graphic, email, social, paid, growth, ai-tooling, news.
 (Web is the flagship craft, split into the design and dev halves — see the cadence below.)
+`news` = the landscape we operate in: markets (index moves + the why, AI-relevant tickers, funding/M&A), what companies are building (launches, model releases, SEC filings), what to expect (forward calls logged in predictions.md), and the AI space (regulation, lab announcements). Trust-critical: cross-check every figure against a 2nd source, mark fast-moving numbers directional.
 Paid platform granularity is BLOCK-level tags, not domains: google-ads, meta-ads, snap-ads.
 
 ## Daily cadence — breadth without dilution
-- SCAN all 8 domains every run: one tight line each, surfaced ONLY if something genuinely moved. Per-domain silence is allowed; never skip the whole run.
+- SCAN all 9 domains every run: one tight line each, surfaced ONLY if something genuinely moved. Per-domain silence is allowed; never skip the whole run.
 - DEEP-BEAT exactly 3 domains:
   1. EXACTLY ONE web slug — the least-recently-covered of {`web-design`, `web-dev`}. Web is the flagship craft and gets a beat EVERY day; the two halves ALTERNATE (so if today is web-dev, tomorrow leans web-design). A single item that genuinely serves both can be tagged with both, but still only "spends" the one guaranteed web slot.
   2. The 2 NON-web domains gone longest without a deep beat. Determine by scanning the `domains` arrays of the last ~10 reports and picking the 2 least-recently-present non-web domains (treat web-design + web-dev as the web pair, excluded here). Self-balances even if a day was missed.

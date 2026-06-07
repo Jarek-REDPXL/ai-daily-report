@@ -74,6 +74,21 @@ jobs:
           rm -f resp.json
       # ── end temporary diagnostic ──────────────────────────────────────────────
 
+      # Ingestion funnel (Phase 1): harvest hundreds of items from the curated
+      # registry into redpxl.signals + a local harvest-digest.md the Claude step
+      # reads FIRST. FAIL-SOFT — a dead feed/collector or missing secret logs and
+      # is skipped; ingestion NEVER blocks the publish run (the routine falls back
+      # to web search). DATABASE_URL persists signals (clustering in Phase 2);
+      # FINNHUB_API_KEY enables the markets collector (both optional).
+      - name: Harvest source signals (ingestion funnel)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pip install --quiet -r scripts/collectors/requirements.txt || echo "collector dep install issue — continuing fail-soft"
+          python scripts/collectors/ingest.py || echo "ingest failed — continuing fail-soft (routine will web-search instead)"
+
       - name: Generate today's briefing with Claude
         uses: anthropics/claude-code-action@v1
         env:
@@ -92,8 +107,11 @@ jobs:
               - docs/prompts/daily.md (the canonical daily editorial spec — authoritative
                 for WHAT to produce and how)
 
-            Do everything daily.md specifies: read team input first (fail-soft), research
-            the last ~24h on the 8-domain cadence, PREPEND one dated daily object to
+            Do everything daily.md specifies: read the harvested signal digest
+            (scripts/collectors/harvest-digest.md) FIRST and let it steer your leads,
+            read team input next (fail-soft), research the last ~24h on the 9-domain
+            cadence (incl. the new `news` domain — markets + AI landscape, cross-checked),
+            PREPEND one dated daily object to
             reports/data/reports.js WITH its `domains` array (exact existing shape,
             newest first, never overwrite older entries), create/update the durable cards
             in reports/data/cards.js, and update the per-domain digests, predictions, and

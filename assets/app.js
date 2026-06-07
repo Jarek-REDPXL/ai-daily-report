@@ -166,6 +166,7 @@
     { label: "Development", hash: "#/hub/development", on: v => v.view === "hub" && v.hub === "development" },
     { label: "Marketing", hash: "#/hub/marketing", on: v => v.view === "hub" && v.hub === "marketing" },
     { label: "AI", hash: "#/hub/ai", on: v => v.view === "hub" && v.hub === "ai" },
+    { label: "News", hash: "#/hub/news", on: v => v.view === "hub" && v.hub === "news" },
     { label: "Feed", hash: "#/feed", on: v => v.view === "feed" },
     { label: "Inbox", hash: "#/inbox", on: v => v.view === "inbox", quiet: true },
   ];

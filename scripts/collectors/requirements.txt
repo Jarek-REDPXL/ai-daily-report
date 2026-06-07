@@ -1,0 +1,4 @@
+# RedPxl News — collector dependencies (Phase 1).
+# Installed by the daily/weekly workflows before the ingest step.
+feedparser>=6.0.11
+psycopg[binary]>=3.2

@@ -17,6 +17,10 @@ venv/
 # scratch
 *.tmp
 
+# Transient harvest output (regenerated every run by scripts/collectors/ingest.py)
+scripts/collectors/harvest-digest.md
+scripts/collectors/harvest.json
+
 # Design feedback loop (dev-only tooling — not part of the site)
 shots/
 shot*.py

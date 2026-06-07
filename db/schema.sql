@@ -82,3 +82,27 @@ CREATE VIEW redpxl.rating_summary AS
   UNION ALL
   SELECT 'report' AS target_type, report_id AS target_id, count(*) AS n, round(avg(score),2) AS avg_score
     FROM redpxl.ratings WHERE report_id IS NOT NULL GROUP BY report_id;
+
+-- ── Phase 1: ingestion staging (see db/migrations/001_signals.sql) ───────────
+-- Collectors write the harvest here every run; the daily routine reasons over it.
+CREATE TABLE IF NOT EXISTS redpxl.signals (
+  id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  source        text NOT NULL,
+  url           text NOT NULL,
+  title         text NOT NULL,
+  published_at  timestamptz,
+  domain_guess  text,
+  excerpt       text,
+  engagement    integer NOT NULL DEFAULT 0,
+  raw           jsonb,
+  content_hash  text NOT NULL,
+  fetched_at    timestamptz NOT NULL DEFAULT now(),
+  run_date      date NOT NULL DEFAULT (now() AT TIME ZONE 'utc')::date,
+  cluster_id    uuid,
+  score         numeric
+);
+CREATE UNIQUE INDEX IF NOT EXISTS signals_content_hash_uniq ON redpxl.signals (content_hash);
+CREATE INDEX IF NOT EXISTS signals_run_date_idx  ON redpxl.signals (run_date DESC);
+CREATE INDEX IF NOT EXISTS signals_domain_idx    ON redpxl.signals (domain_guess);
+CREATE INDEX IF NOT EXISTS signals_published_idx ON redpxl.signals (published_at DESC);
+CREATE INDEX IF NOT EXISTS signals_cluster_idx   ON redpxl.signals (cluster_id);

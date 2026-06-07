@@ -17,6 +17,7 @@ them aligned (the quality gate parses `domains.js`, so that file wins on conflic
 | `paid` | Paid ads | Paid acquisition across ad platforms — strategy, creative, bidding, measurement. |
 | `growth` | Marketing & growth strategy | Funnels, positioning, analytics, experimentation, GTM and growth loops. |
 | `ai-tooling` | AI tools, skills & techniques | AI models/agents/tools, new skills & techniques, and how to adopt them. |
+| `news` | News (markets & the AI landscape) | Markets (index moves + why, AI tickers, funding/M&A), what companies are building (launches, model releases, SEC filings), what to expect (predictions), and the AI space (regulation, lab announcements). Trust-critical: cross-check figures. |
 
 ## Paid platform tags (block-level, NOT domains)
 
@@ -31,7 +32,7 @@ as a separate domain. Use these exact tag slugs:
 
 ## Hubs (how domains roll up for the site)
 
-The site groups the 8 domains into 4 **hubs** — the navigable craft areas a
+The site groups the 9 domains into 5 **hubs** — the navigable craft areas a
 teammate browses. This is the single reference for the mapping (UI is built against
 it):
 
@@ -41,6 +42,7 @@ it):
 | **Development** | `web-dev` |
 | **Marketing** | `email`, `social`, `paid`, `growth` |
 | **AI** | `ai-tooling` |
+| **News** | `news` |
 
 Cards and reports can be multi-tagged, so a cross-craft item (e.g. a card tagged
 `["web-dev","web-design"]`) legitimately appears in more than one hub. Domains stay
