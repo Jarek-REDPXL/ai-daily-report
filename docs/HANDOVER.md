@@ -10,8 +10,9 @@ what it is, how it runs, every moving part, how to change things, and what's nex
 **RedPxl News** is a self-running, self-improving intelligence platform for the
 RedPxl team across the disciplines the team works in — **web design, web dev,
 graphic, email, social, paid, growth**, plus **ai-tooling** (AI tools, skills &
-techniques applied to all of the above). These 8 domains roll up into 4 navigable
-**hubs** — Design, Development, Marketing, AI (mapping in §4 / docs/DOMAINS.md). A
+techniques applied to all of the above), plus **news** (markets & the AI landscape).
+These 9 domains roll up into 5 navigable **hubs** — Design, Development, Marketing,
+AI, News (mapping in §4 / docs/DOMAINS.md). A
 private knowledge base (not just a news feed) that
 researches these fields every morning, writes a daily briefing (and a weekly
 synthesis on Mondays), grades its own past predictions, compounds what it learns in
@@ -24,6 +25,14 @@ on-brand site — with zero manual steps day to day.
 - **Host:** Vercel, project `ai-daily-report` under team `jarek-s-projects2` (Pro)
 - **Generator:** Claude "AI NEWS" routine (Claude web/app), runs daily ~08:00 BST,
   free under the user's Max plan.
+
+> **95+ Masterplan (shipped 2026-06-07):** the system gained an ingestion funnel
+> (curated multi-source collectors → `redpxl.signals`), corroboration clustering, a
+> link-resolves trust gate, smart cards (required `action`, threads, corroboration),
+> **ask-anything RAG** (`/api/ask` + the Ask tab + optional MCP), and compounding
+> loops (YouTube transcripts, source self-curation, outcome tracking). It's merged
+> fail-soft — dormant until you add the secrets/migrations in
+> **[docs/MASTERPLAN-ACTIVATION.md](./MASTERPLAN-ACTIVATION.md)**. Start there to turn it on.
 
 ---
 
