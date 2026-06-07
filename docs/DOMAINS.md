@@ -64,7 +64,7 @@ Domains tag two kinds of content now:
 
 Card shape (gate-validated): `{ id, domains:[...], title, summary, why, how:[steps],
 confidence:"confirmed|emerging|speculative", status:"active|superseded",
-supersedes:[ids], related:[ids], sources, tags:[...], created, updated }`.
+supersedes:[ids], related:[ids], sources:[{label?, url}], tags:[...], created, updated }`.
 
 Derived by `scripts/build-data.js` (do NOT hand-edit): one lazy-loadable file per
 domain at `reports/data/cards/<domain>.json`, plus a `cards` facet (count per

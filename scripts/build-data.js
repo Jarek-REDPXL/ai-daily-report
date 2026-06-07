@@ -83,7 +83,12 @@ const cardCounts = {};
 for (const c of cards) for (const d of (c.domains || [])) cardCounts[d] = (cardCounts[d] || 0) + 1;
 const domainsFacet = facetFor(reportCounts);
 const cardsFacet = facetFor(cardCounts);
-fs.writeFileSync(OUT_META, JSON.stringify({ domains: domainsFacet, cards: cardsFacet }, null, 0));
+// Full label map for ALL domains (incl. ones with no cards/reports) — the hub
+// sub-section headers need labels for empty domains too, which the facets (which
+// only list non-empty domains) can't provide. Sourced from domains.js, no mirror.
+const domainLabels = {};
+DOMAINS.forEach(d => { domainLabels[d] = { label: DOMAIN_LABELS_SHORT[d] || d, fullLabel: DOMAIN_LABELS[d] || d }; });
+fs.writeFileSync(OUT_META, JSON.stringify({ domains: domainsFacet, cards: cardsFacet, domainLabels }, null, 0));
 
 // one lazy-loadable file per domain that has cards; prune domains that no longer do
 fs.mkdirSync(OUT_CARDS_DIR, { recursive: true });
@@ -103,6 +108,7 @@ for (const f of fs.readdirSync(OUT_CARDS_DIR)) {
 const cardsIndex = cards.map(c => ({
   id: c.id, title: c.title, summary: c.summary, domains: c.domains || [],
   confidence: c.confidence, status: c.status, updated: c.updated || c.created || "",
+  supersedes: c.supersedes || [],   // needed for "Replaced by" reverse lookup in the card view
 }));
 fs.writeFileSync(OUT_CARDS_INDEX, JSON.stringify(cardsIndex, null, 0));
 

@@ -17,7 +17,8 @@
      status      "active" | "superseded"
      supersedes  array of card ids this replaces (or [])
      related     array of related card ids (or [])
-     sources     HTML string of <a href> EXACT links joined by " · "
+     sources     array of { label?, url } — exact links (url required). NOT markdown
+                 or HTML strings. The card view renders them as clickable anchors.
      tags        array of extra tags (e.g. platform tags) (or [])
      created     "YYYY-MM-DD"
      updated     "YYYY-MM-DD"
@@ -40,7 +41,7 @@ window.AI_EDGE_CARDS = [
     status: "active",
     supersedes: [],
     related: [],
-    sources: "<a href=\"https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API\" target=\"_blank\" rel=\"noopener\">MDN — View Transitions API</a>",
+    sources: [{ label: "MDN — View Transitions API", url: "https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API" }],
     tags: ["css", "ux"],
     created: "2026-06-07",
     updated: "2026-06-07"
@@ -62,7 +63,7 @@ window.AI_EDGE_CARDS = [
     status: "active",
     supersedes: [],
     related: [],
-    sources: "<a href=\"https://www.facebook.com/business/help/2724374746554905\" target=\"_blank\" rel=\"noopener\">Meta — About Advantage+ shopping campaigns</a>",
+    sources: [{ label: "Meta — About Advantage+ shopping campaigns", url: "https://www.facebook.com/business/help/2724374746554905" }],
     tags: ["meta-ads"],
     created: "2026-06-07",
     updated: "2026-06-07"
@@ -84,7 +85,7 @@ window.AI_EDGE_CARDS = [
     status: "active",
     supersedes: [],
     related: [],
-    sources: "<a href=\"https://support.google.com/mail/answer/81126\" target=\"_blank\" rel=\"noopener\">Google — Email sender guidelines</a>",
+    sources: [{ label: "Google — Email sender guidelines", url: "https://support.google.com/mail/answer/81126" }],
     tags: ["deliverability"],
     created: "2026-06-07",
     updated: "2026-06-07"
@@ -106,7 +107,7 @@ window.AI_EDGE_CARDS = [
     status: "active",
     supersedes: [],
     related: [],
-    sources: "<a href=\"https://docs.anthropic.com/en/docs/build-with-claude/tool-use/overview\" target=\"_blank\" rel=\"noopener\">Anthropic — Tool use overview</a>",
+    sources: [{ label: "Anthropic — Tool use overview", url: "https://docs.anthropic.com/en/docs/build-with-claude/tool-use/overview" }],
     tags: ["workflow", "agents"],
     created: "2026-06-07",
     updated: "2026-06-07"

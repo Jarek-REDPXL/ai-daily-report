@@ -104,7 +104,7 @@ Card object shape (gate-validated):
   status: "active" | "superseded",
   supersedes: [cardId, ...],           // plays this replaces (or [])
   related: [cardId, ...],              // peers (or [])
-  sources: "html <a href> EXACT links joined by ' · '",
+  sources: [{ label, url }],            // structured exact links (url required); NOT html/markdown
   tags: ["meta-ads", ...], created: "YYYY-MM-DD", updated: "YYYY-MM-DD"
 }
 ```

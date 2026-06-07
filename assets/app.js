@@ -22,6 +22,7 @@
   // ---- domain filter state (purely additive; off unless the facet loads) ----
   let domainFacet = [];          // [{slug,count,label,fullLabel}] from index.meta.json
   let domainFilter = null;       // selected slug, or null for "All"
+  let domainLabelMap = {};       // slug -> {label,fullLabel} for ALL domains (incl. empty)
 
   // ---- cards (durable knowledge atoms) ----
   let cardsIndex = [];           // slim cards [{id,title,summary,domains,confidence,status,updated}]
@@ -91,10 +92,13 @@
       const res = await fetch("reports/data/index.meta.json", { cache: "no-cache" });
       if (!res.ok) throw new Error("meta " + res.status);
       const m = await res.json();
+      if (m && m.domainLabels) domainLabelMap = m.domainLabels;   // labels for all domains
       const d = m && Array.isArray(m.domains) ? m.domains : [];
       return d.filter(x => x && x.slug);
     } catch (e) { return []; }
   }
+  const domShort = d => (domainLabelMap[d] && domainLabelMap[d].label) || d;
+  const domFull = d => (domainLabelMap[d] && domainLabelMap[d].fullLabel) || d;
   async function loadCardsIndex() {
     try {
       const res = await fetch("reports/data/cards-index.json", { cache: "no-cache" });
@@ -404,36 +408,71 @@
   // =========================================================================
   //  HOME / HUB / CARD views
   // =========================================================================
+  // ---- freshness (client-side; "updated Xd ago" + stale cue) ----
+  function freshness(dateStr) {
+    if (!dateStr) return { text: "", stale: false };
+    const d = new Date(dateStr + "T00:00:00Z");
+    if (isNaN(d.getTime())) return { text: "", stale: false };
+    const n = Math.floor((Date.now() - d.getTime()) / 86400000);
+    let text = n <= 0 ? "updated today"
+      : n === 1 ? "updated 1d ago"
+      : n < 30 ? "updated " + n + "d ago"
+      : n < 365 ? "updated " + Math.floor(n / 30) + "mo ago"
+      : "updated " + Math.floor(n / 365) + "y ago";
+    return { text, stale: n > 60 };
+  }
+  // card's primary hub = first hub (canonical order) whose domains intersect it
+  function primaryHub(domains) {
+    const ds = new Set(domains || []);
+    return HUB_ORDER.find(h => (HUBS[h].domains || []).some(d => ds.has(d))) || null;
+  }
+  function slim(id) { return cardsIndex.find(x => x.id === id) || null; }
+
+  // ---- shared card tile (home / hub / related) ----
   function cardTileHTML(c) {
-    const conf = c.confidence ? `<span class="kc-conf ${c.confidence}">${c.confidence}</span>` : "";
+    const f = freshness(c.updated);
+    const conf = c.confidence ? `<span class="kc-conf ${esc(c.confidence)}">${esc(c.confidence)}</span>` : "";
     const sup = c.status === "superseded" ? `<span class="kc-conf superseded">superseded</span>` : "";
-    const doms = (c.domains || []).map(d => `<span class="kc-dom">${esc(d)}</span>`).join("");
+    const doms = (c.domains || []).map(d => `<span class="kc-dom">${esc(domShort(d))}</span>`).join("");
     return `<a class="kcard" href="#/card/${encodeURIComponent(c.id)}">
-        <div class="kc-top">${conf}${sup}<span class="kc-updated">${esc(c.updated || "")}</span></div>
+        <span class="kc-dot" aria-hidden="true"></span>
+        <div class="kc-top">${conf}${sup}<span class="kc-fresh${f.stale ? " stale" : ""}">${esc(f.text)}</span></div>
         <h4 class="kc-title">${esc(c.title)}</h4>
         <p class="kc-summary">${esc(c.summary)}</p>
         <div class="kc-doms">${doms}</div>
       </a>`;
   }
+  // ---- compact tile for related / evolution groups ----
+  function relTileHTML(s) {
+    if (!s) return "";
+    const f = freshness(s.updated);
+    const conf = s.confidence ? `<span class="kc-conf ${esc(s.confidence)}">${esc(s.confidence)}</span>` : "";
+    return `<a class="rel-tile" href="#/card/${encodeURIComponent(s.id)}">
+        <div class="kc-top">${conf}<span class="kc-fresh${f.stale ? " stale" : ""}">${esc(f.text)}</span></div>
+        <span class="rel-title">${esc(s.title)}</span>
+      </a>`;
+  }
+  function pulseItemHTML(r) {
+    return `<a class="pulse-item" href="#/feed/${encodeURIComponent(r.id)}">
+        <span class="pulse-date">${esc(r.dateLabel.replace(/,? 2026$/, ""))}</span>
+        <span class="pulse-title">${esc(r.title)}</span>
+        <span class="pulse-doms">${(r.domains || []).map(d => `<span class="pulse-dom">${esc(domShort(d))}</span>`).join("")}</span>
+      </a>`;
+  }
   function hubCount(hub) {
     const set = new Set(HUBS[hub].domains);
-    // distinct cards whose domains intersect the hub's domain set
     return cardsIndex.filter(c => (c.domains || []).some(d => set.has(d))).length;
   }
 
   function renderHome() {
-    const dailies = META.filter(r => r.type === "daily").slice(0, 7);
-    const changed = dailies.map(r =>
-      `<a class="pulse-item" href="#/feed/${encodeURIComponent(r.id)}">
-        <span class="pulse-date">${esc(r.dateLabel.replace(/,? 2026$/, ""))}</span>
-        <span class="pulse-title">${esc(r.title)}</span>
-        ${(r.domains || []).map(d => `<span class="pulse-dom">${esc(d)}</span>`).join("")}
-      </a>`).join("") || `<p class="empty">No intake yet.</p>`;
+    const dailies = META.filter(r => r.type === "daily").slice(0, 6);
+    const changed = dailies.map(pulseItemHTML).join("") || `<p class="empty">No intake yet.</p>`;
 
     const tiles = HUB_ORDER.map(h => {
       const n = hubCount(h);
       return `<a class="hub-tile hub-${h}" href="#/hub/${h}">
-          <span class="ht-label">${HUBS[h].label}</span>
+          <span class="ht-dot" aria-hidden="true"></span>
+          <span class="ht-label">${esc(HUBS[h].label)}</span>
           <span class="ht-scope">${esc(HUBS[h].scope)}</span>
           <span class="ht-count">${n} card${n === 1 ? "" : "s"}</span>
         </a>`;
@@ -444,11 +483,17 @@
       ? `<div class="kcard-grid">${recent.map(cardTileHTML).join("")}</div>`
       : `<p class="empty">No cards yet — they appear as the routine distils durable plays.</p>`;
 
+    const lastUpd = cardsIndex.reduce((m, c) => (c.updated > m ? c.updated : m), "");
+    const lastF = freshness(lastUpd);
+    const glance = `${cardsIndex.length} card${cardsIndex.length === 1 ? "" : "s"} across ${HUB_ORDER.length} hubs`
+      + (lastF.text ? ` · library ${lastF.text}` : "");
+
     viewEl.innerHTML = `
       <section class="home-hero">
         <div class="hh-kicker"><span class="kicker-rule"></span>Knowledge Center</div>
         <h1 class="hh-title">The pulse</h1>
         <p class="hh-sub">What changed across the crafts, and the plays worth keeping.</p>
+        <div class="at-glance"><span class="ag-dot" aria-hidden="true"></span>${esc(glance)}</div>
       </section>
 
       <section class="home-block">
@@ -471,55 +516,93 @@
 
   function renderHub(hub) {
     if (!HUBS[hub]) { location.hash = "#/"; return; }
-    const set = new Set(HUBS[hub].domains);
-    const cards = cardsIndex.filter(c => (c.domains || []).some(d => set.has(d))).sort(byUpdated);
-    const body = cards.length
-      ? `<div class="kcard-grid">${cards.map(cardTileHTML).join("")}</div>`
-      : `<p class="empty">No cards in this hub yet — they fill in as the routine runs.</p>`;
+    const H = HUBS[hub];
+    const set = new Set(H.domains);
+    const distinct = cardsIndex.filter(c => (c.domains || []).some(d => set.has(d)));
+
+    // per-domain sub-sections in the hub's canonical domain order
+    const subs = H.domains.map(d => {
+      const cs = cardsIndex.filter(c => (c.domains || []).includes(d)).sort(byUpdated);
+      const body = cs.length
+        ? `<div class="kcard-grid">${cs.map(cardTileHTML).join("")}</div>`
+        : `<p class="empty subtle">Building as the routine runs.</p>`;
+      return `<section class="hub-sub">
+          <div class="hub-sub-head"><span class="hub-sub-dot" aria-hidden="true"></span>
+            <h3>${esc(domFull(d))}</h3><span class="hub-sub-count">${cs.length}</span></div>
+          ${body}
+        </section>`;
+    }).join("");
+
+    // recent intake into this hub (ties the library to the live stream)
+    const recent = META.filter(r => r.type === "daily" && (r.domains || []).some(d => set.has(d))).slice(0, 4);
+    const recentHTML = recent.length
+      ? `<div class="pulse-list">${recent.map(pulseItemHTML).join("")}</div>`
+      : `<p class="empty subtle">No recent intake tagged to this hub yet.</p>`;
+
     viewEl.innerHTML = `
       <section class="hub-header">
+        <div class="cv-back"><a href="#/">← Home</a></div>
         <div class="hh-kicker"><span class="kicker-rule"></span>Hub</div>
-        <h1 class="hh-title">${esc(HUBS[hub].label)}</h1>
-        <p class="hh-sub">${esc(HUBS[hub].scope)} <span class="hub-domnote">Domains: ${HUBS[hub].domains.map(esc).join(", ")}</span></p>
+        <h1 class="hh-title">${esc(H.label)}</h1>
+        <p class="hh-sub">${esc(H.scope)}</p>
+        <div class="at-glance"><span class="ag-dot" aria-hidden="true"></span>${distinct.length} card${distinct.length === 1 ? "" : "s"} · ${H.domains.length} domain${H.domains.length === 1 ? "" : "s"}</div>
       </section>
-      <section class="home-block"><div class="hb-head"><h2>${cards.length} card${cards.length === 1 ? "" : "s"}</h2></div>${body}</section>`;
+      <div class="hub-subs">${subs}</div>
+      <section class="home-block">
+        <div class="hb-head"><h2>Recent in ${esc(H.label)}</h2><a class="hb-more" href="#/feed">Open the feed →</a></div>
+        ${recentHTML}
+      </section>`;
     Array.prototype.forEach.call(viewEl.children, (el, i) => el.style.setProperty("--i", Math.min(i, 6)));
     window.scrollTo({ top: 0 });
   }
 
-  function cardLinkById(id) {
-    const c = cardsIndex.find(x => x.id === id);
-    const label = c ? c.title : id;
-    return `<a href="#/card/${encodeURIComponent(id)}">${esc(label)}</a>`;
-  }
   async function renderCard(id) {
     viewEl.innerHTML = '<div class="loading">Loading…</div>';
     const c = id ? await getCard(id) : null;
     if (document.body.dataset.view !== "card") return; // superseded by another nav
     if (!c) { viewEl.innerHTML = `<section class="card-view"><p class="empty">Card not found. <a href="#/">Back to home</a></p></section>`; return; }
+
+    const f = freshness(c.updated);
     const how = (c.how || []).map(s => `<li>${s}</li>`).join("");
-    const doms = (c.domains || []).map(d => `<span class="kc-dom">${esc(d)}</span>`).join("");
-    const tagsHTML = (c.tags || []).map(t => `<span class="tag ${esc(t)}">${esc(t)}</span>`).join("");
-    const rel = (c.related || []).filter(Boolean);
-    const sup = (c.supersedes || []).filter(Boolean);
+    const doms = (c.domains || []).map(d => `<span class="kc-dom" title="${esc(domFull(d))}">${esc(domShort(d))}</span>`).join("");
+    const tagsHTML = (c.tags || []).map(t => `<span class="cv-tag">${esc(t)}</span>`).join("");
+    // card sources are a structured [{label,url}] array → clickable anchors (no markdown/HTML strings)
+    const srcAnchors = (Array.isArray(c.sources) ? c.sources : []).filter(s => s && s.url).map(s => {
+      let host = ""; try { host = new URL(s.url).hostname.replace(/^www\./, ""); } catch (e) { host = s.url; }
+      return `<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label || host)}</a>`;
+    }).join(" · ");
+
+    // evolution: what this replaces, and what replaced it (reverse lookup via index)
+    const replaces = (c.supersedes || []).map(slim).filter(Boolean);
+    const replacedBy = cardsIndex.filter(x => (x.supersedes || []).includes(c.id));
+    const related = (c.related || []).map(slim).filter(Boolean);
+    const evoGroup = (label, cls, arr) => arr.length
+      ? `<div class="evo-group ${cls}"><span class="evo-label">${label}</span><div class="rel-tiles">${arr.map(relTileHTML).join("")}</div></div>` : "";
+
+    const ph = primaryHub(c.domains || []);
+    const back = ph ? `<a href="#/hub/${ph}">← ${esc(HUBS[ph].label)} hub</a>` : `<a href="#/">← Home</a>`;
+
     viewEl.innerHTML = `
       <article class="card-view">
-        <div class="cv-back"><a href="#/">← Home</a></div>
+        <div class="cv-back">${back}</div>
         <div class="hh-kicker"><span class="kicker-rule"></span>Knowledge Card</div>
         <h1 class="cv-title">${esc(c.title)}</h1>
         <div class="cv-meta">
-          <span class="kc-conf ${esc(c.confidence)}">${esc(c.confidence)}</span>
+          <span class="cv-conf ${esc(c.confidence)}">${esc(c.confidence)}</span>
           <span class="cv-status ${esc(c.status)}">${esc(c.status)}</span>
           <span class="cv-doms">${doms}</span>
-          <span class="cv-dates">created ${esc(c.created || "")} · updated ${esc(c.updated || "")}</span>
+          <span class="cv-fresh${f.stale ? " stale" : ""}">${esc(f.text)}${c.created ? " · created " + esc(c.created) : ""}</span>
         </div>
         <p class="cv-summary">${c.summary || ""}</p>
         ${c.why ? `<div class="why"><b>Why it matters:</b> ${c.why}</div>` : ""}
         ${how ? `<div class="cv-how"><h3>How to run it</h3><ol>${how}</ol></div>` : ""}
         ${tagsHTML ? `<div class="cv-tags">${tagsHTML}</div>` : ""}
-        ${sup.length ? `<div class="cv-links"><b>Supersedes:</b> ${sup.map(cardLinkById).join(" · ")}</div>` : ""}
-        ${rel.length ? `<div class="cv-links"><b>Related:</b> ${rel.map(cardLinkById).join(" · ")}</div>` : ""}
-        ${c.sources ? `<div class="sources"><h3>Sources</h3><p>${c.sources}</p></div>` : ""}
+        ${(replaces.length || replacedBy.length || related.length) ? `<div class="cv-evo">
+          ${evoGroup("Replaces", "replaces", replaces)}
+          ${evoGroup("Replaced by", "replaced-by", replacedBy)}
+          ${evoGroup("Related", "related", related)}
+        </div>` : ""}
+        ${srcAnchors ? `<div class="sources"><h3>Sources</h3><p>${srcAnchors}</p></div>` : ""}
       </article>`;
     Array.prototype.forEach.call(viewEl.children, (el, i) => el.style.setProperty("--i", Math.min(i, 6)));
     window.scrollTo({ top: 0 });
