@@ -51,6 +51,29 @@ jobs:
       - name: Install PDF deps
         run: pip install --quiet reportlab
 
+      # ── TEMPORARY DIAGNOSTIC — remove after one run ───────────────────────────
+      # Proves the team-feedback loop end-to-end: that GitHub's CRON_SECRET matches
+      # Vercel's (200 = match, 401 = mismatch → re-sync) and how many NEW feedback
+      # items + rating aggregates the routine would read. Never prints the secret or
+      # the response body; fail-soft so it can't block the run.
+      - name: "DIAGNOSTIC (temp) — verify /api/intake auth + feedback count"
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "${CRON_SECRET}" ]; then echo "CRON_SECRET is EMPTY in GitHub secrets — nothing to test."; exit 0; fi
+          HTTP=$(curl -s -o resp.json -w "%{http_code}" -H "Authorization: Bearer ${CRON_SECRET}" https://redpxlnews.com/api/intake)
+          echo "GET /api/intake -> HTTP ${HTTP}"
+          if [ "${HTTP}" = "200" ]; then
+            echo "AUTH OK — GitHub CRON_SECRET matches Vercel."
+            python -c "import json; d=json.load(open('resp.json')); print('feedback (new):', len(d.get('feedback', []))); print('rating aggregates:', len(d.get('ratings', [])))"
+          elif [ "${HTTP}" = "401" ]; then
+            echo "AUTH FAILED (401) — GitHub CRON_SECRET does NOT match Vercel's. Fix: re-sync the secret between GitHub and Vercel."
+          else
+            echo "Unexpected status ${HTTP} — endpoint/runtime issue, not an auth mismatch."
+          fi
+          rm -f resp.json
+      # ── end temporary diagnostic ──────────────────────────────────────────────
+
       - name: Generate today's briefing with Claude
         uses: anthropics/claude-code-action@v1
         env:
