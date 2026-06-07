@@ -773,6 +773,13 @@
     const replaces = (c.supersedes || []).map(slim).filter(Boolean);
     const replacedBy = cardsIndex.filter(x => (x.supersedes || []).includes(c.id));
     const related = (c.related || []).map(slim).filter(Boolean);
+    // corroboration label (Phase 2) — how many independent sources back the claim
+    const cc = (typeof c.corroboration_count === "number") ? c.corroboration_count : 0;
+    const corrobBadge = cc > 0
+      ? `<span class="cv-corrob c${Math.min(cc, 3)}" title="${cc} independent source${cc === 1 ? "" : "s"}">${cc >= 3 ? "Confirmed" : cc === 2 ? "Reported" : "Single-source"} · ${cc} src</span>`
+      : "";
+    // thread (Phase 3) — other cards advancing the same storyline
+    const threadPeers = c.thread_id ? cardsIndex.filter(x => x.thread_id === c.thread_id && x.id !== c.id) : [];
     const evoGroup = (label, cls, arr) => arr.length
       ? `<div class="evo-group ${cls}"><span class="evo-label">${label}</span><div class="rel-tiles">${arr.map(relTileHTML).join("")}</div></div>` : "";
 
@@ -786,17 +793,20 @@
         <h1 class="cv-title">${esc(c.title)}</h1>
         <div class="cv-meta">
           <span class="cv-conf ${esc(c.confidence)}">${esc(c.confidence)}</span>
+          ${corrobBadge}
           <span class="cv-status ${esc(c.status)}">${esc(c.status)}</span>
           <span class="cv-doms">${doms}</span>
           <span class="cv-fresh${f.stale ? " stale" : ""}">${esc(f.text)}${c.created ? " · created " + esc(c.created) : ""}</span>
         </div>
         <p class="cv-summary">${c.summary || ""}</p>
+        ${c.action ? `<div class="cv-action"><span class="cv-action-label">Do this now</span> ${esc(c.action)}</div>` : ""}
         ${c.why ? `<div class="why"><b>Why it matters:</b> ${c.why}</div>` : ""}
         ${how ? `<div class="cv-how"><h3>How to run it</h3><ol>${how}</ol></div>` : ""}
         ${tagsHTML ? `<div class="cv-tags">${tagsHTML}</div>` : ""}
-        ${(replaces.length || replacedBy.length || related.length) ? `<div class="cv-evo">
+        ${(replaces.length || replacedBy.length || related.length || threadPeers.length) ? `<div class="cv-evo">
           ${evoGroup("Replaces", "replaces", replaces)}
           ${evoGroup("Replaced by", "replaced-by", replacedBy)}
+          ${evoGroup("Same thread", "thread", threadPeers)}
           ${evoGroup("Related", "related", related)}
         </div>` : ""}
         ${srcAnchors ? `<div class="sources"><h3>Sources</h3><p>${srcAnchors}</p></div>` : ""}

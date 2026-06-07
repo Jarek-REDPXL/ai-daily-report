@@ -111,6 +111,8 @@ const cardsIndex = cards.map(c => ({
   confidence: c.confidence, status: c.status, updated: c.updated || c.created || "",
   supersedes: c.supersedes || [],   // needed for "Replaced by" reverse lookup in the card view
   corroboration_count: (typeof c.corroboration_count === "number" ? c.corroboration_count : null),
+  action: c.action || "",           // one-line "do this" for list/hub display
+  thread_id: c.thread_id || null,   // storyline grouping
 }));
 fs.writeFileSync(OUT_CARDS_INDEX, JSON.stringify(cardsIndex, null, 0));
 

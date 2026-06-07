@@ -17,6 +17,8 @@ CREATE TABLE redpxl.cards (
   created date NOT NULL,
   updated date NOT NULL,
   corroboration_count int,          -- Phase 2: independent sources behind a claim (NULL = not a claim card)
+  action text,                      -- Phase 3: one-line "do this now"
+  thread_id text,                   -- Phase 3: storyline this card advances
   content_hash text,
   synced_at timestamptz NOT NULL DEFAULT now()
 );

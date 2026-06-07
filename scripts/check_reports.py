@@ -34,8 +34,8 @@ DOMAINS_JS = os.path.join(REPO, "scripts", "domains.js")
 REQUIRED = ["id", "type", "week", "title", "dateLabel", "sortDate", "tldr", "sections", "domains"]
 
 # cards (durable knowledge atoms) — domains validated separately below.
-CARD_REQUIRED = ["id", "title", "summary", "why", "how", "confidence", "status",
-                 "sources", "created", "updated"]
+CARD_REQUIRED = ["id", "title", "summary", "why", "how", "action", "confidence",
+                 "status", "sources", "created", "updated"]
 CARD_CONFIDENCE = {"confirmed", "emerging", "speculative"}
 CARD_STATUS = {"active", "superseded"}
 
@@ -242,6 +242,10 @@ def main():
             # corroboration_count (Phase 2, optional) = how many INDEPENDENT sources
             # back this card's claim. Separate from `confidence` (play maturity). The
             # label can't lie: it must be a positive int <= distinct source hostnames.
+            # thread_id (Phase 3, optional) = the storyline this card advances.
+            tid = c.get("thread_id")
+            if tid is not None and not (isinstance(tid, str) and tid.strip()):
+                errors.append("%s thread_id must be a non-empty string when present" % cw)
             cc = c.get("corroboration_count")
             if cc is not None:
                 if not isinstance(cc, int) or isinstance(cc, bool) or cc < 1:

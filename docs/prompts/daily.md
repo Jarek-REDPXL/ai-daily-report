@@ -52,7 +52,9 @@ Cards are the point of this system (see docs/NORTH-STAR.md). The daily is just t
 **Mechanics:**
 - **One canonical card per play. Update in place, never duplicate.** Before creating, search cards.js for an existing card on the same play. If it exists, UPDATE it: bump `updated`, adjust `confidence` (speculative → emerging → confirmed), add the new real source, refine `how`/`why`. Else CREATE one.
 - If a new play REPLACES an older one, set the old card's `status:"superseded"` and list its id in the new card's `supersedes:[...]`; cross-link peers via `related:[...]`.
-- Card shape (gate-validated): `{ id (stable slug), domains:[≥1 valid slug], title, summary, why, how:[steps], confidence:"confirmed|emerging|speculative", status:"active|superseded", supersedes:[ids], related:[ids], sources:[{label?, url}], tags:[...], created, updated }`.
+- Card shape (gate-validated): `{ id (stable slug), domains:[≥1 valid slug], title, summary, action (REQUIRED one-line "do this now"), why, how:[steps], confidence:"confirmed|emerging|speculative" (play maturity), corroboration_count (OPTIONAL int on claim cards — # independent sources; gate enforces ≤ distinct source domains), thread_id (OPTIONAL slug — the storyline this advances), status:"active|superseded", supersedes:[ids], related:[ids], sources:[{label?, url}], tags:[...], created, updated }`.
+- **`action` is required** — the single concrete next step a teammate runs (distinct from the multi-step `how`). No card without a "do this."
+- For **news/claim cards**, set `corroboration_count` to the number of INDEPENDENT sources you actually cite (from the cluster digest) and include that many real `sources`. Use `thread_id` to link cards that advance one ongoing story.
 - **`sources` is a STRUCTURED array of `{label, url}` REAL links** (url required, http(s)) — NEVER markdown or an HTML string. The card view renders clickable anchors. (Report `sources` stay HTML strings — different field.)
 - Cards do NOT replace the daily entry — write both when a deep beat yields a play.
 

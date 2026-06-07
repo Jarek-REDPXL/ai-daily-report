@@ -340,6 +340,12 @@ main::before{content:"";position:absolute;top:var(--xl);right:var(--lg);width:46
 .why b{font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;
   color:var(--red);display:block;margin-bottom:5px}
 .do{background:var(--panel-2);border-left:3px solid var(--sky)}
+/* card "Do this now" — the single concrete next step, led with the action */
+.cv-action{margin:var(--md) 0 0;padding:var(--md) var(--lg);font-size:15.5px;line-height:1.6;
+  color:var(--fg);background:var(--panel-2);border-left:3px solid var(--sky);border-radius:0 var(--r-sm) var(--r-sm) 0}
+.cv-action-label{font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--sky);display:block;margin-bottom:5px}
+[data-theme="light"] .cv-action-label{color:#2C7DB0}
 .do b{font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;
   color:var(--sky);display:block;margin-bottom:5px}
 [data-theme="light"] .do b{color:#2C7DB0}
@@ -651,6 +657,13 @@ body[data-view="inbox"] .view-page{display:block}
 .cv-conf.emerging{color:#fff;background:var(--red);border-color:transparent}
 .cv-conf.speculative{color:var(--fg-55)}
 [data-theme="light"] .cv-conf.confirmed{color:#2C7DB0}
+/* corroboration badge — independent-source count (separate from confidence) */
+.cv-corrob{font-family:var(--mono);font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  border:1px solid var(--line);border-radius:var(--r-pill);padding:4px 10px;color:var(--fg-55)}
+.cv-corrob.c3{color:var(--sky);border-color:rgba(158,201,228,.5);background:rgba(158,201,228,.08)}
+.cv-corrob.c2{color:var(--fg-70)}
+.cv-corrob.c1{color:var(--fg-40)}
+[data-theme="light"] .cv-corrob.c3{color:#2C7DB0}
 .cv-fresh{font-family:var(--mono);font-size:10px;color:var(--fg-40);margin-left:auto}
 .cv-fresh.stale{color:#b6892b}
 [data-theme="light"] .cv-fresh.stale{color:#9a6f1e}
@@ -665,6 +678,7 @@ body[data-view="inbox"] .view-page{display:block}
 .evo-group{display:flex;flex-direction:column;gap:9px;padding-left:13px;position:relative}
 .evo-group::before{content:"";position:absolute;left:0;top:2px;bottom:2px;width:3px;background:var(--line-2)}
 .evo-group.replaced-by::before,.evo-group.replaces::before{background:var(--red)}
+.evo-group.thread::before{background:var(--sky)}
 .evo-label{font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--fg-55)}
 .evo-group.replaced-by .evo-label{color:var(--red)}
 .rel-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}

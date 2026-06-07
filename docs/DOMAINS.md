@@ -66,9 +66,12 @@ Domains tag two kinds of content now:
   `domains:[≥1 valid slug]` and a stable id, and is updated in place (one canonical
   card per play). Full bar: THE STANDARD in `docs/NORTH-STAR.md`.
 
-Card shape (gate-validated): `{ id, domains:[...], title, summary, why, how:[steps],
-confidence:"confirmed|emerging|speculative", status:"active|superseded",
-supersedes:[ids], related:[ids], sources:[{label?, url}], tags:[...], created, updated }`.
+Card shape (gate-validated): `{ id, domains:[...], title, summary, action (required
+one-line "do this now"), why, how:[steps], confidence:"confirmed|emerging|speculative"
+(play maturity), corroboration_count (optional int; # independent sources, gate-capped
+at distinct source domains), thread_id (optional storyline slug),
+status:"active|superseded", supersedes:[ids], related:[ids], sources:[{label?, url}],
+tags:[...], created, updated }`.
 
 Derived by `scripts/build-data.js` (do NOT hand-edit): one lazy-loadable file per
 domain at `reports/data/cards/<domain>.json`, plus a `cards` facet (count per
