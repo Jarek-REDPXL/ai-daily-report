@@ -2,3 +2,4 @@
 # Installed by the daily/weekly workflows before the ingest step.
 feedparser>=6.0.11
 psycopg[binary]>=3.2
+numpy>=1.26          # Phase 2 clustering (cosine grouping)

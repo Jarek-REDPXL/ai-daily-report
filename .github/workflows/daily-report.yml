@@ -89,6 +89,18 @@ jobs:
           pip install --quiet -r scripts/collectors/requirements.txt || echo "collector dep install issue — continuing fail-soft"
           python scripts/collectors/ingest.py || echo "ingest failed — continuing fail-soft (routine will web-search instead)"
 
+      # Cluster + corroborate (Phase 2): embed the harvest, group near-duplicate
+      # stories (same story from many outlets = corroboration), score, and emit
+      # clusters-digest.md (tens of ranked, corroborated clusters). FAIL-SOFT —
+      # without OPENAI_API_KEY/DATABASE_URL it skips and the routine falls back to
+      # the unclustered harvest-digest.md.
+      - name: Cluster & corroborate signals
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python scripts/collectors/cluster.py || echo "cluster step failed — continuing fail-soft"
+
       - name: Generate today's briefing with Claude
         uses: anthropics/claude-code-action@v1
         env:
@@ -132,6 +144,8 @@ jobs:
             --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
 
       - name: Quality gate — regenerate derived data + validate (FAILS the run if invalid)
+        env:
+          CHECK_LINKS: "1"   # Phase 2 trust gate: every published link must resolve (404/410 fails)
         run: python scripts/check_reports.py "$(date -u +'%Y-%m-%d')"
 
       - name: Commit & push

@@ -13,9 +13,9 @@ The team writes back — feedback (share / ask / learn_next) and per-card/report
 - **Close the loop (best-effort):** if you acted on new items, `POST /api/intake` with `{ "ids": [...] }` (same Bearer auth) to mark them `reviewed` so they aren't re-processed. This too is fail-soft — a failed mark-reviewed must never block or fail the run; just continue.
 
 ## Read harvested signals FIRST (the ingestion funnel — breadth in, filter before synthesis)
-Before this step runs, `scripts/collectors/ingest.py` harvests hundreds of items from the curated registry (RSS, Hacker News, arXiv, GitHub, Product Hunt, markets/EDGAR) into `scripts/collectors/harvest-digest.md` (a domain-grouped, ranked shortlist) + `harvest.json` (the full set). **Read `harvest-digest.md` FIRST**, before any web search.
+Before this step runs, `scripts/collectors/ingest.py` harvests hundreds of items from the curated registry (RSS, Hacker News, arXiv, GitHub, Product Hunt, markets/EDGAR), then `cluster.py` groups near-duplicate stories and ranks them by corroboration. **Read `scripts/collectors/clusters-digest.md` FIRST** (ranked, corroborated clusters); if it's absent, read `harvest-digest.md` (the unclustered shortlist). Either way, before any web search. (`harvest.json` holds the full set if you need it.)
 - The harvest is BREADTH; your job is the FILTER. Skim it, pick the few leads per deep-beat domain that are genuinely real, corroborated, and matter to our crafts — then web-search those to go deeper and verify.
-- Corroboration = trust: if several independent sources in the harvest carry the same story, that's a strong signal it's real (and Phase 2 will score this automatically). A lone item is a lead to verify, not a fact to publish.
+- Corroboration = trust, and the cluster digest scores it for you: **Confirmed (≥3 independent sources) / Reported (2) / Single-source (1)**. Lead with Confirmed; a Single-source item is a lead to verify, not a fact to publish. When a card makes a corroborated claim, set its `corroboration_count` to the number of independent sources you actually cite (the gate checks it can't exceed your distinct source domains).
 - This is an ENHANCEMENT, fail-soft: if `harvest-digest.md` is missing or thin, do NOT abort — research normally via web search. Never let ingestion block the run.
 
 ## Domains (canonical — scripts/domains.js / docs/DOMAINS.md)

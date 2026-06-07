@@ -12,14 +12,14 @@ const data = require('../reports/data/sync.json');
 // JSON.stringify'd string bound with a ::jsonb cast; dates use ::date.
 const CARD_UPSERT = `
   INSERT INTO redpxl.cards
-    (id, domains, title, summary, why, how, confidence, status, sources, tags, supersedes, related, created, updated, synced_at)
+    (id, domains, title, summary, why, how, confidence, status, sources, tags, supersedes, related, created, updated, corroboration_count, synced_at)
   VALUES
-    ($1, $2::text[], $3, $4, $5, $6::text[], $7, $8, $9::jsonb, $10::text[], $11::text[], $12::text[], $13::date, $14::date, now())
+    ($1, $2::text[], $3, $4, $5, $6::text[], $7, $8, $9::jsonb, $10::text[], $11::text[], $12::text[], $13::date, $14::date, $15, now())
   ON CONFLICT (id) DO UPDATE SET
     domains=EXCLUDED.domains, title=EXCLUDED.title, summary=EXCLUDED.summary, why=EXCLUDED.why,
     how=EXCLUDED.how, confidence=EXCLUDED.confidence, status=EXCLUDED.status, sources=EXCLUDED.sources,
     tags=EXCLUDED.tags, supersedes=EXCLUDED.supersedes, related=EXCLUDED.related,
-    created=EXCLUDED.created, updated=EXCLUDED.updated, synced_at=now()
+    created=EXCLUDED.created, updated=EXCLUDED.updated, corroboration_count=EXCLUDED.corroboration_count, synced_at=now()
 `;
 
 const REPORT_UPSERT = `
@@ -71,6 +71,7 @@ module.exports = async (req, res) => {
         c.related || [],
         c.created,
         c.updated,
+        (typeof c.corroboration_count === 'number' ? c.corroboration_count : null),
       ]);
       cards_upserted++;
     }

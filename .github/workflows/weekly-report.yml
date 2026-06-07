@@ -91,6 +91,8 @@ jobs:
             --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
 
       - name: Quality gate — regenerate derived data + validate (FAILS the run if invalid)
+        env:
+          CHECK_LINKS: "1"   # Phase 2 trust gate: every published link must resolve (404/410 fails)
         run: python scripts/check_reports.py
 
       - name: Commit & push

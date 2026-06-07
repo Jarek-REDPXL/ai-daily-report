@@ -18,8 +18,12 @@ Optional arg: a date override YYYY-MM-DD for the "today" freshness check
 """
 import json
 import os
+import re
 import subprocess
 import sys
+import urllib.error
+import urllib.parse
+import urllib.request
 from datetime import date, timedelta
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -34,6 +38,77 @@ CARD_REQUIRED = ["id", "title", "summary", "why", "how", "confidence", "status",
                  "sources", "created", "updated"]
 CARD_CONFIDENCE = {"confirmed", "emerging", "speculative"}
 CARD_STATUS = {"active", "superseded"}
+
+
+def _host(url):
+    try:
+        return urllib.parse.urlsplit(url).netloc.lower().replace("www.", "")
+    except Exception:
+        return ""
+
+
+# Trust gate (Phase 2): verify every published link resolves — kills dead and
+# fabricated URLs. Opt-in via `--check-links` or CHECK_LINKS=1 (the workflows set
+# it). Definitive 404/410 = FAIL (fabricated/dead); other errors (403 bot-block,
+# 5xx, timeouts) = WARN only, so transient network blips never block a publish.
+_DEAD_CODES = {404, 410}
+# Browser-like UA: many sites (Google support, etc.) serve a 404/403 to obvious
+# bots, which would be a false "dead link". A real UA avoids that false positive.
+_LINK_UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
+
+
+def _href_set_from_html(s):
+    return set(re.findall(r'href=["\'](https?://[^"\']+)["\']', s or "", re.IGNORECASE))
+
+
+def _link_status(url):
+    """Return (ok, code_or_msg). ok=False ONLY when a GET itself returns a dead
+    code — HEAD is unreliable (many sites 404/405 a HEAD they'd 200 on GET), so a
+    HEAD failure just falls through to GET before we conclude anything."""
+    headers = {
+        "User-Agent": _LINK_UA,
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+    }
+    last = "unknown"
+    for method in ("HEAD", "GET"):
+        try:
+            req = urllib.request.Request(url, method=method, headers=headers)
+            with urllib.request.urlopen(req, timeout=15) as r:
+                return True, r.status
+        except urllib.error.HTTPError as e:
+            last = e.code
+            if method == "GET":
+                # only a GET dead code is definitive; other codes are warn-only
+                return (False, e.code) if e.code in _DEAD_CODES else (True, e.code)
+        except Exception as e:  # noqa: BLE001 — network/timeout → don't fail the run
+            last = "neterr:%s" % e
+            if method == "GET":
+                return True, last
+    return True, last
+
+
+def check_links(cards, reports, errors, warnings):
+    urls = set()
+    for c in (cards or []):
+        for s in (c.get("sources") or []):
+            u = s.get("url") if isinstance(s, dict) else None
+            if isinstance(u, str) and u.startswith(("http://", "https://")):
+                urls.add(u.strip())
+    for r in reports:
+        if isinstance(r.get("sources"), str):
+            urls |= _href_set_from_html(r["sources"])
+    dead, warned = 0, 0
+    for u in sorted(urls):
+        ok, code = _link_status(u)
+        if not ok:
+            errors.append("dead link (HTTP %s): %s" % (code, u))
+            dead += 1
+        elif isinstance(code, str) or (isinstance(code, int) and code >= 400):
+            warnings.append("link not 2xx/3xx (%s): %s" % (code, u))
+            warned += 1
+    print("link-check: %d urls, %d dead, %d warned" % (len(urls), dead, warned))
 
 
 def valid_domains():
@@ -150,6 +225,7 @@ def main():
             # sources: structured array of {label?, url} — EVERY card needs >=1 real,
             # non-empty http(s) url (no markdown/HTML strings, no fabricated/empty links).
             src = c.get("sources")
+            hosts = set()
             if not isinstance(src, list) or not src:
                 errors.append("%s sources must be a non-empty array of {label?, url} (>=1 real link)" % cw)
             else:
@@ -160,8 +236,19 @@ def main():
                         errors.append("%s sources[%d] must be an object with a real http(s) url" % (cw, k))
                     else:
                         real += 1
+                        hosts.add(_host(url))
                 if real < 1:
                     errors.append("%s must have >=1 real source url" % cw)
+            # corroboration_count (Phase 2, optional) = how many INDEPENDENT sources
+            # back this card's claim. Separate from `confidence` (play maturity). The
+            # label can't lie: it must be a positive int <= distinct source hostnames.
+            cc = c.get("corroboration_count")
+            if cc is not None:
+                if not isinstance(cc, int) or isinstance(cc, bool) or cc < 1:
+                    errors.append("%s corroboration_count must be a positive integer" % cw)
+                elif cc > len(hosts):
+                    errors.append("%s corroboration_count=%d exceeds distinct source domains (%d) — the label can't lie"
+                                  % (cw, cc, len(hosts)))
             for ref_field in ("supersedes", "related"):
                 refs = c.get(ref_field) or []
                 if not isinstance(refs, list):
@@ -229,6 +316,10 @@ def main():
 
     n_daily = sum(1 for r in reports if r.get("type") == "daily")
     n_weekly = sum(1 for r in reports if r.get("type") == "weekly")
+
+    # Trust gate: link-resolves check (opt-in — slow, needs network).
+    if "--check-links" in sys.argv or os.environ.get("CHECK_LINKS") == "1":
+        check_links(cards, reports, errors, warnings)
 
     for w in warnings:
         print("WARN: " + w)

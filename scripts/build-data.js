@@ -110,6 +110,7 @@ const cardsIndex = cards.map(c => ({
   id: c.id, title: c.title, summary: c.summary, domains: c.domains || [],
   confidence: c.confidence, status: c.status, updated: c.updated || c.created || "",
   supersedes: c.supersedes || [],   // needed for "Replaced by" reverse lookup in the card view
+  corroboration_count: (typeof c.corroboration_count === "number" ? c.corroboration_count : null),
 }));
 fs.writeFileSync(OUT_CARDS_INDEX, JSON.stringify(cardsIndex, null, 0));
 

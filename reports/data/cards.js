@@ -13,7 +13,12 @@
      summary     1-2 sentences: what it is / the fast way
      why         the payoff + POV (why run it)
      how         array of steps — exact tools/prompts/clicks
-     confidence  "confirmed" | "emerging" | "speculative"
+     confidence  "confirmed" | "emerging" | "speculative" (play MATURITY)
+     corroboration_count  OPTIONAL int — how many INDEPENDENT sources back a
+                 claim (separate from confidence). Set on claim/news cards; the
+                 gate enforces it can't exceed the distinct source domains, so the
+                 "Confirmed (3+) / Reported (2) / Single-source (1)" label can't
+                 lie. Omit on tool/technique cards (one official link is fine).
      status      "active" | "superseded"
      supersedes  array of card ids this replaces (or [])
      related     array of related card ids (or [])
@@ -201,7 +206,7 @@ window.AI_EDGE_CARDS = [
     related: [],
     sources: [
       { label: "PPC Land — Meta's unified Advantage+ structure", url: "https://ppc.land/meta-launches-unified-api-structure-for-advantage-campaigns/" },
-      { label: "Meta — About Advantage+ shopping/sales campaigns", url: "https://www.facebook.com/business/help/2724374746554905" }
+      { label: "Meta — About Advantage+ shopping/sales campaigns", url: "https://www.facebook.com/business/ads/advantage-plus-shopping-campaigns" }
     ],
     tags: ["meta-ads"],
     created: "2026-06-07",

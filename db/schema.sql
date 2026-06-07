@@ -16,6 +16,7 @@ CREATE TABLE redpxl.cards (
   related text[] NOT NULL DEFAULT '{}',
   created date NOT NULL,
   updated date NOT NULL,
+  corroboration_count int,          -- Phase 2: independent sources behind a claim (NULL = not a claim card)
   content_hash text,
   synced_at timestamptz NOT NULL DEFAULT now()
 );
