@@ -23,6 +23,7 @@ const OUT_DIR = path.join(REPO, "reports", "data", "entries");
 const OUT_CARDS_DIR = path.join(REPO, "reports", "data", "cards");
 const OUT_CARDS_INDEX = path.join(REPO, "reports", "data", "cards-index.json");
 const OUT_HUBS = path.join(REPO, "reports", "data", "hubs.json");
+const OUT_SYNC = path.join(REPO, "reports", "data", "sync.json");
 
 global.window = {};
 eval(fs.readFileSync(SRC, "utf8"));
@@ -131,7 +132,13 @@ for (const f of fs.readdirSync(OUT_DIR)) {
   if (f.endsWith(".json") && !keep.has(f)) fs.unlinkSync(path.join(OUT_DIR, f));
 }
 
+// sync.json — a single flat file the git→Neon sync function (api/sync.js) require()s
+// at deploy. Full card + report objects (all fields), built from the SAME parsed
+// cards.js/reports.js. The site never reads this; it exists only for the mirror sync.
+fs.writeFileSync(OUT_SYNC, JSON.stringify({ cards: cards, reports: all }, null, 0));
+
 console.log("build-data: wrote index.json (" + index.length + ") + index.meta.json ("
   + domainsFacet.length + " domains, " + cardsFacet.length + " card-domains) + "
   + keep.size + " entry files + " + keepCards.size + " card files + cards-index.json ("
-  + cards.length + " cards) + hubs.json (" + hubsOut.length + " hubs)");
+  + cards.length + " cards) + hubs.json (" + hubsOut.length + " hubs) + sync.json ("
+  + cards.length + " cards, " + all.length + " reports)");
