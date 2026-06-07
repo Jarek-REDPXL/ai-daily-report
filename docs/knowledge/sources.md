@@ -32,6 +32,13 @@
 | GitHub releases | ai-tooling | 53 | 1 | 2026-06-04 | shipped tools, open-weight drops | primary source |
 | company IR / SEC filings | ai-tooling | 57 | 1 | 2026-06-04 | hard financials, S-1s | authoritative |
 | earnings-call transcripts (YouTube) | ai-tooling | 50 | 1 | 2026-06-04 | exec guidance, capex/compute | cite video + timestamp |
+| MDN Web Docs | web-design | 58 | 1 | 2026-06-07 | CSS properties/values, Baseline support | primary/authoritative |
+| Smashing Magazine | web-design | 52 | 1 | 2026-06-07 | frontend technique deep-dives | practitioner, cross-check support % |
+| PPC Land | paid | 52 | 1 | 2026-06-07 | ad-platform product/API changes | good Meta/Google changelog signal |
+| Meta Business Help (official) | paid | 55 | 1 | 2026-06-07 | Advantage+ / ads policy | primary; Help Center lags real behavior |
+| Google Ads blog (blog.google/ads) | paid | 55 | 1 | 2026-06-07 | Google Ads/AI Max announcements | primary source |
+| Sprout Social | social | 52 | 1 | 2026-06-07 | platform algorithm/ranking guides | refreshed annually; solid baseline |
+| Khroma | graphic | 62 | 1 | 2026-06-07 | AI colour palette tool | behind 5★-rated card-graphic-color-palette — keep high |
 
-<!-- Seed roster is ai-tooling (the only domain with history so far). Add rows for
-     web/graphic/email/social/paid/growth as those domains start producing reports. -->
+<!-- Seed roster began as ai-tooling; web-design/paid/social/graphic rows added as
+     those domains started producing. Add email/growth rows as they earn a beat. -->

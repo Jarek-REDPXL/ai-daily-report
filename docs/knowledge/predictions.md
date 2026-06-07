@@ -25,6 +25,9 @@
 - [2026-06-06] [ai-tooling] Memory/"dreaming" becomes a competitive-parity floor: a major consumer AI product still lacking persistent memory will visibly lose ground. — (due ~4 weeks)
 - [2026-06-06] [ai-tooling] The Great American AI Act's dev-law preemption will draw formal state pushback (CA/CO). — (due ~4–6 weeks)
 - [2026-06-06] [ai-tooling] A Claude Sonnet 4.8 refresh lands and reprices the mid-tier. — (rumor; due ~2–4 weeks)
+- [2026-06-07] [web-design] CSS `corner-shape` ships in a second browser engine (Safari or Firefox), putting squircles on the path to Baseline. — (due ~end of 2026)
+- [2026-06-07] [paid] Meta removes the ability to create a fully-manual (Advantage+-off) Sales campaign in Ads Manager, making the unified Advantage+ flow mandatory. — (due ~end of 2026)
+- [2026-06-07] [social] Instagram surfaces "Sends"/shares as a default top-line metric in post Insights (not buried), reflecting its weight in ranking. — (due ~end of Q3 2026)
 
 ## Resolved predictions (outcome log — newest first)
 <!-- format: [made → resolved] [domain] ✅/❌/⚖️ claim — outcome note -->

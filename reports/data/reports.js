@@ -27,6 +27,54 @@
    ============================================================ */
 window.AI_EDGE_REPORTS = [
 
+  /* ===================== DAILY — Sun Jun 7 ===================== */
+  {
+    id: "2026-06-07-daily",
+    type: "daily",
+    week: "Week of Jun 1 – 7, 2026",
+    title: "Daily Briefing — Sunday, June 7",
+    dateLabel: "Sunday, June 7, 2026",
+    sortDate: "2026-06-07",
+    domains: ["web-design", "paid", "social"],
+    tldr: [
+      "<b>Web play of the day: real iOS-style squircle corners in one line of CSS.</b> Chrome's <code>corner-shape</code> property finally lets you replace the slightly-boxy <code>border-radius</code> look with Apple-smooth super-ellipse corners — and it falls back to normal rounding everywhere else, so you can ship it today with zero risk.",
+      "<b>Paid: Meta quietly retired the standalone 'Advantage+ Shopping' campaign.</b> Manual and Advantage+ are now one unified flow under the <i>Sales</i> objective with AI on by default — if your playbook still says 'create an ASC campaign,' it's out of date. Exact new steps below.",
+      "<b>Social: Instagram's #1 ranking signal in 2026 is the DM share (sends-per-reach).</b> Likes are noise; if people forward your Reel to a friend, Instagram treats it as proof it's worth pushing to strangers. Design the post for the send, not the like.",
+      "<b>Also moved (paid):</b> Google's AI Max expanded to Shopping + travel and Google Ads will auto-link your YouTube channel after Jun 10 unless you opt out — worth a 2-minute check.",
+      "<b>Sharpen your edge:</b> when you ship the squircle CSS, keep <code>border-radius</code> on the element too — <code>corner-shape</code> only changes the <i>shape</i> of the curve, not its size, so without a radius there's nothing to reshape."
+    ],
+    sections: [
+      { h: "Web design — run it today: Apple-style squircle corners in one line",
+        blocks: [
+          { sub: "Replace the boxy border-radius look with true super-ellipse corners", tags:["technique"],
+            p: "What changed: Chromium shipped the CSS <code>corner-shape</code> property (Chrome 139+, ~67% of users as of May 2026), so the iOS app-icon 'squircle' — the smooth super-ellipse Apple uses everywhere — is now native CSS instead of a <code>clip-path</code>/SVG hack. Why it matters for our builds: rounded rectangles are the single most-repeated shape in any UI (buttons, cards, modals, avatars), and the squircle reads as 'premium' the way Apple's do — for one extra line. Because <code>border-radius</code> still controls the size and unsupported browsers just render a normal rounded corner, it's pure progressive enhancement: zero risk to ship now.",
+            doIt: "On any button/card you already round, add the shape keyword next to the radius: <code>.btn { border-radius: 28%; corner-shape: squircle; }</code>. Want to dial the curve precisely? Use the math function — <code>corner-shape: superellipse(1.5)</code> is a softer squircle, higher <code>n</code> = squarer, lower = rounder. Keep a real <code>border-radius</code> on the element (the shape needs a size to act on). Test in Chrome/Edge; Safari/Firefox fall back to your normal rounding automatically — no <code>@supports</code> guard needed.",
+            note: "Don't strip your existing border-radius when you add this — corner-shape with no radius does nothing." }
+        ]
+      },
+      { h: "Paid — what changed this week",
+        blocks: [
+          { sub: "Meta merged manual + Advantage+ into one flow — 'create an ASC campaign' is dead", tags:["meta-ads"],
+            p: "What changed: in its Feb 2026 Ads Manager overhaul Meta merged the separate 'Manual' and 'Advantage+ Shopping' options into a single unified campaign-creation flow, with AI-driven optimization on by default; the old standalone Advantage+ Shopping Campaign (ASC) was renamed Advantage+ <i>Sales</i> and its legacy APIs are being deprecated. Why it matters: any SOP, screenshot, or onboarding doc that says 'choose Advantage+ Shopping' now points at a menu that no longer exists — and juniors will silently build the wrong thing.",
+            doIt: "New cold-traffic ecommerce setup: (1) New campaign → <b>Sales</b> objective; (2) leave the three Advantage+ levers ON — Advantage+ budget, Advantage+ audience, Advantage+ placements (that <i>is</i> the old ASC, now the default); (3) feed it a deep, varied creative pool and iterate on creative, not audiences; (4) cap existing-customer spend in settings so budget skews to new buyers; (5) keep one small manual ad set as a 2–3 week control. Meta's global tests showed Advantage+ Sales at ~32% higher ROAS / ~17% lower CPA vs manual-only — but prove it on your account before reallocating.",
+            note: "Learning-phase thresholds are reportedly easing for smaller budgets, but Meta's Help Center lags real behaviour — treat any exact conversions-per-week number as directional, not gospel." },
+          { sub: "Google AI Max expands + auto-links your YouTube after Jun 10", tags:["google-ads"],
+            p: "What changed (Google Marketing Live 2026): AI Max — the AI-driven Search add-on — is expanding to Shopping and travel formats with a new 'AI Brief' to steer messaging, and Google will <b>auto-link your YouTube channel to your Google Ads account after Jun 10, 2026 unless you act</b>. Why it matters: the auto-link unlocks organic video metrics and lets you build remarketing audiences from past viewers — useful, but it's an opt-out, so decide on purpose rather than by default.",
+            doIt: "Two-minute check: in Google Ads → Tools → Linked accounts, review the pending YouTube link before Jun 10 and confirm it's the right channel (or unlink). If you run Search at scale, switch on AI Max for one campaign as a test and compare CPA against your current setup before rolling it out." }
+        ]
+      },
+      { h: "Social — the technique: design for the DM share, not the like",
+        blocks: [
+          { sub: "Instagram's strongest 2026 ranking signal is sends-per-reach (private shares)", tags:["technique"],
+            p: "What changed: Instagram has unified its primary metric to 'Views' across Reels, Stories, photos and carousels — and the signal that most drives whether a post escapes your followers is now <b>sends per reach</b>: how often people DM your content to a friend. Likes and even comments are weaker tells; a private share is the algorithm's clearest evidence the post is worth showing to strangers. Why it matters: most of our social briefs still optimise for likes/saves. The lever moved — so should the brief.",
+            doIt: "Build the share trigger into the post on purpose: (1) make the takeaway <i>forwardable</i> — a single screenshot-able tip, a 'send this to the person who needs it' framing, an inside-joke or stat someone would DM to a colleague; (2) put the hook in the first line/frame so it survives the feed; (3) add a soft CTA to share to a specific person ('tag the teammate who still uses border-radius'); (4) check the <b>Sends</b> count in Insights, not just likes, and make more of whatever gets forwarded.",
+            note: "Saves still matter for evergreen/utility content, but for reach, a send beats a save beats a like." }
+        ]
+      }
+    ],
+    sources: "<a href='https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/corner-shape' target='_blank' rel='noopener'>MDN — corner-shape</a> · <a href='https://www.smashingmagazine.com/2026/03/beyond-border-radius-css-corner-shape-property-ui/' target='_blank' rel='noopener'>Smashing — corner-shape for UI</a> · <a href='https://ppc.land/meta-launches-unified-api-structure-for-advantage-campaigns/' target='_blank' rel='noopener'>PPC Land — Meta unified Advantage+</a> · <a href='https://blog.google/products/ads-commerce/ai-max-new-features/' target='_blank' rel='noopener'>Google — AI Max</a> · <a href='https://sproutsocial.com/insights/instagram-algorithm/' target='_blank' rel='noopener'>Sprout Social — Instagram algorithm 2026</a>"
+  },
+
   /* ===================== DAILY — Sat Jun 6 ===================== */
   {
     id: "2026-06-06-daily",

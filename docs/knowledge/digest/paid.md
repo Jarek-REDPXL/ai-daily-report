@@ -16,9 +16,14 @@
 
 ## Active threads (ongoing storylines to advance, not repeat)
 <!-- one line each: thread → latest state + date. None yet — seed on first run. -->
+- [meta-ads] Advantage+ consolidation → Feb 2026 Meta merged Manual + Advantage+ into ONE unified creation flow; standalone "Advantage+ Shopping" (ASC) renamed Advantage+ **Sales**, legacy APIs deprecated (Q1 2026). Learning-phase thresholds reportedly easing but Meta docs lag — directional (2026-06-07).
+- [google-ads] AI Max expanding to Shopping + travel (Google Marketing Live 2026) + "AI Brief"; Google auto-links YouTube channel → Google Ads after Jun 10, 2026 unless opted out (2026-06-07).
 
 ## Durable lessons (the compounding edge — evergreen takeaways we've taught)
 <!-- promote a thread's conclusion here once it's a stable, reusable principle. -->
+- Platform UIs are collapsing manual controls into AI-default flows (Meta unified Advantage+, Google AI Max). The operator edge is no longer audience-building — it's creative volume/quality + a guarded manual control campaign to prove the AI's lift on YOUR account before reallocating.
+- When a platform changes campaign-type names/menus, audit SOPs/onboarding docs the same week — stale "click X" steps make juniors silently build the wrong thing.
 
 ## Changelog (one line per run — newest first)
 <!-- YYYY-MM-DD: … -->
+- 2026-06-07: Deep beat — Meta unified Advantage+ (Sales objective default) + Google AI Max/YouTube auto-link. Card updated: card-paid-meta-advantage-plus. Sources: PPC Land, Meta Help, blog.google.

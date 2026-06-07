@@ -92,6 +92,31 @@ window.AI_EDGE_CARDS = [
   },
 
   {
+    id: "card-webdesign-squircle-corners",
+    domains: ["web-design"],
+    title: "Give buttons and cards iOS-style squircle corners with one line of CSS",
+    summary: "Chrome's new corner-shape property turns a normal border-radius into a true Apple-style super-ellipse 'squircle' — and falls back to plain rounding everywhere it isn't supported.",
+    why: "Rounded rectangles are the most-repeated shape in any UI; the squircle reads as 'premium' (it's the curve Apple uses on every icon) for one extra declaration — and because unsupported browsers just show your existing rounded corner, it's pure progressive enhancement with zero downside.",
+    how: [
+      "On a button/card you already round, add the shape next to the radius: <code>.btn { border-radius: 28%; corner-shape: squircle; }</code>",
+      "Keep a real <code>border-radius</code> — corner-shape only changes the shape of the curve, not its size, so with no radius there's nothing to reshape.",
+      "Dial the curve with the math function if you want: <code>corner-shape: superellipse(1.5)</code> (lower n = rounder, higher = squarer).",
+      "Test in Chrome/Edge; Safari and Firefox fall back to normal rounding automatically — no <code>@supports</code> guard needed."
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-web-view-transitions"],
+    sources: [
+      { label: "MDN — corner-shape", url: "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/corner-shape" },
+      { label: "Smashing Magazine — Beyond border-radius", url: "https://www.smashingmagazine.com/2026/03/beyond-border-radius-css-corner-shape-property-ui/" }
+    ],
+    tags: ["css", "ui"],
+    created: "2026-06-07",
+    updated: "2026-06-07"
+  },
+
+  {
     id: "card-webdev-v0-screenshot",
     domains: ["web-dev"],
     title: "Turn a screenshot into working UI code with v0",
@@ -136,22 +161,48 @@ window.AI_EDGE_CARDS = [
   },
 
   {
-    id: "card-paid-meta-advantage-plus",
-    domains: ["paid"],
-    title: "Launch a self-optimizing Meta prospecting campaign in 20 minutes",
-    summary: "Meta's Advantage+ Shopping (ASC) auto-handles audiences, placements and creative selection in one campaign — usually beating hand-built ad sets for cold ecommerce traffic.",
-    why: "You stop babysitting audiences and spend your time on creative (the real lever), while the algorithm finds buyers faster and often at a lower cost per purchase.",
+    id: "card-social-instagram-sends",
+    domains: ["social"],
+    title: "Design every Instagram post to get DM-shared — the 2026 ranking signal that matters",
+    summary: "Instagram now treats 'sends per reach' (private DM shares) as its strongest distribution signal; build posts people forward to a friend, not just ones they like.",
+    why: "Likes and even comments are weak tells now — a private share is the algorithm's clearest evidence a post is worth showing to strangers. Most social briefs still optimise for likes/saves; the lever moved, so the brief should too.",
     how: [
-      "In Ads Manager, create a new Advantage+ Shopping campaign for one market.",
-      "Set a budget big enough for ~50 purchases/week so it exits the learning phase quickly.",
-      "Upload a deep, varied creative pool — refresh creative, not audiences.",
-      "Cap existing-customer spend in settings so budget skews to new buyers; keep one small manual campaign as a control for 2-3 weeks."
+      "Make the takeaway forwardable: one screenshot-able tip, a 'send this to the person who needs it' framing, or a stat/inside-joke someone would DM to a colleague.",
+      "Put the hook in the first line/frame so it survives the feed scroll.",
+      "Add a soft CTA to share to a specific person (e.g. 'tag the teammate who still uses border-radius').",
+      "Track the <b>Sends</b> count in Insights — not just likes — and make more of whatever gets forwarded."
     ],
     confidence: "emerging",
     status: "active",
     supersedes: [],
+    related: ["card-social-repurpose-claude"],
+    sources: [{ label: "Sprout Social — How the Instagram algorithm works (2026)", url: "https://sproutsocial.com/insights/instagram-algorithm/" }],
+    tags: ["instagram", "content"],
+    created: "2026-06-07",
+    updated: "2026-06-07"
+  },
+
+  {
+    id: "card-paid-meta-advantage-plus",
+    domains: ["paid"],
+    title: "Launch a self-optimizing Meta prospecting campaign the new (unified) way",
+    summary: "Meta merged the old 'Manual' and 'Advantage+ Shopping' options into one flow: pick the Sales objective and the Advantage+ levers (budget, audience, placements) are on by default — that IS the old ASC, now auto-handling targeting, placements and creative selection for cold ecommerce traffic.",
+    why: "You stop babysitting audiences and spend your time on creative (the real lever), while the algorithm finds buyers faster and often at a lower cost per purchase. Heads-up: any SOP that still says 'choose Advantage+ Shopping' points at a menu that no longer exists — juniors will silently build the wrong thing.",
+    how: [
+      "In Ads Manager, create a new campaign and choose the <b>Sales</b> objective (the old standalone 'Advantage+ Shopping' / ASC is gone — it's now Advantage+ Sales inside this unified flow).",
+      "Leave the three Advantage+ levers ON — Advantage+ budget, Advantage+ audience, Advantage+ placements; that is the AI-driven setup.",
+      "Upload a deep, varied creative pool — refresh creative, not audiences.",
+      "Cap existing-customer spend in settings so budget skews to new buyers; keep one small manual ad set as a control for 2-3 weeks.",
+      "Give it enough budget to clear the learning phase quickly (thresholds are reportedly easing for smaller budgets, but Meta's Help Center lags — treat any exact conversions/week number as directional)."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    supersedes: [],
     related: [],
-    sources: [{ label: "Meta — About Advantage+ shopping campaigns", url: "https://www.facebook.com/business/help/2724374746554905" }],
+    sources: [
+      { label: "PPC Land — Meta's unified Advantage+ structure", url: "https://ppc.land/meta-launches-unified-api-structure-for-advantage-campaigns/" },
+      { label: "Meta — About Advantage+ shopping/sales campaigns", url: "https://www.facebook.com/business/help/2724374746554905" }
+    ],
     tags: ["meta-ads"],
     created: "2026-06-07",
     updated: "2026-06-07"

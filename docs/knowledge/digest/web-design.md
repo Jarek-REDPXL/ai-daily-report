@@ -15,9 +15,12 @@
 
 ## Active threads (ongoing storylines to advance, not repeat)
 <!-- one line each: thread → latest state + date. None yet — seed on first run. -->
+- CSS `corner-shape` / `superellipse()` (squircles) → shipped Chromium (Chrome 139+, ~67% users May 2026), Safari/Firefox not yet; usable today as progressive enhancement (2026-06-07). Watch for Safari/Firefox support → Baseline.
 
 ## Durable lessons (the compounding edge — evergreen takeaways we've taught)
 <!-- promote a thread's conclusion here once it's a stable, reusable principle. -->
+- New CSS visual primitives (corner-shape, scroll-driven animation, anchor positioning) that **degrade gracefully** can ship the day they hit one engine — pure upside, no `@supports` gymnastics, because unsupported browsers fall back to the old rendering. Lead with these.
 
 ## Changelog (one line per run — newest first)
 <!-- YYYY-MM-DD: … -->
+- 2026-06-07: Deep beat — CSS `corner-shape` squircles (Chrome 139+, graceful fallback). Card: card-webdesign-squircle-corners. Source: MDN, Smashing Mag.
