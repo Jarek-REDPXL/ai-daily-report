@@ -58,9 +58,11 @@ Domains tag two kinds of content now:
 
 - **Reports** (`reports/data/reports.js`) — the daily/weekly INTAKE feed.
 - **Cards** (`reports/data/cards.js`, `window.AI_EDGE_CARDS`) — the compounding
-  LIBRARY of durable plays the routine maintains. Each card carries `domains:[≥1
-  valid slug]` and a stable id, and is updated in place (one canonical card per
-  play) rather than re-buried in the next daily.
+  LIBRARY and the real product. Each card is a **practical, AI-powered,
+  run-it-today play for a craft** — operator voice, exact tools/prompts/clicks, a
+  clear payoff, and **>=1 real working link** (never fabricated). Each carries
+  `domains:[≥1 valid slug]` and a stable id, and is updated in place (one canonical
+  card per play). Full bar: THE STANDARD in `docs/NORTH-STAR.md`.
 
 Card shape (gate-validated): `{ id, domains:[...], title, summary, why, how:[steps],
 confidence:"confirmed|emerging|speculative", status:"active|superseded",

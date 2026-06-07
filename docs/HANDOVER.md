@@ -86,12 +86,16 @@ Each report object shape:
 - `reports/data/cards/<domain>.json` — derived per-domain card lists (lazy-loadable
   by the future hubs); a card with N domains appears in each of its domain files.
 
-### The card layer (durable knowledge atoms)
+### The card layer (the real product)
 **`reports/data/cards.js` is a second source of truth** (`window.AI_EDGE_CARDS`).
-Reports are the daily INTAKE feed; **cards are the compounding LIBRARY of plays** the
-routine maintains. Unlike reports (append-only, dated), a card has a STABLE id and is
-**updated in place** — one canonical card per play, never re-buried in tomorrow's
-daily. (Not displayed on the site yet — that's Phase 2.)
+Reports are the daily INTAKE feed; **cards are the compounding LIBRARY** and the
+actual point of the system. Each card is a **practical, AI-powered, run-it-today play
+for a craft** — operator voice (a sharp operator sharing a trick), exact
+tools/prompts/clicks, a clear payoff, and **>=1 real working link** (never fabricated;
+gate-enforced). Kill 95% — leaner beats padded. Full bar: THE STANDARD in
+`docs/NORTH-STAR.md`. Unlike reports (append-only, dated), a card has a STABLE id and
+is **updated in place** — one canonical card per play, never re-buried in tomorrow's
+daily. Rendered in the knowledge-center hubs + card view (live).
 
 Card object shape (gate-validated):
 ```

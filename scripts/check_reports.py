@@ -147,14 +147,21 @@ def main():
                 errors.append("%s confidence must be one of %s" % (cw, sorted(CARD_CONFIDENCE)))
             if c.get("status") not in CARD_STATUS:
                 errors.append("%s status must be one of %s" % (cw, sorted(CARD_STATUS)))
-            # sources: structured array of {label?, url} — url required (no markdown/HTML strings)
+            # sources: structured array of {label?, url} — EVERY card needs >=1 real,
+            # non-empty http(s) url (no markdown/HTML strings, no fabricated/empty links).
             src = c.get("sources")
             if not isinstance(src, list) or not src:
-                errors.append("%s sources must be a non-empty array of {label?, url}" % cw)
+                errors.append("%s sources must be a non-empty array of {label?, url} (>=1 real link)" % cw)
             else:
+                real = 0
                 for k, s in enumerate(src):
-                    if not isinstance(s, dict) or not s.get("url"):
-                        errors.append("%s sources[%d] must be an object with a non-empty url" % (cw, k))
+                    url = s.get("url") if isinstance(s, dict) else None
+                    if not (isinstance(url, str) and url.strip().lower().startswith(("http://", "https://"))):
+                        errors.append("%s sources[%d] must be an object with a real http(s) url" % (cw, k))
+                    else:
+                        real += 1
+                if real < 1:
+                    errors.append("%s must have >=1 real source url" % cw)
             for ref_field in ("supersedes", "related"):
                 refs = c.get(ref_field) or []
                 if not isinstance(refs, list):

@@ -19,13 +19,31 @@ Paid platform granularity is BLOCK-level tags, not domains: google-ads, meta-ads
 - A deep beat = real research + golden block(s): what changed, why it matters to this discipline, the technique/do-it, exact link(s); plus any new prediction and a digest update for that domain.
 - The report's `domains` array = every domain that earned a SUBSTANTIVE block today (valid slugs incl. `web-design`/`web-dev`). One-line scans that surfaced nothing do NOT earn a tag.
 
-## Card extraction (the compounding library — do this on every deep beat)
-The daily is the INTAKE feed; cards are the durable LIBRARY of plays the team keeps. Whenever a deep beat surfaces a durable play/technique/tool (not just news — something a teammate would DO), capture it as a card in `reports/data/cards.js` (`window.AI_EDGE_CARDS`):
-- **One canonical card per play. Update in place, never duplicate.** Before creating, search cards.js for an existing card on the same play. If it exists, UPDATE it: bump `updated` to today, adjust `confidence` as evidence grows (speculative → emerging → confirmed), add the new exact source to `sources`, and refine `how`/`why`. If it's genuinely new, CREATE one.
+## Card extraction (the compounding library — the real product)
+Cards are the point of this system (see docs/NORTH-STAR.md). The daily is just the INTAKE; the LIBRARY of cards is what makes the team faster. On every deep beat, ask: "is there a play here a teammate could RUN TODAY?" If yes, capture it as a card in `reports/data/cards.js` (`window.AI_EDGE_CARDS`).
+
+**THE BAR for a card (non-negotiable — kill 95%):**
+- A card is a **PRACTICAL, AI-POWERED, RUN-IT-TODAY play for a craft** — advanced but non-technical, step-by-step with **exact tools / prompts / clicks** and a clear payoff.
+- **Voice = a sharp operator sharing a trick with a POV** — never news, specs, or encyclopedia. Title = an action ("Test 9 font pairings in 30 seconds with ChatGPT"), not an event ("Chrome ships X").
+- Frame as **"a fast way,"** not "the best / the trending" — no unbacked superlatives.
+- **Every card has >=1 REAL working source/tool link.** If you cannot verify a real URL, DROP the item — NEVER fabricate a link (gate-enforced).
+- Leaner beats padded. If it isn't runnable today, it's not a card.
+
+**Worked example — this is the bar:**
+> **Title:** Test 9 font pairings in 30 seconds with ChatGPT
+> **Why:** stop hand-mocking type — see nine credible directions instantly.
+> **How:** 1) open ChatGPT's image generator; 2) prompt "Create a 3x3 grid of 9 different font-pairing examples (heading + body) for a [brand vibe] brand, labeling each pair's font names"; 3) screenshot the 2-3 that fit, regenerate variations; 4) confirm the fonts are licensed before use.
+> **Source:** chatgpt.com
+
+**Mechanics:**
+- **One canonical card per play. Update in place, never duplicate.** Before creating, search cards.js for an existing card on the same play. If it exists, UPDATE it: bump `updated`, adjust `confidence` (speculative → emerging → confirmed), add the new real source, refine `how`/`why`. Else CREATE one.
 - If a new play REPLACES an older one, set the old card's `status:"superseded"` and list its id in the new card's `supersedes:[...]`; cross-link peers via `related:[...]`.
-- Card shape (gate-validated): `{ id (stable slug, e.g. "card-paid-meta-advantage-plus"), domains:[≥1 valid slug], title, summary, why, how:[steps], confidence:"confirmed|emerging|speculative", status:"active|superseded", supersedes:[ids], related:[ids], sources:[{label?, url}], tags:[...], created, updated }`.
-- **Card `sources` are a STRUCTURED array of `{label, url}` exact links** (url required) — NEVER a markdown or HTML string. The card view renders them as clickable anchors. (This differs from report `sources`, which stay HTML strings.)
-- Cards do NOT replace the daily entry — write both: the daily covers the news; the card distils the reusable play. Not every deep beat yields a card (only durable plays do), but most should advance at least one.
+- Card shape (gate-validated): `{ id (stable slug), domains:[≥1 valid slug], title, summary, why, how:[steps], confidence:"confirmed|emerging|speculative", status:"active|superseded", supersedes:[ids], related:[ids], sources:[{label?, url}], tags:[...], created, updated }`.
+- **`sources` is a STRUCTURED array of `{label, url}` REAL links** (url required, http(s)) — NEVER markdown or an HTML string. The card view renders clickable anchors. (Report `sources` stay HTML strings — different field.)
+- Cards do NOT replace the daily entry — write both when a deep beat yields a play.
+
+## What the deep beats hunt now (the shift)
+Hunt for **runnable plays**, not events. Each deep beat should be scanning for: a **new AI tool/feature/skill** the team could use today, a **trending technique** worth stealing, or a **clever workflow** for the craft — and turning it into a recipe with exact steps + a real link. Good leads sound like: "a new Claude skill that's burning results — here's how to run it," "the new way to make realistic AI video ads — the exact tools + steps," "a faster way to X in Figma/Ads Manager/your ESP." The test for what survives: **can a teammate run it today?** If it's just "a thing happened," it's intake at most — it does not become a card.
 
 ## Sourcing (non-negotiable)
 1. EVERY source is an exact clickable link. No bare-text sources. If you can't link it, don't cite it — never fabricate links.
@@ -51,6 +69,9 @@ The daily is the INTAKE feed; cards are the durable LIBRARY of plays the team ke
 
 ## The bar: golden value, kill 95%
 Publish only what clears all three: (1) what changed, (2) why it matters to THIS discipline / our work, (3) the technique / do-it / link. "A thing happened" gets cut. Teach concepts the team can use Monday. A quiet day is a short, sharp briefing — never padding.
+
+## NO EMPTY DAYS (the twin of kill-95%)
+Kill-95% sets the ceiling; this sets the floor. **Every run must surface at least one genuinely useful, run-it-today play** — at least one real card-worthy diamond. If the obvious sources are quiet, **WIDEN THE NET** instead of giving up: YouTube transcripts (talks, demos, tutorials), practitioner communities (Reddit, Discord, HN, niche Slacks), changelogs, newsletters, indie tools, niche blogs — keep hunting until you find a real play with a real working link. **Quiet is never empty.** Never pad with junk to fill space (that fails kill-95%), but never stop at "nothing today" either — the diamond is always out there; go deeper to find it.
 
 ## Web flagship — the quality standard (worked example)
 Web is the flagship craft, split into the **web-design** and **web-dev** halves (it gets a beat every day, alternating focus). A model web block, domains include `web-dev` (and `web-design` when the design payoff is real): sub = "Chrome ships cross-document View Transitions". What changed: native page-to-page transitions without a JS framework. Why it matters: client sites get app-like polish with near-zero bundle cost — a real differentiator on builds we ship. Do-it: opt in with the view-transition CSS + a one-line meta; start on a hero-to-detail navigation; link the exact spec/release note. This depth and "so-what-for-us" framing is the bar every domain emulates.
