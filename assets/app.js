@@ -167,6 +167,7 @@
     { label: "Marketing", hash: "#/hub/marketing", on: v => v.view === "hub" && v.hub === "marketing" },
     { label: "AI", hash: "#/hub/ai", on: v => v.view === "hub" && v.hub === "ai" },
     { label: "Feed", hash: "#/feed", on: v => v.view === "feed" },
+    { label: "Inbox", hash: "#/inbox", on: v => v.view === "inbox", quiet: true },
   ];
   let topnav = null, viewEl = null;
   function buildShell() {
@@ -176,7 +177,7 @@
       topnav.className = "topnav";
       topnav.setAttribute("aria-label", "Sections");
       topnav.innerHTML = NAVLINKS.map(l =>
-        `<a class="topnav-link" data-hash="${l.hash}" href="${l.hash}">${l.label}</a>`).join("");
+        `<a class="topnav-link${l.quiet ? " quiet" : ""}" data-hash="${l.hash}" href="${l.hash}">${l.label}</a>`).join("");
       topbar.appendChild(topnav);
     }
     const layout = document.querySelector(".layout");
@@ -807,6 +808,116 @@
   }
 
   // =========================================================================
+  //  INBOX (#/inbox) — team feedback + rating highlights (gated browser read)
+  //  ALL user text is rendered via textContent — never innerHTML.
+  // =========================================================================
+  const KIND_LABEL = { share: "Share", ask: "Ask", learn_next: "Learn next" };
+  function timeAgo(iso) {
+    const t = Date.parse(iso);
+    if (isNaN(t)) return "";
+    const s = Math.max(0, (Date.now() - t) / 1000);
+    if (s < 60) return "just now";
+    const m = Math.floor(s / 60); if (m < 60) return m + "m ago";
+    const h = Math.floor(m / 60); if (h < 24) return h + "h ago";
+    const d = Math.floor(h / 24); if (d < 30) return d + "d ago";
+    const mo = Math.floor(d / 30); if (mo < 12) return mo + "mo ago";
+    return Math.floor(mo / 12) + "y ago";
+  }
+  function inboxFeedbackEl(f) {
+    const item = document.createElement("div");
+    item.className = "fb-item" + (f.status === "new" ? " is-new" : "");
+    const top = document.createElement("div"); top.className = "fb-top";
+    const kind = document.createElement("span");
+    kind.className = "fb-kind " + (f.kind || "share");
+    kind.textContent = KIND_LABEL[f.kind] || f.kind || "share";
+    top.appendChild(kind);
+    if (f.craft) { const c = document.createElement("span"); c.className = "fb-craft"; c.textContent = f.craft; top.appendChild(c); }
+    const time = document.createElement("span"); time.className = "fb-time"; time.textContent = timeAgo(f.created); top.appendChild(time);
+    item.appendChild(top);
+    const body = document.createElement("p"); body.className = "fb-body"; body.textContent = f.body || ""; item.appendChild(body);
+    if (f.submitter) { const who = document.createElement("span"); who.className = "fb-who"; who.textContent = "— " + f.submitter; item.appendChild(who); }
+    return item;
+  }
+  function inboxRatingEl(r) {
+    const href = r.target_type === "card" ? "#/card/" + encodeURIComponent(r.target_id)
+      : r.target_type === "report" ? "#/feed/" + encodeURIComponent(r.target_id) : null;
+    const el = document.createElement(href ? "a" : "div");
+    el.className = "rh-row";
+    if (href) el.setAttribute("href", href);
+    const score = document.createElement("span"); score.className = "rh-score"; score.textContent = (r.avg_score != null ? r.avg_score : "?") + "/5";
+    const title = document.createElement("span"); title.className = "rh-title"; title.textContent = r.title || r.target_id || "(unknown)";
+    const n = document.createElement("span"); n.className = "rh-n"; n.textContent = "n=" + (r.n || 0);
+    el.appendChild(score); el.appendChild(title); el.appendChild(n);
+    return el;
+  }
+  async function renderInbox() {
+    viewEl.innerHTML = `
+      <section class="home-hero">
+        <div class="hh-kicker"><span class="kicker-rule"></span>Team Inbox</div>
+        <h1 class="hh-title">Inbox</h1>
+        <p class="hh-sub">What the team shared, asked, and rated — the routine reads this each run and acts on it.</p>
+      </section>
+      <section class="home-block">
+        <div class="hb-head"><h2>Rating highlights</h2></div>
+        <div id="inbox-ratings"><p class="empty subtle">Loading…</p></div>
+      </section>
+      <section class="home-block">
+        <div class="hb-head"><h2>Feedback</h2></div>
+        <div id="inbox-feedback"><p class="empty subtle">Loading…</p></div>
+      </section>`;
+    Array.prototype.forEach.call(viewEl.children, (el, i) => el.style.setProperty("--i", Math.min(i, 6)));
+    window.scrollTo({ top: 0 });
+
+    const fbWrap = viewEl.querySelector("#inbox-feedback");
+    const rWrap = viewEl.querySelector("#inbox-ratings");
+    let data = null;
+    try {
+      const res = await fetch("/api/inbox", { cache: "no-cache" });
+      data = await res.json();
+      if (!res.ok || !data || !data.ok) throw new Error((data && data.error) || ("HTTP " + res.status));
+    } catch (e) {
+      if (document.body.dataset.view !== "inbox") return;
+      fbWrap.innerHTML = `<p class="empty">Couldn't load the inbox. <a href="#/inbox">Retry</a></p>`;
+      rWrap.innerHTML = "";
+      return;
+    }
+    if (document.body.dataset.view !== "inbox") return;
+
+    // ratings: top-rated + lowest-rated (cards/reports) by avg
+    const ratings = Array.isArray(data.ratings) ? data.ratings : [];
+    rWrap.innerHTML = "";
+    if (!ratings.length) {
+      rWrap.innerHTML = `<p class="empty subtle">No ratings yet — they appear as the team rates plays.</p>`;
+    } else {
+      // ratings come avg-desc; split into best + worst with no overlap
+      const k = Math.min(5, Math.ceil(ratings.length / 2));
+      const top = ratings.slice(0, k);
+      const low = ratings.slice(k).reverse().slice(0, 5);
+      const group = (label, rows) => {
+        if (!rows.length) return;
+        const g = document.createElement("div"); g.className = "rh-group";
+        const h = document.createElement("div"); h.className = "rh-label"; h.textContent = label; g.appendChild(h);
+        rows.forEach(r => g.appendChild(inboxRatingEl(r)));
+        rWrap.appendChild(g);
+      };
+      group("Top rated", top);
+      group("Needs another look", low);
+    }
+
+    // feedback: new-first
+    const feedback = Array.isArray(data.feedback) ? data.feedback : [];
+    fbWrap.innerHTML = "";
+    if (!feedback.length) {
+      fbWrap.innerHTML = `<p class="empty">No feedback yet — it lands here when the team uses the form.</p>`;
+    } else {
+      const list = document.createElement("div"); list.className = "fb-list";
+      feedback.forEach(f => list.appendChild(inboxFeedbackEl(f)));
+      fbWrap.appendChild(list);
+    }
+    revealTiles(viewEl);
+  }
+
+  // =========================================================================
   //  Router
   // =========================================================================
   function parseHash() {
@@ -818,6 +929,7 @@
     if (head === "feed") return { view: "feed", id: parts[1] ? decodeURIComponent(parts.slice(1).join("/")) : null };
     if (head === "hub") return { view: "hub", hub: (parts[1] || "").toLowerCase() };
     if (head === "card") return { view: "card", id: parts[1] ? decodeURIComponent(parts.slice(1).join("/")) : null };
+    if (head === "inbox") return { view: "inbox" };
     return { view: "home" };
   }
   let ready = false;
@@ -833,6 +945,8 @@
       renderHub(route.hub);
     } else if (route.view === "card") {
       renderCard(route.id);
+    } else if (route.view === "inbox") {
+      renderInbox();
     } else {
       renderHome();
     }
