@@ -1,0 +1,8 @@
+{
+  "name": "ai-daily-report",
+  "private": true,
+  "description": "RedPxl News — serverless functions only (the static site stays build-free).",
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.0"
+  }
+}

@@ -5,8 +5,11 @@
 // lives in env var SITE_PASS (Vercel → Settings → Environment Variables) — never
 // in client code. The cookie stores a SHA-256 of the password (not the password
 // itself), so it can't be reverse-engineered from the cookie.
+// The matcher excludes /api/db-health so the DB health check is reachable without
+// the team password (it returns only row counts, never secrets). The middleware
+// never even runs for that path.
 export const config = {
-  matcher: '/((?!_vercel/).*)',
+  matcher: '/((?!_vercel/|api/db-health).*)',
 };
 
 async function sha256hex(s) {
