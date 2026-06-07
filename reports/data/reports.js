@@ -18,12 +18,12 @@
      sources   HTML string of REAL <a> links (attributes use single quotes
                  so they sit safely inside double-quoted JS strings)
 
-   NOTE (history rework): every item is graded against one bar — a
-   practical, AI-powered, run-it-today play with a clear payoff and at
-   least one REAL, verified source/tool link. News, specs, funding, and
-   "X happened" with no takeaway are cut. Days that were pure news are
-   condensed to a short honest note rather than padded — history is kept,
-   but nothing is dressed up as advice it wasn't.
+   NOTE (history rework): every dated entry carries >=1 practical,
+   AI-powered, RUN-IT-TODAY play — operator voice, non-technical, with
+   exact steps/tools/prompts, a clear payoff, and at least one REAL,
+   web-verified link. Plays are framed as durable techniques relevant to
+   the period, not as "news that day." News, specs, funding, and
+   "X happened" with no takeaway are cut. No fabricated links.
    ============================================================ */
 window.AI_EDGE_REPORTS = [
 
@@ -94,17 +94,20 @@ window.AI_EDGE_REPORTS = [
     sortDate: "2026-06-04",
     domains: ["ai-tooling"],
     tldr: [
-      "<b>A policy- and corporate-news day, kept short on purpose.</b> Jun 4's headlines — a US AI Act discussion draft, an executive order, lab IPO filings — matter for context but aren't run-it-today plays for a craft.",
-      "Nothing here cleared the bar of a practical, link-backed technique, so we condensed instead of dressing up news as advice."
+      "<b>Play: turn your own documents into a grounded, cited Q&A source with NotebookLM.</b> Stop scrolling PDFs and reports — upload them and ask questions answered only from your sources, with citations you can click.",
+      "The day's headlines (an AI Act draft, an executive order, IPO filings) were policy and corporate news — cut. The durable, run-it-today move is the research assistant below."
     ],
     sections: [
-      { h: "Why this entry is short",
+      { h: "Run it today: a private research assistant grounded in your docs",
         blocks: [
-          { p: "The day was dominated by AI regulation and corporate manoeuvring (federal-vs-state law, frontier-model review rules, IPO paperwork). Worth tracking, but there's no non-technical, do-it-today move inside it. For the durable plays from this stretch, see the persistent-memory technique (Jun 6) and the release-day eval kit (Jun 5)." }
+          { sub: "Ask your documents questions instead of re-reading them", tags:["skill","tool"],
+            p: "Payoff: fast, trustworthy answers pulled only from material you uploaded — no open-web hallucination — with inline citations back to the exact passage. Ideal for contracts, research bundles, meeting notes, or a competitor's whitepapers.",
+            doIt: "Open <a href='https://notebooklm.google/' target='_blank' rel='noopener'>NotebookLM</a> (free, Google account). Create a notebook and upload your sources (PDFs, Google Docs, pasted text, a website or YouTube URL). Ask in plain language — <code>What are the renewal terms?</code> or <code>Summarize the risks across all three docs</code> — and every claim links to its source. Use the Audio Overview to turn the set into a podcast-style briefing.",
+            note: "Because it answers only from your sources, it's far less likely to make things up than a general chatbot." }
         ]
       }
     ],
-    sources: "No run-it-today play survived re-grading for this date; entry condensed to keep the history honest."
+    sources: "<a href='https://notebooklm.google/' target='_blank' rel='noopener'>Google NotebookLM</a>"
   },
 
   /* ===================== DAILY — Wed Jun 3 ===================== */
@@ -141,19 +144,22 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Tuesday, June 2",
     dateLabel: "Tuesday, June 2, 2026",
     sortDate: "2026-06-02",
-    domains: ["ai-tooling"],
+    domains: ["ai-tooling", "web-dev"],
     tldr: [
-      "<b>A regulation-and-launch day, condensed.</b> Jun 2 brought an executive order, a hyperscaler's in-house models, and cloud-marketplace availability — adoption news, not a craft technique.",
-      "Nothing here is a non-technical, do-it-today play with a verifiable link, so it's kept short rather than padded."
+      "<b>Play: make GitHub Copilot follow your conventions automatically with a custom-instructions file.</b> One small file in your repo and every suggestion respects your stack, style, and rules — no more re-explaining in each prompt.",
+      "The day's headlines (an executive order, a hyperscaler's in-house models, cloud-marketplace availability) were adoption news — cut. The durable dev play is below."
     ],
     sections: [
-      { h: "Why this entry is short",
+      { h: "Run it today: teach Copilot your project's rules once",
         blocks: [
-          { p: "Policy framing and corporate distribution moves dominated the day. They shift the landscape but don't hand you a runnable play. The durable techniques from this week are the eval kit (Jun 5) and the persistent-memory loop (Jun 6)." }
+          { sub: "Stop fixing the same Copilot mistakes in every file", tags:["tool","skill"],
+            p: "Payoff: suggestions that already use your framework, naming, test style, and 'never do X' rules — fewer rewrites and more consistency across the team.",
+            doIt: "Create <code>.github/copilot-instructions.md</code> at your repo root. Write plain-English rules: language/framework versions, naming conventions, your testing library, formatting, and hard always/never rules (e.g. <code>always use async/await, never callbacks</code>; <code>validate all inputs with zod</code>). Commit it. Copilot Chat now attaches it to every request in that repo — expand the References on a reply to confirm it loaded. Docs: <a href='https://docs.github.com/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot' target='_blank' rel='noopener'>GitHub — repository custom instructions</a>.",
+            note: "Keep it short and concrete; vague rules get ignored. Path-specific rules go in .github/instructions/." }
         ]
       }
     ],
-    sources: "No run-it-today play survived re-grading for this date; entry condensed to keep the history honest."
+    sources: "<a href='https://docs.github.com/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot' target='_blank' rel='noopener'>GitHub Docs — Repository custom instructions</a>"
   },
 
   /* ===================== DAILY — Mon Jun 1 ===================== */
@@ -166,17 +172,20 @@ window.AI_EDGE_REPORTS = [
     sortDate: "2026-06-01",
     domains: ["ai-tooling"],
     tldr: [
-      "<b>Model-launch and IPO headlines, condensed.</b> Jun 1 was a new open-weight model with big benchmark claims and an IPO filing — news, not a play.",
-      "The one durable habit it points at — never trust a vendor benchmark until it reproduces on your own tasks — is built into the eval kit (Jun 5) and the standing eval set (May 18), so it isn't repeated here."
+      "<b>Play: run a capable open model on your own machine — free and private — with Ollama.</b> Zero token cost, works offline, and your data never leaves your laptop. Perfect for the open-weight era.",
+      "The day's open-weight launch and IPO headlines were news; the durable, run-it-today move is getting a local model running below."
     ],
     sections: [
-      { h: "Why this entry is short",
+      { h: "Run it today: a private, free LLM on your laptop",
         blocks: [
-          { p: "A launch with pre-release benchmark claims is a hypothesis, not a result. The runnable response is to have your own eval set ready (see May 18) and run it the day weights land (see Jun 5) — there's no separate do-it-today move on this date." }
+          { sub: "Use AI on confidential text without sending it to anyone", tags:["tool"],
+            p: "Payoff: no API bill, no rate limits, and full privacy for the work you can't paste into a cloud chatbot — contracts, client data, internal docs. Good enough for summarizing, drafting, classifying, and code help on a modern laptop.",
+            doIt: "Install <a href='https://ollama.com/' target='_blank' rel='noopener'>Ollama</a> (Mac/Windows/Linux, free). In a terminal run <code>ollama run llama3.2</code> (or <code>qwen2.5</code>, <code>gemma3</code>) — it downloads once, then runs locally. Chat in the terminal, or point any app at the built-in local API at <code>localhost:11434</code>. Pick a small model (1–8B) for speed; a bigger one if you have the RAM.",
+            note: "Match model size to your RAM (an 8B model needs ~8GB free). For the hardest 10% of tasks, still reach for a frontier model — see the model router (May 30)." }
         ]
       }
     ],
-    sources: "No standalone play survived re-grading; see the eval-kit entries (May 18, Jun 5) for the durable habit this day pointed at."
+    sources: "<a href='https://ollama.com/' target='_blank' rel='noopener'>Ollama — run open models locally</a>"
   },
 
   /* ===================== WEEKLY SUMMARY — Issue #2 ===================== */
@@ -226,17 +235,20 @@ window.AI_EDGE_REPORTS = [
     sortDate: "2026-05-31",
     domains: ["ai-tooling"],
     tldr: [
-      "<b>Mostly product news, condensed.</b> May 31 was about agents getting payment rails and a consumer agent shipping — adoption news, not a craft technique.",
-      "The one engineering nugget (durable/idempotent execution) is real but a developer-infra topic, not a non-technical run-it-today play — so it's noted, not dressed up."
+      "<b>Play: automate one recurring chore end-to-end with a no-code AI workflow in Zapier.</b> Let an AI step read, decide, and act across your apps so the task runs itself — no engineer required.",
+      "The day's headlines (agent payment rails, a consumer-agent launch) were adoption news; the durable, run-it-today automation play is below."
     ],
     sections: [
-      { h: "Why this entry is short",
+      { h: "Run it today: hand a recurring chore to an AI workflow",
         blocks: [
-          { p: "Agent payment rails and a 'personal agent' launch were the day's headlines — adoption, not technique. For what's worth keeping from this week, see the weekly digest above (element-level citations + the verifier pattern)." }
+          { sub: "Turn 'I do this every day' into 'it does itself'", tags:["tool","practice"],
+            p: "Payoff: reclaim the 15-minute tasks you repeat daily — triage inbound email, summarize form responses into Slack, label and route tickets — with an AI step doing the judgment in the middle.",
+            doIt: "In <a href='https://zapier.com/ai' target='_blank' rel='noopener'>Zapier</a> (free tier), build a Zap: pick a Trigger (new email, new form entry, new row), add an AI step (a ChatGPT or Claude action) with a clear instruction like <code>Summarize this in 2 bullets and classify as urgent or normal</code>, then an Action (post to Slack, append to a sheet, draft a reply). Test on one real item, then switch it on.",
+            note: "Start with a low-stakes, reversible task; keep a human-approval step for anything that sends externally." }
         ]
       }
     ],
-    sources: "No run-it-today play survived re-grading for this date; see Weekly Issue #2 for the techniques worth keeping."
+    sources: "<a href='https://zapier.com/ai' target='_blank' rel='noopener'>Zapier — AI automation</a>"
   },
 
   /* ===================== DAILY — Sat May 30 ===================== */
@@ -275,17 +287,20 @@ window.AI_EDGE_REPORTS = [
     sortDate: "2026-05-29",
     domains: ["ai-tooling"],
     tldr: [
-      "<b>A model-availability and uptake day, condensed.</b> May 29 was a fast/cheap model going GA plus enterprise and government rollouts — news, not a technique.",
-      "The actionable nugget — benchmark a cheap model on your highest-volume task — lives in the model router (May 30), so it isn't repeated here."
+      "<b>Play: drop a long document or recording into Google AI Studio and ask Gemini about all of it at once.</b> A huge context window, free in the browser — no setup, no chunking, no RAG.",
+      "The day's model-GA and uptake headlines were news; the durable, run-it-today long-context move is below."
     ],
     sections: [
-      { h: "Why this entry is short",
+      { h: "Run it today: analyze something huge in one shot",
         blocks: [
-          { p: "A new model reaching general availability is a reason to re-run your eval, not a standalone play. The runnable version is the one-page model router (May 30) and the standing eval set (May 18)." }
+          { sub: "Stop chunking — paste the whole thing", tags:["tool","skill"],
+            p: "Payoff: summarize a 200-page report, compare five contracts, or pull every action item from a 2-hour meeting recording in a single prompt — free, because Gemini's context window holds it all.",
+            doIt: "Go to <a href='https://aistudio.google.com/' target='_blank' rel='noopener'>Google AI Studio</a> (free, Google account). Start a new prompt, attach your files (PDFs, long text, audio or video), pick a Gemini model, and ask: <code>List every commitment made and who owns it</code> or <code>What changed between v1 and v2 of this contract?</code>. Turn the temperature down for factual extraction.",
+            note: "It's the free, no-code way to see what a giant context window does for your real documents before you build anything." }
         ]
       }
     ],
-    sources: "No standalone play survived re-grading; see the model router (May 30) for the move this day pointed at."
+    sources: "<a href='https://aistudio.google.com/' target='_blank' rel='noopener'>Google AI Studio</a>"
   },
 
   /* ===================== DAILY — Thu May 28 ===================== */
@@ -298,17 +313,20 @@ window.AI_EDGE_REPORTS = [
     sortDate: "2026-05-28",
     domains: ["ai-tooling"],
     tldr: [
-      "<b>A flagship-launch day, condensed.</b> May 28 was a new top-tier model plus a valuation milestone — news, not a run-it-today play.",
-      "Its genuinely useful idea (plan first, then run codebase-scale work) is captured as a technique in Weekly Issue #1, so it isn't repeated here."
+      "<b>Play: stop staring at a blank prompt — let the Console write and improve it for you.</b> Anthropic's prompt generator drafts a structured prompt for your task; the prompt improver upgrades one you already have.",
+      "The day's flagship-launch and valuation headlines were news; the durable, run-it-today prompting move is below."
     ],
     sections: [
-      { h: "Why this entry is short",
+      { h: "Run it today: a better prompt in two clicks",
         blocks: [
-          { p: "A model release and a valuation headline don't translate into a non-technical play on their own. The durable version — force a planning phase before generation — is in Weekly Issue #1 (May 18–24)." }
+          { sub: "Beat the blank-page problem (and weak prompts)", tags:["skill","tool"],
+            p: "Payoff: a well-structured, best-practice prompt in seconds instead of trial-and-error — clearer instructions, examples, and reasoning steps that measurably lift output quality.",
+            doIt: "Open the <a href='https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompt-generator' target='_blank' rel='noopener'>Claude Console prompting tools</a>. Use the <b>prompt generator</b>: describe your task (<code>classify support tickets by urgency and topic</code>) and it outputs a full prompt template with variables. Already have a prompt that underperforms? Paste it into the <b>prompt improver</b>, add a note on what's wrong (<code>summaries are too basic for experts</code>), and it rewrites with chain-of-thought and clean structure.",
+            note: "The resulting structure ports to other chatbots too — generate once, reuse anywhere." }
         ]
       }
     ],
-    sources: "No standalone play survived re-grading; see Weekly Issue #1 for the planning technique this day pointed at."
+    sources: "<a href='https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompt-generator' target='_blank' rel='noopener'>Anthropic — Console prompting tools (generator + improver)</a>"
   },
 
   /* ===================== DAILY — Wed May 27 ===================== */
@@ -321,17 +339,20 @@ window.AI_EDGE_REPORTS = [
     sortDate: "2026-05-27",
     domains: ["ai-tooling"],
     tldr: [
-      "<b>A funding and corporate-news day, condensed.</b> May 27 was a record raise, an office opening, and an analyst placement — none of it a craft technique.",
-      "Nothing here is a non-technical, do-it-today play with a verifiable link, so it's kept short rather than padded."
+      "<b>Play: build a custom GPT for a task you repeat, so the setup is baked in.</b> Package your instructions, reference files, and tone once — then just open it and go.",
+      "The day's funding, office-opening, and analyst-placement headlines were news; the durable, run-it-today move is below."
     ],
     sections: [
-      { h: "Why this entry is short",
+      { h: "Run it today: a reusable assistant for one job",
         blocks: [
-          { p: "Funding scale and vendor positioning are context, not a runnable move. For the durable techniques from this period, see the two weekly digests." }
+          { sub: "Stop re-pasting the same setup every session", tags:["tool","skill"],
+            p: "Payoff: a one-click expert — your brand-voice writer, your spec reviewer, your SQL helper — that already knows the rules and reference docs, and that you can share with teammates.",
+            doIt: "In ChatGPT (Plus/Team), open the GPT builder and click Configure. Fill in instructions (role + rules + output format), upload your reference files under Knowledge, and add a few conversation starters. Test in the preview pane, then save. Reopen it any time instead of rebuilding context. Guide: <a href='https://help.openai.com/en/articles/8554397-creating-and-editing-gpts' target='_blank' rel='noopener'>OpenAI — Creating and editing GPTs</a>.",
+            note: "Put your non-negotiables (<code>always cite the source doc</code>, <code>never invent figures</code>) in the instructions — they stick across every chat." }
         ]
       }
     ],
-    sources: "No run-it-today play survived re-grading for this date; entry condensed to keep the history honest."
+    sources: "<a href='https://help.openai.com/en/articles/8554397-creating-and-editing-gpts' target='_blank' rel='noopener'>OpenAI — Creating and editing GPTs</a>"
   },
 
   /* ===================== DAILY — Tue May 26 ===================== */
@@ -342,19 +363,22 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Tuesday, May 26",
     dateLabel: "Tuesday, May 26, 2026",
     sortDate: "2026-05-26",
-    domains: ["ai-tooling"],
+    domains: ["ai-tooling", "graphic"],
     tldr: [
-      "<b>An enterprise-platform launch day, condensed.</b> May 26 was a new enterprise agent platform, a multimodal model, and a security preview — product news, not a technique.",
-      "Nothing here is a non-technical, do-it-today play with a verifiable link, so it's kept short rather than padded."
+      "<b>Play: generate on-brand mockups, icons, and social images with ChatGPT's image tool — and edit them in plain English.</b> Concept art and asset drafts in minutes, no design suite.",
+      "The day's enterprise-platform and multimodal launches were news; the durable, run-it-today design move is below."
     ],
     sections: [
-      { h: "Why this entry is short",
+      { h: "Run it today: design assets from a sentence",
         blocks: [
-          { p: "Platform announcements shift what's available but don't hand you a runnable play. The durable techniques from this period live in the two weekly digests." }
+          { sub: "Draft visuals without opening Photoshop", tags:["tool"],
+            p: "Payoff: fast first-draft mockups, hero images, icons, and ad variations — with legible text in the image and transparent backgrounds on request — that you can hand off or polish.",
+            doIt: "In ChatGPT, ask for an image: <code>A clean flat-style icon set for a budgeting app, 6 icons, consistent line weight, transparent background</code>. To revise, just describe the change (<code>make the palette warmer</code>, <code>add the headline FALL SALE</code>) or select a region and edit only that part. Iterate, then download. How-to: <a href='https://help.openai.com/en/articles/11084440-images-in-chatgpt' target='_blank' rel='noopener'>OpenAI — Images in ChatGPT</a>.",
+            note: "Spin up cheap variations for A/B options; always confirm you have rights to any referenced style before commercial use." }
         ]
       }
     ],
-    sources: "No run-it-today play survived re-grading for this date; entry condensed to keep the history honest."
+    sources: "<a href='https://help.openai.com/en/articles/11084440-images-in-chatgpt' target='_blank' rel='noopener'>OpenAI — Images in ChatGPT</a>"
   },
 
   /* ===================== DAILY — Mon May 25 ===================== */
@@ -367,17 +391,20 @@ window.AI_EDGE_REPORTS = [
     sortDate: "2026-05-25",
     domains: ["ai-tooling"],
     tldr: [
-      "<b>A pricing-and-power day, condensed.</b> May 25 was a permanent price cut, profitability/IPO chatter, a utility merger, and a pulled executive order — market and policy news.",
-      "The one durable response — re-run your cost math when prices move — is the model router (May 30), so it isn't repeated here."
+      "<b>Play: run non-urgent bulk AI jobs at ~50% off with the Batch API.</b> Translating, classifying, or summarizing thousands of items? Submit them as one batch and pay half.",
+      "The day's price-cut, profitability, and power-merger headlines were news; the durable, run-it-today cost move is below."
     ],
     sections: [
-      { h: "Why this entry is short",
+      { h: "Run it today: halve the cost of bulk AI work",
         blocks: [
-          { p: "A cheaper model is a reason to re-check your routing, not a standalone play. The runnable version is the one-page model router (May 30) and the two-gate picker (Jun 3)." }
+          { sub: "Pay full price only when you need the answer now", tags:["money","tool"],
+            p: "Payoff: a 50% discount on large, non-interactive jobs — tag 10,000 reviews, translate a product catalog, generate metadata for a media library — with most batches finishing within an hour.",
+            doIt: "Instead of looping one-at-a-time API calls, submit them together via the <a href='https://platform.claude.com/docs/en/build-with-claude/batch-processing' target='_blank' rel='noopener'>Message Batches API</a> (OpenAI has an equivalent Batch API). Bundle your requests into one batch, submit, poll for completion, then collect the results. Use it for anything where 'within an hour' is fine — evals, moderation, bulk content, data enrichment.",
+            note: "Keep real-time calls for user-facing work; route everything async to batch and the savings compound." }
         ]
       }
     ],
-    sources: "No standalone play survived re-grading; see the model router (May 30) for the move this day pointed at."
+    sources: "<a href='https://platform.claude.com/docs/en/build-with-claude/batch-processing' target='_blank' rel='noopener'>Anthropic — Message Batches (50% off bulk jobs)</a>"
   },
 
   /* ===================== WEEKLY SUMMARY — Issue #1 ===================== */
@@ -429,19 +456,22 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Sunday, May 24",
     dateLabel: "Sunday, May 24, 2026",
     sortDate: "2026-05-24",
-    domains: ["ai-tooling"],
+    domains: ["ai-tooling", "web-dev"],
     tldr: [
-      "<b>A pricing-and-access day, condensed.</b> May 24 was a permanent price cut, a coding tool reaching browser/mobile, and a security-model rumor — news, not a technique.",
-      "The durable response — re-run cost math when prices move — is the model router (May 30), so it isn't repeated here."
+      "<b>Play: paste a screenshot and get the code — or the fix.</b> Hand a UI mockup, an error screen, or a broken chart to a vision model and let it write the markup or diagnose the bug.",
+      "The day's price-cut and tool-availability headlines were news; the durable, run-it-today vision move is below."
     ],
     sections: [
-      { h: "Why this entry is short",
+      { h: "Run it today: turn a picture into working code",
         blocks: [
-          { p: "Cheaper tokens and a new surface for a coding tool are reasons to re-check routing, not standalone plays. The runnable version is the model router (May 30)." }
+          { sub: "Skip the typing — show, don't tell", tags:["tool","skill"],
+            p: "Payoff: a screenshot of a design becomes HTML/CSS in one step; a screenshot of a stack trace or broken chart becomes a diagnosis and a fix — faster than describing it in words.",
+            doIt: "In Claude or ChatGPT, drag in the image and ask: <code>Rebuild this screen as a responsive Tailwind component</code> or <code>Here's the error — what's wrong and how do I fix it?</code>. For repeatable use, send images via the API. Capabilities and limits: <a href='https://platform.claude.com/docs/en/build-with-claude/vision' target='_blank' rel='noopener'>Anthropic — Vision</a>.",
+            note: "Great for converting a Figma export or a whiteboard photo into a first-pass build you then refine." }
         ]
       }
     ],
-    sources: "No standalone play survived re-grading; see the model router (May 30) for the move this day pointed at."
+    sources: "<a href='https://platform.claude.com/docs/en/build-with-claude/vision' target='_blank' rel='noopener'>Anthropic — Vision (image input)</a>"
   },
 
   /* ===================== DAILY — Sat May 23 ===================== */
@@ -454,17 +484,20 @@ window.AI_EDGE_REPORTS = [
     sortDate: "2026-05-23",
     domains: ["ai-tooling"],
     tldr: [
-      "<b>A research-milestone and money day, condensed.</b> May 23 was an AI math result, IPO/profit news, and a governance reversal — notable, but not a craft play.",
-      "Nothing here is a non-technical, do-it-today move with a verifiable link, so it's kept short rather than padded."
+      "<b>Play: do research with Perplexity, not a plain chatbot — every answer comes with clickable sources.</b> Get a synthesized answer plus the citations to verify it, in one step.",
+      "The day's research-milestone and IPO headlines were news; the durable, run-it-today research move is below."
     ],
     sections: [
-      { h: "Why this entry is short",
+      { h: "Run it today: research that shows its work",
         blocks: [
-          { p: "A research milestone and funding news are signals to watch, not runnable plays. For the durable techniques from this week, see Weekly Issue #1." }
+          { sub: "Answers you can actually check", tags:["tool","skill"],
+            p: "Payoff: a fast, current, synthesized answer to a real question — market sizing, a how-to, a comparison — with numbered citations so you can confirm each claim instead of trusting a confident guess.",
+            doIt: "Go to <a href='https://www.perplexity.ai/' target='_blank' rel='noopener'>Perplexity</a> (free). Ask a specific question, then read the cited sources before you rely on it. Use Focus to scope the search (e.g. academic), and ask follow-ups to drill in. Treat the citations as the deliverable — open them.",
+            note: "For anything you'll publish or decide on, verify at least the load-bearing numbers against their linked sources." }
         ]
       }
     ],
-    sources: "No run-it-today play survived re-grading for this date; entry condensed to keep the history honest."
+    sources: "<a href='https://www.perplexity.ai/' target='_blank' rel='noopener'>Perplexity — cited answer engine</a>"
   },
 
   /* ===================== DAILY — Fri May 22 ===================== */
@@ -475,19 +508,22 @@ window.AI_EDGE_REPORTS = [
     title: "Daily Briefing — Friday, May 22",
     dateLabel: "Friday, May 22, 2026",
     sortDate: "2026-05-22",
-    domains: ["ai-tooling"],
+    domains: ["ai-tooling", "web-dev"],
     tldr: [
-      "<b>A supply-chain-breach and model-launch day, condensed.</b> May 22 was a poisoned IDE extension, more cheap multimodal models, and funding rounds — security and market news.",
-      "The hygiene takeaway (pin/verify extensions, rotate tokens) is good practice but not an AI-powered play, so it's noted rather than dressed up."
+      "<b>Play: run an AI-assisted security pass on your code before you ship.</b> A free scanner plus a focused LLM review catches the obvious holes a poisoned dependency or rushed PR introduces.",
+      "The day's supply-chain-breach and model-launch headlines were news; the durable, run-it-today security move is below."
     ],
     sections: [
-      { h: "Why this entry is short",
+      { h: "Run it today: a security review on your diff",
         blocks: [
-          { p: "A breach is a reminder to treat your editor as production infrastructure, and new cheap models are a reason to re-run your eval — neither is a standalone AI play. The runnable version of the model angle is the router (May 30)." }
+          { sub: "Catch the leak before it ships", tags:["tool","practice"],
+            p: "Payoff: fewer hard-coded secrets, injection bugs, and risky dependency calls reaching production — a cheap safety net for solo devs and small teams without a dedicated security person.",
+            doIt: "Two layers. (1) Run <a href='https://semgrep.dev/' target='_blank' rel='noopener'>Semgrep</a> (free) on your repo to scan for known vulnerable patterns, secrets, and dependency issues. (2) Paste your diff into Claude/ChatGPT with: <code>Review this diff only for security issues — injection, auth, secrets, unsafe deps. List concrete risks and fixes; say 'none found' if clean.</code> Fix what either flags.",
+            note: "Especially worth it right after adding a new dependency or IDE extension — treat third-party code as untrusted." }
         ]
       }
     ],
-    sources: "No run-it-today AI play survived re-grading; see the model router (May 30) for the model-choice angle."
+    sources: "<a href='https://semgrep.dev/' target='_blank' rel='noopener'>Semgrep — code security scanning</a>"
   },
 
   /* ===================== DAILY — Thu May 21 ===================== */
@@ -500,17 +536,20 @@ window.AI_EDGE_REPORTS = [
     sortDate: "2026-05-21",
     domains: ["ai-tooling"],
     tldr: [
-      "<b>A talent-and-capital day, condensed.</b> May 21 was a high-profile hire, a funding round, and strategy framing — industry news, not a craft technique.",
-      "Nothing here is a non-technical, do-it-today play with a verifiable link, so it's kept short rather than padded."
+      "<b>Play: level up your AI mental models with Andrej Karpathy's free deep-dives — then use AI to study them.</b> An hour with his explainers teaches you more than a week of headlines.",
+      "The day's talent-and-capital headlines were news; the durable, run-it-today learning move is below."
     ],
     sections: [
-      { h: "Why this entry is short",
+      { h: "Run it today: actually understand how LLMs work",
         blocks: [
-          { p: "Where talent and capital concentrate is a useful signal, not a runnable move. For the durable techniques from this week, see Weekly Issue #1." }
+          { sub: "Invest an hour in the fundamentals", tags:["skill","practice"],
+            p: "Payoff: judgment that compounds with every new model — once you understand tokens, context, and training, you stop chasing hype and start using AI well. The best free resource comes from the field's clearest teacher.",
+            doIt: "Watch Karpathy's free explainers (start with 'Intro to Large Language Models', then 'Deep Dive into LLMs') linked from <a href='https://karpathy.ai/' target='_blank' rel='noopener'>karpathy.ai</a> and his YouTube. To lock it in, paste the video transcript into a chatbot and ask it to quiz you, or to re-explain any part <code>like I'm a marketer, not an engineer</code>.",
+            note: "Skills that survive model upgrades — orchestration, evals, judgment — beat memorizing this week's leaderboard." }
         ]
       }
     ],
-    sources: "No run-it-today play survived re-grading for this date; entry condensed to keep the history honest."
+    sources: "<a href='https://karpathy.ai/' target='_blank' rel='noopener'>Andrej Karpathy — free AI explainers</a>"
   },
 
   /* ===================== DAILY — Wed May 20 ===================== */
@@ -523,17 +562,20 @@ window.AI_EDGE_REPORTS = [
     sortDate: "2026-05-20",
     domains: ["ai-tooling"],
     tldr: [
-      "<b>A predictions-and-platform-turbulence day, condensed.</b> May 20 was forward-looking forecasts and some launch-week instability — commentary, not a craft technique.",
-      "The practical takeaway (keep an abstraction layer between your tools and any one model) is captured in the model router (May 30), so it isn't repeated here."
+      "<b>Play: write prompts that survive a model switch.</b> Platforms add and drop models weekly — a well-structured prompt ports across ChatGPT, Claude, and Gemini so you're never locked in.",
+      "The day's predictions and platform-turbulence headlines were news; the durable, run-it-today prompting move is below."
     ],
     sections: [
-      { h: "Why this entry is short",
+      { h: "Run it today: a prompt that works anywhere",
         blocks: [
-          { p: "Forecasts and platform wobble are context, not runnable plays. The durable move — don't hard-couple a workflow to one vendor's lineup — is built into the model router (May 30)." }
+          { sub: "Don't hard-couple your work to one model", tags:["skill","practice"],
+            p: "Payoff: when a model gets removed, repriced, or beaten, you paste the same prompt into the next one and it just works — no rewrite, no lock-in.",
+            doIt: "Structure every important prompt the same way: a clear role, the task, the rules/constraints, the context (marked with headers or XML-style tags), and the exact output format — plus 1–2 examples. This structure is portable across providers. Reference: <a href='https://platform.openai.com/docs/guides/prompt-engineering' target='_blank' rel='noopener'>OpenAI — Prompt engineering guide</a> (the same principles apply to Claude and Gemini).",
+            note: "Keep your best prompts in a plain-text file so you can drop them into whichever model wins this month." }
         ]
       }
     ],
-    sources: "No standalone play survived re-grading; see the model router (May 30) for the vendor-independence move."
+    sources: "<a href='https://platform.openai.com/docs/guides/prompt-engineering' target='_blank' rel='noopener'>OpenAI — Prompt engineering guide</a>"
   },
 
   /* ===================== DAILY — Tue May 19 ===================== */
