@@ -410,12 +410,21 @@ td b,td strong{color:var(--fg)}
   .scrim.open{display:block;position:fixed;inset:0;background:rgba(10,13,18,.6);backdrop-filter:blur(2px);z-index:120}
   main{padding:var(--xl) var(--lg) var(--xxl);max-width:none}
   main::before{display:none}
+  .view-page{padding:var(--xl) var(--lg) var(--xxl)}   /* match main's reduced gutters */
 }
 @media (max-width:600px){
   #latest-pill{display:none}
   .masthead h2{font-size:1.9rem}
   .footer-count{margin-left:0}
+  .view-page{padding:var(--lg) var(--md) var(--xl)}
+  .hh-title{font-size:clamp(26px,8vw,34px)}
 }
+
+/* staggered render-entrance for tiles/list-items (cards, hub tiles, related, pulse
+   rows). app.js adds .rise + a per-item --i; same `reveal` keyframe as sections, so
+   they always end visible (no "stuck hidden" failure). Reduced-motion forces visible. */
+.rise{opacity:0;transform:translateY(14px);animation:reveal var(--t-slow) var(--ease-out) forwards;
+  animation-delay:calc(var(--i,0) * 45ms)}
 /* ===========================================================================
    Motion & interaction polish (orchestrated load, micro-interactions)
    =========================================================================== */
@@ -490,7 +499,9 @@ body,.topbar,.sidebar,.panel,.block,.tldr,.nav-item{
 }
 
 /* ---- view switching by body[data-view] ---- */
-.view-page{display:none;max-width:1180px;margin:0 auto;padding:var(--xl) clamp(16px,4vw,32px) var(--xxxl)}
+/* full-width + same gutters/rhythm as the feed's main column (the reference layout),
+   so home/hubs/card read as one consistent layout, not narrower/differently-margined. */
+.view-page{display:none;max-width:none;margin:0;padding:var(--xxl) clamp(24px,5vw,72px) var(--huge)}
 body[data-view="feed"] .layout{display:flex}
 body[data-view="feed"] .view-page{display:none}
 body[data-view="home"] .layout,
@@ -522,14 +533,15 @@ body[data-view="card"] .view-page{display:block}
 .hb-more:hover{text-decoration:underline}
 .empty{color:var(--fg-40);font-size:14px;padding:var(--md) 0}
 
-/* ---- pulse list (what changed) ---- */
+/* ---- pulse list (what changed) — fixed date column so every title starts at the
+   same x (straight left edge); domain tags right-aligned. ---- */
 .pulse-list{display:flex;flex-direction:column;gap:2px}
-.pulse-item{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;text-decoration:none;color:var(--fg-70);
-  padding:11px 12px;border-radius:var(--r-md);border:1px solid transparent;
-  transition:background-color var(--t-fast) var(--ease),color var(--t-fast) var(--ease)}
-.pulse-item:hover{background:var(--panel-2);color:var(--fg)}
-.pulse-date{font-family:var(--mono);font-size:11px;color:var(--fg-40);flex:0 0 auto;min-width:96px}
-.pulse-title{font-weight:600;font-size:15px;flex:1;min-width:200px}
+.pulse-item{display:grid;grid-template-columns:132px minmax(0,1fr) auto;align-items:baseline;gap:14px;
+  text-decoration:none;color:var(--fg-70);padding:11px 12px;border-radius:var(--r-md);border:1px solid transparent;
+  transition:background-color var(--t-fast) var(--ease),color var(--t-fast) var(--ease),transform var(--t-fast) var(--ease-out)}
+.pulse-item:hover{background:var(--panel-2);color:var(--fg);transform:translateX(2px)}
+.pulse-date{font-family:var(--mono);font-size:11px;color:var(--fg-40);white-space:nowrap}
+.pulse-title{font-weight:600;font-size:15px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pulse-dom{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.05em;
   color:var(--fg-55);background:var(--panel-2);border:1px solid var(--line);border-radius:var(--r-sm);padding:2px 6px}
 
@@ -611,7 +623,13 @@ body[data-view="card"] .view-page{display:block}
 .hub-tile .ht-dot{position:absolute;top:16px;right:16px;opacity:.5;transition:opacity var(--t-fast) var(--ease)}
 .hub-tile:hover .ht-dot{opacity:1}
 
-.pulse-doms{display:inline-flex;flex-wrap:wrap;gap:5px}
+.pulse-doms{display:inline-flex;flex-wrap:wrap;gap:5px;justify-self:end}
+/* mobile: stack date → title → tags so nothing crams or overflows */
+@media (max-width:560px){
+  .pulse-item{grid-template-columns:1fr;gap:3px;padding:10px 12px}
+  .pulse-title{white-space:normal}
+  .pulse-doms{justify-self:start}
+}
 
 .empty.subtle{color:var(--fg-40);font-size:13px;font-style:italic;padding:8px 0}
 
@@ -669,8 +687,10 @@ body[data-view="card"] .view-page{display:block}
 /* ---- contribute form (homepage) ---- */
 .contribute{border-top:1px solid var(--line);padding-top:var(--xl);margin-top:var(--xl)}
 .contribute-sub{color:var(--fg-55);font-size:14px;margin:0 0 var(--md);max-width:60ch}
+.cform,.cform-thanks{max-width:760px}
 .cform{position:relative;background:var(--panel);border:1px solid var(--line);
   border-left:3px solid var(--red);border-radius:0 var(--r-md) var(--r-md) 0;padding:18px 20px}
+.cform[hidden]{display:none}
 .cform-kinds{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:var(--md)}
 .kind-btn{font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;
   cursor:pointer;padding:7px 12px;border-radius:var(--r-pill);background:var(--panel-2);
@@ -700,25 +720,38 @@ body[data-view="card"] .view-page{display:block}
 .cform-submit:disabled,.btn-sm:disabled{opacity:.55;cursor:default;transform:none}
 .cform-msg{font-family:var(--mono);font-size:11px;color:var(--fg-40)}
 .cform-msg.err{color:var(--red)}
-.cform-thanks{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;color:var(--fg-70)}
-
-/* ---- rating control (card view + feed editions) ---- */
-.rate{margin-top:var(--xl);border-top:1px solid var(--line);padding-top:var(--md)}
-.rate-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.rate-label{font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--fg-55)}
-.rate-dots{display:inline-flex;gap:6px}
-/* 1–5 as the brand's square-dot motif (NOT stars/emoji) — fills red up to the score */
-.rate-dot{width:15px;height:15px;padding:0;cursor:pointer;background:transparent;
-  border:1px solid var(--line-2);border-radius:2px;
+.cform-thanks{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--red);
+  border-radius:0 var(--r-md) var(--r-md) 0;padding:20px 22px;animation:reveal var(--t-slow) var(--ease-out)}
+.cform-thanks[hidden]{display:none}
+.cform-thanks-row{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--fg);margin-bottom:14px}
+.cform-again{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  cursor:pointer;padding:9px 16px;border:1px solid var(--line-2);border-radius:var(--r-md);background:transparent;color:var(--fg);
   transition:background-color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease),transform var(--t-fast) var(--ease-out)}
-.rate-dot:hover{border-color:var(--red)}
-.rate-dot:active{transform:scale(.9)}
+.cform-again:hover{border-color:var(--red);background:var(--panel-2)}
+.cform-again:active{transform:scale(.97)}
+
+/* ---- rating control (card view + feed editions) — prominent CTA panel ---- */
+.rate{margin-top:var(--xl);background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--red);
+  border-radius:0 var(--r-md) var(--r-md) 0;padding:16px 18px}
+.rate-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.rate-label{font-family:var(--mono);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--fg-70)}
+.rate.rated .rate-label{color:var(--red)}
+.rate-dots{display:inline-flex;gap:8px}
+/* 1–5 as the brand's square-dot motif (NOT stars/emoji) — fills red up to the score */
+.rate-dot{width:26px;height:26px;padding:0;cursor:pointer;background:var(--panel-2);
+  border:1px solid var(--line-2);border-radius:3px;
+  transition:background-color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease),transform var(--t-med) var(--ease-out)}
+.rate-dot:hover{border-color:var(--red);transform:translateY(-2px)}
+.rate-dot:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.rate-dot:active{transform:scale(.92)}
 .rate-dot.on{background:var(--red);border-color:var(--red)}
-.rate-state{font-family:var(--mono);font-size:11px;color:var(--red);font-weight:600}
-.rate-expand{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.rate-dot.pop{animation:ratePop .32s var(--ease-out)}
+@keyframes ratePop{0%{transform:scale(.7)}55%{transform:scale(1.22)}100%{transform:scale(1)}}
+.rate-state{margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--red);font-weight:700;letter-spacing:.04em}
+.rate-expand{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
 .rate-expand[hidden]{display:none}  /* explicit display:flex would otherwise override the hidden attribute */
 .rate-expand .rate-comment{flex:1;min-width:180px}
-.rate-msg{font-family:var(--mono);font-size:11px;color:var(--fg-40);margin:8px 0 0}
+.rate-msg{font-family:var(--mono);font-size:11px;color:var(--fg-40);margin:10px 0 0}
 .rate-msg.err{color:var(--red)}
 
 /* respect reduced motion — kill all of the above */
@@ -726,4 +759,5 @@ body[data-view="card"] .view-page{display:block}
   *{transition:none !important;scroll-behavior:auto;animation:none !important}
   #report-container > *{opacity:1;transform:none}
   .view-page > *{opacity:1;transform:none}
+  .rise{opacity:1;transform:none}   /* never leave a tile stuck hidden */
 }

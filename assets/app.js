@@ -24,6 +24,17 @@
   let domainFilter = null;       // selected slug, or null for "All"
   let domainLabelMap = {};       // slug -> {label,fullLabel} for ALL domains (incl. empty)
 
+  // motion: staggered entrance for tiles/list-items on render. Uses the same
+  // CSS `reveal` keyframe as the section reveal (always ends visible — never the
+  // "stuck hidden until scroll" failure mode). Reduced-motion forces them visible.
+  function revealTiles(root) {
+    if (!root) return;
+    root.querySelectorAll(".kcard, .hub-tile, .rel-tile, .pulse-item").forEach((el, i) => {
+      el.style.setProperty("--i", Math.min(i, 10));
+      el.classList.add("rise");
+    });
+  }
+
   // ---- cards (durable knowledge atoms) ----
   let cardsIndex = [];           // slim cards [{id,title,summary,domains,confidence,status,updated}]
   const cardCache = {};          // id -> full card
@@ -356,6 +367,7 @@
 
     Array.prototype.forEach.call(container.children, (el, i) => el.style.setProperty("--i", Math.min(i, 8)));
     wireRating(container, "report", r.id);
+    revealTiles(container);
 
     container.querySelectorAll(".report-nav button[data-go]").forEach(btn => {
       if (btn.dataset.go) btn.addEventListener("click", () => { location.hash = "#/feed/" + btn.dataset.go; });
@@ -516,25 +528,36 @@
         </div>
         <input class="cform-hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div class="cform-foot">
-          <button type="submit" class="cform-submit">Send</button>
+          <button type="submit" class="cform-submit" disabled>Send</button>
           <span class="cform-msg" role="status" aria-live="polite"></span>
         </div>
       </form>
+      <div class="cform-thanks" hidden>
+        <div class="cform-thanks-row"><span class="ag-dot" aria-hidden="true"></span>Thanks — your note landed. The next run will see it.</div>
+        <button type="button" class="cform-again">Send another</button>
+      </div>
     </section>`;
   }
   function wireFeedbackForm(root) {
     const form = root.querySelector(".cform");
     if (!form) return;
+    const thanks = root.querySelector(".cform-thanks");
+    const bodyEl = form.querySelector(".cform-body");
+    const msg = form.querySelector(".cform-msg");
+    const submit = form.querySelector(".cform-submit");
     let kind = "share";
+
     form.querySelectorAll(".kind-btn").forEach(btn => btn.addEventListener("click", () => {
       kind = btn.dataset.kind;
       form.querySelectorAll(".kind-btn").forEach(b => b.classList.toggle("active", b === btn));
     }));
-    const msg = form.querySelector(".cform-msg");
-    const submit = form.querySelector(".cform-submit");
+    // disable Send until the message has content
+    const syncDisabled = () => { submit.disabled = (bodyEl.value || "").trim().length < 1; };
+    bodyEl.addEventListener("input", syncDisabled);
+    syncDisabled();
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const bodyEl = form.querySelector(".cform-body");
       const body = (bodyEl.value || "").trim();
       msg.className = "cform-msg"; msg.textContent = "";
       if (body.length < 1) { msg.textContent = "Add a message first."; msg.classList.add("err"); bodyEl.focus(); return; }
@@ -546,12 +569,26 @@
           submitter: (form.querySelector(".cform-name").value || "").trim(),
           hp: form.querySelector(".cform-hp").value || ""
         });
-        // thank-you is STATIC text (never user input)
-        form.innerHTML = `<div class="cform-thanks"><span class="ag-dot" aria-hidden="true"></span>Thanks — your note landed. The next run will see it.</div>`;
+        // success → show thank-you; keep the form in the DOM for "Send another"
+        form.hidden = true;
+        thanks.hidden = false;
+        submit.textContent = "Send";
       } catch (err) {
         submit.disabled = false; submit.textContent = "Send";
         msg.textContent = "Couldn't send — please try again."; msg.classList.add("err");
       }
+    });
+
+    // "Send another" → restore a FRESH form without a page reload
+    thanks.querySelector(".cform-again").addEventListener("click", () => {
+      form.reset();
+      kind = "share";
+      form.querySelectorAll(".kind-btn").forEach(b => b.classList.toggle("active", b.dataset.kind === "share"));
+      msg.className = "cform-msg"; msg.textContent = "";
+      syncDisabled();
+      thanks.hidden = true;
+      form.hidden = false;
+      bodyEl.focus();
     });
   }
 
@@ -585,10 +622,13 @@
     const msg = el.querySelector(".rate-msg");
     let selected = savedRating(type, id);
     const paint = n => dots.forEach(d => d.classList.toggle("on", parseInt(d.dataset.score, 10) <= n));
-    if (selected) paint(selected);
+    if (selected) { paint(selected); el.classList.add("rated"); }
     dots.forEach(d => d.addEventListener("click", () => {
       selected = parseInt(d.dataset.score, 10);
       paint(selected);
+      // micro-animation: pop the just-clicked square (reduced-motion disables it)
+      d.classList.remove("pop");
+      requestAnimationFrame(() => d.classList.add("pop"));
       expand.hidden = false;
       commentEl.focus();
     }));
@@ -604,6 +644,7 @@
         storeRating(type, id, selected);
         label.textContent = "You rated this";
         state.textContent = selected + "/5";
+        el.classList.add("rated");
         expand.hidden = true;
         submit.disabled = false; submit.textContent = "Submit";
       } catch (err) {
@@ -663,6 +704,7 @@
       ${feedbackFormHTML()}`;
     Array.prototype.forEach.call(viewEl.children, (el, i) => el.style.setProperty("--i", Math.min(i, 6)));
     wireFeedbackForm(viewEl);
+    revealTiles(viewEl);
     window.scrollTo({ top: 0 });
   }
 
@@ -705,6 +747,7 @@
         ${recentHTML}
       </section>`;
     Array.prototype.forEach.call(viewEl.children, (el, i) => el.style.setProperty("--i", Math.min(i, 6)));
+    revealTiles(viewEl);
     window.scrollTo({ top: 0 });
   }
 
@@ -759,6 +802,7 @@
       </article>`;
     Array.prototype.forEach.call(viewEl.children, (el, i) => el.style.setProperty("--i", Math.min(i, 6)));
     wireRating(viewEl, "card", c.id);
+    revealTiles(viewEl);
     window.scrollTo({ top: 0 });
   }
 
