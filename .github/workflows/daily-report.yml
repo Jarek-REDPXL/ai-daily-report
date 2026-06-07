@@ -1,10 +1,15 @@
 name: Daily AI Briefing
 
 # SCHEDULE DISABLED. Daily generation is handled by the Claude "AI NEWS" routine
-# (free under your Max plan) which commits straight to this repo. This workflow
-# is an OPTIONAL backup that bills the Anthropic API — kept manual-only so it
-# never auto-runs or double-generates. To use it, add the ANTHROPIC_API_KEY
-# secret and run it from the Actions tab. To re-enable the schedule, restore:
+# (free under your Max plan) which commits straight to this repo. This workflow is
+# an OPTIONAL manual-only backup. It authenticates with the Claude Code OAuth token
+# (CLAUDE_CODE_OAUTH_TOKEN secret) so a run bills the Max subscription, NOT the paid
+# API. AUTH GUARDRAIL: wire ONLY claude_code_oauth_token into the Claude step — do
+# NOT add anthropic_api_key there, and do NOT put ANTHROPIC_API_KEY in the job env;
+# if the API key is present it takes precedence and billing goes to the paid API.
+# The ANTHROPIC_API_KEY secret stays in the repo as a manual fallback only.
+# To use this backup: add the CLAUDE_CODE_OAUTH_TOKEN secret and run it from the
+# Actions tab. To re-enable the schedule, restore:
 #   schedule:
 #     - cron: "0 6 * * *"   # 06:00 UTC ≈ 07:00 Europe/London
 on:
@@ -38,7 +43,10 @@ jobs:
       - name: Generate today's briefing with Claude
         uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Max-subscription auth ONLY. Never add anthropic_api_key here (it would
+          # take precedence and bill the paid API). ANTHROPIC_API_KEY is a manual
+          # fallback secret, intentionally not wired into this step or the job env.
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
             Follow the instructions in docs/prompts/daily.md to produce TODAY's
             daily report for "The AI Edge".

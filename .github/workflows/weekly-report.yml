@@ -2,8 +2,13 @@ name: Weekly AI Briefing
 
 # SCHEDULE DISABLED. The weekly edition is produced by the Claude "AI NEWS"
 # routine on MONDAYS (covering the prior full Mon–Sun week; free under Max) and
-# committed to this repo. This workflow is an OPTIONAL API-billed backup —
-# manual-only so it never auto-runs. To re-enable the schedule, restore:
+# committed to this repo. This workflow is an OPTIONAL manual-only backup. It
+# authenticates with the Claude Code OAuth token (CLAUDE_CODE_OAUTH_TOKEN secret)
+# so a run bills the Max subscription, NOT the paid API. AUTH GUARDRAIL: wire ONLY
+# claude_code_oauth_token into the Claude step — do NOT add anthropic_api_key there,
+# and do NOT put ANTHROPIC_API_KEY in the job env; if the API key is present it takes
+# precedence and billing goes to the paid API. The ANTHROPIC_API_KEY secret stays in
+# the repo as a manual fallback only. To re-enable the schedule, restore:
 #   schedule:
 #     - cron: "0 7 * * 1"   # Monday 07:00 UTC (for the week just ended)
 on:
@@ -37,7 +42,10 @@ jobs:
       - name: Generate the weekly briefing with Claude
         uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Max-subscription auth ONLY. Never add anthropic_api_key here (it would
+          # take precedence and bill the paid API). ANTHROPIC_API_KEY is a manual
+          # fallback secret, intentionally not wired into this step or the job env.
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
             Follow the instructions in docs/prompts/weekly.md to produce the
             WEEKLY report for "The AI Edge".
