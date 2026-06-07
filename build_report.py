@@ -92,13 +92,18 @@ code = S("code", fontName="Courier", fontSize=8.5, leading=12, leftIndent=12,
 # ---------- inline HTML → reportlab-safe markup ----------
 import re
 def rl(s):
-    """reports.js uses <b>/<i>/<code> + literal unicode. reportlab Paragraph
-    understands <b>/<i>/<font> and needs raw '&' escaped. Convert <code>."""
+    """reports.js uses <b>/<i>/<code>/<a> + literal unicode. reportlab Paragraph
+    understands <b>/<i>/<font>/<a> and needs raw '&' escaped. Convert <code>.
+    reportlab's <a> accepts ONLY href — any other attribute (rel, target, ...) makes
+    paraparser raise, which would fail the weekly PDF build (and the gate). So
+    normalise every <a> down to just its href."""
     if s is None:
         return ""
     s = str(s)
     # escape ampersands that aren't already entities
     s = re.sub(r"&(?!#?\w+;)", "&amp;", s)
+    # strip rel/target/etc. from anchors — keep ONLY href (reportlab rejects the rest)
+    s = re.sub(r'<a\b[^>]*?\bhref=(["\'])(.*?)\1[^>]*>', r'<a href="\2">', s, flags=re.IGNORECASE)
     s = s.replace("<code>", '<font face="Courier" size="8.5">').replace("</code>", "</font>")
     return s
 

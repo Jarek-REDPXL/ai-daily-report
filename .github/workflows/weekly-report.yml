@@ -80,9 +80,14 @@ jobs:
               the gate (it regenerates all derived files and validates).
             - Do NOT git commit or push — a later workflow step does that.
             Everything else in weekly.md still applies.
+          # Tool allow-list (comma-separated, no spaces) — without this the action
+          # auto-denies file edits in CI. Bash is needed for build_report.py and the
+          # feedback-read curl. NOT granting git commit/push — the deterministic
+          # Commit & push step handles that and the prompt forbids it.
           claude_args: |
             --max-turns 60
-            --model claude-sonnet-4-6
+            --model claude-opus-4-8
+            --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
 
       - name: Quality gate — regenerate derived data + validate (FAILS the run if invalid)
         run: python scripts/check_reports.py
