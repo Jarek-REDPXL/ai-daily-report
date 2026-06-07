@@ -21,6 +21,7 @@ on:
 
 permissions:
   contents: write           # native GITHUB_TOKEN push to the run's branch
+  id-token: write           # lets claude-code-action fetch its OIDC token
 
 concurrency:
   group: ai-edge-daily
