@@ -26,4 +26,5 @@
 
 ## Changelog (one line per run — newest first)
 <!-- YYYY-MM-DD: … -->
+- 2026-06-07: Weekly Issue #3 — paid is the clearest case of the week's "controls collapse into AI defaults" throughline; action items carried forward (fix SOPs to Advantage+ Sales + keep a manual control; Jun 10 YouTube auto-link opt-out check).
 - 2026-06-07: Deep beat — Meta unified Advantage+ (Sales objective default) + Google AI Max/YouTube auto-link. Card updated: card-paid-meta-advantage-plus. Sources: PPC Land, Meta Help, blog.google.

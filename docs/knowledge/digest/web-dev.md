@@ -15,9 +15,12 @@
 
 ## Active threads (ongoing storylines to advance, not repeat)
 <!-- one line each: thread → latest state + date. None yet — seed on first run. -->
+- AI coding assistants → repo-level conventions files becoming the norm: GitHub Copilot reads `.github/copilot-instructions.md` (and path-scoped `.github/instructions/`) on every request in a repo (2026-06-02). Watch whether other assistants standardize an equivalent.
 
 ## Durable lessons (the compounding edge — evergreen takeaways we've taught)
 <!-- promote a thread's conclusion here once it's a stable, reusable principle. -->
+- **State your conventions to the AI once, not per file:** a committed repo instructions file (`.github/copilot-instructions.md`) makes every suggestion follow your stack/naming/test style — the dev version of a persistent-memory loop. Keep rules short and concrete; vague rules get ignored.
 
 ## Changelog (one line per run — newest first)
 <!-- YYYY-MM-DD: … -->
+- 2026-06-07: Weekly Issue #3 (Week of Jun 1–7) — folded the Jun 2 Copilot-conventions play into the "govern the AI default" throughline; seeded the assistant-conventions thread + durable lesson.

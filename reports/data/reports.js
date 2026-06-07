@@ -27,6 +27,110 @@
    ============================================================ */
 window.AI_EDGE_REPORTS = [
 
+  /* ===================== WEEKLY SUMMARY — Issue #3 ===================== */
+  {
+    id: "2026-06-07-weekly",
+    type: "weekly",
+    week: "Week of Jun 1 – 7, 2026",
+    title: "Weekly Briefing — Issue #3",
+    dateLabel: "Week of Jun 1 – Jun 7, 2026",
+    sortDate: "2026-06-07",
+    domains: ["ai-tooling", "web-dev", "web-design", "paid", "social"],
+    pdf: "reports/pdf/weekly-ai-report-2026-06-07.pdf",
+    tldr: [
+      "<b>The week in one idea: the controls collapsed into AI defaults — across model vendors, ad platforms, and the browser — so the edge moved from <i>operating</i> the controls to <i>governing</i> the system.</b> Every domain that moved this week told the same story: the manual lever is being retired; the win is setting the system up once and keeping one guarded control to prove the AI's lift.",
+      "<b>AI/all — build your personal AI operating system:</b> a two-gate model router, a 5-task frozen eval you can run on any new model in an hour, a persistent-memory loop, a private local model (Ollama), and grounded doc Q&A (NotebookLM). Five dailies this week were really one system — stand it up.",
+      "<b>Paid — your SOPs are out of date this week.</b> Meta merged Manual + Advantage+ into one <i>Sales</i> flow (ASC is gone) and Google auto-links your YouTube channel after <b>Jun 10</b> unless you opt out. Two assignable actions below.",
+      "<b>Design + Dev — two free, zero-risk upgrades:</b> Apple-smooth squircle corners in one line of CSS (<code>corner-shape</code>), and teach Copilot your conventions once with <code>.github/copilot-instructions.md</code>.",
+      "<b>Social — the ranking lever moved:</b> Instagram now distributes on <b>sends per reach</b> (private DM shares), not likes. Brief for the forward, measure Sends.",
+      "<b>Sharpen your edge:</b> the connective thread — never hand the AI the wheel without a control. A manual ad set, a frozen eval, a reviewed memory merge, a graceful CSS fallback: each one is how you trust the default without being trapped by it."
+    ],
+    sections: [
+      { h: "The week in one idea: the controls collapsed into AI defaults",
+        blocks: [
+          { sub: "Stop operating the levers — start governing the system",
+            p: "Pull the week's moves together and they rhyme. Meta retired the standalone Advantage+ Shopping campaign and made AI-on the default Sales flow. Google is auto-linking YouTube and pushing AI Max into more formats. Model vendors shipped persistent memory (ChatGPT 'dreaming') and ~100×-cheaper open weights so the model itself is becoming a commodity default. Even the browser shipped a 'premium' visual default (squircle corners) for one line of CSS. The manual lever — building the audience by hand, picking the one model, re-prompting your conventions every time — is being retired across crafts.",
+            note: "Synthesis, not recap: the five dailies this week weren't five unrelated tips. They were one shift seen from five disciplines." },
+          { sub: "So the operator edge moved up a level",
+            p: "When the platform does the optimizing, operating the controls is no longer the skill — <b>governing the system is.</b> That means: choose and judge the model (router + standing eval), give it memory and your conventions, design your inputs for the signal the AI now ranks on (the DM share, a deep creative pool), and — the non-negotiable — keep <b>one guarded manual control</b> to prove the AI's lift on YOUR work before you trust it. Set it up once; verify; then let it run.",
+            doIt: "This week's homework, in one sentence each: stand up a model router + frozen eval (AI), add a repo conventions file (dev), ship one squircle (design), fix your Meta SOPs + the Jun 10 YouTube check (paid), rewrite one brief for sends (social). Details below." }
+        ]
+      },
+      { h: "What changed, and what to do — by domain",
+        intro: "One tight synthesis per domain that actually moved this week. Quiet domains (graphic, email, growth) are skipped on purpose.",
+        blocks: [
+          { sub: "AI tooling — five dailies that are really one system", tags:["ai-tooling"],
+            p: "The week's AI plays compound into a personal operating system, not a pile of tips: <b>Ollama</b> for free/private work your data can't leave the laptop for; a <b>two-gate model picker</b> (capability/cost, then data/jurisdiction); a <b>release-day verdict kit</b> — 5 frozen real tasks you re-run on any new model to get a yes/no in an hour; a <b>persistent-memory loop</b> (distill each session to JSON, re-inject next time) so you stop re-explaining yourself; and <b>NotebookLM</b> for grounded, cited Q&A over your own documents.",
+            doIt: "Pick the two with the highest leverage and do them this week: (1) write your <b>model router</b> — one row per recurring task, the cheapest model that passes a quick eval, re-checked monthly; (2) freeze <b>5 of your real tasks</b> as a scored set so the next model launch is a one-hour decision, not a week of vibes. The rest (memory loop, Ollama, NotebookLM) layer on top.",
+            note: "Why it compounds: models keep getting cheaper and more interchangeable, so the durable value isn't picking today's winner — it's the harness that lets you swap winners safely." },
+          { sub: "Web dev — teach Copilot your conventions once", tags:["web-dev"],
+            p: "The same 'govern the default' move shows up in code: instead of correcting the AI's framework, naming, and test style in every file, you encode the rules once and the assistant follows them on every request.",
+            doIt: "Add <code>.github/copilot-instructions.md</code> at your repo root with plain-English rules (framework/versions, naming, test library, hard always/never lines). Commit it; Copilot Chat attaches it to every request in that repo. Keep it short and concrete — vague rules get ignored.",
+            note: "This is the dev version of the persistent-memory play: state your context once, reuse it forever." },
+          { sub: "Web design — Apple-smooth corners, free and zero-risk", tags:["web-design"],
+            p: "Chromium shipped the CSS <code>corner-shape</code> property (Chrome 139+, ~67% of users), so the iOS 'squircle' super-ellipse is now native CSS — no clip-path/SVG hack. Because <code>border-radius</code> still sets the size and unsupported browsers fall back to normal rounding, it's pure progressive enhancement.",
+            doIt: "On any button/card you already round, add the keyword next to the radius: <code>.btn { border-radius: 28%; corner-shape: squircle; }</code>. Dial it precisely with <code>corner-shape: superellipse(1.5)</code>. No <code>@supports</code> guard needed — Safari/Firefox degrade gracefully.",
+            note: "The keeper principle: gracefully-degrading CSS primitives can ship the day they hit one engine — lead with them." },
+          { sub: "Paid — your playbook is out of date as of this week", tags:["paid","meta-ads","google-ads"],
+            p: "Two platform changes break existing SOPs. <b>Meta</b> merged Manual + Advantage+ into one unified creation flow; standalone 'Advantage+ Shopping' (ASC) is gone, renamed Advantage+ <b>Sales</b> with AI on by default and legacy APIs deprecating. <b>Google</b> expanded AI Max to Shopping + travel and will <b>auto-link your YouTube channel to Google Ads after Jun 10 unless you opt out.</b>",
+            doIt: "(1) Audit every SOP/onboarding doc that says 'create an Advantage+ Shopping campaign' — the new path is Sales objective with the three Advantage+ levers left on; keep one small manual ad set as a 2–3 week control to prove lift. (2) Before <b>Jun 10</b>: Google Ads → Tools → Linked accounts → review the pending YouTube link and confirm or unlink.",
+            note: "Treat Meta's exact learning-phase / ROAS numbers as directional — the Help Center lags real behavior; prove it on your account." },
+          { sub: "Social — distribution follows the private share now", tags:["social"],
+            p: "Instagram unified its top-line metric to 'Views' and the strongest distribution signal is now <b>sends per reach</b> — how often people DM your post to a friend. A private forward is louder evidence the post is worth showing to strangers than a like or even a comment.",
+            doIt: "Rewrite the brief for the forward: a single screenshot-able takeaway, a 'send this to the person who needs it' framing, the hook in the first line/frame, and a soft CTA to share to a specific person. Then judge posts by the <b>Sends</b> count in Insights, not likes.",
+            note: "Saves still win for evergreen/utility content — but for reach, a send beats a save beats a like." }
+        ]
+      },
+      { h: "Techniques & tools worth adopting this week — the keepers",
+        intro: "The survivors after killing 95%. Each is a run-it-today play with a real link.",
+        blocks: [
+          { sub: "The shortlist", tags:["technique"],
+            table: { head: ["Keeper", "What it buys you", "Start here"],
+              rows: [
+                ["Model router + 5-task frozen eval", "Judge any new model in an hour; pay frontier prices only where they earn it", "Artificial Analysis / Promptfoo"],
+                ["Persistent-memory loop", "Stop re-explaining your context every session", "Distill to JSON, re-inject next chat"],
+                ["Ollama (local model)", "Free, private AI for text you can't paste into a cloud chatbot", "ollama run llama3.2"],
+                ["NotebookLM", "Grounded, cited Q&A over your own docs — far less hallucination", "Upload sources, ask in plain English"],
+                ["Copilot conventions file", "Suggestions that already follow your stack and rules", ".github/copilot-instructions.md"],
+                ["corner-shape squircle", "Apple-smooth corners, one line, zero risk", "border-radius + corner-shape: squircle"]
+              ] } }
+        ]
+      },
+      { h: "Predictions ledger — resolved & newly on the board",
+        blocks: [
+          { sub: "Resolved this week",
+            list: [
+              "✅ <b>[ai-tooling] 'Compute/power is THE bottleneck'</b> (made May 30) — reaffirmed Jun 4 by ByteDance ~$70B infra and Anthropic ~$200B cloud/chip commitments.",
+              "⚖️ <b>[ai-tooling] The jobs-narrative reversal would settle</b> (made May 30) — partial: instead of settling it escalated into open labor conflict across multiple jurisdictions."
+            ] },
+          { sub: "Newly on the board (logged this week, still open)",
+            list: [
+              "<b>[web-design]</b> CSS <code>corner-shape</code> ships in a 2nd engine (Safari/Firefox), putting squircles on the path to Baseline — due ~end of 2026.",
+              "<b>[paid]</b> Meta removes the ability to create a fully-manual (Advantage+-off) Sales campaign, making the unified flow mandatory — due ~end of 2026.",
+              "<b>[social]</b> Instagram surfaces 'Sends' as a default top-line metric in post Insights — due ~end of Q3 2026.",
+              "<b>[ai-tooling]</b> MiniMax M3's SWE-Bench Pro 59 claim reproduces (or not) once weights ship — due ~Jun 11; and a Claude Sonnet 4.8 refresh reprices the mid-tier — due ~2–4 weeks.",
+              "<b>[ai-tooling] NEW weekly call:</b> by end of Q3 2026, at least two more major ad/creative platforms will retire a standalone manual campaign type in favor of an AI-default flow (the 'controls collapse' trend continues) — falsifiable by Sep 30."
+            ] }
+        ]
+      },
+      { h: "This week's action list",
+        intro: "Concrete and assignable, per discipline.",
+        checklist: [
+          "AI/all — Write a one-page model router (task → cheapest model that passes a quick eval) and re-check it monthly.",
+          "AI/all — Freeze 5 of your real tasks as a scored eval set so the next model launch is a one-hour yes/no.",
+          "AI/all — Start the persistent-memory loop: distill each session to JSON and re-inject it next time.",
+          "AI/private — Install Ollama and run a local model for anything you can't paste into a cloud chatbot.",
+          "Dev — Add .github/copilot-instructions.md with your stack, naming, test style, and hard always/never rules.",
+          "Design — Ship corner-shape: squircle on one button/card as progressive enhancement (keep the border-radius).",
+          "Paid — Audit SOPs to Meta's unified Advantage+ Sales flow and keep one manual control ad set to prove lift.",
+          "Paid — Before Jun 10: review/confirm the Google Ads → YouTube auto-link (or unlink).",
+          "Social — Rewrite one brief to optimize for sends-per-reach and report Sends in Insights, not likes."
+        ]
+      }
+    ],
+    sources: "<a href='https://ollama.com/' target='_blank' rel='noopener'>Ollama — run open models locally</a> · <a href='https://artificialanalysis.ai/' target='_blank' rel='noopener'>Artificial Analysis (price/speed/quality)</a> · <a href='https://www.promptfoo.dev/' target='_blank' rel='noopener'>Promptfoo (eval across models)</a> · <a href='https://notebooklm.google/' target='_blank' rel='noopener'>Google NotebookLM</a> · <a href='https://docs.github.com/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot' target='_blank' rel='noopener'>GitHub — Copilot repository custom instructions</a> · <a href='https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/corner-shape' target='_blank' rel='noopener'>MDN — corner-shape</a> · <a href='https://www.smashingmagazine.com/2026/03/beyond-border-radius-css-corner-shape-property-ui/' target='_blank' rel='noopener'>Smashing — corner-shape for UI</a> · <a href='https://ppc.land/meta-launches-unified-api-structure-for-advantage-campaigns/' target='_blank' rel='noopener'>PPC Land — Meta unified Advantage+</a> · <a href='https://blog.google/products/ads-commerce/ai-max-new-features/' target='_blank' rel='noopener'>Google — AI Max</a> · <a href='https://sproutsocial.com/insights/instagram-algorithm/' target='_blank' rel='noopener'>Sprout Social — Instagram algorithm 2026</a> · <a href='https://www.anthropic.com/engineering/building-effective-agents' target='_blank' rel='noopener'>Anthropic — Building effective agents</a>"
+  },
+
   /* ===================== DAILY — Sun Jun 7 ===================== */
   {
     id: "2026-06-07-daily",

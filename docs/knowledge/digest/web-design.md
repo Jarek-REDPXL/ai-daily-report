@@ -23,4 +23,5 @@
 
 ## Changelog (one line per run — newest first)
 <!-- YYYY-MM-DD: … -->
+- 2026-06-07: Weekly Issue #3 — squircle `corner-shape` carried as a "keeper" + the design instance of "controls collapse into free platform defaults; lead with gracefully-degrading primitives."
 - 2026-06-07: Deep beat — CSS `corner-shape` squircles (Chrome 139+, graceful fallback). Card: card-webdesign-squircle-corners. Source: MDN, Smashing Mag.

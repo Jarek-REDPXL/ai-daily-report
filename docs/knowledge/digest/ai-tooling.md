@@ -36,8 +36,10 @@
 - **Build compliance artifacts once** (model card + eval suite + red-team + incident runbook), emit per-jurisdiction exports (EU AI Act, US EO/CAISI).
 - **Planner → worker → verifier → merge** is the reliable multi-agent shape; never let one session do everything (context pollution).
 - **The durable skills compound with stronger models:** orchestration, evals, judgment, context engineering, writing Skills (markdown runbooks).
+- **Controls collapse → govern the system, don't operate it (weekly synthesis, Jun 1–7):** vendors/platforms keep retiring manual levers for AI-on defaults. The edge is the harness around the default — router + standing eval to pick/judge models, a persistent-memory loop and a conventions file so context is stated once, grounded Q&A over your own docs — plus one guarded manual control to prove the AI's lift before trusting it. The five Jun 1–7 dailies (Ollama, two-gate picker, release-day verdict kit, memory loop, NotebookLM) are one personal AI operating system, not five tips.
 
 ## Changelog (one line per run — newest first)
+- 2026-06-07: Weekly Issue #3 (Week of Jun 1–7) — synthesized the week's AI plays into one "personal AI operating system" + the cross-domain "controls collapse → govern the system" throughline; logged weekly prediction (≥2 more platforms retire manual campaign types by Sep 30). PDF: weekly-ai-report-2026-06-07.pdf.
 - 2026-06-06: restructured archive to Monday–Sunday weeks; weekly now written on Monday for the prior full week. Issue #1 = Week of May 18–24 (Google I/O), Issue #2 = Week of May 25–31. Added Mon May 18 daily. Sidebar derives week grouping from sortDate.
 - 2026-06-06: digest seeded from May 19 – Jun 6 reports (backfill + autonomous runs).
 - 2026-06-06: ledger split into per-domain digests under docs/knowledge/digest/; this file inherited the AI/tech/markets threads, lessons, and changelog. Shared mission + sourcing moved to _house.md.

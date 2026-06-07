@@ -22,8 +22,8 @@
 | llm-stats.com | ai-tooling | 55 | 2 | 2026-06-06 | model benchmark/price comparison | good for model-router calls |
 | digitalapplied tracker | ai-tooling | 50 | 2 | 2026-06-06 | release/figures tracker | figures directional unless confirmed |
 | blog.google | ai-tooling | 58 | 2 | 2026-06-06 | Google/Gemini primary announcements | primary source |
-| Anthropic (official) | ai-tooling | 60 | 2 | 2026-06-06 | Claude features, research, policy posts | primary source |
-| OpenAI (official) | ai-tooling | 58 | 2 | 2026-06-06 | ChatGPT/model releases | primary source |
+| Anthropic (official) | ai-tooling | 61 | 3 | 2026-06-07 | Claude features, research, policy posts | primary source; "Building effective agents" behind weekly |
+| OpenAI (official) | ai-tooling | 59 | 3 | 2026-06-07 | ChatGPT/model releases, memory | primary source |
 | Bloomberg | ai-tooling | 55 | 2 | 2026-06-06 | markets, M&A, funding | paywalled; cross-check |
 | CNBC | ai-tooling | 50 | 1 | 2026-06-04 | markets/tech business | |
 | The Information | ai-tooling | 55 | 1 | 2026-06-04 | scoops, deep tech-business | paywalled; high signal |
@@ -37,8 +37,14 @@
 | PPC Land | paid | 52 | 1 | 2026-06-07 | ad-platform product/API changes | good Meta/Google changelog signal |
 | Meta Business Help (official) | paid | 55 | 1 | 2026-06-07 | Advantage+ / ads policy | primary; Help Center lags real behavior |
 | Google Ads blog (blog.google/ads) | paid | 55 | 1 | 2026-06-07 | Google Ads/AI Max announcements | primary source |
-| Sprout Social | social | 52 | 1 | 2026-06-07 | platform algorithm/ranking guides | refreshed annually; solid baseline |
+| Sprout Social | social | 53 | 2 | 2026-06-07 | platform algorithm/ranking guides | refreshed annually; solid baseline; behind weekly keeper |
 | Khroma | graphic | 62 | 1 | 2026-06-07 | AI colour palette tool | behind 5★-rated card-graphic-color-palette — keep high |
+| Ollama (ollama.com) | ai-tooling | 54 | 2 | 2026-06-07 | run open-weight models locally (free/private) | tool primary; behind Jun 1 daily + weekly keeper |
+| Google NotebookLM | ai-tooling | 54 | 2 | 2026-06-07 | grounded, cited Q&A over your own docs | tool primary; behind Jun 4 daily + weekly keeper |
+| Artificial Analysis | ai-tooling | 56 | 3 | 2026-06-07 | model price/speed/quality comparison | load-bearing for router/verdict-kit plays |
+| Promptfoo | ai-tooling | 53 | 2 | 2026-06-07 | run an eval set across models, diff outputs | behind release-day verdict kit + router |
+| OpenRouter | ai-tooling | 52 | 2 | 2026-06-07 | A/B models behind one API | behind two-gate picker + router |
+| GitHub Docs (Copilot) | web-dev | 54 | 2 | 2026-06-07 | repo custom-instructions / Copilot config | primary; behind Jun 2 daily + weekly keeper |
 
 <!-- Seed roster began as ai-tooling; web-design/paid/social/graphic rows added as
      those domains started producing. Add email/growth rows as they earn a beat. -->

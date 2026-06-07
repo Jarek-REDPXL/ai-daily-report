@@ -23,4 +23,5 @@
 
 ## Changelog (one line per run — newest first)
 <!-- YYYY-MM-DD: … -->
+- 2026-06-07: Weekly Issue #3 — sends-per-reach carried as a keeper + the social instance of "design your inputs for the signal the AI now ranks on" (brief for the DM forward, measure Sends).
 - 2026-06-07: Deep beat — Instagram sends-per-reach is the dominant 2026 ranking signal. Card: card-social-instagram-sends. Source: Sprout Social.

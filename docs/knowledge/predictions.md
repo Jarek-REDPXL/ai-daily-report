@@ -28,6 +28,7 @@
 - [2026-06-07] [web-design] CSS `corner-shape` ships in a second browser engine (Safari or Firefox), putting squircles on the path to Baseline. — (due ~end of 2026)
 - [2026-06-07] [paid] Meta removes the ability to create a fully-manual (Advantage+-off) Sales campaign in Ads Manager, making the unified Advantage+ flow mandatory. — (due ~end of 2026)
 - [2026-06-07] [social] Instagram surfaces "Sends"/shares as a default top-line metric in post Insights (not buried), reflecting its weight in ranking. — (due ~end of Q3 2026)
+- [2026-06-07] [ai-tooling] Weekly synthesis call ("controls collapse"): ≥2 more major ad/creative platforms retire a standalone manual campaign/workflow type in favor of an AI-default flow. — (due ~Sep 30 2026)
 
 ## Resolved predictions (outcome log — newest first)
 <!-- format: [made → resolved] [domain] ✅/❌/⚖️ claim — outcome note -->
