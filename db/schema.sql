@@ -1,5 +1,6 @@
 CREATE SCHEMA IF NOT EXISTS redpxl;
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE EXTENSION IF NOT EXISTS vector;   -- Phase 2/4: pgvector (clustering + RAG)
 
 CREATE TABLE redpxl.cards (
   id text PRIMARY KEY,
@@ -102,10 +103,49 @@ CREATE TABLE IF NOT EXISTS redpxl.signals (
   fetched_at    timestamptz NOT NULL DEFAULT now(),
   run_date      date NOT NULL DEFAULT (now() AT TIME ZONE 'utc')::date,
   cluster_id    uuid,
-  score         numeric
+  score         numeric,
+  embedding     vector(1536)            -- Phase 2: set by scripts/collectors/cluster.py
 );
 CREATE UNIQUE INDEX IF NOT EXISTS signals_content_hash_uniq ON redpxl.signals (content_hash);
 CREATE INDEX IF NOT EXISTS signals_run_date_idx  ON redpxl.signals (run_date DESC);
 CREATE INDEX IF NOT EXISTS signals_domain_idx    ON redpxl.signals (domain_guess);
 CREATE INDEX IF NOT EXISTS signals_published_idx ON redpxl.signals (published_at DESC);
 CREATE INDEX IF NOT EXISTS signals_cluster_idx   ON redpxl.signals (cluster_id);
+CREATE INDEX IF NOT EXISTS signals_embedding_hnsw ON redpxl.signals USING hnsw (embedding vector_cosine_ops);
+
+-- ── Phase 4: ask-anything retrieval (see db/migrations/004_ask_retrieval.sql) ─
+CREATE TABLE IF NOT EXISTS redpxl.kb_embeddings (
+  kind          text NOT NULL CHECK (kind IN ('card','report')),
+  ref_id        text NOT NULL,
+  content       text NOT NULL,
+  content_hash  text NOT NULL,
+  embedding     vector(1536),
+  updated_at    timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (kind, ref_id)
+);
+CREATE INDEX IF NOT EXISTS kb_embeddings_hnsw ON redpxl.kb_embeddings USING hnsw (embedding vector_cosine_ops);
+
+CREATE TABLE IF NOT EXISTS redpxl.ask_log (
+  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  question   text NOT NULL,
+  matched    boolean NOT NULL DEFAULT false,
+  top_score  numeric,
+  created    timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS ask_log_created_idx ON redpxl.ask_log (created DESC);
+
+-- ── Phase 5: outcome tracking (see db/migrations/005_outcomes.sql) ───────────
+CREATE TABLE IF NOT EXISTS redpxl.outcomes (
+  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  card_id      text NOT NULL REFERENCES redpxl.cards(id) ON DELETE CASCADE,
+  outcome      text NOT NULL CHECK (outcome IN ('shipped','worked','didnt')),
+  note         text,
+  rater        text,
+  client_token text,
+  created      timestamptz NOT NULL DEFAULT now()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS outcomes_token_card_uniq
+  ON redpxl.outcomes (client_token, card_id) WHERE client_token IS NOT NULL;
+CREATE INDEX IF NOT EXISTS outcomes_card_idx ON redpxl.outcomes (card_id);
+CREATE OR REPLACE VIEW redpxl.outcome_summary AS
+  SELECT card_id, outcome, count(*) AS n FROM redpxl.outcomes GROUP BY card_id, outcome;

@@ -27,6 +27,7 @@ import arxiv_src      # noqa: E402
 import github_src     # noqa: E402
 import producthunt    # noqa: E402
 import markets        # noqa: E402
+import youtube        # noqa: E402
 from common import log  # noqa: E402
 
 COLLECTORS = [
@@ -36,6 +37,7 @@ COLLECTORS = [
     ("github", github_src.collect),
     ("producthunt", producthunt.collect),
     ("markets", markets.collect),
+    ("youtube", youtube.collect),
 ]
 
 UPSERT = """

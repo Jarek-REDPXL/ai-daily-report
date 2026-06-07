@@ -21,6 +21,7 @@ venv/
 scripts/collectors/harvest-digest.md
 scripts/collectors/harvest.json
 scripts/collectors/clusters-digest.md
+scripts/collectors/sources-suggestions.md
 
 # Design feedback loop (dev-only tooling — not part of the site)
 shots/

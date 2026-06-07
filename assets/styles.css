@@ -792,6 +792,20 @@ body[data-view="inbox"] .view-page{display:block}
 .rate-msg{font-family:var(--mono);font-size:11px;color:var(--fg-40);margin:10px 0 0}
 .rate-msg.err{color:var(--red)}
 
+/* outcome tracking (Phase 5) — one-tap "did you run this?" on cards */
+.outcome{margin-top:var(--md);background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--sky);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;padding:var(--md) var(--lg)}
+.oc-label{font-family:var(--mono);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--fg-70);display:block;margin-bottom:11px}
+.oc-btns{display:flex;gap:10px;flex-wrap:wrap}
+.oc-btn{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.04em;cursor:pointer;
+  background:var(--panel-2);color:var(--fg-70);border:1px solid var(--line);border-radius:var(--r-pill);
+  padding:7px 14px;transition:border-color var(--t-fast) var(--ease),transform var(--t-fast) var(--ease)}
+.oc-btn:hover{border-color:var(--sky);transform:translateY(-1px)}
+.oc-btn:active{transform:scale(.96)}
+.oc-btn.on{background:var(--sky);border-color:var(--sky);color:#0A0D12}
+.oc-msg{font-family:var(--mono);font-size:11px;color:var(--fg-40);margin:11px 0 0}
+.oc-msg.err{color:var(--red)}
+
 /* ============================================================
    INBOX (N4): team feedback + rating highlights view.
    ============================================================ */

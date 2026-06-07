@@ -3,3 +3,4 @@
 feedparser>=6.0.11
 psycopg[binary]>=3.2
 numpy>=1.26          # Phase 2 clustering (cosine grouping)
+youtube-transcript-api>=0.6   # Phase 5 transcripts (optional; collector degrades to feed summary without it)

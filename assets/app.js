@@ -657,6 +657,41 @@
     });
   }
 
+  // Outcome tracking (Phase 5) — one-tap "did you run this?" so the system learns
+  // from RESULTS, not just clicks. Cards only.
+  const OUTCOME_LABEL = { shipped: "We shipped this", worked: "It worked", didnt: "Didn't work" };
+  function savedOutcome(id) { try { return localStorage.getItem("redpxl-outcome:" + id) || ""; } catch (e) { return ""; } }
+  function outcomeControlHTML(id) {
+    const prior = savedOutcome(id);
+    const btns = Object.keys(OUTCOME_LABEL).map(k =>
+      `<button type="button" class="oc-btn${prior === k ? " on" : ""}" data-outcome="${k}">${OUTCOME_LABEL[k]}</button>`).join("");
+    return `<div class="outcome" data-id="${esc(id)}">
+      <span class="oc-label">${prior ? "You marked this" : "Did you run this?"}</span>
+      <div class="oc-btns" role="group" aria-label="Outcome">${btns}</div>
+      <p class="oc-msg" role="status" aria-live="polite" hidden></p>
+    </div>`;
+  }
+  function wireOutcome(root, id) {
+    const el = root.querySelector(".outcome");
+    if (!el) return;
+    const btns = Array.prototype.slice.call(el.querySelectorAll(".oc-btn"));
+    const label = el.querySelector(".oc-label");
+    const msg = el.querySelector(".oc-msg");
+    btns.forEach(b => b.addEventListener("click", async () => {
+      const outcome = b.dataset.outcome;
+      btns.forEach(x => x.classList.toggle("on", x === b));
+      msg.hidden = true; msg.className = "oc-msg";
+      try {
+        await postJSON("/api/outcome", { card_id: id, outcome: outcome, client_token: clientToken(), hp: "" });
+        try { localStorage.setItem("redpxl-outcome:" + id, outcome); } catch (e) {}
+        label.textContent = "You marked this";
+        msg.hidden = false; msg.textContent = "Thanks — logged.";
+      } catch (err) {
+        msg.hidden = false; msg.textContent = "Couldn't save — try again."; msg.classList.add("err");
+      }
+    }));
+  }
+
   function renderHome() {
     const dailies = META.filter(r => r.type === "daily").slice(0, 6);
     const changed = dailies.map(pulseItemHTML).join("") || `<p class="empty">No intake yet.</p>`;
@@ -812,9 +847,11 @@
         </div>` : ""}
         ${srcAnchors ? `<div class="sources"><h3>Sources</h3><p>${srcAnchors}</p></div>` : ""}
         ${ratingControlHTML("card", c.id)}
+        ${outcomeControlHTML(c.id)}
       </article>`;
     Array.prototype.forEach.call(viewEl.children, (el, i) => el.style.setProperty("--i", Math.min(i, 6)));
     wireRating(viewEl, "card", c.id);
+    wireOutcome(viewEl, c.id);
     revealTiles(viewEl);
     window.scrollTo({ top: 0 });
   }

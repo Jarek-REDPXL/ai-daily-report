@@ -36,7 +36,18 @@ module.exports = async (req, res) => {
            LEFT JOIN redpxl.reports r ON rs.target_type = 'report' AND r.id = rs.target_id
           ORDER BY rs.avg_score DESC, rs.n DESC`
       );
-      res.status(200).json({ ok: true, feedback, ratings });
+      // Outcomes (Phase 5) — what the team actually shipped / found worked. Wrapped
+      // fail-soft so intake still works before migration 005 is applied.
+      let outcomes = [];
+      try {
+        outcomes = await sql.query(
+          `SELECT o.card_id, o.outcome, o.n, c.title
+             FROM redpxl.outcome_summary o
+             LEFT JOIN redpxl.cards c ON c.id = o.card_id
+            ORDER BY o.n DESC`
+        );
+      } catch (e) { outcomes = []; }
+      res.status(200).json({ ok: true, feedback, ratings, outcomes });
       return;
     }
 
