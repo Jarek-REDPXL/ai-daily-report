@@ -25,7 +25,7 @@ permissions:
   id-token: write           # lets claude-code-action fetch its OIDC token
 
 concurrency:
-  group: ai-edge-weekly
+  group: ai-edge-publish   # shared with daily so the two never push concurrently
   cancel-in-progress: false
 
 jobs:
@@ -106,4 +106,14 @@ jobs:
           fi
           git add -A
           git commit -m "weekly: AI briefing for week ending $(date -u +'%Y-%m-%d')"
-          git push "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" HEAD:"${{ github.ref_name }}"
+          # Push with rebase-and-retry: if main moved ahead mid-run (e.g. the daily
+          # workflow landed a commit), fetch + rebase onto it and retry instead of
+          # failing on a non-fast-forward.
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+          for attempt in 1 2 3; do
+            git fetch origin "${{ github.ref_name }}"
+            git rebase "origin/${{ github.ref_name }}" || { git rebase --abort; echo "rebase conflict — failing safely"; exit 1; }
+            git push origin HEAD:"${{ github.ref_name }}" && { echo "pushed"; exit 0; }
+            echo "push attempt $attempt rejected, retrying..."; sleep 5
+          done
+          echo "push failed after retries"; exit 1
