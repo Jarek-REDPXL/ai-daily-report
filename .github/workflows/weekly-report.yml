@@ -1,10 +1,11 @@
 name: Weekly AI Briefing
 
-# SCHEDULE DISABLED (manual-only). The weekly edition is normally produced by the
-# Claude "AI NEWS" cloud routine on MONDAYS (free under Max). This workflow is an
-# OPTIONAL manual backup that runs the SAME spec (docs/NORTH-STAR.md +
-# docs/prompts/weekly.md), regenerates the weekly PDF, then runs the project quality
-# gate (scripts/check_reports.py) so it can NEVER publish broken/stale derived data.
+# SCHEDULE ENABLED — runs every Monday at 07:00 UTC (for the week just ended) and
+# on-demand. Runs the SAME spec as the Claude "AI NEWS" cloud routine (docs/NORTH-STAR.md
+# + docs/prompts/weekly.md), regenerates the weekly PDF, then the project quality gate
+# (scripts/check_reports.py) so it can NEVER publish broken/stale derived data.
+# ⚠ ONE ENGINE ONLY: with this schedule on, the Claude.ai cloud routine must be
+# DISABLED — otherwise both generate the same week's edition and collide.
 #
 # AUTH GUARDRAIL: the Claude step authenticates with claude_code_oauth_token
 # (CLAUDE_CODE_OAUTH_TOKEN) so a run bills the Max subscription, NOT the paid API.
@@ -13,11 +14,11 @@ name: Weekly AI Briefing
 # billing goes to the paid API. ANTHROPIC_API_KEY stays a manual fallback secret.
 #
 # Secrets needed: CLAUDE_CODE_OAUTH_TOKEN (auth) + CRON_SECRET (feedback-read).
-# To re-enable the schedule later, restore:
-#   schedule:
-#     - cron: "0 7 * * 1"   # Monday 07:00 UTC (for the week just ended)
+# To pause the schedule, comment out the `schedule:` block under `on:` (keep workflow_dispatch).
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 7 * * 1"     # Monday 07:00 UTC (for the week just ended)
 
 permissions:
   contents: write           # native GITHUB_TOKEN push to the run's branch
