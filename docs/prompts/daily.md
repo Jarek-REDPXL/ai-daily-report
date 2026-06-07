@@ -5,12 +5,12 @@ Mission & standard: see docs/NORTH-STAR.md — read before writing.
 ## Mission
 Compounding intelligence edge for the RedPxl team across our disciplines — using AI to stay ahead of everyone in our fields. This is a knowledge base, not a news feed: golden, usable judgment that compounds, never raw headlines. Shared standards live in docs/knowledge/digest/_house.md.
 
-## Read team input FIRST (every run, before researching)
-The team writes back — feedback (share / ask / learn_next) and per-card/report ratings. Read it before anything else and let it steer the run:
-- **Fetch** `GET /api/intake` with `Authorization: Bearer <CRON_SECRET>` — the CRON_SECRET the routine already holds (same secret as the sync cron). NEVER write the literal secret into this file or any repo file.
-- **Prioritise requests:** any `ask` / `learn_next` topics become first-class research targets for today's deep beats (cover them as run-it-today plays).
-- **Fold in rating signal:** highly-rated cards/sources → trust and reinforce them (resurface, build on, keep their sources high in sources.md); low-rated ones → reconsider (revisit the play, lower the source's score, or supersede the card).
-- **Close the loop:** after you've acted on the new items, `POST /api/intake` with `{ "ids": [...] }` (same Bearer auth) to mark them `reviewed` so they aren't re-processed next run.
+## Read team input FIRST (every run — but FAIL-SOFT, never blocks the run)
+The team writes back — feedback (share / ask / learn_next) and per-card/report ratings. Try to read it before researching and let it steer the run, BUT the daily report is the priority: team input is an enhancement on top, never a precondition.
+- **Attempt ONCE:** `GET /api/intake` with `Authorization: Bearer <CRON_SECRET>` — the CRON_SECRET the routine already holds (same secret as the sync cron). NEVER write the literal secret into this file or any repo file.
+- **On ANY failure** (auth, network, endpoint down, bad/empty response): do NOT retry, do NOT abort. Log one line that input couldn't be read and **proceed with the normal briefing exactly as if there were no feedback.** Never let this step delay or stop the daily report.
+- **If input WAS read:** prioritise requests — any `ask` / `learn_next` topics become first-class research targets for today's deep beats (cover them as run-it-today plays); and fold in the rating signal — highly-rated cards/sources → trust and reinforce (resurface, build on, keep their sources high in sources.md); low-rated ones → reconsider (revisit the play, lower the source's score, or supersede the card).
+- **Close the loop (best-effort):** if you acted on new items, `POST /api/intake` with `{ "ids": [...] }` (same Bearer auth) to mark them `reviewed` so they aren't re-processed. This too is fail-soft — a failed mark-reviewed must never block or fail the run; just continue.
 
 ## Domains (canonical — scripts/domains.js / docs/DOMAINS.md)
 web-design (FLAGSHIP), web-dev (FLAGSHIP), graphic, email, social, paid, growth, ai-tooling.
