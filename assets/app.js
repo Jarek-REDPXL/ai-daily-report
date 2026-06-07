@@ -351,9 +351,11 @@
     });
 
     if (r.sources) html += `<div class="sources"><h3>Sources</h3><p>${r.sources}</p></div>`;
+    html += ratingControlHTML("report", r.id);
     container.innerHTML = html;
 
     Array.prototype.forEach.call(container.children, (el, i) => el.style.setProperty("--i", Math.min(i, 8)));
+    wireRating(container, "report", r.id);
 
     container.querySelectorAll(".report-nav button[data-go]").forEach(btn => {
       if (btn.dataset.go) btn.addEventListener("click", () => { location.hash = "#/feed/" + btn.dataset.go; });
@@ -464,6 +466,153 @@
     return cardsIndex.filter(c => (c.domains || []).some(d => set.has(d))).length;
   }
 
+  // =========================================================================
+  //  WRITE-BACK: client token (shared), POST helper, feedback form, rating control
+  //  All user input is treated as DATA — sent to the gated API, never rendered as
+  //  HTML. Nothing here ever builds DOM from user-supplied strings.
+  // =========================================================================
+  function clientToken() {
+    try {
+      let t = localStorage.getItem("redpxl-token");
+      if (!t) {
+        t = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+          : "t-" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+        localStorage.setItem("redpxl-token", t);
+      }
+      return t;
+    } catch (e) { return ""; }
+  }
+  function savedRating(type, id) {
+    try { const v = localStorage.getItem("redpxl-rating:" + type + ":" + id); return v ? parseInt(v, 10) : 0; }
+    catch (e) { return 0; }
+  }
+  function storeRating(type, id, score) {
+    try { localStorage.setItem("redpxl-rating:" + type + ":" + id, String(score)); } catch (e) {}
+  }
+  async function postJSON(path, payload) {
+    const r = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+    let data = null; try { data = await r.json(); } catch (e) {}
+    if (!r.ok || !data || !data.ok) throw new Error((data && data.error) || ("HTTP " + r.status));
+    return data;
+  }
+
+  // ---- feedback form (homepage) ----
+  function feedbackFormHTML() {
+    return `<section class="home-block contribute" id="contribute">
+      <div class="hb-head"><h2>Contribute</h2></div>
+      <p class="contribute-sub">Share a win, ask for a play, or tell the system what to learn next — it feeds the next run.</p>
+      <form class="cform" autocomplete="off" novalidate>
+        <div class="cform-kinds" role="group" aria-label="Type of note">
+          <button type="button" class="kind-btn active" data-kind="share">Share a win</button>
+          <button type="button" class="kind-btn" data-kind="ask">Ask for a play</button>
+          <button type="button" class="kind-btn" data-kind="learn_next">Learn next</button>
+        </div>
+        <label class="cform-label" for="cf-body">Your message</label>
+        <textarea id="cf-body" class="cform-body" maxlength="2000" rows="4" required
+          placeholder="e.g. We ran the Advantage+ play and CPA dropped 18% — or: we need a fast way to batch-edit product photos."></textarea>
+        <div class="cform-row">
+          <input class="cform-craft" maxlength="80" aria-label="Craft or topic (optional)" placeholder="Craft / topic (optional)">
+          <input class="cform-name" maxlength="80" aria-label="Your name (optional)" placeholder="Your name (optional)">
+        </div>
+        <input class="cform-hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="cform-foot">
+          <button type="submit" class="cform-submit">Send</button>
+          <span class="cform-msg" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+    </section>`;
+  }
+  function wireFeedbackForm(root) {
+    const form = root.querySelector(".cform");
+    if (!form) return;
+    let kind = "share";
+    form.querySelectorAll(".kind-btn").forEach(btn => btn.addEventListener("click", () => {
+      kind = btn.dataset.kind;
+      form.querySelectorAll(".kind-btn").forEach(b => b.classList.toggle("active", b === btn));
+    }));
+    const msg = form.querySelector(".cform-msg");
+    const submit = form.querySelector(".cform-submit");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const bodyEl = form.querySelector(".cform-body");
+      const body = (bodyEl.value || "").trim();
+      msg.className = "cform-msg"; msg.textContent = "";
+      if (body.length < 1) { msg.textContent = "Add a message first."; msg.classList.add("err"); bodyEl.focus(); return; }
+      submit.disabled = true; submit.textContent = "Sending…";
+      try {
+        await postJSON("/api/feedback", {
+          kind, body,
+          craft: (form.querySelector(".cform-craft").value || "").trim(),
+          submitter: (form.querySelector(".cform-name").value || "").trim(),
+          hp: form.querySelector(".cform-hp").value || ""
+        });
+        // thank-you is STATIC text (never user input)
+        form.innerHTML = `<div class="cform-thanks"><span class="ag-dot" aria-hidden="true"></span>Thanks — your note landed. The next run will see it.</div>`;
+      } catch (err) {
+        submit.disabled = false; submit.textContent = "Send";
+        msg.textContent = "Couldn't send — please try again."; msg.classList.add("err");
+      }
+    });
+  }
+
+  // ---- rating control (card view + feed editions) ----
+  function ratingControlHTML(type, id) {
+    const prior = savedRating(type, id);
+    const dots = [1, 2, 3, 4, 5].map(n =>
+      `<button type="button" class="rate-dot${prior && n <= prior ? " on" : ""}" data-score="${n}" aria-label="Rate ${n} of 5"></button>`).join("");
+    return `<div class="rate" data-type="${esc(type)}" data-id="${esc(id)}">
+      <div class="rate-row">
+        <span class="rate-label">${prior ? "You rated this" : "Rate this play"}</span>
+        <div class="rate-dots" role="group" aria-label="Rating, 1 to 5">${dots}</div>
+        <span class="rate-state">${prior ? prior + "/5" : ""}</span>
+      </div>
+      <div class="rate-expand" hidden>
+        <input type="text" class="rate-comment" maxlength="280" aria-label="Optional comment" placeholder="Optional — one line on why">
+        <button type="button" class="rate-submit btn-sm">Submit</button>
+      </div>
+      <p class="rate-msg" role="status" aria-live="polite" hidden></p>
+    </div>`;
+  }
+  function wireRating(root, type, id) {
+    const el = root.querySelector(".rate");
+    if (!el) return;
+    const dots = Array.prototype.slice.call(el.querySelectorAll(".rate-dot"));
+    const expand = el.querySelector(".rate-expand");
+    const commentEl = el.querySelector(".rate-comment");
+    const submit = el.querySelector(".rate-submit");
+    const label = el.querySelector(".rate-label");
+    const state = el.querySelector(".rate-state");
+    const msg = el.querySelector(".rate-msg");
+    let selected = savedRating(type, id);
+    const paint = n => dots.forEach(d => d.classList.toggle("on", parseInt(d.dataset.score, 10) <= n));
+    if (selected) paint(selected);
+    dots.forEach(d => d.addEventListener("click", () => {
+      selected = parseInt(d.dataset.score, 10);
+      paint(selected);
+      expand.hidden = false;
+      commentEl.focus();
+    }));
+    submit.addEventListener("click", async () => {
+      if (!selected) return;
+      submit.disabled = true; submit.textContent = "Saving…"; msg.hidden = true; msg.className = "rate-msg";
+      try {
+        await postJSON("/api/rating", {
+          target_type: type, target_id: id, score: selected,
+          comment: (commentEl.value || "").trim(),
+          client_token: clientToken(), hp: ""
+        });
+        storeRating(type, id, selected);
+        label.textContent = "You rated this";
+        state.textContent = selected + "/5";
+        expand.hidden = true;
+        submit.disabled = false; submit.textContent = "Submit";
+      } catch (err) {
+        submit.disabled = false; submit.textContent = "Submit";
+        msg.hidden = false; msg.textContent = "Couldn't save — try again."; msg.classList.add("err");
+      }
+    });
+  }
+
   function renderHome() {
     const dailies = META.filter(r => r.type === "daily").slice(0, 6);
     const changed = dailies.map(pulseItemHTML).join("") || `<p class="empty">No intake yet.</p>`;
@@ -509,8 +658,11 @@
       <section class="home-block">
         <div class="hb-head"><h2>Recent cards</h2></div>
         ${recentHTML}
-      </section>`;
+      </section>
+
+      ${feedbackFormHTML()}`;
     Array.prototype.forEach.call(viewEl.children, (el, i) => el.style.setProperty("--i", Math.min(i, 6)));
+    wireFeedbackForm(viewEl);
     window.scrollTo({ top: 0 });
   }
 
@@ -603,8 +755,10 @@
           ${evoGroup("Related", "related", related)}
         </div>` : ""}
         ${srcAnchors ? `<div class="sources"><h3>Sources</h3><p>${srcAnchors}</p></div>` : ""}
+        ${ratingControlHTML("card", c.id)}
       </article>`;
     Array.prototype.forEach.call(viewEl.children, (el, i) => el.style.setProperty("--i", Math.min(i, 6)));
+    wireRating(viewEl, "card", c.id);
     window.scrollTo({ top: 0 });
   }
 

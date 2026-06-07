@@ -660,6 +660,67 @@ body[data-view="card"] .view-page{display:block}
   .cv-meta{gap:8px}
 }
 
+/* ============================================================
+   WRITE-BACK (N3): contribute form + rating control.
+   RedPxl system — red sparingly, mono labels, square-dot motif,
+   no stock star widget, no emoji. Dark default + light.
+   ============================================================ */
+
+/* ---- contribute form (homepage) ---- */
+.contribute{border-top:1px solid var(--line);padding-top:var(--xl);margin-top:var(--xl)}
+.contribute-sub{color:var(--fg-55);font-size:14px;margin:0 0 var(--md);max-width:60ch}
+.cform{position:relative;background:var(--panel);border:1px solid var(--line);
+  border-left:3px solid var(--red);border-radius:0 var(--r-md) var(--r-md) 0;padding:18px 20px}
+.cform-kinds{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:var(--md)}
+.kind-btn{font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;
+  cursor:pointer;padding:7px 12px;border-radius:var(--r-pill);background:var(--panel-2);
+  border:1px solid var(--line);color:var(--fg-55);
+  transition:background-color var(--t-fast) var(--ease),color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease)}
+.kind-btn:hover{color:var(--fg);border-color:var(--line-2)}
+.kind-btn.active{background:var(--red-glow);border-color:transparent;color:var(--fg);position:relative;padding-left:16px}
+.kind-btn.active::before{content:"";position:absolute;left:7px;top:50%;transform:translateY(-50%);width:5px;height:5px;background:var(--red)}
+.cform-label{display:block;font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--fg-55);margin:0 0 7px}
+.cform-body,.cform-row input,.rate-comment{width:100%;background:var(--panel-2);border:1px solid var(--line);
+  border-radius:var(--r-md);color:var(--fg);font-family:var(--font);font-size:14px;padding:11px 13px;outline:none;
+  transition:border-color var(--t-fast) var(--ease),box-shadow var(--t-fast) var(--ease)}
+.cform-body{resize:vertical;min-height:88px;line-height:1.6}
+.cform-body:focus,.cform-row input:focus,.rate-comment:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-glow)}
+.cform-body::placeholder,.cform-row input::placeholder,.rate-comment::placeholder{color:var(--fg-40)}
+.cform-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.cform-row input{flex:1;min-width:160px}
+/* honeypot — off-screen, never shown to humans */
+.cform-hp{position:absolute;left:-9999px;top:auto;width:1px;height:1px;opacity:0;pointer-events:none}
+.cform-foot{display:flex;align-items:center;gap:14px;margin-top:var(--md)}
+.cform-submit,.btn-sm{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  cursor:pointer;padding:10px 20px;border:0;border-radius:var(--r-md);background:var(--red);color:#fff;
+  transition:background-color var(--t-fast) var(--ease),transform var(--t-fast) var(--ease-out)}
+.cform-submit:hover,.btn-sm:hover{background:var(--red-dark)}
+.cform-submit:active,.btn-sm:active{transform:scale(.97)}
+.cform-submit:disabled,.btn-sm:disabled{opacity:.55;cursor:default;transform:none}
+.cform-msg{font-family:var(--mono);font-size:11px;color:var(--fg-40)}
+.cform-msg.err{color:var(--red)}
+.cform-thanks{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;color:var(--fg-70)}
+
+/* ---- rating control (card view + feed editions) ---- */
+.rate{margin-top:var(--xl);border-top:1px solid var(--line);padding-top:var(--md)}
+.rate-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.rate-label{font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--fg-55)}
+.rate-dots{display:inline-flex;gap:6px}
+/* 1–5 as the brand's square-dot motif (NOT stars/emoji) — fills red up to the score */
+.rate-dot{width:15px;height:15px;padding:0;cursor:pointer;background:transparent;
+  border:1px solid var(--line-2);border-radius:2px;
+  transition:background-color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease),transform var(--t-fast) var(--ease-out)}
+.rate-dot:hover{border-color:var(--red)}
+.rate-dot:active{transform:scale(.9)}
+.rate-dot.on{background:var(--red);border-color:var(--red)}
+.rate-state{font-family:var(--mono);font-size:11px;color:var(--red);font-weight:600}
+.rate-expand{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.rate-expand[hidden]{display:none}  /* explicit display:flex would otherwise override the hidden attribute */
+.rate-expand .rate-comment{flex:1;min-width:180px}
+.rate-msg{font-family:var(--mono);font-size:11px;color:var(--fg-40);margin:8px 0 0}
+.rate-msg.err{color:var(--red)}
+
 /* respect reduced motion — kill all of the above */
 @media (prefers-reduced-motion:reduce){
   *{transition:none !important;scroll-behavior:auto;animation:none !important}
