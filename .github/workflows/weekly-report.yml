@@ -95,6 +95,16 @@ jobs:
           CHECK_LINKS: "1"   # Phase 2 trust gate: every published link must resolve (404/410 fails)
         run: python scripts/check_reports.py
 
+      # Embed the published cards + reports into pgvector for /api/ask (Phase 4).
+      # Idempotent + FAIL-SOFT (skips without DATABASE_URL/OPENAI_API_KEY).
+      - name: Embed knowledge base for Ask (RAG)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          pip install --quiet "psycopg[binary]" || echo "psycopg install issue — continuing"
+          python scripts/collectors/embed_kb.py || echo "kb embed failed — continuing fail-soft"
+
       - name: Commit & push
         env:
           # claude-code-action clears the checkout-persisted credential, so the push

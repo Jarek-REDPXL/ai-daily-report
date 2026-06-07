@@ -1,0 +1,13 @@
+{
+  "name": "redpxl-news-mcp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "MCP server exposing the RedPxl News knowledge base (get_latest, search, ask) to Claude Desktop / Cowork.",
+  "bin": { "redpxl-news-mcp": "server.js" },
+  "scripts": { "start": "node server.js" },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@neondatabase/serverless": "^1.0.0"
+  }
+}

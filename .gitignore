@@ -33,3 +33,7 @@ ai-daily-report.tar.gz
 *.bundle
 
 .vercel
+
+# MCP server deps (installed locally by whoever runs it)
+mcp/node_modules/
+mcp/package-lock.json

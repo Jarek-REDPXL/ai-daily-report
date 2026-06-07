@@ -346,6 +346,28 @@ main::before{content:"";position:absolute;top:var(--xl);right:var(--lg);width:46
 .cv-action-label{font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;
   color:var(--sky);display:block;margin-bottom:5px}
 [data-theme="light"] .cv-action-label{color:#2C7DB0}
+
+/* ASK view (#/ask) — RAG over our own knowledge base */
+.ask-view{max-width:760px}
+.ask-h1{font-size:clamp(26px,4vw,38px);font-weight:800;letter-spacing:-.02em;margin:6px 0 8px}
+.ask-sub{color:var(--fg-55);font-size:15px;line-height:1.6;margin:0 0 var(--lg)}
+.ask-form{display:flex;gap:10px;margin-bottom:var(--lg)}
+.ask-form input{flex:1;padding:13px 16px;background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--r-sm);color:var(--fg);font-size:15px;font-family:inherit;outline:none;transition:border-color var(--t-fast) var(--ease)}
+.ask-form input:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-glow)}
+.ask-form button{padding:13px 22px;background:var(--red);color:#fff;border:0;border-radius:var(--r-sm);
+  font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:background var(--t-fast) var(--ease)}
+.ask-form button:hover{background:var(--red-2,#CC2522)}
+.ask-answer{padding:var(--md) var(--lg);background:var(--panel);border-left:3px solid var(--red);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;font-size:16px;line-height:1.75;color:var(--fg)}
+.ask-answer.ask-none{border-left-color:var(--line-2);color:var(--fg-55)}
+.ask-cites{margin-top:var(--md)}
+.ask-cites h3{font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--fg-55);margin:0 0 8px}
+.ask-cites ol{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.ask-cites a{color:var(--fg);text-decoration:none;border-bottom:1px solid var(--red)}
+.ask-cites a:hover{color:var(--red)}
+.ask-kind{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-40);margin-left:6px}
+.ask-err{color:var(--red);font-size:14px}
 .do b{font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;
   color:var(--sky);display:block;margin-bottom:5px}
 [data-theme="light"] .do b{color:#2C7DB0}

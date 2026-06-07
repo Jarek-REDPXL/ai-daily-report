@@ -167,6 +167,7 @@
     { label: "Marketing", hash: "#/hub/marketing", on: v => v.view === "hub" && v.hub === "marketing" },
     { label: "AI", hash: "#/hub/ai", on: v => v.view === "hub" && v.hub === "ai" },
     { label: "News", hash: "#/hub/news", on: v => v.view === "hub" && v.hub === "news" },
+    { label: "Ask", hash: "#/ask", on: v => v.view === "ask" },
     { label: "Feed", hash: "#/feed", on: v => v.view === "feed" },
     { label: "Inbox", hash: "#/inbox", on: v => v.view === "inbox", quiet: true },
   ];
@@ -929,6 +930,51 @@
   }
 
   // =========================================================================
+  //  ASK (#/ask) — retrieval over our OWN knowledge base (RAG, grounded + cited)
+  //  Answers come only from our cards/reports; a miss becomes a learn-next signal.
+  // =========================================================================
+  async function renderAsk() {
+    viewEl.innerHTML = `
+      <section class="ask-view">
+        <div class="hh-kicker"><span class="kicker-rule"></span>Ask the knowledge base</div>
+        <h1 class="ask-h1">Ask anything across our cards &amp; reports</h1>
+        <p class="ask-sub">Answers come only from RedPxl News's own curated base, with citations. No match yet? Your question becomes a learn-next priority for the routine.</p>
+        <form class="ask-form" id="askForm">
+          <input id="askInput" type="text" placeholder="e.g. how do we add app-like page transitions?" autocomplete="off" maxlength="500" required>
+          <button type="submit">Ask</button>
+        </form>
+        <div class="ask-result" id="askResult"></div>
+      </section>`;
+    const form = viewEl.querySelector("#askForm");
+    const input = viewEl.querySelector("#askInput");
+    const out = viewEl.querySelector("#askResult");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const q = input.value.trim();
+      if (q.length < 3) return;
+      out.innerHTML = `<div class="loading">Searching the knowledge base…</div>`;
+      try {
+        const res = await fetch("/api/ask", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: q }),
+        });
+        const data = await res.json();
+        if (!data.ok) { out.innerHTML = `<p class="ask-err">${esc(data.error || "Something went wrong.")}</p>`; return; }
+        if (!data.matched) { out.innerHTML = `<div class="ask-answer ask-none">${esc(data.message || "No match yet — added to learn-next.")}</div>`; return; }
+        const cites = (data.citations || []).map(c =>
+          `<li><a href="${esc(c.hash)}">[${c.n}] ${esc(c.title)}</a> <span class="ask-kind">${esc(c.kind)}</span></li>`).join("");
+        out.innerHTML = `<div class="ask-answer">${esc(data.answer).replace(/\n/g, "<br>")}</div>`
+          + (cites ? `<div class="ask-cites"><h3>Sources</h3><ol>${cites}</ol></div>` : "");
+      } catch (err) {
+        out.innerHTML = `<p class="ask-err">Couldn't reach the knowledge base. Try again in a moment.</p>`;
+      }
+    });
+    input.focus();
+    revealTiles(viewEl);
+    window.scrollTo({ top: 0 });
+  }
+
+  // =========================================================================
   //  Router
   // =========================================================================
   function parseHash() {
@@ -941,6 +987,7 @@
     if (head === "hub") return { view: "hub", hub: (parts[1] || "").toLowerCase() };
     if (head === "card") return { view: "card", id: parts[1] ? decodeURIComponent(parts.slice(1).join("/")) : null };
     if (head === "inbox") return { view: "inbox" };
+    if (head === "ask") return { view: "ask" };
     return { view: "home" };
   }
   let ready = false;
@@ -958,6 +1005,8 @@
       renderCard(route.id);
     } else if (route.view === "inbox") {
       renderInbox();
+    } else if (route.view === "ask") {
+      renderAsk();
     } else {
       renderHome();
     }
