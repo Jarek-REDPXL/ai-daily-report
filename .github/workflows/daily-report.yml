@@ -1,22 +1,26 @@
 name: Daily AI Briefing
 
-# SCHEDULE DISABLED. Daily generation is handled by the Claude "AI NEWS" routine
-# (free under your Max plan) which commits straight to this repo. This workflow is
-# an OPTIONAL manual-only backup. It authenticates with the Claude Code OAuth token
-# (CLAUDE_CODE_OAUTH_TOKEN secret) so a run bills the Max subscription, NOT the paid
-# API. AUTH GUARDRAIL: wire ONLY claude_code_oauth_token into the Claude step — do
-# NOT add anthropic_api_key there, and do NOT put ANTHROPIC_API_KEY in the job env;
-# if the API key is present it takes precedence and billing goes to the paid API.
-# The ANTHROPIC_API_KEY secret stays in the repo as a manual fallback only.
-# To use this backup: add the CLAUDE_CODE_OAUTH_TOKEN secret and run it from the
-# Actions tab. To re-enable the schedule, restore:
+# SCHEDULE DISABLED (manual-only). Daily generation is normally handled by the Claude
+# "AI NEWS" cloud routine (free under Max). This workflow is an OPTIONAL manual backup
+# that runs the SAME spec the cloud routine follows (docs/NORTH-STAR.md +
+# docs/prompts/daily.md), then runs the project quality gate (scripts/check_reports.py)
+# so it can NEVER publish broken/stale derived data.
+#
+# AUTH GUARDRAIL: the Claude step authenticates with claude_code_oauth_token
+# (CLAUDE_CODE_OAUTH_TOKEN) so a run bills the Max subscription, NOT the paid API.
+# Wire ONLY the OAuth token — do NOT add anthropic_api_key to the step and do NOT put
+# ANTHROPIC_API_KEY in the job env; if the API key is present it takes precedence and
+# billing goes to the paid API. ANTHROPIC_API_KEY stays a manual fallback secret.
+#
+# Secrets needed: CLAUDE_CODE_OAUTH_TOKEN (auth) + CRON_SECRET (feedback-read).
+# To re-enable the schedule later, restore:
 #   schedule:
 #     - cron: "0 6 * * *"   # 06:00 UTC ≈ 07:00 Europe/London
 on:
-  workflow_dispatch:        # run on-demand from the Actions tab
+  workflow_dispatch:        # run on-demand from the Actions tab (pick the branch)
 
 permissions:
-  contents: write           # needed so the workflow can commit the new report
+  contents: write           # native GITHUB_TOKEN push to the run's branch
 
 concurrency:
   group: ai-edge-daily
@@ -25,7 +29,7 @@ concurrency:
 jobs:
   daily:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,35 +41,50 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
       - name: Install PDF deps
         run: pip install --quiet reportlab
 
       - name: Generate today's briefing with Claude
         uses: anthropics/claude-code-action@v1
+        env:
+          # Lets daily.md's feedback-read call /api/intake (Bearer). Step-scoped
+          # ONLY — never job-level, and never the API key.
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
         with:
           # Max-subscription auth ONLY. Never add anthropic_api_key here (it would
           # take precedence and bill the paid API). ANTHROPIC_API_KEY is a manual
           # fallback secret, intentionally not wired into this step or the job env.
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
-            Follow the instructions in docs/prompts/daily.md to produce TODAY's
-            daily report for "The AI Edge".
+            Execute the RedPxl News DAILY routine exactly as the repo defines it —
+            the SAME spec the scheduled cloud routine follows. Read and follow, in order:
+              - docs/NORTH-STAR.md   (mission + THE STANDARD — the bar for everything)
+              - docs/prompts/daily.md (the canonical daily editorial spec — authoritative
+                for WHAT to produce and how)
 
-            Hard requirements:
-            - Use web search to gather AI news from the last ~24 hours.
-            - Cross-check surprising figures against a second source; mark
-              fast-moving/forward-looking numbers as directional.
-            - PREPEND one new report object to the array in
-              reports/data/reports.js (newest first). Do NOT delete or overwrite
-              existing reports. Keep the exact object shape used by the existing
-              entries so the site renders it.
-            - Set type:"daily", today's date as sortDate (YYYY-MM-DD), a
-              dateLabel, a 3-5 bullet tldr, and tight sections.
-            - Validate the file is still valid JavaScript after editing.
-            Do NOT git commit or push — a later workflow step handles that.
+            Do everything daily.md specifies: read team input first (fail-soft), research
+            the last ~24h on the 8-domain cadence, PREPEND one dated daily object to
+            reports/data/reports.js WITH its `domains` array (exact existing shape,
+            newest first, never overwrite older entries), create/update the durable cards
+            in reports/data/cards.js, and update the per-domain digests, predictions, and
+            sources — all to THE STANDARD (practical, run-it-today, real links only).
+
+            CI OVERRIDES (only these differ from daily.md's closing steps):
+            - Do NOT run scripts/check_reports.py yourself — a later workflow step runs
+              the gate (it regenerates all derived files and validates).
+            - Do NOT git commit or push — a later workflow step does that.
+            Everything else in daily.md still applies.
           claude_args: |
-            --max-turns 30
+            --max-turns 50
             --model claude-sonnet-4-6
+
+      - name: Quality gate — regenerate derived data + validate (FAILS the run if invalid)
+        run: python scripts/check_reports.py "$(date -u +'%Y-%m-%d')"
 
       - name: Commit & push
         run: |

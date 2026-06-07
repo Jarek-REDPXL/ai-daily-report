@@ -1,21 +1,26 @@
 name: Weekly AI Briefing
 
-# SCHEDULE DISABLED. The weekly edition is produced by the Claude "AI NEWS"
-# routine on MONDAYS (covering the prior full Mon–Sun week; free under Max) and
-# committed to this repo. This workflow is an OPTIONAL manual-only backup. It
-# authenticates with the Claude Code OAuth token (CLAUDE_CODE_OAUTH_TOKEN secret)
-# so a run bills the Max subscription, NOT the paid API. AUTH GUARDRAIL: wire ONLY
-# claude_code_oauth_token into the Claude step — do NOT add anthropic_api_key there,
-# and do NOT put ANTHROPIC_API_KEY in the job env; if the API key is present it takes
-# precedence and billing goes to the paid API. The ANTHROPIC_API_KEY secret stays in
-# the repo as a manual fallback only. To re-enable the schedule, restore:
+# SCHEDULE DISABLED (manual-only). The weekly edition is normally produced by the
+# Claude "AI NEWS" cloud routine on MONDAYS (free under Max). This workflow is an
+# OPTIONAL manual backup that runs the SAME spec (docs/NORTH-STAR.md +
+# docs/prompts/weekly.md), regenerates the weekly PDF, then runs the project quality
+# gate (scripts/check_reports.py) so it can NEVER publish broken/stale derived data.
+#
+# AUTH GUARDRAIL: the Claude step authenticates with claude_code_oauth_token
+# (CLAUDE_CODE_OAUTH_TOKEN) so a run bills the Max subscription, NOT the paid API.
+# Wire ONLY the OAuth token — do NOT add anthropic_api_key to the step and do NOT put
+# ANTHROPIC_API_KEY in the job env; if the API key is present it takes precedence and
+# billing goes to the paid API. ANTHROPIC_API_KEY stays a manual fallback secret.
+#
+# Secrets needed: CLAUDE_CODE_OAUTH_TOKEN (auth) + CRON_SECRET (feedback-read).
+# To re-enable the schedule later, restore:
 #   schedule:
 #     - cron: "0 7 * * 1"   # Monday 07:00 UTC (for the week just ended)
 on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: write           # native GITHUB_TOKEN push to the run's branch
 
 concurrency:
   group: ai-edge-weekly
@@ -24,7 +29,7 @@ concurrency:
 jobs:
   weekly:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 50
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,36 +41,50 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
       - name: Install PDF deps
         run: pip install --quiet reportlab
 
       - name: Generate the weekly briefing with Claude
         uses: anthropics/claude-code-action@v1
+        env:
+          # Lets weekly.md's feedback-read (via the shared spec) call /api/intake
+          # (Bearer). Step-scoped ONLY — never job-level, and never the API key.
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
         with:
           # Max-subscription auth ONLY. Never add anthropic_api_key here (it would
           # take precedence and bill the paid API). ANTHROPIC_API_KEY is a manual
           # fallback secret, intentionally not wired into this step or the job env.
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
-            Follow the instructions in docs/prompts/weekly.md to produce the
-            WEEKLY report for "The AI Edge".
+            Execute the RedPxl News WEEKLY routine exactly as the repo defines it —
+            the SAME spec the scheduled cloud routine follows. Read and follow, in order:
+              - docs/NORTH-STAR.md    (mission + THE STANDARD — the bar for everything)
+              - docs/prompts/weekly.md (the canonical weekly synthesis spec — authoritative)
 
-            Hard requirements:
-            - Review the daily reports already in reports/data/reports.js for the
-              past week, and run fresh web searches to fill gaps.
-            - Cross-check funding/valuation/acquisition/benchmark numbers; mark
-              fast-moving or forward-looking figures as directional.
-            - PREPEND one new report object (type:"weekly") to the array in
-              reports/data/reports.js, matching the existing object shape. Do NOT
-              overwrite older reports.
-            - Update build_report.py's content to match the new weekly report,
-              then run `python3 build_report.py` to regenerate the PDF into
-              reports/pdf/, and set the new object's `pdf:` field to that file.
-            - Validate reports/data/reports.js is still valid JavaScript.
-            Do NOT git commit or push — a later workflow step handles that.
+            Do everything weekly.md specifies: synthesize the week just ended across the
+            domains that moved, PREPEND one type:"weekly" object to reports/data/reports.js
+            WITH its `domains` array (exact existing shape, never overwrite older entries;
+            weekly sortDate = that week's Sunday), run `python3 build_report.py` to
+            regenerate the weekly PDF into reports/pdf/ and set the object's `pdf` field,
+            and update the per-domain digests, predictions, and sources — all to THE
+            STANDARD (practical, real links only).
+
+            CI OVERRIDES (only these differ from weekly.md's closing steps):
+            - Do NOT run scripts/check_reports.py yourself — a later workflow step runs
+              the gate (it regenerates all derived files and validates).
+            - Do NOT git commit or push — a later workflow step does that.
+            Everything else in weekly.md still applies.
           claude_args: |
-            --max-turns 40
+            --max-turns 60
             --model claude-sonnet-4-6
+
+      - name: Quality gate — regenerate derived data + validate (FAILS the run if invalid)
+        run: python scripts/check_reports.py
 
       - name: Commit & push
         run: |
