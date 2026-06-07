@@ -40,4 +40,16 @@ const DOMAIN_LABELS_SHORT = {
 // Platform granularity for the `paid` domain — lives in block-level tags.
 const PAID_PLATFORM_TAGS = ["google-ads", "meta-ads", "snap-ads"];
 
-module.exports = { DOMAINS, DOMAIN_LABELS, DOMAIN_LABELS_SHORT, PAID_PLATFORM_TAGS };
+// HUBS — the 4 navigable craft areas the 8 domains roll up into. SINGLE SOURCE
+// OF TRUTH: build-data.js emits this for the site (reports/data/hubs.json) and the
+// gate validates each hub's domains against DOMAINS, so the mapping never drifts.
+// Human-readable version + rationale: docs/DOMAINS.md "Hubs".
+const HUBS = {
+  design:      { label: "Design",      scope: "UI/UX, frontend craft, brand & visual systems.",  domains: ["web-design", "graphic"] },
+  development: { label: "Development", scope: "Build, code, performance, architecture & tooling.", domains: ["web-dev"] },
+  marketing:   { label: "Marketing",   scope: "Email, social, paid and growth strategy.",          domains: ["email", "social", "paid", "growth"] },
+  ai:          { label: "AI",          scope: "AI tools, skills & techniques for every craft.",    domains: ["ai-tooling"] },
+};
+const HUB_ORDER = ["design", "development", "marketing", "ai"];
+
+module.exports = { DOMAINS, DOMAIN_LABELS, DOMAIN_LABELS_SHORT, PAID_PLATFORM_TAGS, HUBS, HUB_ORDER };

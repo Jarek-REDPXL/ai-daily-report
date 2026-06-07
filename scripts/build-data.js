@@ -12,7 +12,7 @@
  */
 const fs = require("fs");
 const path = require("path");
-const { DOMAINS, DOMAIN_LABELS, DOMAIN_LABELS_SHORT } = require("./domains.js"); // single source of truth for slugs + labels
+const { DOMAINS, DOMAIN_LABELS, DOMAIN_LABELS_SHORT, HUBS, HUB_ORDER } = require("./domains.js"); // single source of truth for slugs + labels + hubs
 
 const REPO = path.resolve(__dirname, "..");
 const SRC = path.join(REPO, "reports", "data", "reports.js");
@@ -21,6 +21,8 @@ const OUT_INDEX = path.join(REPO, "reports", "data", "index.json");
 const OUT_META = path.join(REPO, "reports", "data", "index.meta.json");
 const OUT_DIR = path.join(REPO, "reports", "data", "entries");
 const OUT_CARDS_DIR = path.join(REPO, "reports", "data", "cards");
+const OUT_CARDS_INDEX = path.join(REPO, "reports", "data", "cards-index.json");
+const OUT_HUBS = path.join(REPO, "reports", "data", "hubs.json");
 
 global.window = {};
 eval(fs.readFileSync(SRC, "utf8"));
@@ -96,6 +98,22 @@ for (const f of fs.readdirSync(OUT_CARDS_DIR)) {
   if (f.endsWith(".json") && !keepCards.has(f)) fs.unlinkSync(path.join(OUT_CARDS_DIR, f));
 }
 
+// slim card index for fast lookups + home/hub listing (id → which domain file to
+// load for the full card). Newest-updated first.
+const cardsIndex = cards.map(c => ({
+  id: c.id, title: c.title, summary: c.summary, domains: c.domains || [],
+  confidence: c.confidence, status: c.status, updated: c.updated || c.created || "",
+}));
+fs.writeFileSync(OUT_CARDS_INDEX, JSON.stringify(cardsIndex, null, 0));
+
+// hubs.json — the hub→domains rollup, sourced from domains.js (single source of
+// truth). Emitted as an ordered array so app.js iterates it directly with no
+// mirrored copy. The site computes per-hub card counts itself (distinct cards).
+const hubsOut = HUB_ORDER.filter(k => HUBS[k]).map(k => ({
+  key: k, label: HUBS[k].label, scope: HUBS[k].scope, domains: HUBS[k].domains || [],
+}));
+fs.writeFileSync(OUT_HUBS, JSON.stringify(hubsOut, null, 0));
+
 // one file per full report
 const keep = new Set();
 for (const r of all) {
@@ -109,5 +127,5 @@ for (const f of fs.readdirSync(OUT_DIR)) {
 
 console.log("build-data: wrote index.json (" + index.length + ") + index.meta.json ("
   + domainsFacet.length + " domains, " + cardsFacet.length + " card-domains) + "
-  + keep.size + " entry files + " + keepCards.size + " card files ("
-  + cards.length + " cards)");
+  + keep.size + " entry files + " + keepCards.size + " card files + cards-index.json ("
+  + cards.length + " cards) + hubs.json (" + hubsOut.length + " hubs)");

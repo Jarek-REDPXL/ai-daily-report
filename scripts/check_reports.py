@@ -50,6 +50,17 @@ def valid_domains():
         pass
     sys.exit("FAIL: could not load valid domain slugs from scripts/domains.js")
 
+def load_hubs():
+    """Read the HUBS map from scripts/domains.js (single source of truth) so the
+    gate can validate hub→domain mappings against the canonical slugs."""
+    node_script = "process.stdout.write(JSON.stringify(require(process.argv[1]).HUBS||{}));"
+    try:
+        out = subprocess.run(["node", "-e", node_script, DOMAINS_JS],
+                             capture_output=True, check=True)
+        return json.loads(out.stdout.decode("utf-8", "replace"))
+    except Exception:
+        return {}
+
 def _eval_global(js_path, global_name, label):
     node_script = (
         "const fs=require('fs');global.window={};"
@@ -150,6 +161,21 @@ def main():
             errors.append("duplicate card ids: %s" % ", ".join(sorted(map(str, cdupes))))
     else:
         warnings.append("cards.js not found — card layer not validated")
+
+    # ---- HUBS — each hub's domains must be valid slugs (drift guard) ----
+    hubs = load_hubs()
+    if hubs:
+        for hub, spec in hubs.items():
+            hdoms = spec.get("domains") if isinstance(spec, dict) else None
+            if not isinstance(hdoms, list) or not hdoms:
+                errors.append("hub %r has no domains" % hub)
+                continue
+            hbad = [d for d in hdoms if d not in valid]
+            if hbad:
+                errors.append("hub %r invalid domain slug(s): %s (valid: %s)"
+                              % (hub, ", ".join(map(str, hbad)), ", ".join(sorted(valid))))
+    else:
+        warnings.append("no HUBS defined in scripts/domains.js — hub mapping not validated")
 
     # sorted newest-first by sortDate
     dates = [r.get("sortDate", "") for r in reports]

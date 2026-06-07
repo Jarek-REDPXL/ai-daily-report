@@ -1,8 +1,11 @@
-/* RedPxl News — renderer.
-   Loads a lightweight index.json (metadata + search blob), then lazy-loads each
-   full report from reports/data/entries/<id>.json on demand (cached). Falls back
-   to the legacy single-file window.AI_EDGE_REPORTS if the fetch path fails, so the
-   site never hard-breaks. */
+/* RedPxl News — knowledge center shell.
+   Hash-based client-side routing over multiple views:
+     #/            home pulse
+     #/feed[/<id>] the report reader (intake feed) — preserved exactly as before
+     #/hub/<hub>   a craft hub (design|development|marketing|ai)
+     #/card/<id>   a single knowledge card
+   No hash / unknown → home. The reader (search + domain chips + Mon–Sun archive +
+   report container + pager/keyboard-nav) is unchanged; it now lives under #/feed. */
 (function () {
   const container = document.getElementById("report-container");
   const nav = document.getElementById("archive-nav");
@@ -12,33 +15,32 @@
   const sidebar = document.getElementById("sidebar");
   const scrim = document.getElementById("scrim");
 
-  let META = [];                 // lightweight metadata array (newest-first)
+  let META = [];                 // lightweight report metadata array (newest-first)
   const cache = {};              // id -> full report object (lazy)
   let legacy = null;             // window.AI_EDGE_REPORTS if we fall back
 
   // ---- domain filter state (purely additive; off unless the facet loads) ----
-  // Chip labels come from the facet (index.meta.json), which is built from
-  // scripts/domains.js — the single source of truth. Nothing is mirrored here.
-  let domainFacet = [];          // [{slug,count,label,fullLabel}] from index.meta.json (empty = no chips)
+  let domainFacet = [];          // [{slug,count,label,fullLabel}] from index.meta.json
   let domainFilter = null;       // selected slug, or null for "All"
 
+  // ---- cards (durable knowledge atoms) ----
+  let cardsIndex = [];           // slim cards [{id,title,summary,domains,confidence,status,updated}]
+  const cardCache = {};          // id -> full card
+  let legacyCards = null;        // window.AI_EDGE_CARDS fallback
+
+  // Hubs roll the 8 domains up into 4 craft areas. Loaded from reports/data/hubs.json
+  // (emitted from scripts/domains.js — the single source of truth). Never mirrored
+  // here; empty until loaded, and the views degrade gracefully if it's missing.
+  let HUBS = {};
+  let HUB_ORDER = [];
+
   const sortFn = (a, b) => (a.sortDate < b.sortDate ? 1 : (a.sortDate > b.sortDate ? -1 : (a.type === "weekly" ? -1 : 1)));
+  const byUpdated = (a, b) => ((a.updated || "") < (b.updated || "") ? 1 : ((a.updated || "") > (b.updated || "") ? -1 : 0));
+  const esc = s => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-  // Sidecar facet load — own try/catch so any failure leaves the site exactly as
-  // it is today (no chips, base rendering untouched). Never throws.
-  async function loadDomainFacet() {
-    try {
-      const res = await fetch("reports/data/index.meta.json", { cache: "no-cache" });
-      if (!res.ok) throw new Error("meta " + res.status);
-      const m = await res.json();
-      const d = m && Array.isArray(m.domains) ? m.domains : [];
-      return d.filter(x => x && x.slug);
-    } catch (e) {
-      return [];
-    }
-  }
-
-  // ---------- data loading (with legacy fallback) ----------
+  // =========================================================================
+  //  Data loading (each with its own safety net)
+  // =========================================================================
   async function loadIndex() {
     try {
       const res = await fetch("reports/data/index.json", { cache: "no-cache" });
@@ -47,7 +49,6 @@
       if (Array.isArray(idx) && idx.length) return idx.slice().sort(sortFn);
       throw new Error("empty index");
     } catch (e) {
-      // fallback: load the legacy single file and derive metadata from it
       legacy = await loadLegacy();
       if (legacy && legacy.length) {
         legacy.forEach(r => { cache[r.id] = r; });
@@ -85,8 +86,101 @@
       return null;
     }
   }
+  async function loadDomainFacet() {
+    try {
+      const res = await fetch("reports/data/index.meta.json", { cache: "no-cache" });
+      if (!res.ok) throw new Error("meta " + res.status);
+      const m = await res.json();
+      const d = m && Array.isArray(m.domains) ? m.domains : [];
+      return d.filter(x => x && x.slug);
+    } catch (e) { return []; }
+  }
+  async function loadCardsIndex() {
+    try {
+      const res = await fetch("reports/data/cards-index.json", { cache: "no-cache" });
+      if (!res.ok) throw new Error("cards-index " + res.status);
+      const arr = await res.json();
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+  async function loadHubs() {
+    // returns [{key,label,scope,domains}] (ordered) or [] — own try/catch, never throws
+    try {
+      const res = await fetch("reports/data/hubs.json", { cache: "no-cache" });
+      if (!res.ok) throw new Error("hubs " + res.status);
+      const arr = await res.json();
+      return Array.isArray(arr) ? arr.filter(h => h && h.key) : [];
+    } catch (e) { return []; }
+  }
+  function loadLegacyCards() {
+    if (window.AI_EDGE_CARDS) return Promise.resolve(window.AI_EDGE_CARDS);
+    return new Promise(resolve => {
+      const s = document.createElement("script");
+      s.src = "reports/data/cards.js";
+      s.onload = () => resolve(window.AI_EDGE_CARDS || []);
+      s.onerror = () => resolve([]);
+      document.head.appendChild(s);
+    });
+  }
+  async function getCard(id) {
+    if (cardCache[id]) return cardCache[id];
+    const slim = cardsIndex.find(c => c.id === id);
+    const dom = slim && slim.domains && slim.domains[0];
+    if (dom) {
+      try {
+        const res = await fetch("reports/data/cards/" + dom + ".json", { cache: "no-cache" });
+        if (res.ok) {
+          const arr = await res.json();
+          arr.forEach(c => { cardCache[c.id] = c; });
+          if (cardCache[id]) return cardCache[id];
+        }
+      } catch (e) { /* fall through to legacy */ }
+    }
+    legacyCards = legacyCards || await loadLegacyCards();
+    const c = (legacyCards || []).find(x => x.id === id);
+    if (c) { cardCache[id] = c; return c; }
+    return null;
+  }
 
-  // ---- theme (RedPxl defaults to DARK; toggle opts into light) ----
+  // =========================================================================
+  //  Top nav (route switcher) — injected so index.html stays minimal
+  // =========================================================================
+  const NAVLINKS = [
+    { label: "Home", hash: "#/", on: v => v.view === "home" },
+    { label: "Design", hash: "#/hub/design", on: v => v.view === "hub" && v.hub === "design" },
+    { label: "Development", hash: "#/hub/development", on: v => v.view === "hub" && v.hub === "development" },
+    { label: "Marketing", hash: "#/hub/marketing", on: v => v.view === "hub" && v.hub === "marketing" },
+    { label: "AI", hash: "#/hub/ai", on: v => v.view === "hub" && v.hub === "ai" },
+    { label: "Feed", hash: "#/feed", on: v => v.view === "feed" },
+  ];
+  let topnav = null, viewEl = null;
+  function buildShell() {
+    const topbar = document.querySelector(".topbar");
+    if (topbar) {
+      topnav = document.createElement("nav");
+      topnav.className = "topnav";
+      topnav.setAttribute("aria-label", "Sections");
+      topnav.innerHTML = NAVLINKS.map(l =>
+        `<a class="topnav-link" data-hash="${l.hash}" href="${l.hash}">${l.label}</a>`).join("");
+      topbar.appendChild(topnav);
+    }
+    const layout = document.querySelector(".layout");
+    viewEl = document.createElement("main");
+    viewEl.className = "view-page";
+    viewEl.id = "view";
+    if (layout && layout.parentNode) layout.parentNode.insertBefore(viewEl, layout.nextSibling);
+  }
+  function markNav(route) {
+    if (!topnav) return;
+    topnav.querySelectorAll(".topnav-link").forEach(a => {
+      const l = NAVLINKS.find(x => x.hash === a.dataset.hash);
+      a.classList.toggle("active", !!(l && l.on(route)));
+    });
+  }
+
+  // =========================================================================
+  //  THE FEED (intake reader) — preserved exactly; only hash writes changed
+  // =========================================================================
   const tt = document.getElementById("theme-toggle");
   tt.addEventListener("click", () => {
     const isLight = document.documentElement.getAttribute("data-theme") === "light";
@@ -94,12 +188,10 @@
     else { document.documentElement.setAttribute("data-theme", "light"); localStorage.setItem("redpxl-theme", "light"); }
   });
 
-  // ---- mobile sidebar ----
   function setSidebar(open){ sidebar.classList.toggle("open", open); scrim.classList.toggle("open", open); }
   document.getElementById("menu-btn").addEventListener("click", () => setSidebar(!sidebar.classList.contains("open")));
   scrim.addEventListener("click", () => setSidebar(false));
 
-  // ---- scroll progress (rAF-throttled) ----
   const bar = document.getElementById("progressbar");
   let ticking = false;
   window.addEventListener("scroll", () => {
@@ -111,7 +203,6 @@
     });
   }, { passive: true });
 
-  // ---- Mon–Sun week label derived from sortDate ----
   const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   function weekLabel(sortDate) {
     const [y, m, d] = String(sortDate).split("-").map(Number);
@@ -149,28 +240,29 @@
     nav.innerHTML = "";
     const f = (filter || "").trim().toLowerCase();
     weeks.forEach(w => {
-      // visible set = matches search AND selected domain (domain off => no constraint)
       const items = byWeek[w].filter(r =>
         (!f || (r.q || "").includes(f)) &&
         (!domainFilter || (r.domains || []).includes(domainFilter)));
-      if (!items.length) return; // hide weeks with no matching entries
+      if (!items.length) return;
       const grp = document.createElement("div");
       grp.className = "week-group";
       grp.innerHTML = `<div class="week-label">${w}</div>` + items.map(navItemHTML).join("");
       nav.appendChild(grp);
     });
-    nav.querySelectorAll(".nav-item").forEach(b => b.addEventListener("click", () => { show(b.dataset.id); setSidebar(false); }));
+    nav.querySelectorAll(".nav-item").forEach(b => b.addEventListener("click", () => {
+      setSidebar(false);
+      location.hash = "#/feed/" + b.dataset.id;   // route owns navigation
+    }));
     markActive();
   }
   searchEl.addEventListener("input", () => buildNav(searchEl.value));
 
-  // ---- domain filter chips (only built when the facet loaded) ----
   function setDomain(slug) {
     domainFilter = slug || null;
     try {
       if (domainFilter) localStorage.setItem("redpxl-domain", domainFilter);
       else localStorage.removeItem("redpxl-domain");
-    } catch (e) { /* storage may be unavailable; filter still works in-session */ }
+    } catch (e) {}
     markChips();
     buildNav(searchEl.value);
   }
@@ -180,7 +272,7 @@
     });
   }
   function renderChips() {
-    if (!domainFacet.length) return; // fail-safe: no facet => no chips, behave as today
+    if (!domainFacet.length) return;
     const wrap = document.createElement("div");
     wrap.className = "domain-filter";
     wrap.setAttribute("role", "group");
@@ -193,15 +285,14 @@
       html += `<button class="dchip" data-domain="${d.slug}" title="${full}">${label} <span class="dchip-count">${d.count}</span></button>`;
     });
     wrap.innerHTML = html;
-    nav.parentNode.insertBefore(wrap, nav); // sits above the archive nav, below the search
+    nav.parentNode.insertBefore(wrap, nav);
     wrap.querySelectorAll(".dchip").forEach(c => c.addEventListener("click", () => {
       const slug = c.dataset.domain || null;
-      setDomain(slug === domainFilter ? null : slug); // re-click active or "All" clears
+      setDomain(slug === domainFilter ? null : slug);
     }));
     markChips();
   }
 
-  // ---- rendering ----
   const tags = a => (!a || !a.length) ? "" : `<span class="tags">${a.map(t => `<span class="tag ${t}">${t}</span>`).join("")}</span>`;
   const list = a => `<ul>${a.map(li => `<li>${li}</li>`).join("")}</ul>`;
   const table = t => `<div class="tbl-wrap"><table><thead><tr>${t.head.map(h => `<th>${h}</th>`).join("")}</tr></thead>` +
@@ -261,7 +352,7 @@
     Array.prototype.forEach.call(container.children, (el, i) => el.style.setProperty("--i", Math.min(i, 8)));
 
     container.querySelectorAll(".report-nav button[data-go]").forEach(btn => {
-      if (btn.dataset.go) btn.addEventListener("click", () => show(btn.dataset.go));
+      if (btn.dataset.go) btn.addEventListener("click", () => { location.hash = "#/feed/" + btn.dataset.go; });
     });
     container.querySelectorAll(".checklist input").forEach(cb => {
       const key = "aiedge-ck-" + cb.dataset.ck;
@@ -279,10 +370,9 @@
     if (!meta) return;
     currentId = meta.id;
     markActive();
-    if (location.hash.slice(1) !== meta.id) history.replaceState(null, "", "#" + meta.id);
     container.innerHTML = '<div class="loading">Loading…</div>';
     const full = await getEntry(meta.id);
-    if (currentId !== meta.id) return; // a newer navigation superseded this one
+    if (currentId !== meta.id) return;
     if (!full) { container.innerHTML = '<div class="loading">Could not load this report.</div>'; return; }
     render(full);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -299,41 +389,204 @@
       if (r.top < sb.top + 70 || r.bottom > sb.bottom - 10) activeEl.scrollIntoView({ block: "center", behavior: "smooth" });
     }
   }
-  window.addEventListener("hashchange", () => { const id = location.hash.slice(1); if (id && id !== currentId) show(id); });
 
-  // ---- keyboard nav ----
   document.addEventListener("keydown", (e) => {
+    if (document.body.dataset.view !== "feed") return;     // arrows/search only in feed
     const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
     if (e.key === "/" && !typing) { e.preventDefault(); searchEl.focus(); return; }
     if (e.key === "Escape" && document.activeElement === searchEl) { searchEl.blur(); return; }
     if (typing) return;
     const idx = META.findIndex(x => x.id === currentId);
-    if (e.key === "ArrowLeft" && META[idx - 1]) { e.preventDefault(); show(META[idx - 1].id); }
-    else if (e.key === "ArrowRight" && META[idx + 1]) { e.preventDefault(); show(META[idx + 1].id); }
+    if (e.key === "ArrowLeft" && META[idx - 1]) { e.preventDefault(); location.hash = "#/feed/" + META[idx - 1].id; }
+    else if (e.key === "ArrowRight" && META[idx + 1]) { e.preventDefault(); location.hash = "#/feed/" + META[idx + 1].id; }
   });
 
-  // ---- init ----
+  // =========================================================================
+  //  HOME / HUB / CARD views
+  // =========================================================================
+  function cardTileHTML(c) {
+    const conf = c.confidence ? `<span class="kc-conf ${c.confidence}">${c.confidence}</span>` : "";
+    const sup = c.status === "superseded" ? `<span class="kc-conf superseded">superseded</span>` : "";
+    const doms = (c.domains || []).map(d => `<span class="kc-dom">${esc(d)}</span>`).join("");
+    return `<a class="kcard" href="#/card/${encodeURIComponent(c.id)}">
+        <div class="kc-top">${conf}${sup}<span class="kc-updated">${esc(c.updated || "")}</span></div>
+        <h4 class="kc-title">${esc(c.title)}</h4>
+        <p class="kc-summary">${esc(c.summary)}</p>
+        <div class="kc-doms">${doms}</div>
+      </a>`;
+  }
+  function hubCount(hub) {
+    const set = new Set(HUBS[hub].domains);
+    // distinct cards whose domains intersect the hub's domain set
+    return cardsIndex.filter(c => (c.domains || []).some(d => set.has(d))).length;
+  }
+
+  function renderHome() {
+    const dailies = META.filter(r => r.type === "daily").slice(0, 7);
+    const changed = dailies.map(r =>
+      `<a class="pulse-item" href="#/feed/${encodeURIComponent(r.id)}">
+        <span class="pulse-date">${esc(r.dateLabel.replace(/,? 2026$/, ""))}</span>
+        <span class="pulse-title">${esc(r.title)}</span>
+        ${(r.domains || []).map(d => `<span class="pulse-dom">${esc(d)}</span>`).join("")}
+      </a>`).join("") || `<p class="empty">No intake yet.</p>`;
+
+    const tiles = HUB_ORDER.map(h => {
+      const n = hubCount(h);
+      return `<a class="hub-tile hub-${h}" href="#/hub/${h}">
+          <span class="ht-label">${HUBS[h].label}</span>
+          <span class="ht-scope">${esc(HUBS[h].scope)}</span>
+          <span class="ht-count">${n} card${n === 1 ? "" : "s"}</span>
+        </a>`;
+    }).join("");
+
+    const recent = cardsIndex.slice().sort(byUpdated).slice(0, 6);
+    const recentHTML = recent.length
+      ? `<div class="kcard-grid">${recent.map(cardTileHTML).join("")}</div>`
+      : `<p class="empty">No cards yet — they appear as the routine distils durable plays.</p>`;
+
+    viewEl.innerHTML = `
+      <section class="home-hero">
+        <div class="hh-kicker"><span class="kicker-rule"></span>Knowledge Center</div>
+        <h1 class="hh-title">The pulse</h1>
+        <p class="hh-sub">What changed across the crafts, and the plays worth keeping.</p>
+      </section>
+
+      <section class="home-block">
+        <div class="hb-head"><h2>What changed</h2><a class="hb-more" href="#/feed">Open the feed →</a></div>
+        <div class="pulse-list">${changed}</div>
+      </section>
+
+      <section class="home-block">
+        <div class="hb-head"><h2>Hubs</h2></div>
+        <div class="hub-tiles">${tiles}</div>
+      </section>
+
+      <section class="home-block">
+        <div class="hb-head"><h2>Recent cards</h2></div>
+        ${recentHTML}
+      </section>`;
+    Array.prototype.forEach.call(viewEl.children, (el, i) => el.style.setProperty("--i", Math.min(i, 6)));
+    window.scrollTo({ top: 0 });
+  }
+
+  function renderHub(hub) {
+    if (!HUBS[hub]) { location.hash = "#/"; return; }
+    const set = new Set(HUBS[hub].domains);
+    const cards = cardsIndex.filter(c => (c.domains || []).some(d => set.has(d))).sort(byUpdated);
+    const body = cards.length
+      ? `<div class="kcard-grid">${cards.map(cardTileHTML).join("")}</div>`
+      : `<p class="empty">No cards in this hub yet — they fill in as the routine runs.</p>`;
+    viewEl.innerHTML = `
+      <section class="hub-header">
+        <div class="hh-kicker"><span class="kicker-rule"></span>Hub</div>
+        <h1 class="hh-title">${esc(HUBS[hub].label)}</h1>
+        <p class="hh-sub">${esc(HUBS[hub].scope)} <span class="hub-domnote">Domains: ${HUBS[hub].domains.map(esc).join(", ")}</span></p>
+      </section>
+      <section class="home-block"><div class="hb-head"><h2>${cards.length} card${cards.length === 1 ? "" : "s"}</h2></div>${body}</section>`;
+    Array.prototype.forEach.call(viewEl.children, (el, i) => el.style.setProperty("--i", Math.min(i, 6)));
+    window.scrollTo({ top: 0 });
+  }
+
+  function cardLinkById(id) {
+    const c = cardsIndex.find(x => x.id === id);
+    const label = c ? c.title : id;
+    return `<a href="#/card/${encodeURIComponent(id)}">${esc(label)}</a>`;
+  }
+  async function renderCard(id) {
+    viewEl.innerHTML = '<div class="loading">Loading…</div>';
+    const c = id ? await getCard(id) : null;
+    if (document.body.dataset.view !== "card") return; // superseded by another nav
+    if (!c) { viewEl.innerHTML = `<section class="card-view"><p class="empty">Card not found. <a href="#/">Back to home</a></p></section>`; return; }
+    const how = (c.how || []).map(s => `<li>${s}</li>`).join("");
+    const doms = (c.domains || []).map(d => `<span class="kc-dom">${esc(d)}</span>`).join("");
+    const tagsHTML = (c.tags || []).map(t => `<span class="tag ${esc(t)}">${esc(t)}</span>`).join("");
+    const rel = (c.related || []).filter(Boolean);
+    const sup = (c.supersedes || []).filter(Boolean);
+    viewEl.innerHTML = `
+      <article class="card-view">
+        <div class="cv-back"><a href="#/">← Home</a></div>
+        <div class="hh-kicker"><span class="kicker-rule"></span>Knowledge Card</div>
+        <h1 class="cv-title">${esc(c.title)}</h1>
+        <div class="cv-meta">
+          <span class="kc-conf ${esc(c.confidence)}">${esc(c.confidence)}</span>
+          <span class="cv-status ${esc(c.status)}">${esc(c.status)}</span>
+          <span class="cv-doms">${doms}</span>
+          <span class="cv-dates">created ${esc(c.created || "")} · updated ${esc(c.updated || "")}</span>
+        </div>
+        <p class="cv-summary">${c.summary || ""}</p>
+        ${c.why ? `<div class="why"><b>Why it matters:</b> ${c.why}</div>` : ""}
+        ${how ? `<div class="cv-how"><h3>How to run it</h3><ol>${how}</ol></div>` : ""}
+        ${tagsHTML ? `<div class="cv-tags">${tagsHTML}</div>` : ""}
+        ${sup.length ? `<div class="cv-links"><b>Supersedes:</b> ${sup.map(cardLinkById).join(" · ")}</div>` : ""}
+        ${rel.length ? `<div class="cv-links"><b>Related:</b> ${rel.map(cardLinkById).join(" · ")}</div>` : ""}
+        ${c.sources ? `<div class="sources"><h3>Sources</h3><p>${c.sources}</p></div>` : ""}
+      </article>`;
+    Array.prototype.forEach.call(viewEl.children, (el, i) => el.style.setProperty("--i", Math.min(i, 6)));
+    window.scrollTo({ top: 0 });
+  }
+
+  // =========================================================================
+  //  Router
+  // =========================================================================
+  function parseHash() {
+    let h = location.hash.slice(1);
+    if (!h || h === "/") return { view: "home" };
+    if (h[0] !== "/") return { view: "feed", id: h };       // legacy bare-id deep link
+    const parts = h.replace(/^\/+/, "").split("/");
+    const head = parts[0];
+    if (head === "feed") return { view: "feed", id: parts[1] ? decodeURIComponent(parts.slice(1).join("/")) : null };
+    if (head === "hub") return { view: "hub", hub: (parts[1] || "").toLowerCase() };
+    if (head === "card") return { view: "card", id: parts[1] ? decodeURIComponent(parts.slice(1).join("/")) : null };
+    return { view: "home" };
+  }
+  let ready = false;
+  function router() {
+    if (!ready) return;
+    const route = parseHash();
+    document.body.dataset.view = route.view;
+    markNav(route);
+    if (route.view === "feed") {
+      if (route.id) show(route.id);
+      else if (!currentId) show(META[0] && META[0].id);
+    } else if (route.view === "hub") {
+      renderHub(route.hub);
+    } else if (route.view === "card") {
+      renderCard(route.id);
+    } else {
+      renderHome();
+    }
+  }
+  window.addEventListener("hashchange", router);
+
+  // =========================================================================
+  //  Init
+  // =========================================================================
+  buildShell();
   (async function init() {
-    // Load the index and the (optional) domain facet together; the facet has its
-    // own try/catch and can never block the index or base rendering.
-    const [meta, facet] = await Promise.all([loadIndex(), loadDomainFacet()]);
+    const [meta, facet, cidx, hubs] = await Promise.all([loadIndex(), loadDomainFacet(), loadCardsIndex(), loadHubs()]);
     META = meta;
     domainFacet = facet;
+    cardsIndex = cidx;
+    HUB_ORDER = hubs.map(h => h.key);
+    HUBS = {};
+    hubs.forEach(h => { HUBS[h.key] = { label: h.label, scope: h.scope, domains: h.domains || [] }; });
     if (!META.length) {
+      document.body.dataset.view = "feed";
       container.innerHTML = '<div class="loading">No reports yet.</div>';
-      latestPill.textContent = "No reports"; return;
+      latestPill.textContent = "No reports";
+    } else {
+      groupWeeks();
+      latestPill.textContent = "Latest: " + META[0].dateLabel.replace(/,? 2026$/, "");
+      const days = META.filter(r => r.type === "daily").length, wks = META.filter(r => r.type === "weekly").length;
+      countEl.textContent = `${days} daily · ${wks} weekly · ${META.length} total · ${cardsIndex.length} cards`;
+      try {
+        const saved = localStorage.getItem("redpxl-domain");
+        if (saved && domainFacet.some(d => d.slug === saved)) domainFilter = saved;
+      } catch (e) {}
+      renderChips();
+      buildNav("");
     }
-    groupWeeks();
-    latestPill.textContent = "Latest: " + META[0].dateLabel.replace(/,? 2026$/, "");
-    const days = META.filter(r => r.type === "daily").length, wks = META.filter(r => r.type === "weekly").length;
-    countEl.textContent = `${days} daily · ${wks} weekly · ${META.length} total`;
-    // restore persisted domain selection, but only if it's a domain actually present
-    try {
-      const saved = localStorage.getItem("redpxl-domain");
-      if (saved && domainFacet.some(d => d.slug === saved)) domainFilter = saved;
-    } catch (e) { /* storage unavailable — ignore */ }
-    renderChips();
-    buildNav("");
-    show(location.hash.slice(1) || META[0].id);
+    ready = true;
+    router();   // resolve the initial hash
   })();
 })();
