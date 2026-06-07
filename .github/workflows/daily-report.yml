@@ -93,6 +93,10 @@ jobs:
         run: python scripts/check_reports.py "$(date -u +'%Y-%m-%d')"
 
       - name: Commit & push
+        env:
+          # claude-code-action clears the checkout-persisted credential, so the push
+          # must re-authenticate explicitly with the native token.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "AI Edge Bot"
           git config user.email "bot@users.noreply.github.com"
@@ -101,4 +105,4 @@ jobs:
           fi
           git add -A
           git commit -m "daily: AI briefing for $(date -u +'%Y-%m-%d')"
-          git push origin "${{ github.ref_name }}"
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" HEAD:"${{ github.ref_name }}"
