@@ -26,14 +26,19 @@
 
 ## Active threads (ongoing storylines to advance, not repeat)
 <!-- one line each: thread → latest state + date. None yet — seed on first run. -->
+- **AI-trade repricing:** Broadcom's soft AI-chip guide (~$16B vs ~$17.2B expected, stock −12%, reported Jun 3) plus higher-for-longer rate worries rotated money OUT of AI names; by Jun 8 Asia, SoftBank −~6%, Samsung −~10%, SK Hynix −~8%, Kospi down ~8% (CNBC). Watch whether this is a dip-buy (Son called a correction the "best" opportunity) or a regime change toward provable AI ROI. (2026-06-08)
+- **The bottleneck is power/memory, not just chips:** even amid the equity sell-off, infra capital kept flooding in — Helion $465M Series G at $15.5B (fusion, Jun 4), PhysicsX $300M Series C at $2.4B, Nvidia–SK Hynix + Nvidia–LG memory/data-center pacts. The compute story is becoming an energy story. (2026-06-08)
 
 ## Durable lessons (the compounding edge — evergreen takeaways we've taught)
 <!-- promote a thread's conclusion here once it's a stable, reusable principle. -->
 - Markets coverage earns trust only when it's corroborated and dated — lead with
   what 3+ independent sources agree on; flag single-source numbers as such and
   cross-check any figure before publishing.
+- **Report the rotation, not the tick:** intraday index/stock percentages move hour to hour and age badly. The durable, publishable fact is the *direction + the why* (a guidance miss, a rates shift) corroborated across sources — quote exact percentages as directional, dated snapshots.
+- **For our team, a markets move is a climate signal, not a trade:** translate it into how clients will scrutinize the AI work we pitch (e.g. a repricing of AI spend → lead with cost-per-outcome and a spend ceiling).
 
 ## Changelog (one line per run — newest first)
 <!-- YYYY-MM-DD: … -->
+- 2026-06-08: First substantive `news` beat — AI-trade repricing (Broadcom-triggered Asia sell-off, Jun 8) + the power/memory funding counter-signal (Helion $465M/$15.5B). Seeded two threads + two durable lessons; logged 2 predictions. No news *card* (markets = intake, not a run-it-today craft play — the day's diamonds were web-dev + growth).
 - 2026-06-07: Domain seeded (Phase 1 of the 95+ masterplan). News = markets + what
   companies are building + what to expect + the AI space; its own 5th hub.

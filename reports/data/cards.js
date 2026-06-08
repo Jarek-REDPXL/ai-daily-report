@@ -35,6 +35,64 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdev-ai-gateway-spend-limits",
+    domains: ["web-dev"],
+    title: "Put a hard dollar cap on any AI feature before you ship it",
+    action: "Route your app's LLM calls through Cloudflare AI Gateway and add a spend limit scoped to model/team with a fallback route on over-limit.",
+    summary: "Cloudflare AI Gateway's new spend limits track real dollar cost (from each model's token pricing) and either block or fail over to a cheaper model when a budget is hit — so a runaway loop or traffic spike can't quietly burn four figures.",
+    why: "The #1 reason teams won't ship LLM features to production is the fear of an unbounded bill. A real ceiling turns 'we daren't ship AI' into 'it literally cannot cost more than $X' — and with the market now repricing loose AI spend, controlling unit economics is a feature, not an afterthought.",
+    how: [
+      "Proxy your OpenAI/Anthropic/etc. calls through an AI Gateway endpoint (point your base URL at the gateway).",
+      "In the gateway settings (dashboard or API) add a <b>spend limit</b> and scope it by <code>model</code>, <code>provider</code>, or a custom attribute like <code>user</code>/<code>team</code>/<code>app</code> (e.g. $2,000/mo senior, $500/mo standard, or $50/day on one pricey model).",
+      "Pick a window: daily/weekly/monthly, fixed (resets 1st of month / Monday / midnight) or rolling.",
+      "Choose the over-limit behavior: <b>block</b> by default, or add a <b>Dynamic Route</b> to fail over to a cheaper fallback model so a hard cap doesn't break the workflow.",
+      "Reconcile the gateway's cost math against your provider invoice for the first month before trusting the cap to the dollar."
+    ],
+    confidence: "emerging",
+    status: "active",
+    thread_id: "thread-govern-ai-spend",
+    supersedes: [],
+    related: ["card-ai-tooling-reusable-skills"],
+    sources: [
+      { label: "Cloudflare — AI Gateway spend limits", url: "https://blog.cloudflare.com/ai-gateway-spend-limits/" },
+      { label: "Cloudflare Changelog — Control AI costs with spend limits", url: "https://developers.cloudflare.com/changelog/post/2026-06-05-spend-limits/" }
+    ],
+    tags: ["cloudflare", "llm", "cost-control"],
+    created: "2026-06-08",
+    updated: "2026-06-08"
+  },
+
+  {
+    id: "card-growth-aeo-content-formats",
+    domains: ["growth"],
+    title: "Reformat a page so AI answer engines cite it",
+    action: "Take one high-intent page, match its title to a query pattern, lead each section with a one-sentence answer, and add a list/table, original stats, and an FAQ block.",
+    summary: "2026 research across 1M+ AI citations (HubSpot State of AEO + Wix Studio AI Search Lab) shows answer engines cite product/landing pages, blog posts and listicles most — and reward an intent-matched title plus original stats, a last-updated date, and FAQ schema. AEO is a formatting pass on pages you already have.",
+    why: "AI search is now a real discovery channel and being <i>cited</i> in the answer is starting to matter more than classic backlinks. The lever isn't writing more — it's structuring what you have so a model can lift a clean, attributable chunk and name you as the source.",
+    how: [
+      "Pick one page that should be winning AI mentions (start with money pages, not the blog archive).",
+      "Match the title to the intent engines reward: <code>What is X</code>, <code>X vs Y</code>, <code>How to X</code>, or <code>Best X</code>.",
+      "Lead each section with a direct one-sentence answer, then expand — engines lift the first clean sentence.",
+      "Convert dense prose into a list or comparison table (pre-chunked = easy to extract); comparison tables specifically win ChatGPT citations.",
+      "Add original/first-party stats (your own benchmark or survey number) — proprietary data is what gets attributed to you.",
+      "Add an FAQ block with FAQ schema, a visible last-updated date, and an author bio; then check if ChatGPT/Perplexity cite you for the target question and iterate."
+    ],
+    confidence: "emerging",
+    status: "active",
+    corroboration_count: 2,
+    supersedes: [],
+    related: [],
+    sources: [
+      { label: "HubSpot — Content formats answer engines favor [research]", url: "https://blog.hubspot.com/marketing/content-format-types-that-earn-citations" },
+      { label: "Wix Studio AI Search Lab — content types most cited by LLMs (1M+ citations)", url: "https://www.wix.com/studio/ai-search-lab/research/content-types-most-cited-by-llms" },
+      { label: "HubSpot — Why citations matter more than backlinks for AI", url: "https://blog.hubspot.com/marketing/citations-in-aeo" }
+    ],
+    tags: ["aeo", "seo", "ai-search"],
+    created: "2026-06-08",
+    updated: "2026-06-08"
+  },
+
+  {
     id: "card-graphic-font-pairing",
     domains: ["graphic"],
     title: "Test 9 font pairings in 30 seconds with ChatGPT",

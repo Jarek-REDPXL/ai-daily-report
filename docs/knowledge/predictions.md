@@ -29,6 +29,10 @@
 - [2026-06-07] [paid] Meta removes the ability to create a fully-manual (Advantage+-off) Sales campaign in Ads Manager, making the unified Advantage+ flow mandatory. — (due ~end of 2026)
 - [2026-06-07] [social] Instagram surfaces "Sends"/shares as a default top-line metric in post Insights (not buried), reflecting its weight in ranking. — (due ~end of Q3 2026)
 - [2026-06-07] [ai-tooling] Weekly synthesis call ("controls collapse"): ≥2 more major ad/creative platforms retire a standalone manual campaign/workflow type in favor of an AI-default flow. — (due ~Sep 30 2026)
+- [2026-06-08] [web-dev] A second mainstream LLM gateway/proxy (OpenRouter, Vercel AI Gateway, Portkey, or a hyperscaler) ships dollar-denominated spend limits with a fallback-route option, matching Cloudflare. — (due ~end of Q3 2026)
+- [2026-06-08] [news] The AI-equity sell-off is a dip, not a regime change: a basket of the names hit Jun 8 (SoftBank, Samsung, SK Hynix) closes higher than its Jun 8 level within ~6 weeks. — (due ~Jul 20 2026)
+- [2026-06-08] [news] Power is the binding AI constraint: ≥1 more fusion/nuclear/energy-for-compute deal above $250M is announced (or a hyperscaler signs a major new power-purchase/SMR agreement) within ~8 weeks. — (due ~Aug 3 2026)
+- [2026-06-08] [growth] AEO goes mainstream-measurable: a major analytics/SEO platform (GA4, Ahrefs, Semrush, or HubSpot) ships a standard "AI citations / answer-engine visibility" report as a default surface. — (due ~end of 2026)
 
 ## Resolved predictions (outcome log — newest first)
 <!-- format: [made → resolved] [domain] ✅/❌/⚖️ claim — outcome note -->

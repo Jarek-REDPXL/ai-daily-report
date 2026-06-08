@@ -25,7 +25,7 @@
 | Anthropic (official) | ai-tooling | 61 | 3 | 2026-06-07 | Claude features, research, policy posts | primary source; "Building effective agents" behind weekly |
 | OpenAI (official) | ai-tooling | 59 | 3 | 2026-06-07 | ChatGPT/model releases, memory | primary source |
 | Bloomberg | ai-tooling | 55 | 2 | 2026-06-06 | markets, M&A, funding | paywalled; cross-check |
-| CNBC | ai-tooling | 50 | 1 | 2026-06-04 | markets/tech business | |
+| CNBC | news | 54 | 2 | 2026-06-08 | markets/tech business, sell-offs, earnings | solid 2nd source; behind Jun 8 news beat (Asia AI sell-off + Broadcom) |
 | The Information | ai-tooling | 55 | 1 | 2026-06-04 | scoops, deep tech-business | paywalled; high signal |
 | Reuters | ai-tooling | 52 | 1 | 2026-06-04 | wire confirmation, policy | good 2nd source |
 | arXiv | ai-tooling | 55 | 1 | 2026-06-04 | primary research papers | cite specific abstract |
@@ -45,6 +45,12 @@
 | Promptfoo | ai-tooling | 53 | 2 | 2026-06-07 | run an eval set across models, diff outputs | behind release-day verdict kit + router |
 | OpenRouter | ai-tooling | 52 | 2 | 2026-06-07 | A/B models behind one API | behind two-gate picker + router |
 | GitHub Docs (Copilot) | web-dev | 54 | 2 | 2026-06-07 | repo custom-instructions / Copilot config | primary; behind Jun 2 daily + weekly keeper |
+| Cloudflare (blog + dev changelog) | web-dev | 55 | 1 | 2026-06-08 | AI Gateway/Workers product + cost-control changes | primary; behind Jun 8 spend-limits card |
+| Axios | news | 52 | 1 | 2026-06-08 | funding/valuation, climate & deals desk | good non-paywalled 2nd source; behind Helion figure |
+| company newsroom / IR (Helion etc.) | news | 50 | 1 | 2026-06-08 | primary funding/round confirmation | authoritative for the round; cross-check valuation vs press |
+| HubSpot Blog (Marketing) | growth | 55 | 1 | 2026-06-08 | AEO/GEO, content strategy, original research | strong first-party research (State of AEO); behind Jun 8 AEO card |
+| Wix Studio (AI Search Lab) | growth | 50 | 1 | 2026-06-08 | AI-citation datasets, AEO research | corroborating dataset; cross-check against HubSpot |
 
 <!-- Seed roster began as ai-tooling; web-design/paid/social/graphic rows added as
-     those domains started producing. Add email/growth rows as they earn a beat. -->
+     those domains started producing. news/growth rows added 2026-06-08 on their
+     first beats. Add email row as it earns a beat. -->

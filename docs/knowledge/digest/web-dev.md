@@ -16,11 +16,14 @@
 ## Active threads (ongoing storylines to advance, not repeat)
 <!-- one line each: thread → latest state + date. None yet — seed on first run. -->
 - AI coding assistants → repo-level conventions files becoming the norm: GitHub Copilot reads `.github/copilot-instructions.md` (and path-scoped `.github/instructions/`) on every request in a repo (2026-06-02). Watch whether other assistants standardize an equivalent.
+- Governing LLM-feature COST in production: Cloudflare AI Gateway shipped dollar-denominated **spend limits** (block or fail-over-to-cheaper-model) on 2026-06-05 — the first mainstream proxy with a real hard cap. Lands the same week the market is repricing AI spend (`news`). Watch whether other gateways (OpenRouter, Vercel AI, Portkey) ship equivalents — cross-links to `thread-govern-ai-spend`.
 
 ## Durable lessons (the compounding edge — evergreen takeaways we've taught)
 <!-- promote a thread's conclusion here once it's a stable, reusable principle. -->
 - **State your conventions to the AI once, not per file:** a committed repo instructions file (`.github/copilot-instructions.md`) makes every suggestion follow your stack/naming/test style — the dev version of a persistent-memory loop. Keep rules short and concrete; vague rules get ignored.
+- **Never ship an LLM feature without a hard cost ceiling:** route calls through a gateway and set a dollar spend limit with a fallback model, so a runaway loop or traffic spike can't quietly burn four figures. Unit-economics control is what makes "ship AI to prod" safe.
 
 ## Changelog (one line per run — newest first)
 <!-- YYYY-MM-DD: … -->
+- 2026-06-08: Cloudflare AI Gateway **spend limits** (Jun 5) → card-webdev-ai-gateway-spend-limits + new cost-governance thread/lesson; tied into the cross-domain `thread-govern-ai-spend` (market repricing AI spend).
 - 2026-06-07: Weekly Issue #3 (Week of Jun 1–7) — folded the Jun 2 Copilot-conventions play into the "govern the AI default" throughline; seeded the assistant-conventions thread + durable lesson.
