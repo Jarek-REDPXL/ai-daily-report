@@ -18,7 +18,7 @@ name: Daily AI Briefing
 on:
   workflow_dispatch:        # run on-demand from the Actions tab (pick the branch)
   schedule:
-    - cron: "0 6 * * *"     # 06:00 UTC ≈ 07:00 Europe/London (daily)
+    - cron: "17 6 * * *"    # ~06:17 UTC (~07:17 London) — off the congested top-of-hour
 
 permissions:
   contents: write           # native GITHUB_TOKEN push to the run's branch
