@@ -21,13 +21,13 @@
 | The Neuron | ai-tooling | 52 | 2 | 2026-06-06 | newsletter signal, what's trending | |
 | llm-stats.com | ai-tooling | 55 | 2 | 2026-06-06 | model benchmark/price comparison | good for model-router calls |
 | digitalapplied tracker | ai-tooling | 50 | 2 | 2026-06-06 | release/figures tracker | figures directional unless confirmed |
-| blog.google | ai-tooling | 58 | 2 | 2026-06-06 | Google/Gemini primary announcements | primary source |
+| blog.google | ai-tooling | 60 | 3 | 2026-06-09 | Google/Gemini primary announcements | primary source; behind Gemini 3.5 Live Translate (Jun 9) |
 | Anthropic (official) | ai-tooling | 61 | 3 | 2026-06-07 | Claude features, research, policy posts | primary source; "Building effective agents" behind weekly |
 | OpenAI (official) | ai-tooling | 59 | 3 | 2026-06-07 | ChatGPT/model releases, memory | primary source |
 | Bloomberg | ai-tooling | 55 | 2 | 2026-06-06 | markets, M&A, funding | paywalled; cross-check |
 | CNBC | news | 54 | 2 | 2026-06-08 | markets/tech business, sell-offs, earnings | solid 2nd source; behind Jun 8 news beat (Asia AI sell-off + Broadcom) |
 | The Information | ai-tooling | 55 | 1 | 2026-06-04 | scoops, deep tech-business | paywalled; high signal |
-| Reuters | ai-tooling | 52 | 1 | 2026-06-04 | wire confirmation, policy | good 2nd source |
+| Reuters | ai-tooling | 54 | 2 | 2026-06-09 | wire confirmation, policy | good 2nd source; behind EU–Meta WhatsApp order (Jun 9) |
 | arXiv | ai-tooling | 55 | 1 | 2026-06-04 | primary research papers | cite specific abstract |
 | GitHub releases | ai-tooling | 53 | 1 | 2026-06-04 | shipped tools, open-weight drops | primary source |
 | company IR / SEC filings | ai-tooling | 57 | 1 | 2026-06-04 | hard financials, S-1s | authoritative |
@@ -50,7 +50,12 @@
 | company newsroom / IR (Helion etc.) | news | 50 | 1 | 2026-06-08 | primary funding/round confirmation | authoritative for the round; cross-check valuation vs press |
 | HubSpot Blog (Marketing) | growth | 55 | 1 | 2026-06-08 | AEO/GEO, content strategy, original research | strong first-party research (State of AEO); behind Jun 8 AEO card |
 | Wix Studio (AI Search Lab) | growth | 50 | 1 | 2026-06-08 | AI-citation datasets, AEO research | corroborating dataset; cross-check against HubSpot |
+| Chrome for Developers (developer.chrome.com) | web-design | 56 | 1 | 2026-06-09 | Chrome release notes + web-platform explainers | primary/authoritative; behind Jun 9 gap-decorations card |
+| Ideogram (official blog + GitHub docs) | graphic | 52 | 1 | 2026-06-09 | image-model releases, prompting schema | tool primary; behind Jun 9 Ideogram-4.0 JSON-layout card |
+| Omnisend (Help Center + product/blog) | email | 52 | 1 | 2026-06-09 | ESP MCP setup, lifecycle/deliverability how-to | tool primary; behind Jun 9 Omnisend-MCP card |
+| TechCrunch | news | 50 | 1 | 2026-06-09 | tech-business, security, funding/M&A | non-paywalled; behind Jun 9 MS OSS supply-chain item |
+| The Hacker News | web-dev | 50 | 1 | 2026-06-09 | CVEs, exploits, supply-chain security | good security signal; cross-check CVSS/patch dates with vendor advisory |
 
 <!-- Seed roster began as ai-tooling; web-design/paid/social/graphic rows added as
      those domains started producing. news/growth rows added 2026-06-08 on their
-     first beats. Add email row as it earns a beat. -->
+     first beats. email row + Chrome/Ideogram/Omnisend/security rows added 2026-06-09. -->

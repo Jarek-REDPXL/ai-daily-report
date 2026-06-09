@@ -35,6 +35,117 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdesign-gap-decorations",
+    domains: ["web-design"],
+    title: "Draw dividers between grid/flex items with one line of CSS — drop the pseudo-element hacks",
+    action: "On a grid or flex container that already has a gap, add column-rule: 1px solid #ddd (and row-rule) and test in Chrome/Edge 149+.",
+    summary: "Chrome 149's CSS Gap Decorations extend column-rule to Grid and Flexbox and add a new row-rule, so separators paint directly in the gap with the familiar width/style/color shorthand — no extra divs, pseudo-elements, or background-gradient tricks.",
+    why: "Card/sidebar/dashboard/pricing-table separators are some of the most-repeated UI in any design system, and today they're faked with markup that breaks the moment items wrap or the count changes. This deletes that scar tissue — and because the rules are purely decorative, unsupported browsers just show an empty gap, so it's pure progressive enhancement you can ship to production now.",
+    how: [
+      "Confirm Chrome/Edge 149+ (<code>chrome://version</code>) — it's default-on in stable, no flag.",
+      "On a grid/flex container that already has a <code>gap</code>, add the lines: <code>.cards { display:grid; grid-template-columns:repeat(3,1fr); gap:2rem; column-rule:1px solid #ddd; row-rule:1px solid #ddd; }</code>",
+      "Want lines only between items (not trailing past a short last row)? Add <code>column-rule-visibility-items: visible</code> / <code>row-rule-visibility-items: visible</code>.",
+      "Animate on hover (width/colour/inset are animatable): <code>.cards{transition:column-rule-color .3s} .cards:hover{column-rule-color:#3b82f6}</code>. No <code>@supports</code> guard needed.",
+      "Keep it decorative — Chromium-only for now, so don't rely on it for load-bearing layout until Safari/Firefox follow."
+    ],
+    confidence: "emerging",
+    status: "active",
+    thread_id: "thread-modern-css-primitives",
+    supersedes: [],
+    related: ["card-webdesign-squircle-corners", "card-web-view-transitions"],
+    sources: [
+      { label: "Chrome for Developers — Gap decorations now in Chromium (149)", url: "https://developer.chrome.com/blog/gap-decorations-stable" },
+      { label: "Chrome 149 release notes", url: "https://developer.chrome.com/release-notes/149" }
+    ],
+    tags: ["css", "ui", "layout"],
+    created: "2026-06-09",
+    updated: "2026-06-09"
+  },
+
+  {
+    id: "card-graphic-ideogram-json-layout",
+    domains: ["graphic"],
+    title: "JSON-prompt Ideogram 4.0 to nail headlines, hex colours, and layout on the first try",
+    action: "Generate at ideogram.ai with a JSON object that declares your text strings, brand hex palette, and each element's bounding box — not a sentence.",
+    summary: "Ideogram 4.0 (open-weight, Jun 2026) was trained exclusively on structured JSON captions, so you prompt it like a design brief: typed text layers (spelled right, ~0.97 OCR), per-element bounding boxes on a 0–1000 grid, and a colour palette of up to 16 hex codes.",
+    why: "It kills the two worst failure modes of AI image gen for real design work — garbled in-image text and 'it ignored my layout.' Declaring copy, position and brand hexes as data makes output repeatable and templatable: swap the text + palette fields over a fixed layout to mass-produce posters, packaging, signage or a card set.",
+    how: [
+      "Go to <b>ideogram.ai</b> (or the API at developer.ideogram.ai) and generate with a JSON object, not prose — prose underperforms because the model is trained on JSON.",
+      "Use the schema: top-level <code>high_level_description</code>, a <code>style_description</code> with <code>color_palette</code> = your brand hexes (up to 16), and a <code>compositional_deconstruction.elements</code> array.",
+      "Place each element with a typed entry, e.g. <code>{type:\"text\", bbox:[50,150,150,850], text:\"GOLDCREST\", desc:\"bold black serif caps, centered top\"}</code> — <code>bbox</code> is row-first <code>[y_min,x_min,y_max,x_max]</code>, 0–1000, origin top-left.",
+      "Keep key order intact (<code>type</code> → <code>bbox</code> → <code>text</code>/<code>desc</code>); iterate by editing only the wrong field (nudge a bbox), not by re-describing the whole image.",
+      "For commercial work use the web app/API (commercial tiers) — the open weights are non-commercial, so local/ComfyUI is for prototyping only."
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-graphic-font-pairing", "card-graphic-color-palette"],
+    sources: [
+      { label: "Ideogram — 4.0 (open-weight, JSON-prompted)", url: "https://ideogram.ai/blog/ideogram-4.0/" },
+      { label: "Ideogram 4 — prompting schema (GitHub)", url: "https://github.com/ideogram-oss/ideogram4/blob/main/docs/prompting.md" }
+    ],
+    tags: ["ai-image", "typography", "ideogram"],
+    created: "2026-06-09",
+    updated: "2026-06-09"
+  },
+
+  {
+    id: "card-email-omnisend-mcp",
+    domains: ["email"],
+    title: "Audit your whole email program in plain English by wiring Omnisend into Claude (MCP)",
+    action: "Add Omnisend's MCP server (mcp.omnisend.com/mcp) to Claude as a custom connector, then ask it to rank campaigns by revenue and flag deliverability issues.",
+    summary: "Omnisend shipped a hosted MCP server, so an AI client (Claude/ChatGPT) can read your live account — campaign performance, deliverability diagnostics, subject-line insights, automation revenue, form/subscriber data — and answer in natural language.",
+    why: "It kills the export-to-spreadsheet loop that eats an email operator's morning: ask a question, get an answer grounded in your real numbers, and stand up zero-code lifecycle triggers (e.g. a daily Gmail draft summarising new subscribers) without touching Zapier. It's the 'controls collapse into AI defaults' move arriving in the ESP.",
+    how: [
+      "In Claude, open the left menu → <b>Customize → Connectors</b>.",
+      "Click <b>+ → Add custom connector</b>, name it <code>Omnisend</code>, paste the server URL <code>https://mcp.omnisend.com/mcp</code>, click <b>Add</b>.",
+      "Select the connector → <b>Connect</b>, then complete the Omnisend <b>OAuth</b> sign-in (no API key to copy/paste).",
+      "In a new chat: \"Use the Omnisend connector — give me an account snapshot, rank last 30 days of campaigns by attributed revenue, and flag any with deliverability issues plus one fix each.\"",
+      "Always review any AI-drafted send before it goes out. (The native one-click Claude connector is 'coming soon' — the custom-connector route works today.)"
+    ],
+    confidence: "emerging",
+    status: "active",
+    thread_id: "thread-platform-ai-defaults",
+    supersedes: [],
+    related: ["card-email-dmarc-bimi"],
+    sources: [
+      { label: "Omnisend — Connect MCP to AI tools", url: "https://support.omnisend.com/en/articles/15096086-connect-omnisend-mcp-to-ai-tools" },
+      { label: "Omnisend MCP — product page", url: "https://www.omnisend.com/ai/mcp/" }
+    ],
+    tags: ["mcp", "omnisend", "deliverability"],
+    created: "2026-06-09",
+    updated: "2026-06-09"
+  },
+
+  {
+    id: "card-webdev-rotate-ai-toolchain",
+    domains: ["web-dev"],
+    title: "Patch-and-rotate: lock down your AI coding toolchain after the Jun 2026 supply-chain hit",
+    action: "Rotate any tokens that have been live in a Claude Code / Gemini CLI / VS Code session that touched untrusted repos, and confirm your Linux kernels are on the post-Feb-5 nf_tables patch.",
+    summary: "Two same-day (Jun 8 2026) threats put the AI dev toolchain in the blast radius: password-stealing malware that fires when certain compromised Microsoft OSS repos are opened inside an agentic IDE, and a one-character Linux nf_tables bug (CVE-2026-23111) with a now-public local-root exploit.",
+    why: "The threat model shifted: merely opening a poisoned repo in an agentic IDE (which can auto-run tasks, read env files, run setup scripts) is now enough to exfiltrate the secrets in your AI dev session — and an unpatched kernel turns any foothold into instant root. Treating 'open a repo' as code execution and rotating exposed keys is the cheap insurance.",
+    how: [
+      "Audit recent pulls/clones of Microsoft/Azure OSS repos (the Durable Task project was named among 70+ disabled repos).",
+      "Rotate credentials, API keys and tokens that have been present in a Claude Code / Gemini CLI / VS Code session that touched untrusted code.",
+      "Clone unknown repos into a sandbox/devcontainer with no live secrets before opening them in an agentic IDE.",
+      "Run <code>uname -r</code> and check it against your distro's advisory for CVE-2026-23111 (Debian/Ubuntu/RHEL all patched after Feb 5); prioritise multi-tenant and container hosts.",
+      "Apply the kernel update and reboot affected hosts."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    corroboration_count: 2,
+    supersedes: [],
+    related: [],
+    sources: [
+      { label: "TechCrunch — Microsoft OSS tools hacked to steal AI-dev passwords", url: "https://techcrunch.com/2026/06/08/microsofts-open-source-tools-were-hacked-to-steal-passwords-of-ai-developers/" },
+      { label: "The Hacker News — one-character Linux kernel root flaw (CVE-2026-23111)", url: "https://thehackernews.com/2026/06/one-character-linux-kernel-flaw-enables.html" }
+    ],
+    tags: ["security", "supply-chain", "linux"],
+    created: "2026-06-09",
+    updated: "2026-06-09"
+  },
+
+  {
     id: "card-webdev-ai-gateway-spend-limits",
     domains: ["web-dev"],
     title: "Put a hard dollar cap on any AI feature before you ship it",

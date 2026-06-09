@@ -33,6 +33,11 @@
 - [2026-06-08] [news] The AI-equity sell-off is a dip, not a regime change: a basket of the names hit Jun 8 (SoftBank, Samsung, SK Hynix) closes higher than its Jun 8 level within ~6 weeks. — (due ~Jul 20 2026)
 - [2026-06-08] [news] Power is the binding AI constraint: ≥1 more fusion/nuclear/energy-for-compute deal above $250M is announced (or a hyperscaler signs a major new power-purchase/SMR agreement) within ~8 weeks. — (due ~Aug 3 2026)
 - [2026-06-08] [growth] AEO goes mainstream-measurable: a major analytics/SEO platform (GA4, Ahrefs, Semrush, or HubSpot) ships a standard "AI citations / answer-engine visibility" report as a default surface. — (due ~end of 2026)
+- [2026-06-09] [web-design] CSS Gap Decorations (`column-rule` in grid/flex + `row-rule`) ships in a 2nd browser engine (Safari or Firefox), putting it on the path to Baseline. — (due ~mid-2027)
+- [2026-06-09] [email] A second major ESP (Klaviyo, Mailchimp, or HubSpot) ships an official MCP server for natural-language querying/operation of the email program, matching Omnisend. — (due ~end of Q3 2026)
+- [2026-06-09] [graphic] Another major image model (Adobe Firefly, Google Imagen, Recraft, or Midjourney) adds explicit structured-layout controls (per-element bounding boxes and/or hex-palette conditioning), following Ideogram 4.0's JSON approach. — (due ~end of 2026)
+- [2026-06-09] [news] The EU's WhatsApp interim order holds against Meta's appeal — rival AI chatbots retain free WhatsApp Business API access (no stay granted) through ~Aug 2026. — (due ~Aug 15 2026)
+- [2026-06-09] [news] Apple's "sell the news" reverses: AAPL closes above its Jun 8 (pre-WWDC) level within ~6 weeks as the Siri-AI narrative is digested. — (due ~Jul 21 2026)
 
 ## Resolved predictions (outcome log — newest first)
 <!-- format: [made → resolved] [domain] ✅/❌/⚖️ claim — outcome note -->
