@@ -38,6 +38,9 @@
 - [2026-06-09] [graphic] Another major image model (Adobe Firefly, Google Imagen, Recraft, or Midjourney) adds explicit structured-layout controls (per-element bounding boxes and/or hex-palette conditioning), following Ideogram 4.0's JSON approach. — (due ~end of 2026)
 - [2026-06-09] [news] The EU's WhatsApp interim order holds against Meta's appeal — rival AI chatbots retain free WhatsApp Business API access (no stay granted) through ~Aug 2026. — (due ~Aug 15 2026)
 - [2026-06-09] [news] Apple's "sell the news" reverses: AAPL closes above its Jun 8 (pre-WWDC) level within ~6 weeks as the Siri-AI narrative is digested. — (due ~Jul 21 2026)
+- [2026-06-10] [web-dev] A second major AI coding CLI/agent (Claude Code, Gemini CLI, or Cursor) ships built-in LSP/language-server code intelligence, matching GitHub Copilot CLI. — (due ~end of Q3 2026)
+- [2026-06-10] [paid] Google Ads ships an equivalent in-UI campaign setup-health / optimization score (a 0–100 style grade), following Meta's Opportunity Score. — (due ~end of 2026)
+- [2026-06-10] [news] Anthropic either carves out a ZDR/zero-retention enterprise path for Fable-5-class models OR another major enterprise publicly restricts Fable 5 over the 30-day retention policy. — (due ~Aug 5 2026)
 
 ## Resolved predictions (outcome log — newest first)
 <!-- format: [made → resolved] [domain] ✅/❌/⚖️ claim — outcome note -->

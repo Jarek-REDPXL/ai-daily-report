@@ -16,15 +16,17 @@
 
 ## Active threads (ongoing storylines to advance, not repeat)
 <!-- one line each: thread → latest state + date. None yet — seed on first run. -->
-- [meta-ads] Advantage+ consolidation → Feb 2026 Meta merged Manual + Advantage+ into ONE unified creation flow; standalone "Advantage+ Shopping" (ASC) renamed Advantage+ **Sales**, legacy APIs deprecated (Q1 2026). Learning-phase thresholds reportedly easing but Meta docs lag — directional (2026-06-07).
+- [meta-ads] Advantage+ consolidation → Feb 2026 Meta merged Manual + Advantage+ into ONE unified creation flow; standalone "Advantage+ Shopping" (ASC) renamed Advantage+ **Sales**, legacy APIs deprecated (Q1 2026). **Update (2026-06-10):** the "thresholds easing" note resolved to a number — Advantage+ Shopping/Sales now qualifies at **~25 conversions/week** (down from 50); and Meta shipped a **0–100 Opportunity Score** (setup-health grade across creative variety / signal quality / audience breadth / conversion-event accuracy) to all advertisers. Card updated: card-paid-meta-advantage-plus. Treat the 25/week figure as directional (Help Center lags).
 - [google-ads] AI Max expanding to Shopping + travel (Google Marketing Live 2026) + "AI Brief"; Google auto-links YouTube channel → Google Ads after Jun 10, 2026 unless opted out (2026-06-07).
 
 ## Durable lessons (the compounding edge — evergreen takeaways we've taught)
 <!-- promote a thread's conclusion here once it's a stable, reusable principle. -->
 - Platform UIs are collapsing manual controls into AI-default flows (Meta unified Advantage+, Google AI Max). The operator edge is no longer audience-building — it's creative volume/quality + a guarded manual control campaign to prove the AI's lift on YOUR account before reallocating.
+- **A platform "setup score" (Meta's Opportunity Score) grades how the AI-default flow is built, NOT how it performs.** Use it as a 10-second structural triage (low score = fragmented audiences / thin creative / broken Pixel) and push it 80+ by enabling the Advantage+ levers + diverse creative + CAPI — but keep judging delivery on cost-per-outcome. A 95 with bad creative still loses money.
 - When a platform changes campaign-type names/menus, audit SOPs/onboarding docs the same week — stale "click X" steps make juniors silently build the wrong thing.
 
 ## Changelog (one line per run — newest first)
 <!-- YYYY-MM-DD: … -->
+- 2026-06-10: Deep beat (2nd-longest-gone non-web) — Meta's 0–100 **Opportunity Score** rolled to all advertisers + Advantage+ learning-phase bar halved to ~25 conv/week. Advanced the Advantage+ thread, added the "setup-score ≠ performance" durable lesson, updated card-paid-meta-advantage-plus, logged a prediction (Google ships an equivalent campaign-health score by end-2026). Sources: Social Media Today, SocialBee, Meta Help.
 - 2026-06-07: Weekly Issue #3 — paid is the clearest case of the week's "controls collapse into AI defaults" throughline; action items carried forward (fix SOPs to Advantage+ Sales + keep a manual control; Jun 10 YouTube auto-link opt-out check).
 - 2026-06-07: Deep beat — Meta unified Advantage+ (Sales objective default) + Google AI Max/YouTube auto-link. Card updated: card-paid-meta-advantage-plus. Sources: PPC Land, Meta Help, blog.google.

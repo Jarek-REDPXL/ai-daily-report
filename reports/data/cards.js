@@ -35,6 +35,90 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdev-copilot-cli-lsp",
+    domains: ["web-dev"],
+    title: "Give your terminal AI real code intelligence — wire a language server into Copilot CLI",
+    action: "In Copilot CLI, install the LSP Setup skill, then say 'set up LSP for <your language>' and run /lsp to confirm.",
+    summary: "GitHub Copilot CLI now drives Language Server Protocol servers, so the terminal agent gets IDE-grade semantics — go-to-definition into dependencies, find-all-references, project-wide rename, type resolution — instead of grepping and guessing.",
+    why: "Agentic/terminal coding is where a lot of AI dev work happens now, and the worst failure mode is the agent hallucinating a symbol or editing the wrong call site because it never saw the code graph. A language server turns it from a fuzzy text-searcher into something that resolves your types — fewer wrong edits, reliable renames, and far less context burned reading files it didn't need.",
+    how: [
+      "Install the <b>LSP Setup skill</b> (a reusable markdown runbook): extract it to <code>~/.copilot/skills/</code> and restart Copilot CLI.",
+      "Ask in plain English: <code>set up LSP for Java</code> or <code>enable code intelligence for Python</code> — the skill installs the right server (e.g. <code>npm i -g typescript typescript-language-server</code>, or <code>brew install jdtls</code> for Java) and writes config to <code>~/.copilot/lsp-config.json</code> (user) or <code>lsp.json</code> (repo). It covers 14 languages.",
+      "Run <code>/lsp</code> to confirm the server is running.",
+      "Test it: ask the agent to <i>find all references to</i> a symbol or <i>rename</i> it across the project, and watch it resolve into third-party libraries.",
+      "Commit the repo-level <code>lsp.json</code> so every teammate's agent shares the same code intelligence."
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-ai-tooling-reusable-skills", "card-webdev-v0-screenshot"],
+    sources: [
+      { label: "GitHub Blog — Give Copilot CLI real code intelligence with language servers", url: "https://github.blog/ai-and-ml/github-copilot/give-github-copilot-cli-real-code-intelligence-with-language-servers/" },
+      { label: "GitHub Docs — Using LSP servers with Copilot CLI", url: "https://docs.github.com/en/copilot/concepts/agents/copilot-cli/lsp-servers" }
+    ],
+    tags: ["github-copilot", "cli", "lsp", "ai-codegen"],
+    created: "2026-06-10",
+    updated: "2026-06-10"
+  },
+
+  {
+    id: "card-social-linkedin-ai-citations",
+    domains: ["social"],
+    title: "Write LinkedIn articles that AI search engines cite (LinkedIn is the #2 source)",
+    action: "Publish an original 500–2,000-word LinkedIn article answering one specific buyer question, lead with a one-sentence answer, and post consistently.",
+    summary: "Semrush's analysis of 89K cited LinkedIn URLs found LinkedIn is the #2 most-cited domain in AI answers (behind Reddit); original, educational 500–2,000-word articles win citations far more than viral feed posts.",
+    why: "Buyers increasingly ask ChatGPT/Perplexity 'who's good at X', and the answer is pulled from LinkedIn — so a LinkedIn presence is now a Generative Engine Optimization (GEO) surface: a discovery channel into AI answers you win with craft, not ad spend.",
+    how: [
+      "List the 3–5 questions a buyer would ask an AI in your space (\"best [service] for [use case]\", \"how to [outcome]\").",
+      "For each, publish a LinkedIn <b>article</b> (not just a feed post) of <b>500–2,000 words</b> that answers it directly — lead with a clean one-sentence answer, then expand with original POV + your own data (~95% of cited content is original; reshares barely get cited).",
+      "Post <b>consistently</b> — cited authors averaged 5+ posts in 4 weeks; you don't need virality, moderate relevant engagement (15–25 reactions) is enough.",
+      "Reuse assets: paste a blog post or talk transcript into Claude, ask for a LinkedIn article in your voice, then add first-party numbers.",
+      "Spot-check: ask ChatGPT/Perplexity your target question and see if you (or a competitor) get named; iterate."
+    ],
+    confidence: "emerging",
+    status: "active",
+    thread_id: "thread-answer-engine-optimization",
+    corroboration_count: 2,
+    supersedes: [],
+    related: ["card-growth-aeo-content-formats", "card-social-repurpose-claude"],
+    sources: [
+      { label: "Semrush — We analyzed 89K LinkedIn URLs cited in AI search", url: "https://www.semrush.com/blog/linkedin-ai-visibility-study/" },
+      { label: "PPC Land — How LinkedIn content earns AI-search citations (Semrush)", url: "https://ppc.land/semrush-maps-how-linkedin-content-earns-citations-in-ai-search-tools/" }
+    ],
+    tags: ["linkedin", "geo", "aeo", "ai-search"],
+    created: "2026-06-10",
+    updated: "2026-06-10"
+  },
+
+  {
+    id: "card-ai-tooling-fable5-retention",
+    domains: ["ai-tooling", "news"],
+    title: "Check data retention before you route client data through Claude Fable 5",
+    action: "Confirm which model your tool/Copilot uses; for confidential client data, prefer a ZDR-covered Claude model until your Fable 5 terms are confirmed in writing.",
+    summary: "Claude Fable 5 (public Jun 2026) runs under a new 30-day data-retention policy — classifiers keep prompts/outputs 30 days (flagged items up to 2 years) and existing Zero-Data-Retention agreements do NOT apply to Fable 5 traffic; Microsoft restricted it internally over this.",
+    why: "It's the 'two gates' rule live: a model can pass capability/cost (Fable 5 is top-tier, ~80.3% SWE-Bench) and fail data-provenance. If you or your tools send client-confidential material to Fable 5 expecting zero retention, that assumption is now wrong — and a hyperscaler (Microsoft) already pulled it internally.",
+    how: [
+      "Check which model your AI tool / Copilot / IDE is actually calling (Fable 5 may be a new default in some model pickers).",
+      "For confidential client material, prefer a Claude model still covered by Zero Data Retention (or another ZDR/enterprise path) until terms are confirmed.",
+      "Read Anthropic's Mythos-class retention page and verify — in writing — whether your enterprise agreement covers Fable 5 traffic.",
+      "Bake this into your model router: tag each task by data sensitivity, not just capability and cost."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    corroboration_count: 3,
+    supersedes: [],
+    related: ["card-webdev-ai-gateway-spend-limits"],
+    sources: [
+      { label: "The Verge — Microsoft restricts Claude Fable 5 internally over data retention", url: "https://www.theverge.com/report/947575/microsoft-claude-fable-5-restricted-internally" },
+      { label: "Cybernews — Fable 5 data retention: no exceptions", url: "https://cybernews.com/ai-news/claude-fable-five-data-retention-collection/" },
+      { label: "Anthropic — Data retention practices for Mythos-class models", url: "https://support.claude.com/en/articles/15425996-data-retention-practices-for-mythos-class-models" }
+    ],
+    tags: ["claude", "data-governance", "privacy", "compliance"],
+    created: "2026-06-10",
+    updated: "2026-06-10"
+  },
+
+  {
     id: "card-webdesign-gap-decorations",
     domains: ["web-design"],
     title: "Draw dividers between grid/flex items with one line of CSS — drop the pseudo-element hacks",
@@ -190,9 +274,10 @@ window.AI_EDGE_CARDS = [
     ],
     confidence: "emerging",
     status: "active",
+    thread_id: "thread-answer-engine-optimization",
     corroboration_count: 2,
     supersedes: [],
-    related: [],
+    related: ["card-social-linkedin-ai-citations"],
     sources: [
       { label: "HubSpot — Content formats answer engines favor [research]", url: "https://blog.hubspot.com/marketing/content-format-types-that-earn-citations" },
       { label: "Wix Studio AI Search Lab — content types most cited by LLMs (1M+ citations)", url: "https://www.wix.com/studio/ai-search-lab/research/content-types-most-cited-by-llms" },
@@ -374,29 +459,31 @@ window.AI_EDGE_CARDS = [
     id: "card-paid-meta-advantage-plus",
     domains: ["paid"],
     title: "Launch a self-optimizing Meta prospecting campaign the new (unified) way",
-    action: "In Ads Manager, create a Sales-objective campaign with the three Advantage+ levers on and keep one small manual ad set as a control.",
-    summary: "Meta merged the old 'Manual' and 'Advantage+ Shopping' options into one flow: pick the Sales objective and the Advantage+ levers (budget, audience, placements) are on by default — that IS the old ASC, now auto-handling targeting, placements and creative selection for cold ecommerce traffic.",
-    why: "You stop babysitting audiences and spend your time on creative (the real lever), while the algorithm finds buyers faster and often at a lower cost per purchase. Heads-up: any SOP that still says 'choose Advantage+ Shopping' points at a menu that no longer exists — juniors will silently build the wrong thing.",
+    action: "In Ads Manager, create a Sales-objective campaign with the three Advantage+ levers on, read its 0–100 Opportunity Score, and keep one small manual ad set as a control.",
+    summary: "Meta merged the old 'Manual' and 'Advantage+ Shopping' options into one flow: pick the Sales objective and the Advantage+ levers (budget, audience, placements) are on by default — that IS the old ASC, now auto-handling targeting, placements and creative for cold traffic. Meta also shipped a 0–100 Opportunity Score (a setup-health grade) to all advertisers and halved the learning-phase bar to ~25 conversions/week.",
+    why: "You stop babysitting audiences and spend your time on creative (the real lever), while the algorithm finds buyers faster and often at a lower cost per purchase. The Opportunity Score gives you a 10-second triage of how well a campaign is built, and the lower ~25-conv/week bar means smaller accounts can finally run the unified flow. Heads-up: any SOP that still says 'choose Advantage+ Shopping' points at a menu that no longer exists — juniors will silently build the wrong thing.",
     how: [
       "In Ads Manager, create a new campaign and choose the <b>Sales</b> objective (the old standalone 'Advantage+ Shopping' / ASC is gone — it's now Advantage+ Sales inside this unified flow).",
       "Leave the three Advantage+ levers ON — Advantage+ budget, Advantage+ audience, Advantage+ placements; that is the AI-driven setup.",
-      "Upload a deep, varied creative pool — refresh creative, not audiences.",
-      "Cap existing-customer spend in settings so budget skews to new buyers; keep one small manual ad set as a control for 2-3 weeks.",
-      "Give it enough budget to clear the learning phase quickly (thresholds are reportedly easing for smaller budgets, but Meta's Help Center lags — treat any exact conversions/week number as directional)."
+      "Add the <b>Opportunity Score</b> column (or open the campaign overview) and read the 0–100 grade — it scores creative variety, signal quality (Pixel/CAPI), audience breadth and conversion-event accuracy. Aim for <b>80+</b>; treat anything under ~60 as a structural fix-list, not a performance verdict.",
+      "Upload a deep, varied creative pool — refresh creative, not audiences — and fix tracking with the Conversions API (both lift the score AND delivery).",
+      "Cap existing-customer spend so budget skews to new buyers; keep one small manual ad set as a control for 2-3 weeks.",
+      "Give it enough budget to clear the learning phase (now ~25 conversions/week, down from 50 — but Meta's Help Center lags, so treat the exact number as directional and confirm on the account)."
     ],
     confidence: "confirmed",
     status: "active",
     thread_id: "thread-platform-ai-defaults",
-    corroboration_count: 2,
+    corroboration_count: 3,
     supersedes: [],
     related: [],
     sources: [
       { label: "PPC Land — Meta's unified Advantage+ structure", url: "https://ppc.land/meta-launches-unified-api-structure-for-advantage-campaigns/" },
+      { label: "Social Media Today — Meta launches Opportunity Score to all advertisers", url: "https://www.socialmediatoday.com/news/meta-launches-opportunity-score-all-advertisers/750231/" },
       { label: "Meta — About Advantage+ shopping/sales campaigns", url: "https://www.facebook.com/business/ads/advantage-plus-shopping-campaigns" }
     ],
     tags: ["meta-ads"],
     created: "2026-06-07",
-    updated: "2026-06-07"
+    updated: "2026-06-10"
   },
 
   {
