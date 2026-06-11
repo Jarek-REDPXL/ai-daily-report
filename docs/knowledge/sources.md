@@ -22,22 +22,22 @@
 | llm-stats.com | ai-tooling | 55 | 2 | 2026-06-06 | model benchmark/price comparison | good for model-router calls |
 | digitalapplied tracker | ai-tooling | 50 | 2 | 2026-06-06 | release/figures tracker | figures directional unless confirmed |
 | blog.google | ai-tooling | 60 | 3 | 2026-06-09 | Google/Gemini primary announcements | primary source; behind Gemini 3.5 Live Translate (Jun 9) |
-| Anthropic (official) | ai-tooling | 62 | 4 | 2026-06-10 | Claude features, research, policy posts | primary source; Mythos-class retention Help Center behind Jun 10 Fable-5 card |
+| Anthropic (official) | ai-tooling | 63 | 5 | 2026-06-11 | Claude features, research, policy posts | primary source; behind Jun 10 Fable-5 retention + Jun 11 Claude Code /workflows beat |
 | OpenAI (official) | ai-tooling | 59 | 3 | 2026-06-07 | ChatGPT/model releases, memory | primary source |
-| Bloomberg | ai-tooling | 55 | 2 | 2026-06-06 | markets, M&A, funding | paywalled; cross-check |
-| CNBC | news | 56 | 3 | 2026-06-10 | markets/tech business, sell-offs, earnings, funding | solid 2nd source; behind Jun 8 sell-off + Jun 10 Neura $1.4B round |
-| The Information | ai-tooling | 55 | 1 | 2026-06-04 | scoops, deep tech-business | paywalled; high signal |
+| Bloomberg | ai-tooling | 57 | 3 | 2026-06-11 | markets, M&A, funding, infra financing | paywalled; cross-check; behind Jun 11 Anthropic $35B TPU/data-center deal |
+| CNBC | news | 57 | 4 | 2026-06-11 | markets/tech business, sell-offs, earnings, funding | solid 2nd source; behind Jun 8 sell-off, Jun 10 Neura round + Jun 11 chip-rebound & Coinbase-for-Agents |
+| The Information | ai-tooling | 56 | 2 | 2026-06-11 | scoops, deep tech-business, infra deals | paywalled; high signal; behind Jun 11 Anthropic data-center leases scoop |
 | Reuters | ai-tooling | 54 | 2 | 2026-06-09 | wire confirmation, policy | good 2nd source; behind EU–Meta WhatsApp order (Jun 9) |
 | arXiv | ai-tooling | 55 | 1 | 2026-06-04 | primary research papers | cite specific abstract |
 | GitHub releases | ai-tooling | 53 | 1 | 2026-06-04 | shipped tools, open-weight drops | primary source |
 | company IR / SEC filings | ai-tooling | 57 | 1 | 2026-06-04 | hard financials, S-1s | authoritative |
 | earnings-call transcripts (YouTube) | ai-tooling | 50 | 1 | 2026-06-04 | exec guidance, capex/compute | cite video + timestamp |
-| MDN Web Docs | web-design | 58 | 1 | 2026-06-07 | CSS properties/values, Baseline support | primary/authoritative |
-| Smashing Magazine | web-design | 52 | 1 | 2026-06-07 | frontend technique deep-dives | practitioner, cross-check support % |
+| MDN Web Docs | web-design | 60 | 2 | 2026-06-11 | CSS properties/values, Baseline support | primary/authoritative; behind Jun 11 sibling-index()/sibling-count() beat |
+| Smashing Magazine | web-design | 54 | 2 | 2026-06-11 | frontend technique deep-dives | practitioner, cross-check support %; behind Jun 11 sibling-index math-layouts piece |
 | PPC Land | paid | 55 | 3 | 2026-06-10 | ad-platform product/API changes; AI-search/GEO research | good Meta/Google changelog signal; also carried Semrush LinkedIn-citation study (Jun 10) |
 | Meta Business Help (official) | paid | 56 | 2 | 2026-06-10 | Advantage+ / ads policy / Opportunity Score | primary; Help Center lags real behavior |
 | Social Media Today | paid | 52 | 1 | 2026-06-10 | ad-platform + social product changes | behind Jun 10 Meta Opportunity Score beat; practitioner news, cross-check |
-| Semrush (blog/research) | social | 52 | 1 | 2026-06-10 | AI-search/GEO citation studies, SEO data | behind Jun 10 LinkedIn-AI-citations card (89K-URL study); first-party dataset |
+| Semrush (blog/research) | social | 54 | 2 | 2026-06-11 | AI-search/GEO citation studies, SEO data, AI-visibility tooling | behind Jun 10 LinkedIn-AI-citations card + Jun 11 free AI Search Visibility Checker (growth); first-party dataset |
 | Google Ads blog (blog.google/ads) | paid | 55 | 1 | 2026-06-07 | Google Ads/AI Max announcements | primary source |
 | Sprout Social | social | 53 | 2 | 2026-06-07 | platform algorithm/ranking guides | refreshed annually; solid baseline; behind weekly keeper |
 | Khroma | graphic | 64 | 1 | 2026-06-07 | AI colour palette tool | behind card-graphic-color-palette — team rated that card 5★ (Jun 10 intake); reinforce, keep high |
@@ -56,10 +56,16 @@
 | Chrome for Developers (developer.chrome.com) | web-design | 56 | 1 | 2026-06-09 | Chrome release notes + web-platform explainers | primary/authoritative; behind Jun 9 gap-decorations card |
 | Ideogram (official blog + GitHub docs) | graphic | 52 | 1 | 2026-06-09 | image-model releases, prompting schema | tool primary; behind Jun 9 Ideogram-4.0 JSON-layout card |
 | Omnisend (Help Center + product/blog) | email | 52 | 1 | 2026-06-09 | ESP MCP setup, lifecycle/deliverability how-to | tool primary; behind Jun 9 Omnisend-MCP card |
-| TechCrunch | news | 50 | 1 | 2026-06-09 | tech-business, security, funding/M&A | non-paywalled; behind Jun 9 MS OSS supply-chain item |
+| TechCrunch | news | 51 | 2 | 2026-06-11 | tech-business, security, funding/M&A, agentic products | non-paywalled; behind Jun 9 MS OSS supply-chain + Jun 11 Coinbase-for-Agents |
 | The Hacker News | web-dev | 50 | 1 | 2026-06-09 | CVEs, exploits, supply-chain security | good security signal; cross-check CVSS/patch dates with vendor advisory |
 | The Verge | news | 52 | 1 | 2026-06-10 | tech-business, AI policy/product, scoops | non-paywalled; behind Jun 10 Microsoft–Fable-5 restriction |
 | TipRanks | news | 49 | 1 | 2026-06-10 | daily markets/ticker moves + the why | useful for intraday direction; treat exact percentages as directional, cross-check |
+| LogRocket Blog | web-design | 50 | 1 | 2026-06-11 | frontend/CSS technique deep-dives, JS | practitioner; behind Jun 11 native-CSS-stagger sibling-index piece; cross-check support % |
+| InfoQ | ai-tooling | 50 | 1 | 2026-06-11 | dev-tooling/agent product coverage, conf reporting | behind Jun 11 Claude Code /workflows beat (Code with Claude coverage) |
+| Ahrefs (Brand Radar) | growth | 50 | 1 | 2026-06-11 | AI-visibility / brand-mention tracking across LLMs | tool primary; behind Jun 11 AI-visibility-check card |
+| CoinDesk | news | 50 | 1 | 2026-06-11 | crypto/agentic-payments, fintech product | behind Jun 11 Coinbase-for-Agents; cross-check figures |
+| SiliconANGLE | news | 50 | 1 | 2026-06-11 | enterprise tech/AI product launches | non-paywalled; behind Jun 11 Coinbase-for-Agents |
+| Motley Fool | news | 49 | 1 | 2026-06-11 | markets context/ticker analysis | directional; useful for the "why" behind a move, cross-check exact figures |
 
 <!-- Seed roster began as ai-tooling; web-design/paid/social/graphic rows added as
      those domains started producing. news/growth rows added 2026-06-08 on their

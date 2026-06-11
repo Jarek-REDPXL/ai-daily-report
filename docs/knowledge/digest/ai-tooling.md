@@ -25,6 +25,7 @@
 - **Memory/"dreaming" is now table stakes** → ChatGPT Dreaming V3 (Jun 4) made async memory-synthesis the default in consumer chat (~5× cheaper). (Jun 6)
 - **Hyperscalers decoupling from single model suppliers** → Microsoft in-house MAI models (Jun 2); Copilot model-agnostic. (Jun 6)
 - **Capital rotating beyond LLMs** → embodied AI (Generalist $400M) + neuromorphic efficiency (Flourish $500M). (Jun 6)
+- **Multi-agent orchestration becomes a built-in primitive** → Claude Code dynamic `/workflows` (research preview, late May) writes+runs an orchestration script across subagents from a plain-English "...workflow" request; June added nested subagents (5 levels). The planner→worker→verifier→merge shape is now product, not hand-wiring. Card: card-ai-tooling-claude-workflows. Watch for a 2nd major coding agent (Cursor/Gemini CLI/Copilot) to ship a comparable primitive. (2026-06-11)
 
 ## Durable lessons (the compounding edge — evergreen takeaways we've taught)
 <!-- promote a thread's conclusion here once it's a stable, reusable principle. -->
@@ -39,6 +40,7 @@
 - **Controls collapse → govern the system, don't operate it (weekly synthesis, Jun 1–7):** vendors/platforms keep retiring manual levers for AI-on defaults. The edge is the harness around the default — router + standing eval to pick/judge models, a persistent-memory loop and a conventions file so context is stated once, grounded Q&A over your own docs — plus one guarded manual control to prove the AI's lift before trusting it. The five Jun 1–7 dailies (Ollama, two-gate picker, release-day verdict kit, memory loop, NotebookLM) are one personal AI operating system, not five tips.
 
 ## Changelog (one line per run — newest first)
+- 2026-06-11: Deep beat — Claude Code dynamic `/workflows` multi-agent orchestration (research preview late May + nested subagents in June) turns the planner→worker→verifier→merge lesson into a built-in primitive. Card: card-ai-tooling-claude-workflows; added the multi-agent-orchestration thread; logged a prediction (2nd coding agent ships a comparable workflow primitive). Sources: Anthropic Claude Code, Claude Code Docs, InfoQ. Note: Agent SDK/Actions metering split lands Jun 15.
 - 2026-06-07: Weekly Issue #3 (Week of Jun 1–7) — synthesized the week's AI plays into one "personal AI operating system" + the cross-domain "controls collapse → govern the system" throughline; logged weekly prediction (≥2 more platforms retire manual campaign types by Sep 30). PDF: weekly-ai-report-2026-06-07.pdf.
 - 2026-06-06: restructured archive to Monday–Sunday weeks; weekly now written on Monday for the prior full week. Issue #1 = Week of May 18–24 (Google I/O), Issue #2 = Week of May 25–31. Added Mon May 18 daily. Sidebar derives week grouping from sortDate.
 - 2026-06-06: digest seeded from May 19 – Jun 6 reports (backfill + autonomous runs).

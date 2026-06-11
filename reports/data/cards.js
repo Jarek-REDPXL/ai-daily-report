@@ -35,6 +35,92 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdesign-sibling-index",
+    domains: ["web-design"],
+    title: "Stagger a list animation (or build a math layout) with one line of CSS — no JS, no inline styles",
+    action: "On the children of a list, add transition-delay: calc((sibling-index() - 1) * 60ms) and test in Chrome/Edge 137+.",
+    summary: "CSS sibling-index() and sibling-count() let an element read its own 1-based position and the total count, so staggered reveals, center-out cascades and per-item ramps become pure CSS calc() — the timing recalculates itself when items change, no :nth-child() stacks and no per-node --i custom property from a JS loop.",
+    why: "The staggered list reveal is one of the most-requested motion details on client sites, and today it's faked with brittle hand-written :nth-child() delays or extra markup from a framework loop. These functions delete both hacks — and because unsupported browsers just ignore them (everything animates together), it's pure progressive enhancement you can ship now.",
+    how: [
+      "Apply it to the <b>children</b>, not the container: <code>li { transition: opacity .3s, translate .3s; transition-delay: calc((sibling-index() - 1) * 60ms); }</code> with <code>@starting-style { li { opacity:0; translate:0 8px; } }</code> for an enter animation.",
+      "Center-out cascade: delay by distance from the middle — <code>calc(abs(sibling-index() - (sibling-count() + 1) / 2) * 60ms)</code>.",
+      "Per-item ramps work too (no animation needed): <code>opacity: calc(1 - (sibling-index() - 1) * 0.1)</code> for a fading list, or feed sibling-index() into <code>hsl()</code> / <code>rotate()</code> for radial menus.",
+      "Optional clean baseline: wrap the enhancement in <code>@supports (top: sibling-index()) { ... }</code> so non-supporting browsers get a deliberate fallback.",
+      "Keep it decorative — Chromium-only for now, so never rely on it for load-bearing layout until a 2nd engine ships."
+    ],
+    confidence: "emerging",
+    status: "active",
+    thread_id: "thread-modern-css-primitives",
+    supersedes: [],
+    related: ["card-webdesign-gap-decorations", "card-webdesign-squircle-corners", "card-web-view-transitions"],
+    sources: [
+      { label: "MDN — sibling-index()", url: "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/sibling-index" },
+      { label: "MDN — sibling-count()", url: "https://developer.mozilla.org/en-US/docs/Web/CSS/sibling-count" },
+      { label: "Smashing Magazine — Mathematical layouts with sibling-index() and sibling-count()", url: "https://www.smashingmagazine.com/2026/05/mathematical-layouts-sibling-index-sibling-count/" }
+    ],
+    tags: ["css", "animation", "ui"],
+    created: "2026-06-11",
+    updated: "2026-06-11"
+  },
+
+  {
+    id: "card-ai-tooling-claude-workflows",
+    domains: ["ai-tooling"],
+    title: "Orchestrate a planner→worker→verifier agent team in Claude Code with /workflows",
+    action: "In Claude Code, phrase a big decomposable job and include the word 'workflow', then watch it run with /workflows.",
+    summary: "Claude Code's dynamic workflows (research preview, late May 2026) let you describe a large task with the word 'workflow' and Claude writes and runs an orchestration script that fans the work across subagents; a June update added nested subagents (up to 5 levels). It makes the reliable planner→worker→verifier→merge shape a built-in primitive.",
+    why: "The biggest failure mode of agentic work isn't model IQ — it's overloading one session until its context turns to mush and it edits the wrong files. Fanning a job across scoped subagents with an independent verifier is how you stay correct on the jobs that actually eat time: full-repo audits, migrations, 'rename this across 40 files', or multi-angle PR review.",
+    how: [
+      "Take a big, decomposable job and phrase it as a workflow, e.g. <code>Audit this codebase for dead exports and unused deps — use a workflow: one agent maps the module graph, parallel agents check each package, a verifier confirms each finding is really unused before reporting.</code>",
+      "Run it and watch with <code>/workflows</code> — it composes the orchestration script and runs the subagents with live progress.",
+      "Bias toward <b>fan-out + verify</b>: independent workers for breadth, plus a skeptic agent prompted to <i>refute</i> each finding before it's accepted (kills plausible-but-wrong results).",
+      "Make external actions idempotent and checkpoint each step so a retried agent never double-acts.",
+      "Once a workflow earns its keep, save it as a reusable AI Skill (markdown runbook) so the team triggers it by name."
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-ai-tooling-reusable-skills", "card-webdev-copilot-cli-lsp"],
+    sources: [
+      { label: "Anthropic — Claude Code", url: "https://www.anthropic.com/product/claude-code" },
+      { label: "Claude Code Docs — Skills", url: "https://code.claude.com/docs/en/skills" },
+      { label: "InfoQ — Code with Claude: managed agents, proactive workflows", url: "https://www.infoq.com/news/2026/05/code-with-claude/" }
+    ],
+    tags: ["claude-code", "agents", "orchestration", "workflow"],
+    created: "2026-06-11",
+    updated: "2026-06-11"
+  },
+
+  {
+    id: "card-growth-ai-visibility-check",
+    domains: ["growth"],
+    title: "Check today whether ChatGPT and Gemini actually mention your brand (free, no login)",
+    action: "Paste your domain into Semrush's free AI Search Visibility Checker, read the 0–100 score, and grab the high-volume prompts where you're not mentioned.",
+    summary: "AEO finally has a measurement layer. Semrush's free AI Search Visibility Checker takes just a domain (no sign-up) and returns an AI Visibility Score (0–100), which engines mention you (ChatGPT, SearchGPT, Gemini, Google AI, Perplexity), competitor comparison, the prompts that trigger your brand, and the high-volume prompts where you're invisible — a ready-made fix list. Ahrefs Brand Radar and Semrush's AI Toolkit do continuous tracking.",
+    why: "AEO advice is only worth acting on if you can see whether it worked — and buyers increasingly start at an AI answer, where most brands are effectively invisible. This closes the loop: measure where you're absent, run the AEO formatting pass on exactly those pages, then re-measure.",
+    how: [
+      "Open <b>Semrush's free AI Search Visibility Checker</b>, enter your (or a client's) domain, and hit <b>Check Visibility</b>.",
+      "Read the <b>0–100 score</b> + platform coverage to see which AI engines name you and which don't.",
+      "Jump to the <b>'opportunities'</b> — high-volume prompts where competitors are named and you aren't; that's your prioritized target list.",
+      "For each gap prompt, apply the AEO formatting pass (intent-matched title → one-sentence answer up top → list/table → original first-party stat → FAQ schema + last-updated date) on the most relevant money page.",
+      "Re-run in ~2–4 weeks to confirm new mentions; for ongoing tracking use Ahrefs Brand Radar or Semrush's AI Toolkit, and sample the actual AI answers by hand to see how you're described."
+    ],
+    confidence: "emerging",
+    status: "active",
+    thread_id: "thread-answer-engine-optimization",
+    supersedes: [],
+    related: ["card-growth-aeo-content-formats", "card-social-linkedin-ai-citations"],
+    sources: [
+      { label: "Semrush — Free AI Search Visibility Checker", url: "https://www.semrush.com/free-tools/ai-search-visibility-checker/" },
+      { label: "Semrush — AI Visibility features", url: "https://www.semrush.com/kb/1626-ai-visibility-features" },
+      { label: "Ahrefs — Brand Radar", url: "https://ahrefs.com/brand-radar" }
+    ],
+    tags: ["aeo", "geo", "ai-search", "measurement"],
+    created: "2026-06-11",
+    updated: "2026-06-11"
+  },
+
+  {
     id: "card-webdev-copilot-cli-lsp",
     domains: ["web-dev"],
     title: "Give your terminal AI real code intelligence — wire a language server into Copilot CLI",
