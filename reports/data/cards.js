@@ -123,17 +123,17 @@ window.AI_EDGE_CARDS = [
   {
     id: "card-webdev-vercel-workflow-nitro",
     domains: ["web-dev"],
-    title: "Add durable, crash-proof background jobs to any full-stack app with two directives",
-    action: "In a Nitro v3 app, npm i workflow, add modules: [\"workflow/nitro\"] to nitro.config, then mark a function \"use workflow\" and its sub-steps \"use step\".",
-    summary: "Vercel's Workflow SDK now runs natively in Nitro v3 (Jun 13, 2026), so any Nitro/Vite full-stack app — not just Next.js — gets durable execution. A \"use workflow\" function checkpoints each \"use step\", so the job resumes from the last completed step after a crash/timeout, failed steps auto-retry, and sleep() suspends for seconds-to-days with no compute cost.",
-    why: "The jobs that actually break in production are the long, multi-step ones — onboarding sequences, payment/fulfilment, AI pipelines that call-wait-call. Hand-rolled, a restart mid-sequence loses state or double-acts. Durable workflows make the reliable do→wait→do shape a two-directive primitive instead of a queue + state machine you maintain by hand.",
+    title: "Make background jobs survive crashes with two keywords — durable workflows in any Nitro v3 app",
+    action: "In a Nitro v3 app: npm i workflow, add modules: [\"workflow/nitro\"] to nitro.config, then tag the main function \"use workflow\" and each step \"use step\".",
+    summary: "A background job is multi-step work that runs after a click — send the welcome email, charge the card, call an AI model, wait, call again. Vercel's Workflow SDK now plugs into Nitro v3 (the server engine behind Nuxt and other full-stack frameworks, not just Next.js), so a function you tag <code>\"use workflow\"</code> saves its progress after every <code>\"use step\"</code>. If the server crashes or times out mid-job, it resumes from the last finished step instead of starting over; a failed step retries itself; and <code>sleep()</code> can pause the job for seconds or days without costing any compute while it waits.",
+    why: "The jobs that actually break in production are the long, multi-step ones — onboarding sequences, payments, AI pipelines. Built by hand, a server restart in the middle loses the job or does it twice (double-charging someone). This makes the safe do-wait-do shape two keywords instead of a queue and state machine you babysit.",
     how: [
-      "Install: <code>npm i workflow</code>.",
-      "Register the module in <code>nitro.config.ts</code>: <code>export default defineConfig({ modules: [\"workflow/nitro\"] })</code>.",
-      "Orchestrator gets <code>\"use workflow\"</code>; each unit of work gets <code>\"use step\"</code>: <code>export async function onboard(email){ \"use workflow\"; const u = await createUser(email); await sleep(\"5s\"); await sendWelcome(u); }</code>",
-      "Kick it off from a route: <code>import { start } from \"workflow/api\"</code> → <code>await start(onboard, [email])</code>.",
-      "Make every step idempotent (a retried step must not double-act); throw <code>FatalError</code> for the genuinely unrecoverable case so it skips retries.",
-      "Deploy to Vercel with <b>Fluid compute</b> enabled — that powers the efficient suspend/resume. (Nitro v3 integration is beta; works best on Vercel for now.)"
+      "Install it: <code>npm i workflow</code>.",
+      "Switch it on in <code>nitro.config.ts</code>: <code>export default defineConfig({ modules: [\"workflow/nitro\"] })</code>.",
+      "Tag the orchestrator <code>\"use workflow\"</code> and each unit of work <code>\"use step\"</code> — the step boundaries are where progress is saved: <code>export async function onboard(email){ \"use workflow\"; const u = await createUser(email); await sleep(\"5s\"); await sendWelcome(u); }</code>",
+      "Start it from a route: <code>import { start } from \"workflow/api\"</code> then <code>await start(onboard, [email])</code>.",
+      "Make each step idempotent — safe to run twice — so a retry never double-acts; throw <code>FatalError</code> for the truly unrecoverable case so it stops retrying.",
+      "Deploy to Vercel with <b>Fluid compute</b> on (that powers the cheap pause/resume). The Nitro v3 integration is beta and works best on Vercel for now — the principle (break long jobs into saved, retry-safe steps) holds anywhere."
     ],
     confidence: "emerging",
     status: "active",
@@ -208,17 +208,17 @@ window.AI_EDGE_CARDS = [
   {
     id: "card-ai-tooling-model-portability",
     domains: ["ai-tooling", "web-dev"],
-    title: "Route AI calls through a gateway with a fallback model list so a yanked model can't take you down",
-    action: "Put your LLM calls behind a gateway (OpenRouter / Vercel AI Gateway / Cloudflare) and declare a priority list of independent fallback models.",
-    summary: "If your app calls a single model ID directly and that model is pulled, deprecated or rate-limited, your feature is down until someone ships a code change. A gateway turns that into config-level failover — declare a priority list and it tries the next model on error, so a vanished model degrades gracefully instead of breaking.",
-    why: "The Jun 12 US government order to disable Claude Fable 5 and Mythos 5 for all customers is the lesson in one headline: the capability you rent can disappear on someone else's order. Model portability is the cheap insurance — uptime that doesn't depend on any one provider's availability.",
+    title: "Route AI calls through a gateway with a backup model list so one yanked model can't take you down",
+    action: "Put your LLM calls behind a gateway (OpenRouter / Vercel AI Gateway / Cloudflare) and give it a priority list of backup models from different providers.",
+    summary: "A gateway is a middleman your app calls instead of one AI provider directly. You hand it a ranked list of models; if the first is pulled, retired, or rate-limited (blocked for sending too many requests), it automatically tries the next. So a model vanishing becomes a config change, not an outage that needs a code deploy.",
+    why: "On Jun 12 the US government ordered Anthropic to switch off Claude Fable 5 and Mythos 5 for every customer — the lesson in one headline: the AI capability you rent can disappear on someone else's order. A backup model list is cheap insurance: your feature stays up even when one provider doesn't.",
     how: [
-      "Put LLM calls behind a <b>gateway/router</b> (OpenRouter, Vercel AI Gateway, or Cloudflare AI Gateway) instead of a single-provider SDK.",
-      "With <b>OpenRouter</b>, pass a <code>models</code> array in priority order (up to 3) — on error it auto-tries the next, and you're billed for whichever ran.",
-      "Pick <b>genuinely independent</b> fallbacks — a different provider for the backup (e.g. a Claude primary with an OpenAI or open-weight fallback) so a single-vendor outage can't take out both.",
-      "Keep prompts model-portable (avoid one model's proprietary quirks) and log which model served each request so you can see when you're silently on the backup.",
-      "Validate the backup clears your task's quality bar before relying on it, and alert on fallback so a 'temporary' downgrade doesn't become permanent.",
-      "Pair with a hard spend cap (card-webdev-ai-gateway-spend-limits) so failover can't quietly route you to a pricier model unbudgeted."
+      "Send your AI calls through a <b>gateway/router</b> — OpenRouter, Vercel AI Gateway, or Cloudflare AI Gateway — instead of one provider's SDK.",
+      "With <b>OpenRouter</b>, pass a <code>models</code> array in priority order (up to 3); on an error it auto-tries the next, and you only pay for the one that actually ran.",
+      "Pick <b>genuinely independent</b> backups — a different provider for the fallback (e.g. a Claude primary with an OpenAI or open-weight backup) so one company's outage can't take out both.",
+      "Keep prompts portable (don't lean on one model's proprietary quirks) and log which model answered each request, so you can tell when you've silently dropped to the backup.",
+      "Check the backup actually clears your quality bar before you trust it, and alert yourself when you fail over so a 'temporary' downgrade doesn't quietly become permanent.",
+      "Pair it with a hard spend cap (card-webdev-ai-gateway-spend-limits) so a failover can't quietly route you to a pricier model off-budget."
     ],
     confidence: "emerging",
     status: "active",
@@ -325,14 +325,14 @@ window.AI_EDGE_CARDS = [
     id: "card-webdev-copilot-cli-lsp",
     domains: ["web-dev"],
     title: "Give your terminal AI real code intelligence — wire a language server into Copilot CLI",
-    action: "In Copilot CLI, install the LSP Setup skill, then say 'set up LSP for <your language>' and run /lsp to confirm.",
-    summary: "GitHub Copilot CLI now drives Language Server Protocol servers, so the terminal agent gets IDE-grade semantics — go-to-definition into dependencies, find-all-references, project-wide rename, type resolution — instead of grepping and guessing.",
-    why: "Agentic/terminal coding is where a lot of AI dev work happens now, and the worst failure mode is the agent hallucinating a symbol or editing the wrong call site because it never saw the code graph. A language server turns it from a fuzzy text-searcher into something that resolves your types — fewer wrong edits, reliable renames, and far less context burned reading files it didn't need.",
+    action: "In Copilot CLI, install the LSP Setup skill, say 'set up LSP for <your language>', then run /lsp to confirm.",
+    summary: "A language server is the background brain an IDE uses to understand code — it powers go-to-definition, find-all-references, and project-wide rename. GitHub Copilot CLI (the terminal version of Copilot) can now use one, so the terminal agent actually resolves your types and symbols instead of searching text and guessing.",
+    why: "A lot of AI coding now happens in the terminal, and the worst failure is the agent inventing a function name or editing the wrong spot because it never really 'saw' how your code connects. A language server turns it from a fuzzy text-searcher into something that knows your types — fewer wrong edits, reliable renames, and far less wasted reading of files it didn't need.",
     how: [
-      "Install the <b>LSP Setup skill</b> (a reusable markdown runbook): extract it to <code>~/.copilot/skills/</code> and restart Copilot CLI.",
-      "Ask in plain English: <code>set up LSP for Java</code> or <code>enable code intelligence for Python</code> — the skill installs the right server (e.g. <code>npm i -g typescript typescript-language-server</code>, or <code>brew install jdtls</code> for Java) and writes config to <code>~/.copilot/lsp-config.json</code> (user) or <code>lsp.json</code> (repo). It covers 14 languages.",
+      "Install the <b>LSP Setup skill</b> (a reusable markdown runbook): unzip it into <code>~/.copilot/skills/</code> and restart Copilot CLI.",
+      "Ask in plain English — <code>set up LSP for Java</code> or <code>enable code intelligence for Python</code>. The skill installs the right server (e.g. <code>npm i -g typescript typescript-language-server</code>, or <code>brew install jdtls</code> for Java) and writes config to <code>~/.copilot/lsp-config.json</code> (just you) or <code>lsp.json</code> (the repo). It covers 14 languages.",
       "Run <code>/lsp</code> to confirm the server is running.",
-      "Test it: ask the agent to <i>find all references to</i> a symbol or <i>rename</i> it across the project, and watch it resolve into third-party libraries.",
+      "Test it: ask the agent to <i>find all references to</i> a symbol or <i>rename</i> it across the project, and watch it follow the trail into third-party libraries.",
       "Commit the repo-level <code>lsp.json</code> so every teammate's agent shares the same code intelligence."
     ],
     confidence: "emerging",
@@ -345,7 +345,7 @@ window.AI_EDGE_CARDS = [
     ],
     tags: ["github-copilot", "cli", "lsp", "ai-codegen"],
     created: "2026-06-10",
-    updated: "2026-06-10"
+    updated: "2026-06-13"
   },
 
   {
@@ -491,16 +491,16 @@ window.AI_EDGE_CARDS = [
   {
     id: "card-webdev-rotate-ai-toolchain",
     domains: ["web-dev"],
-    title: "Patch-and-rotate: lock down your AI coding toolchain after the Jun 2026 supply-chain hit",
-    action: "Rotate any tokens that have been live in a Claude Code / Gemini CLI / VS Code session that touched untrusted repos, and confirm your Linux kernels are on the post-Feb-5 nf_tables patch.",
-    summary: "Two same-day (Jun 8 2026) threats put the AI dev toolchain in the blast radius: password-stealing malware that fires when certain compromised Microsoft OSS repos are opened inside an agentic IDE, and a one-character Linux nf_tables bug (CVE-2026-23111) with a now-public local-root exploit.",
-    why: "The threat model shifted: merely opening a poisoned repo in an agentic IDE (which can auto-run tasks, read env files, run setup scripts) is now enough to exfiltrate the secrets in your AI dev session — and an unpatched kernel turns any foothold into instant root. Treating 'open a repo' as code execution and rotating exposed keys is the cheap insurance.",
+    title: "Lock down your AI coding setup after the June 2026 supply-chain attacks — rotate keys, patch the kernel",
+    action: "Rotate any tokens that were live in a Claude Code / Gemini CLI / VS Code session that opened untrusted repos, and confirm your Linux machines are on the post-Feb-5 kernel patch.",
+    summary: "Two threats landed the same day (Jun 8, 2026), both hitting the AI dev toolchain. First: password-stealing malware that triggers when certain booby-trapped Microsoft open-source repos are opened inside an AI-agent IDE (one that can auto-run setup tasks). Second: a one-character bug in the Linux kernel's firewall code (CVE-2026-23111) with a public exploit that hands a logged-in user full root (admin) control.",
+    why: "The risk model changed: just opening a poisoned repo in an agent IDE — which can auto-run scripts and read your secret files — can now steal the keys in your AI session, and an unpatched kernel turns any small foothold into instant full control. Treat 'open a repo' as 'run code', and rotating exposed keys is cheap insurance.",
     how: [
-      "Audit recent pulls/clones of Microsoft/Azure OSS repos (the Durable Task project was named among 70+ disabled repos).",
-      "Rotate credentials, API keys and tokens that have been present in a Claude Code / Gemini CLI / VS Code session that touched untrusted code.",
-      "Clone unknown repos into a sandbox/devcontainer with no live secrets before opening them in an agentic IDE.",
-      "Run <code>uname -r</code> and check it against your distro's advisory for CVE-2026-23111 (Debian/Ubuntu/RHEL all patched after Feb 5); prioritise multi-tenant and container hosts.",
-      "Apply the kernel update and reboot affected hosts."
+      "List recent pulls/clones of Microsoft/Azure open-source repos (the Durable Task project was among 70+ that were disabled).",
+      "Rotate the credentials, API keys and tokens that were present in any Claude Code / Gemini CLI / VS Code session that touched untrusted code.",
+      "From now on, clone unknown repos into a sandbox/devcontainer with no real secrets before opening them in an agent IDE.",
+      "Check your kernel: run <code>uname -r</code> and compare against your distro's advisory for CVE-2026-23111 (Debian/Ubuntu/RHEL all patched after Feb 5); do multi-tenant and container hosts first.",
+      "Apply the kernel update and reboot the affected machines."
     ],
     confidence: "confirmed",
     status: "active",
@@ -513,22 +513,22 @@ window.AI_EDGE_CARDS = [
     ],
     tags: ["security", "supply-chain", "linux"],
     created: "2026-06-09",
-    updated: "2026-06-09"
+    updated: "2026-06-13"
   },
 
   {
     id: "card-webdev-ai-gateway-spend-limits",
     domains: ["web-dev"],
     title: "Put a hard dollar cap on any AI feature before you ship it",
-    action: "Route your app's LLM calls through Cloudflare AI Gateway and add a spend limit scoped to model/team with a fallback route on over-limit.",
-    summary: "Cloudflare AI Gateway's new spend limits track real dollar cost (from each model's token pricing) and either block or fail over to a cheaper model when a budget is hit — so a runaway loop or traffic spike can't quietly burn four figures.",
-    why: "The #1 reason teams won't ship LLM features to production is the fear of an unbounded bill. A real ceiling turns 'we daren't ship AI' into 'it literally cannot cost more than $X' — and with the market now repricing loose AI spend, controlling unit economics is a feature, not an afterthought.",
+    action: "Route your app's AI calls through Cloudflare AI Gateway and set a spend limit (scoped to a model or team) with a cheaper-model fallback when it's hit.",
+    summary: "Cloudflare AI Gateway is a middleman for your AI calls that now enforces spend limits — real dollar budgets worked out from each model's token price. Cross the budget and it either blocks further calls or fails over to a cheaper model, so a runaway loop or traffic spike can't quietly burn four figures overnight.",
+    why: "The #1 reason teams won't ship AI features is fear of a surprise bill. A real ceiling turns 'we daren't ship AI' into 'it literally cannot cost more than $X' — and with the market now punishing loose AI spend, controlling cost-per-use is a feature, not an afterthought.",
     how: [
-      "Proxy your OpenAI/Anthropic/etc. calls through an AI Gateway endpoint (point your base URL at the gateway).",
-      "In the gateway settings (dashboard or API) add a <b>spend limit</b> and scope it by <code>model</code>, <code>provider</code>, or a custom attribute like <code>user</code>/<code>team</code>/<code>app</code> (e.g. $2,000/mo senior, $500/mo standard, or $50/day on one pricey model).",
-      "Pick a window: daily/weekly/monthly, fixed (resets 1st of month / Monday / midnight) or rolling.",
-      "Choose the over-limit behavior: <b>block</b> by default, or add a <b>Dynamic Route</b> to fail over to a cheaper fallback model so a hard cap doesn't break the workflow.",
-      "Reconcile the gateway's cost math against your provider invoice for the first month before trusting the cap to the dollar."
+      "Send your OpenAI/Anthropic/etc. calls through an AI Gateway endpoint (point your API base URL at the gateway).",
+      "In the gateway settings (dashboard or API), add a <b>spend limit</b> and scope it by <code>model</code>, <code>provider</code>, or a custom tag like <code>user</code>/<code>team</code>/<code>app</code> — e.g. $2,000/mo for seniors, $500/mo standard, or $50/day on one pricey model.",
+      "Pick the window: daily / weekly / monthly, fixed (resets on the 1st, Monday, or midnight) or rolling.",
+      "Choose what happens at the limit: <b>block</b> by default, or add a <b>Dynamic Route</b> that fails over to a cheaper model so the cap doesn't break the feature.",
+      "For the first month, reconcile the gateway's cost figures against your provider invoice before trusting the cap to the exact dollar."
     ],
     confidence: "emerging",
     status: "active",
@@ -541,7 +541,7 @@ window.AI_EDGE_CARDS = [
     ],
     tags: ["cloudflare", "llm", "cost-control"],
     created: "2026-06-08",
-    updated: "2026-06-08"
+    updated: "2026-06-13"
   },
 
   {
@@ -677,14 +677,14 @@ window.AI_EDGE_CARDS = [
     id: "card-webdev-v0-screenshot",
     domains: ["web-dev"],
     title: "Turn a screenshot into working UI code with v0",
-    action: "Drop a UI screenshot into v0.dev, refine by prompt, and paste the generated React/Tailwind into your project.",
-    summary: "Drop a reference screenshot (or a sketch) into v0 and get editable React + Tailwind you can paste into a project — a running start instead of a blank file.",
+    action: "Drop a UI screenshot into v0.dev, refine it with a few prompts, then paste the generated React + Tailwind into your project.",
+    summary: "v0 (by Vercel) turns a picture into front-end code. Drop in a screenshot or sketch and it generates editable React + Tailwind (a popular component framework plus styling toolkit) you can paste straight into a project — a running start instead of a blank file.",
     why: "Skip the boilerplate hour: go from 'here's the look' to working, tweakable components in minutes, then refine by prompt.",
     how: [
       "Go to v0.dev and start a new generation.",
-      "Drop in a screenshot of the UI you want (or describe the component).",
-      "Iterate with follow-up prompts ('make it dark', 'tighten spacing', 'add a mobile layout').",
-      "Copy the generated code into your project and wire it to real data."
+      "Drop in a screenshot of the UI you want (or just describe the component).",
+      "Refine with follow-up prompts — 'make it dark', 'tighten the spacing', 'add a mobile layout'.",
+      "Copy the generated code into your project and wire it up to your real data."
     ],
     confidence: "emerging",
     status: "active",
@@ -693,7 +693,7 @@ window.AI_EDGE_CARDS = [
     sources: [{ label: "v0 by Vercel", url: "https://v0.dev" }],
     tags: ["ai-codegen", "react"],
     created: "2026-06-07",
-    updated: "2026-06-07"
+    updated: "2026-06-13"
   },
 
   {
