@@ -15,7 +15,7 @@
 
 ## Active threads (ongoing storylines to advance, not repeat)
 <!-- one line each: thread → latest state + date. None yet — seed on first run. -->
-- [instagram] 2026 ranking → "Views" is now the unified metric across formats; **sends per reach** (private DM shares) is the strongest distribution signal, above likes/comments; saves still matter for evergreen/utility (2026-06-07, Sprout Social).
+- [instagram] 2026 ranking → "Views" is now the unified metric across formats; **sends per reach** (private DM shares) is the strongest distribution signal, above likes/comments; saves still matter for evergreen/utility (2026-06-07, Sprout Social). **Update (2026-06-12/13):** Instagram expanded **"Your Algorithm"** (Reels Oct 2025 → Explore → **main feed**) — an LLM turns each user's behavior into **plain-language topics** they can add/remove. Reach now also depends on the model confidently filing a post under an opt-in-able topic, so clear/consistent topical signaling (first caption line + on-screen text + first 3s) is a new lever; off-niche posts get actively "show less"-ed. Card: card-social-instagram-your-algorithm. (Search Engine Land, Social Media Today, Engadget)
 - [linkedin] **LinkedIn as a GEO surface** → Semrush (89K cited URLs, 325K prompts across ChatGPT Search/Google AI Mode/Perplexity, Jan–Feb 2026): LinkedIn is the **#2 most-cited domain** in AI answers (behind Reddit), ~11% of responses cite a LinkedIn URL. Citations favour **original 500–2,000-word articles** (50–66% of cited content), educational/advice topics, consistent posting (5+/4wk), moderate engagement — relevance over virality. Card: card-social-linkedin-ai-citations; threaded with growth's AEO card (thread-answer-engine-optimization). (2026-06-10)
 
 ## Durable lessons (the compounding edge — evergreen takeaways we've taught)
@@ -25,6 +25,7 @@
 
 ## Changelog (one line per run — newest first)
 <!-- YYYY-MM-DD: … -->
+- 2026-06-13 (Late Edition): Deep beat — Instagram's "Your Algorithm" reached the main feed (Jun 12): users add/remove LLM-derived plain-language topics. Advanced the Instagram-ranking thread; play = hand the model one clear topic per post (reuses "design inputs for the signal the AI ranks on"). Card: card-social-instagram-your-algorithm; logged a prediction. Sources: Search Engine Land, Social Media Today, Engadget.
 - 2026-06-10: Deep beat (longest-gone non-web) — Semrush 89K-URL study: LinkedIn is the #2 most-cited AI-search domain; original 500–2,000-word articles + consistency win citations. Added the LinkedIn-GEO thread + the "organic social = GEO channel" durable lesson; card-social-linkedin-ai-citations (threaded with growth AEO card). Sources: Semrush, PPC Land.
 - 2026-06-07: Weekly Issue #3 — sends-per-reach carried as a keeper + the social instance of "design your inputs for the signal the AI now ranks on" (brief for the DM forward, measure Sends).
 - 2026-06-07: Deep beat — Instagram sends-per-reach is the dominant 2026 ranking signal. Card: card-social-instagram-sends. Source: Sprout Social.

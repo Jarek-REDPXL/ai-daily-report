@@ -35,6 +35,92 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdesign-css-carousel",
+    domains: ["web-design"],
+    title: "Build an accessible image carousel in pure CSS — no JS library, no a11y debt",
+    action: "On a scroll-snap list, add scroll-marker-group: after, then ::scroll-button(left/right) and li::scroll-marker rules — delete the carousel JS.",
+    summary: "Chrome/Edge 135+ ship the CSS Overflow 5 carousel primitives: a plain scroll-snap container plus ::scroll-button() (prev/next), ::scroll-marker / scroll-marker-group (the dot nav), and :target-current (active dot) — a full carousel with zero JavaScript, and the browser supplies the ARIA roles, keyboard nav and focus order for free.",
+    why: "Carousels are the component teams most often ship with a heavy JS library AND broken accessibility. Doing it natively deletes the dependency, the hydration cost, and the a11y bugs in one move — and it degrades cleanly (engines without support just render a scrollable scroll-snap strip).",
+    how: [
+      "Mark up a list of slides inside a scroll-snap container: <code>.carousel{ overflow-x:auto; scroll-snap-type:x mandatory; } .carousel li{ scroll-snap-align:center; }</code>.",
+      "Turn on the dot nav: add <code>scroll-marker-group: after;</code> to <code>.carousel</code>, then <code>.carousel li::scroll-marker{ content:''; }</code> and style the active dot with <code>.carousel li::scroll-marker:target-current{ background:var(--accent); }</code>.",
+      "Add prev/next buttons the browser wires up: <code>.carousel::scroll-button(left){ content:'⬅' / 'Scroll left'; }</code> and <code>::scroll-button(right){ content:'⮕' / 'Scroll right'; }</code> — the text after <code>/</code> is the accessible label, and a disabled button auto-hides at the ends.",
+      "Delete the old JS carousel/init — keyboard arrows, focus order and a tablist screen-reader experience are handled by the engine.",
+      "Treat the buttons/dots as progressive enhancement: in Firefox/Safari the markup is still a usable swipe/scroll carousel, so no fallback code is needed (optionally gate enhancements with <code>@supports selector(::scroll-marker)</code>)."
+    ],
+    confidence: "emerging",
+    status: "active",
+    thread_id: "thread-modern-css-primitives",
+    supersedes: [],
+    related: ["card-webdesign-sibling-index", "card-webdesign-gap-decorations", "card-webdesign-squircle-corners", "card-web-view-transitions"],
+    sources: [
+      { label: "Chrome for Developers — Carousels with CSS", url: "https://developer.chrome.com/blog/carousels-with-css" },
+      { label: "MDN — ::scroll-marker-group", url: "https://developer.mozilla.org/en-US/docs/Web/CSS/::scroll-marker-group" },
+      { label: "SitePoint — Scroll-driven CSS in 2026: carousels without JavaScript", url: "https://www.sitepoint.com/scrolldriven-css-in-2026-building-carousels-without-javascript/" }
+    ],
+    tags: ["css", "carousel", "accessibility", "scroll-snap", "no-js"],
+    created: "2026-06-13",
+    updated: "2026-06-13"
+  },
+
+  {
+    id: "card-paid-aimax-dsa-experiment",
+    domains: ["paid"],
+    title: "Use Google's DSA reprieve to prove AI Max on your account before the forced migration",
+    action: "In Google Ads → Experiments, run AI Max for Search 50/50 against your live DSA campaign for 2–4 weeks and judge it on CPA/ROAS + wasted-query rate, not clicks.",
+    summary: "Google delayed the automatic Dynamic Search Ads → AI Max migration from Sept 2026 to Feb 2027 and restores DSA creation on Jun 15, 2026 — a window to test AI Max as a controlled experiment instead of being auto-migrated blind.",
+    why: "AI Max for Search is replacing DSA whether you like it or not, but the auto-migration is a black box. The operator edge is the same 'guarded manual control proves the AI's lift on YOUR account' move we apply to Meta Advantage+: migrate on evidence, with brand-term and irrelevant-query guardrails already dialed in, not on a deadline.",
+    how: [
+      "Confirm your DSA campaigns still run; from Jun 15 you can also create/edit DSAs normally during the testing window.",
+      "In <b>Google Ads → Experiments</b>, create an experiment that runs <b>AI Max for Search</b> against your existing DSA campaign with a <b>50/50</b> budget split.",
+      "Before launch, set the guardrails AI Max needs: tight <b>brand exclusions</b>, negative keyword lists, and URL/location/text controls so it can't spend on irrelevant or brand queries.",
+      "Run <b>2–4 weeks</b>, then judge on <b>CPA/ROAS and the wasted-query rate</b> (pull the search-terms report) — not raw clicks or impressions, which AI Max will inflate.",
+      "If it wins, use the voluntary migration tool now; if it loses, keep DSA and re-test before Jan 2027 (new-DSA creation ends Jan 2027; auto-migration begins Feb 2027).",
+      "Audit any SOP/onboarding doc that says 'build a DSA' so juniors don't ship the wrong campaign type as the menus change."
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-paid-meta-advantage-plus"],
+    sources: [
+      { label: "Search Engine Land — Google delays DSA migration to AI Max", url: "https://searchengineland.com/google-delays-dynamic-search-ads-migration-to-ai-max-480049" },
+      { label: "Search Engine Journal — Google extends DSA migration deadline", url: "https://www.searchenginejournal.com/google-extends-dynamic-search-ads-migration-deadline/579074/" },
+      { label: "PPC Land — Google delays DSA-to-AI Max automigration to February 2027", url: "https://ppc.land/google-delays-dsa-to-ai-max-automigration-to-february-2027/" }
+    ],
+    tags: ["google-ads", "ai-max", "dynamic-search-ads", "experiments"],
+    created: "2026-06-13",
+    updated: "2026-06-13"
+  },
+
+  {
+    id: "card-social-instagram-your-algorithm",
+    domains: ["social"],
+    title: "Make Instagram file your posts under one clear topic users can opt into",
+    action: "Open Instagram's 'Your Algorithm' topic list to see how IG categorizes content, then name your post's topic in the first caption line + on-screen text + first 3 seconds.",
+    summary: "Instagram expanded its 'Your Algorithm' controls to the main feed (Jun 12, 2026): an LLM turns each user's behavior into plain-language topics they can add or remove. Reach now depends on the model confidently filing your post under a topic users choose to see more of.",
+    why: "When viewers can explicitly add 'more of this topic' (and remove yours), a muddy, off-niche post isn't just ignored — it gets 'show less'-ed out of the people who'd convert. Clear, consistent topical signaling is the new distribution lever, and it mirrors the durable rule: design your inputs for the signal the AI now ranks on.",
+    how: [
+      "On your own account, open <b>Your Algorithm</b> (Settings → the recommendation/topic controls) and read the topics Instagram has inferred — that's roughly how it's classifying content like yours.",
+      "Pick <b>one</b> topic per post and name it explicitly: put the topic phrase in the <b>first line of the caption</b>, in <b>on-screen text</b>, and spoken/shown in the <b>first 3 seconds</b> of a Reel — give the model unambiguous signals to embed.",
+      "Hold a <b>consistent niche</b> across posts so your account accrues a strong topic association users can opt into; quarantine off-topic personal posts to Stories.",
+      "Add a 'send this to…' / save-worthy payoff so the post also earns the sends + saves signals that still drive distribution (pair with card-social-instagram-sends).",
+      "Spot-check after a week: do your topics in Your Algorithm sharpen toward your niche? If they're scattered, your signaling is too mixed."
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-social-instagram-sends", "card-social-linkedin-ai-citations"],
+    sources: [
+      { label: "Search Engine Land — Instagram's Your Algorithm expands to the main feed", url: "https://searchengineland.com/instagram-your-algorithm-expands-main-feed-479922" },
+      { label: "Social Media Today — Instagram extends Your Algorithm to the main feed", url: "https://www.socialmediatoday.com/news/instagram-extends-your-algorithm-to-the-main-feed/822576/" },
+      { label: "Engadget — You can personalize your Instagram algorithm now", url: "https://www.engadget.com/2191695/you-can-personalize-your-instagram-algorithm-now/" }
+    ],
+    tags: ["instagram", "algorithm", "reach", "content-strategy"],
+    created: "2026-06-13",
+    updated: "2026-06-13"
+  },
+
+  {
     id: "card-webdev-vercel-workflow-nitro",
     domains: ["web-dev"],
     title: "Add durable, crash-proof background jobs to any full-stack app with two directives",

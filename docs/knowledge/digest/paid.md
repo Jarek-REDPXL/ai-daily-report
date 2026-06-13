@@ -17,7 +17,7 @@
 ## Active threads (ongoing storylines to advance, not repeat)
 <!-- one line each: thread → latest state + date. None yet — seed on first run. -->
 - [meta-ads] Advantage+ consolidation → Feb 2026 Meta merged Manual + Advantage+ into ONE unified creation flow; standalone "Advantage+ Shopping" (ASC) renamed Advantage+ **Sales**, legacy APIs deprecated (Q1 2026). **Update (2026-06-10):** the "thresholds easing" note resolved to a number — Advantage+ Shopping/Sales now qualifies at **~25 conversions/week** (down from 50); and Meta shipped a **0–100 Opportunity Score** (setup-health grade across creative variety / signal quality / audience breadth / conversion-event accuracy) to all advertisers. Card updated: card-paid-meta-advantage-plus. Treat the 25/week figure as directional (Help Center lags).
-- [google-ads] AI Max expanding to Shopping + travel (Google Marketing Live 2026) + "AI Brief"; Google auto-links YouTube channel → Google Ads after Jun 10, 2026 unless opted out (2026-06-07).
+- [google-ads] AI Max expanding to Shopping + travel (Google Marketing Live 2026) + "AI Brief"; Google auto-links YouTube channel → Google Ads after Jun 10, 2026 unless opted out (2026-06-07). **Update (2026-06-13):** Google delayed the automatic **DSA → AI Max for Search** migration from **Sept 2026 → Feb 2027** (advertiser feedback / avoid Q4 disruption); **DSA creation restored Jun 15, 2026**, new-DSA creation ends Jan 2027, auto-migration begins Feb 2027. The reprieve is prep time, not a reprieve from AI Max — run a guarded AI-Max-vs-DSA Experiment now (CPA/ROAS + wasted-query rate). Card: card-paid-aimax-dsa-experiment. Timeline directional (already moved once). (Search Engine Land, SEJ, PPC Land)
 
 ## Durable lessons (the compounding edge — evergreen takeaways we've taught)
 <!-- promote a thread's conclusion here once it's a stable, reusable principle. -->
@@ -27,6 +27,7 @@
 
 ## Changelog (one line per run — newest first)
 <!-- YYYY-MM-DD: … -->
+- 2026-06-13 (Late Edition): Deep beat — Google delayed the DSA → AI Max forced migration to Feb 2027 (DSA creation back Jun 15). Advanced the AI-Max/google-ads thread; run-it-today play = a guarded AI-Max-vs-DSA Experiment (prove lift before migrating), reusing the "manual control proves the AI's lift" lesson. Card: card-paid-aimax-dsa-experiment; logged a prediction (timeline holds at Feb 2027). Sources: Search Engine Land, Search Engine Journal, PPC Land.
 - 2026-06-10: Deep beat (2nd-longest-gone non-web) — Meta's 0–100 **Opportunity Score** rolled to all advertisers + Advantage+ learning-phase bar halved to ~25 conv/week. Advanced the Advantage+ thread, added the "setup-score ≠ performance" durable lesson, updated card-paid-meta-advantage-plus, logged a prediction (Google ships an equivalent campaign-health score by end-2026). Sources: Social Media Today, SocialBee, Meta Help.
 - 2026-06-07: Weekly Issue #3 — paid is the clearest case of the week's "controls collapse into AI defaults" throughline; action items carried forward (fix SOPs to Advantage+ Sales + keep a manual control; Jun 10 YouTube auto-link opt-out check).
 - 2026-06-07: Deep beat — Meta unified Advantage+ (Sales objective default) + Google AI Max/YouTube auto-link. Card updated: card-paid-meta-advantage-plus. Sources: PPC Land, Meta Help, blog.google.

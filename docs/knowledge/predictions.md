@@ -44,6 +44,9 @@
 - [2026-06-11] [news] Agentic payments keep spreading: another major broker/fintech (beyond Coinbase) ships an agent-facing trading or payments capability via MCP/x402 within ~8 weeks. — (due ~Aug 6 2026)
 - [2026-06-13] [news] The Fable 5 / Mythos 5 government suspension is resolved: Anthropic restores access to at least one of the two models (for US persons or generally) as the directive is lifted or clarified. — (due ~Jul 11 2026)
 - [2026-06-13] [web-dev] Vercel's Workflow SDK native Nitro v3 integration exits beta (GA) and/or documents first-class non-Vercel runtime support. — (due ~end of Q3 2026)
+- [2026-06-13] [web-design] The CSS Overflow 5 carousel pseudo-elements (`::scroll-button()` / `::scroll-marker` / `scroll-marker-group`) ship in a 2nd browser engine (Firefox or Safari), putting native CSS carousels on the path to Baseline. — (due ~end of 2026)
+- [2026-06-13] [paid] Google's revised DSA → AI Max timeline holds: new-DSA creation ends Jan 2027 and automatic migration begins Feb 2027 with no further delay. — (due ~Feb 2027)
+- [2026-06-13] [social] User-facing plain-language topic controls spread: a 2nd major feed beyond Instagram (e.g. YouTube, Threads, or TikTok's main feed) ships an LLM-driven add/remove-topics control, OR Instagram exposes its inferred topic classification to creators/business accounts. — (due ~end of 2026)
 
 ## Resolved predictions (outcome log — newest first)
 <!-- format: [made → resolved] [domain] ✅/❌/⚖️ claim — outcome note -->
