@@ -42,6 +42,8 @@
 - [2026-06-11] [web-design] CSS `sibling-index()`/`sibling-count()` ships in a 2nd browser engine (Firefox or Safari), putting native sibling-aware styling on the path to Baseline. — (due ~end of 2026)
 - [2026-06-11] [ai-tooling] A second major AI coding agent (Cursor, Gemini CLI, or GitHub Copilot) ships a built-in dynamic multi-agent orchestration / "workflow" primitive comparable to Claude Code's `/workflows`. — (due ~end of Q3 2026)
 - [2026-06-11] [news] Agentic payments keep spreading: another major broker/fintech (beyond Coinbase) ships an agent-facing trading or payments capability via MCP/x402 within ~8 weeks. — (due ~Aug 6 2026)
+- [2026-06-13] [news] The Fable 5 / Mythos 5 government suspension is resolved: Anthropic restores access to at least one of the two models (for US persons or generally) as the directive is lifted or clarified. — (due ~Jul 11 2026)
+- [2026-06-13] [web-dev] Vercel's Workflow SDK native Nitro v3 integration exits beta (GA) and/or documents first-class non-Vercel runtime support. — (due ~end of Q3 2026)
 
 ## Resolved predictions (outcome log — newest first)
 <!-- format: [made → resolved] [domain] ✅/❌/⚖️ claim — outcome note -->

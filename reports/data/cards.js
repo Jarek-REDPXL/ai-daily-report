@@ -35,6 +35,121 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdev-vercel-workflow-nitro",
+    domains: ["web-dev"],
+    title: "Add durable, crash-proof background jobs to any full-stack app with two directives",
+    action: "In a Nitro v3 app, npm i workflow, add modules: [\"workflow/nitro\"] to nitro.config, then mark a function \"use workflow\" and its sub-steps \"use step\".",
+    summary: "Vercel's Workflow SDK now runs natively in Nitro v3 (Jun 13, 2026), so any Nitro/Vite full-stack app — not just Next.js — gets durable execution. A \"use workflow\" function checkpoints each \"use step\", so the job resumes from the last completed step after a crash/timeout, failed steps auto-retry, and sleep() suspends for seconds-to-days with no compute cost.",
+    why: "The jobs that actually break in production are the long, multi-step ones — onboarding sequences, payment/fulfilment, AI pipelines that call-wait-call. Hand-rolled, a restart mid-sequence loses state or double-acts. Durable workflows make the reliable do→wait→do shape a two-directive primitive instead of a queue + state machine you maintain by hand.",
+    how: [
+      "Install: <code>npm i workflow</code>.",
+      "Register the module in <code>nitro.config.ts</code>: <code>export default defineConfig({ modules: [\"workflow/nitro\"] })</code>.",
+      "Orchestrator gets <code>\"use workflow\"</code>; each unit of work gets <code>\"use step\"</code>: <code>export async function onboard(email){ \"use workflow\"; const u = await createUser(email); await sleep(\"5s\"); await sendWelcome(u); }</code>",
+      "Kick it off from a route: <code>import { start } from \"workflow/api\"</code> → <code>await start(onboard, [email])</code>.",
+      "Make every step idempotent (a retried step must not double-act); throw <code>FatalError</code> for the genuinely unrecoverable case so it skips retries.",
+      "Deploy to Vercel with <b>Fluid compute</b> enabled — that powers the efficient suspend/resume. (Nitro v3 integration is beta; works best on Vercel for now.)"
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-ai-tooling-claude-workflows", "card-webdev-ai-gateway-spend-limits"],
+    sources: [
+      { label: "Vercel Changelog — Workflow SDK now runs natively in Nitro v3", url: "https://vercel.com/changelog/workflow-sdk-now-runs-natively-in-nitro-v3" },
+      { label: "Workflow SDK Docs — Getting started on Nitro", url: "https://workflow-sdk.dev/docs/getting-started/nitro" },
+      { label: "Vercel Docs — Workflows", url: "https://vercel.com/docs/workflows" }
+    ],
+    tags: ["vercel", "nitro", "workflows", "durable-execution", "backend"],
+    created: "2026-06-13",
+    updated: "2026-06-13"
+  },
+
+  {
+    id: "card-graphic-figma-capture-layers",
+    domains: ["graphic"],
+    title: "Capture any live webpage as editable Figma layers — not a screenshot",
+    action: "Install the Figma Capture Chrome extension, open a page, click Capture page (or Select element), then paste into Figma Design as editable layers.",
+    summary: "Figma's official Chrome extension (Jun 11, 2026) brings any live webpage onto the canvas as real frames, text, images and vectors — so you can restyle the type, recolour to a client's palette, and reuse the layout as a starting point instead of tracing a flat PNG.",
+    why: "Design work means studying things that already exist — a competitor's pricing table, a dashboard empty state, a checkout you want to beat. A screenshot you can only trace over (or a slow manual rebuild) becomes real spacing, type scale and structure you can deconstruct and riff on in minutes. It's the 'pull real-world structure in as data, then riff' move applied to live UI.",
+    how: [
+      "Install the <b>Figma Capture</b> Chrome extension from the Chrome Web Store and sign in.",
+      "Open the page you want to study and click the extension in the toolbar.",
+      "Choose <b>Capture page</b> for the whole thing, or <b>Select element</b> → hover to highlight → click to grab one component.",
+      "Switch to a Figma Design file and <b>paste</b> — it lands as editable layers.",
+      "Work it: recolour to brand hexes (pair with Khroma — card-graphic-color-palette), swap fonts/copy, detach what you need, keep it as a reference frame beside your redesign.",
+      "Treat it as a <b>starting point</b>, not a deliverable — tidy the layer tree and rebuild messy nodes as proper components."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    supersedes: [],
+    related: ["card-graphic-color-palette", "card-graphic-ideogram-json-layout"],
+    sources: [
+      { label: "Figma Learn — Capture web pages to layers with the Chrome extension", url: "https://help.figma.com/hc/en-us/articles/40826832449303-Capture-web-pages-to-layers-with-the-Figma-Chrome-extension" },
+      { label: "Figma — Release notes (Jun 11, 2026)", url: "https://www.figma.com/release-notes/" },
+      { label: "Chrome Web Store — Figma Capture", url: "https://chromewebstore.google.com/detail/figma-capture/hpfddkbihgmhfbbimeoipehenhijemph" }
+    ],
+    tags: ["figma", "chrome-extension", "layout", "ui"],
+    created: "2026-06-13",
+    updated: "2026-06-13"
+  },
+
+  {
+    id: "card-email-micro-animation",
+    domains: ["email"],
+    title: "Add one purposeful micro-animation that survives Gmail's clip and Outlook",
+    action: "Design the static email first, then layer ONE small GIF motion (CTA pulse / progress bar / product cycle) whose first frame is a standalone static fallback.",
+    summary: "Motion in email earns attention only when it's intentional and engineered for the inbox. The durable recipe (Litmus): static-first design, then one small animated GIF for a single job, kept light and short — worst case in a client that strips animation is your deliberate first frame, not a broken layout.",
+    why: "A subtle, well-placed motion lifts click-through on the element that matters without the fragility of AMP/interactive email (patchy client support). Because it's a GIF, it degrades gracefully everywhere — far safer than betting on interactive features most clients don't render.",
+    how: [
+      "Design the <b>static</b> email first and confirm it fully works with no motion — that frame is your fallback.",
+      "Pick <b>one</b> element to animate with a clear function (CTA, progress bar, product variations, urgency cue).",
+      "Export a tight GIF: make the <b>first frame</b> the standalone static version, and <b>stop the loop after 2–3 repeats</b>.",
+      "Watch weight: keep total assets under ~<b>1–1.5MB</b> and know your baseline HTML size — <b>Gmail clips at ~102KB</b>, which can hide your footer/unsubscribe.",
+      "Place it <b>above the fold</b>; <b>never</b> use flashing/strobing content (photosensitive-seizure risk).",
+      "Render-test across Gmail/Outlook/Apple Mail (Litmus or Email on Acid) and confirm the static fallback looks intentional everywhere."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    supersedes: [],
+    related: ["card-email-omnisend-mcp"],
+    sources: [
+      { label: "Litmus — Micro Animations, Macro Impact: 10 use-cases you can try today", url: "https://www.litmus.com/blog/micro-animations-macro-impact-10-use-cases-you-can-try-today" }
+    ],
+    tags: ["email", "animation", "gif", "design"],
+    created: "2026-06-13",
+    updated: "2026-06-13"
+  },
+
+  {
+    id: "card-ai-tooling-model-portability",
+    domains: ["ai-tooling", "web-dev"],
+    title: "Route AI calls through a gateway with a fallback model list so a yanked model can't take you down",
+    action: "Put your LLM calls behind a gateway (OpenRouter / Vercel AI Gateway / Cloudflare) and declare a priority list of independent fallback models.",
+    summary: "If your app calls a single model ID directly and that model is pulled, deprecated or rate-limited, your feature is down until someone ships a code change. A gateway turns that into config-level failover — declare a priority list and it tries the next model on error, so a vanished model degrades gracefully instead of breaking.",
+    why: "The Jun 12 US government order to disable Claude Fable 5 and Mythos 5 for all customers is the lesson in one headline: the capability you rent can disappear on someone else's order. Model portability is the cheap insurance — uptime that doesn't depend on any one provider's availability.",
+    how: [
+      "Put LLM calls behind a <b>gateway/router</b> (OpenRouter, Vercel AI Gateway, or Cloudflare AI Gateway) instead of a single-provider SDK.",
+      "With <b>OpenRouter</b>, pass a <code>models</code> array in priority order (up to 3) — on error it auto-tries the next, and you're billed for whichever ran.",
+      "Pick <b>genuinely independent</b> fallbacks — a different provider for the backup (e.g. a Claude primary with an OpenAI or open-weight fallback) so a single-vendor outage can't take out both.",
+      "Keep prompts model-portable (avoid one model's proprietary quirks) and log which model served each request so you can see when you're silently on the backup.",
+      "Validate the backup clears your task's quality bar before relying on it, and alert on fallback so a 'temporary' downgrade doesn't become permanent.",
+      "Pair with a hard spend cap (card-webdev-ai-gateway-spend-limits) so failover can't quietly route you to a pricier model unbudgeted."
+    ],
+    confidence: "emerging",
+    status: "active",
+    thread_id: "thread-govern-ai-spend",
+    supersedes: [],
+    related: ["card-webdev-ai-gateway-spend-limits", "card-ai-tooling-fable5-retention"],
+    sources: [
+      { label: "OpenRouter — Model Fallbacks (automatic failover)", url: "https://openrouter.ai/docs/guides/routing/model-fallbacks" },
+      { label: "Vercel — AI Gateway", url: "https://vercel.com/docs/ai-gateway" },
+      { label: "Anthropic — Statement on the US directive to suspend Fable 5 / Mythos 5", url: "https://www.anthropic.com/news/fable-mythos-access" }
+    ],
+    tags: ["llm", "resilience", "gateway", "openrouter", "failover"],
+    created: "2026-06-13",
+    updated: "2026-06-13"
+  },
+
+  {
     id: "card-webdesign-sibling-index",
     domains: ["web-design"],
     title: "Stagger a list animation (or build a math layout) with one line of CSS — no JS, no inline styles",
@@ -413,11 +528,11 @@ window.AI_EDGE_CARDS = [
     confidence: "confirmed",
     status: "active",
     supersedes: [],
-    related: ["card-graphic-font-pairing"],
+    related: ["card-graphic-font-pairing", "card-graphic-figma-capture-layers"],
     sources: [{ label: "Khroma — AI colour tool", url: "https://www.khroma.co" }],
     tags: ["colour", "khroma"],
     created: "2026-06-07",
-    updated: "2026-06-07"
+    updated: "2026-06-13"
   },
 
   {

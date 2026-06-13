@@ -22,10 +22,10 @@
 | llm-stats.com | ai-tooling | 55 | 2 | 2026-06-06 | model benchmark/price comparison | good for model-router calls |
 | digitalapplied tracker | ai-tooling | 50 | 2 | 2026-06-06 | release/figures tracker | figures directional unless confirmed |
 | blog.google | ai-tooling | 60 | 3 | 2026-06-09 | Google/Gemini primary announcements | primary source; behind Gemini 3.5 Live Translate (Jun 9) |
-| Anthropic (official) | ai-tooling | 63 | 5 | 2026-06-11 | Claude features, research, policy posts | primary source; behind Jun 10 Fable-5 retention + Jun 11 Claude Code /workflows beat |
+| Anthropic (official) | ai-tooling | 65 | 6 | 2026-06-13 | Claude features, research, policy posts | primary source; behind Jun 10 Fable-5 retention, Jun 11 /workflows + Jun 13 Fable-5/Mythos-5 government-suspension statement |
 | OpenAI (official) | ai-tooling | 59 | 3 | 2026-06-07 | ChatGPT/model releases, memory | primary source |
-| Bloomberg | ai-tooling | 57 | 3 | 2026-06-11 | markets, M&A, funding, infra financing | paywalled; cross-check; behind Jun 11 Anthropic $35B TPU/data-center deal |
-| CNBC | news | 57 | 4 | 2026-06-11 | markets/tech business, sell-offs, earnings, funding | solid 2nd source; behind Jun 8 sell-off, Jun 10 Neura round + Jun 11 chip-rebound & Coinbase-for-Agents |
+| Bloomberg | ai-tooling | 58 | 4 | 2026-06-13 | markets, M&A, funding, infra financing | paywalled; cross-check; behind Jun 11 Anthropic $35B TPU deal + Jun 13 Fable-5/Mythos-5 foreign-access order |
+| CNBC | news | 59 | 5 | 2026-06-13 | markets/tech business, sell-offs, earnings, funding | solid 2nd source; behind Jun 8 sell-off, Jun 11 chip-rebound/Coinbase + Jun 13 Fable-5/Mythos-5 shutdown |
 | The Information | ai-tooling | 56 | 2 | 2026-06-11 | scoops, deep tech-business, infra deals | paywalled; high signal; behind Jun 11 Anthropic data-center leases scoop |
 | Reuters | ai-tooling | 54 | 2 | 2026-06-09 | wire confirmation, policy | good 2nd source; behind EU–Meta WhatsApp order (Jun 9) |
 | arXiv | ai-tooling | 55 | 1 | 2026-06-04 | primary research papers | cite specific abstract |
@@ -40,12 +40,12 @@
 | Semrush (blog/research) | social | 54 | 2 | 2026-06-11 | AI-search/GEO citation studies, SEO data, AI-visibility tooling | behind Jun 10 LinkedIn-AI-citations card + Jun 11 free AI Search Visibility Checker (growth); first-party dataset |
 | Google Ads blog (blog.google/ads) | paid | 55 | 1 | 2026-06-07 | Google Ads/AI Max announcements | primary source |
 | Sprout Social | social | 53 | 2 | 2026-06-07 | platform algorithm/ranking guides | refreshed annually; solid baseline; behind weekly keeper |
-| Khroma | graphic | 64 | 1 | 2026-06-07 | AI colour palette tool | behind card-graphic-color-palette — team rated that card 5★ (Jun 10 intake); reinforce, keep high |
+| Khroma | graphic | 66 | 1 | 2026-06-13 | AI colour palette tool | behind card-graphic-color-palette — team rated 5★ (re-confirmed Jun 13 intake); reinforced via Figma-capture card cross-link; keep high |
 | Ollama (ollama.com) | ai-tooling | 54 | 2 | 2026-06-07 | run open-weight models locally (free/private) | tool primary; behind Jun 1 daily + weekly keeper |
 | Google NotebookLM | ai-tooling | 54 | 2 | 2026-06-07 | grounded, cited Q&A over your own docs | tool primary; behind Jun 4 daily + weekly keeper |
 | Artificial Analysis | ai-tooling | 56 | 3 | 2026-06-07 | model price/speed/quality comparison | load-bearing for router/verdict-kit plays |
 | Promptfoo | ai-tooling | 53 | 2 | 2026-06-07 | run an eval set across models, diff outputs | behind release-day verdict kit + router |
-| OpenRouter | ai-tooling | 52 | 2 | 2026-06-07 | A/B models behind one API | behind two-gate picker + router |
+| OpenRouter | ai-tooling | 54 | 3 | 2026-06-13 | A/B models behind one API; model-fallback/failover routing | behind two-gate picker, router + Jun 13 model-portability card (models-array fallback) |
 | GitHub Docs (Copilot) | web-dev | 57 | 3 | 2026-06-10 | repo custom-instructions / Copilot config / CLI LSP setup | primary; behind Jun 2 daily + Jun 10 Copilot-CLI-LSP card |
 | GitHub Blog (github.blog) | web-dev | 53 | 1 | 2026-06-10 | Copilot/dev product launches + how-to | primary; behind Jun 10 Copilot CLI language-server card |
 | Cloudflare (blog + dev changelog) | web-dev | 55 | 1 | 2026-06-08 | AI Gateway/Workers product + cost-control changes | primary; behind Jun 8 spend-limits card |
@@ -66,6 +66,11 @@
 | CoinDesk | news | 50 | 1 | 2026-06-11 | crypto/agentic-payments, fintech product | behind Jun 11 Coinbase-for-Agents; cross-check figures |
 | SiliconANGLE | news | 50 | 1 | 2026-06-11 | enterprise tech/AI product launches | non-paywalled; behind Jun 11 Coinbase-for-Agents |
 | Motley Fool | news | 49 | 1 | 2026-06-11 | markets context/ticker analysis | directional; useful for the "why" behind a move, cross-check exact figures |
+| Vercel (changelog + docs) | web-dev | 53 | 1 | 2026-06-13 | framework/runtime product changes, Workflow/AI Gateway | primary; behind Jun 13 Workflow-SDK-on-Nitro-v3 card |
+| workflow-sdk.dev (docs) | web-dev | 50 | 1 | 2026-06-13 | Workflow SDK directives/setup ("use workflow"/"use step") | tool docs; behind Jun 13 durable-workflows card |
+| Figma (release notes + Learn) | graphic | 55 | 1 | 2026-06-13 | Figma product releases + how-to (AI, capture, design QA) | primary; behind Jun 13 capture-webpage-to-layers card |
+| Litmus | email | 53 | 1 | 2026-06-13 | email design/motion technique, deliverability, client rendering | practitioner authority; behind Jun 13 micro-animation card |
+| Ars Technica | news | 50 | 1 | 2026-06-13 | tech-policy/AI deep coverage | non-paywalled; behind Jun 13 Fable-5/Mythos-5 government shutdown |
 
 <!-- Seed roster began as ai-tooling; web-design/paid/social/graphic rows added as
      those domains started producing. news/growth rows added 2026-06-08 on their
