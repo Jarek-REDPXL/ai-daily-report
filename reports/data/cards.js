@@ -267,16 +267,16 @@ window.AI_EDGE_CARDS = [
   {
     id: "card-ai-tooling-claude-workflows",
     domains: ["ai-tooling"],
-    title: "Orchestrate a planner→worker→verifier agent team in Claude Code with /workflows",
-    action: "In Claude Code, phrase a big decomposable job and include the word 'workflow', then watch it run with /workflows.",
-    summary: "Claude Code's dynamic workflows (research preview, late May 2026) let you describe a large task with the word 'workflow' and Claude writes and runs an orchestration script that fans the work across subagents; a June update added nested subagents (up to 5 levels). It makes the reliable planner→worker→verifier→merge shape a built-in primitive.",
-    why: "The biggest failure mode of agentic work isn't model IQ — it's overloading one session until its context turns to mush and it edits the wrong files. Fanning a job across scoped subagents with an independent verifier is how you stay correct on the jobs that actually eat time: full-repo audits, migrations, 'rename this across 40 files', or multi-angle PR review.",
+    title: "Orchestrate a planner-worker-checker agent team in Claude Code with /workflows",
+    action: "In Claude Code, describe a big, splittable job and include the word 'workflow', then watch it run with /workflows.",
+    summary: "Claude Code's dynamic workflows (research preview, late May 2026) let you describe a large job and include the word 'workflow'; Claude then writes and runs a script that splits the work across helper agents (subagents). A June update lets those agents nest up to 5 levels deep. It turns the reliable plan, do-in-parallel, verify, merge shape into a built-in feature.",
+    why: "The biggest failure of AI agent work isn't smarts — it's overloading one chat until its memory turns to mush and it edits the wrong files. Splitting a job across focused sub-agents with an independent checker is how you stay correct on the work that actually eats time: whole-repo audits, migrations, 'rename this across 40 files', or multi-angle PR review.",
     how: [
-      "Take a big, decomposable job and phrase it as a workflow, e.g. <code>Audit this codebase for dead exports and unused deps — use a workflow: one agent maps the module graph, parallel agents check each package, a verifier confirms each finding is really unused before reporting.</code>",
-      "Run it and watch with <code>/workflows</code> — it composes the orchestration script and runs the subagents with live progress.",
-      "Bias toward <b>fan-out + verify</b>: independent workers for breadth, plus a skeptic agent prompted to <i>refute</i> each finding before it's accepted (kills plausible-but-wrong results).",
-      "Make external actions idempotent and checkpoint each step so a retried agent never double-acts.",
-      "Once a workflow earns its keep, save it as a reusable AI Skill (markdown runbook) so the team triggers it by name."
+      "Take a big, splittable job and phrase it as a workflow, e.g. <code>Audit this codebase for dead exports and unused deps — use a workflow: one agent maps the module graph, parallel agents check each package, a verifier confirms each finding is really unused before reporting.</code>",
+      "Run it and watch with <code>/workflows</code> — it builds the orchestration script and runs the sub-agents with live progress.",
+      "Lean on <b>fan-out + verify</b>: independent workers for breadth, plus a skeptic agent told to <i>refute</i> each finding before it's accepted (this kills plausible-but-wrong results).",
+      "Make any external action idempotent (safe to repeat) and save progress at each step so a retried agent never double-acts.",
+      "Once a workflow proves its worth, save it as a reusable AI Skill (a markdown runbook) so the team triggers it by name (card-ai-tooling-reusable-skills)."
     ],
     confidence: "emerging",
     status: "active",
@@ -289,7 +289,7 @@ window.AI_EDGE_CARDS = [
     ],
     tags: ["claude-code", "agents", "orchestration", "workflow"],
     created: "2026-06-11",
-    updated: "2026-06-11"
+    updated: "2026-06-13"
   },
 
   {
@@ -381,14 +381,14 @@ window.AI_EDGE_CARDS = [
     id: "card-ai-tooling-fable5-retention",
     domains: ["ai-tooling", "news"],
     title: "Check data retention before you route client data through Claude Fable 5",
-    action: "Confirm which model your tool/Copilot uses; for confidential client data, prefer a ZDR-covered Claude model until your Fable 5 terms are confirmed in writing.",
-    summary: "Claude Fable 5 (public Jun 2026) runs under a new 30-day data-retention policy — classifiers keep prompts/outputs 30 days (flagged items up to 2 years) and existing Zero-Data-Retention agreements do NOT apply to Fable 5 traffic; Microsoft restricted it internally over this.",
-    why: "It's the 'two gates' rule live: a model can pass capability/cost (Fable 5 is top-tier, ~80.3% SWE-Bench) and fail data-provenance. If you or your tools send client-confidential material to Fable 5 expecting zero retention, that assumption is now wrong — and a hyperscaler (Microsoft) already pulled it internally.",
+    action: "Confirm which model your tool/Copilot uses; for confidential client data, prefer a Zero-Data-Retention Claude model until your Fable 5 terms are confirmed in writing.",
+    summary: "Claude Fable 5 (public Jun 2026) runs under a new data-retention rule: automated classifiers keep prompts and outputs for 30 days (flagged items up to 2 years), and — importantly — existing Zero-Data-Retention (ZDR) agreements, which normally mean 'we keep nothing', do NOT apply to Fable 5 traffic. Microsoft restricted it internally over exactly this.",
+    why: "It's the 'two gates' rule in action: a model can pass on capability/cost (Fable 5 is top-tier, ~80.3% on the SWE-Bench coding test) and still fail on data-handling. If you or your tools send client-confidential material to Fable 5 expecting nothing is stored, that assumption is now wrong — and a hyperscaler already pulled it internally.",
     how: [
       "Check which model your AI tool / Copilot / IDE is actually calling (Fable 5 may be a new default in some model pickers).",
-      "For confidential client material, prefer a Claude model still covered by Zero Data Retention (or another ZDR/enterprise path) until terms are confirmed.",
-      "Read Anthropic's Mythos-class retention page and verify — in writing — whether your enterprise agreement covers Fable 5 traffic.",
-      "Bake this into your model router: tag each task by data sensitivity, not just capability and cost."
+      "For confidential client material, prefer a Claude model still covered by Zero Data Retention (or another enterprise no-retention path) until terms are confirmed.",
+      "Read Anthropic's retention page for these models and confirm — in writing — whether your enterprise agreement covers Fable 5 traffic.",
+      "Bake it into your model router: tag each task by data sensitivity, not just capability and cost."
     ],
     confidence: "confirmed",
     status: "active",
@@ -402,7 +402,7 @@ window.AI_EDGE_CARDS = [
     ],
     tags: ["claude", "data-governance", "privacy", "compliance"],
     created: "2026-06-10",
-    updated: "2026-06-10"
+    updated: "2026-06-13"
   },
 
   {
@@ -803,12 +803,12 @@ window.AI_EDGE_CARDS = [
     id: "card-ai-tooling-reusable-skills",
     domains: ["ai-tooling"],
     title: "Save a workflow you repeat as a reusable AI Skill you trigger with one line",
-    action: "Write a workflow you repeat as a short markdown skill (name + when + steps), store it where your AI tool finds it, and trigger it by name.",
-    summary: "Capture a multi-step task you keep re-explaining (audit an ad account, scaffold a microsite) as a written 'skill' the AI loads on demand and runs the same way every time.",
+    action: "Write a workflow you repeat as a short markdown 'skill' (name + when to use + steps), store it where your AI tool looks, and trigger it by name.",
+    summary: "An AI 'skill' is a short markdown file — a name, when to use it, and the steps — that your AI tool loads on demand. Capture a multi-step task you keep re-explaining (audit an ad account, scaffold a microsite) as one, and the AI runs it the same way every time.",
     why: "Stop paying the re-prompting tax — turn a one-off prompt win into a team asset that runs consistently and gets sharper with every use.",
     how: [
-      "Pick a workflow you repeat and write the exact steps + any templates as a short markdown 'skill' (name, when to use it, the steps).",
-      "Store it where your AI tool can find it (a Claude Project, a skills folder, or your prompt library).",
+      "Pick a workflow you repeat and write the exact steps (plus any templates) as a short markdown 'skill': a name, when to use it, the steps.",
+      "Store it where your AI tool looks — a Claude Project, a skills folder, or your prompt library.",
       "Trigger it by name instead of re-typing the whole process.",
       "After each run, tighten the steps — the skill should improve, not stay static."
     ],
@@ -819,7 +819,7 @@ window.AI_EDGE_CARDS = [
     sources: [{ label: "Anthropic — tool use & agents", url: "https://docs.anthropic.com/en/docs/build-with-claude/tool-use/overview" }],
     tags: ["workflow", "agents"],
     created: "2026-06-07",
-    updated: "2026-06-07"
+    updated: "2026-06-13"
   }
 
 ];
