@@ -140,6 +140,25 @@ for (const f of fs.readdirSync(OUT_DIR)) {
 // cards.js/reports.js. The site never reads this; it exists only for the mirror sync.
 fs.writeFileSync(OUT_SYNC, JSON.stringify({ cards: cards, reports: all }, null, 0));
 
+// ---- TOOLS (standalone reference; NOT a domain/hub) ----
+// Mirror of the cards pipeline: reports/data/tools.js is the source of truth and
+// we derive reports/data/tools.json for the #/tools view. Guarded so build-data
+// still works if tools.js is absent (the view + gate both degrade gracefully).
+const TOOLS_SRC = path.join(REPO, "reports", "data", "tools.js");
+const OUT_TOOLS = path.join(REPO, "reports", "data", "tools.json");
+let toolsCount = 0, toolJobsCount = 0;
+if (fs.existsSync(TOOLS_SRC)) {
+  global.window = {};
+  eval(fs.readFileSync(TOOLS_SRC, "utf8"));
+  const tools = (global.window.AI_EDGE_TOOLS && typeof global.window.AI_EDGE_TOOLS === "object") ? global.window.AI_EDGE_TOOLS : {};
+  const toolJobs = Array.isArray(global.window.AI_EDGE_TOOL_JOBS) ? global.window.AI_EDGE_TOOL_JOBS : [];
+  const toolsTop = Array.isArray(global.window.AI_EDGE_TOOLS_TOP) ? global.window.AI_EDGE_TOOLS_TOP : [];
+  fs.writeFileSync(OUT_TOOLS, JSON.stringify({ tools: tools, jobs: toolJobs, top: toolsTop }, null, 0));
+  toolsCount = Object.keys(tools).length;
+  toolJobsCount = toolJobs.filter(j => j && Array.isArray(j.ranked_tool_ids) && j.ranked_tool_ids.length).length;
+  console.log("build-data: wrote tools.json (" + toolsCount + " tools, " + toolJobsCount + " populated jobs)");
+}
+
 console.log("build-data: wrote index.json (" + index.length + ") + index.meta.json ("
   + domainsFacet.length + " domains, " + cardsFacet.length + " card-domains) + "
   + keep.size + " entry files + " + keepCards.size + " card files + cards-index.json ("

@@ -29,6 +29,7 @@ from datetime import date, timedelta
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPORTS_JS = os.path.join(REPO, "reports", "data", "reports.js")
 CARDS_JS = os.path.join(REPO, "reports", "data", "cards.js")
+TOOLS_JS = os.path.join(REPO, "reports", "data", "tools.js")
 DOMAINS_JS = os.path.join(REPO, "scripts", "domains.js")
 
 REQUIRED = ["id", "type", "week", "title", "dateLabel", "sortDate", "tldr", "sections", "domains"]
@@ -38,6 +39,13 @@ CARD_REQUIRED = ["id", "title", "summary", "why", "how", "action", "confidence",
                  "status", "sources", "created", "updated"]
 CARD_CONFIDENCE = {"confirmed", "emerging", "speculative"}
 CARD_STATUS = {"active", "superseded"}
+
+# Tools directory (standalone reference; NOT a domain/hub). The 12 fixed job slugs.
+EXPECTED_TOOL_JOB_SLUGS = {
+    "automation", "video-creation", "video-editing", "research", "planning-sitemaps",
+    "graphic-design", "web-design", "web-development", "email-retention", "social-media",
+    "paid-ads", "copywriting-cro",
+}
 
 
 def _host(url):
@@ -89,7 +97,7 @@ def _link_status(url):
     return True, last
 
 
-def check_links(cards, reports, errors, warnings):
+def check_links(cards, reports, errors, warnings, tools=None):
     urls = set()
     for c in (cards or []):
         for s in (c.get("sources") or []):
@@ -99,6 +107,12 @@ def check_links(cards, reports, errors, warnings):
     for r in reports:
         if isinstance(r.get("sources"), str):
             urls |= _href_set_from_html(r["sources"])
+    if tools:
+        for t in (tools.get("tools") or {}).values():
+            for s in (t.get("sources") or []):
+                u = s.get("url") if isinstance(s, dict) else None
+                if isinstance(u, str) and u.startswith(("http://", "https://")):
+                    urls.add(u.strip())
     dead, warned = 0, 0
     for u in sorted(urls):
         ok, code = _link_status(u)
@@ -159,6 +173,27 @@ def load_cards():
     if not os.path.exists(CARDS_JS):
         return None
     return _eval_global(CARDS_JS, "AI_EDGE_CARDS", "cards.js")
+
+def load_tools():
+    """Tools directory (standalone reference) — eval tools.js and return
+    {tools, jobs, top}, or None if the file is absent (treated as a warn, like cards)."""
+    if not os.path.exists(TOOLS_JS):
+        return None
+    node_script = (
+        "const fs=require('fs');global.window={};"
+        "eval(fs.readFileSync(process.argv[1],'utf8'));"
+        "process.stdout.write(JSON.stringify({tools:window.AI_EDGE_TOOLS||{},"
+        "jobs:window.AI_EDGE_TOOL_JOBS||[],top:window.AI_EDGE_TOOLS_TOP||[]}));"
+    )
+    try:
+        out = subprocess.run(["node", "-e", node_script, TOOLS_JS],
+                             capture_output=True, check=True)
+    except FileNotFoundError:
+        sys.exit("FAIL: `node` not found on PATH (needed to evaluate tools.js).")
+    except subprocess.CalledProcessError as e:
+        msg = (e.stderr or b"").decode("utf-8", "replace") or str(e)
+        sys.exit("FAIL: tools.js is not valid JavaScript:\n%s" % msg)
+    return json.loads(out.stdout.decode("utf-8", "replace"))
 
 def main():
     errors = []
@@ -283,6 +318,84 @@ def main():
     else:
         warnings.append("no HUBS defined in scripts/domains.js — hub mapping not validated")
 
+    # ---- TOOLS (standalone reference; NOT a domain/hub) — validate if present ----
+    tools_data = load_tools()
+    if tools_data is None:
+        warnings.append("tools.js not found — tools directory not validated")
+    else:
+        tools = tools_data.get("tools") or {}
+        tjobs = tools_data.get("jobs") or []
+        ttop = tools_data.get("top") or []
+        tool_ids = set()
+        if not isinstance(tools, dict) or not tools:
+            errors.append("AI_EDGE_TOOLS must be a non-empty object")
+        else:
+            inner_ids = []
+            for key, t in tools.items():
+                tw = "tool %r" % key
+                if not isinstance(t, dict):
+                    errors.append("%s must be an object" % tw)
+                    continue
+                for f in ("id", "name", "what"):
+                    if not t.get(f):
+                        errors.append("%s missing/empty field: %s" % (tw, f))
+                if t.get("id") and t.get("id") != key:
+                    errors.append("%s id %r does not match its key" % (tw, t.get("id")))
+                src = t.get("sources")
+                if not isinstance(src, list) or not src:
+                    errors.append("%s sources must be a non-empty array with >=1 real http(s) url" % tw)
+                else:
+                    real = 0
+                    for k, s in enumerate(src):
+                        u = s.get("url") if isinstance(s, dict) else None
+                        if not (isinstance(u, str) and u.strip().lower().startswith(("http://", "https://"))):
+                            errors.append("%s sources[%d] must be an object with a real http(s) url" % (tw, k))
+                        else:
+                            real += 1
+                    if real < 1:
+                        errors.append("%s must have >=1 real source url" % tw)
+                tool_ids.add(key)
+                inner_ids.append(t.get("id"))
+            tdupes = set(x for x in inner_ids if x and inner_ids.count(x) > 1)
+            if tdupes:
+                errors.append("duplicate tool ids: %s" % ", ".join(sorted(map(str, tdupes))))
+        # jobs: must use the 12 fixed slugs; ranked ids must exist
+        if not isinstance(tjobs, list) or not tjobs:
+            errors.append("AI_EDGE_TOOL_JOBS must be a non-empty array")
+        else:
+            seen_slugs = set()
+            for i, j in enumerate(tjobs):
+                slug = j.get("slug") if isinstance(j, dict) else None
+                jw = "tool job[%d] slug=%r" % (i, slug)
+                if not isinstance(j, dict):
+                    errors.append("%s must be an object" % jw)
+                    continue
+                if slug not in EXPECTED_TOOL_JOB_SLUGS:
+                    errors.append("%s is not one of the 12 fixed tool-job slugs" % jw)
+                if slug in seen_slugs:
+                    errors.append("duplicate tool job slug: %s" % slug)
+                seen_slugs.add(slug)
+                if not j.get("label"):
+                    errors.append("%s missing label" % jw)
+                rids = j.get("ranked_tool_ids")
+                if rids is None:
+                    rids = []
+                if not isinstance(rids, list):
+                    errors.append("%s ranked_tool_ids must be an array" % jw)
+                else:
+                    bad = [r for r in rids if r not in tool_ids]
+                    if bad:
+                        errors.append("%s references unknown tool id(s): %s" % (jw, ", ".join(map(str, bad))))
+                    if rids and not (isinstance(j.get("why_number_one"), str) and j.get("why_number_one").strip()):
+                        warnings.append("%s has ranked tools but no why_number_one" % jw)
+        # overall top list
+        if not isinstance(ttop, list):
+            errors.append("AI_EDGE_TOOLS_TOP must be an array")
+        else:
+            badtop = [r for r in ttop if r not in tool_ids]
+            if badtop:
+                errors.append("AI_EDGE_TOOLS_TOP references unknown tool id(s): %s" % ", ".join(map(str, badtop)))
+
     # sorted newest-first by sortDate
     dates = [r.get("sortDate", "") for r in reports]
     if dates != sorted(dates, reverse=True):
@@ -329,7 +442,7 @@ def main():
 
     # Trust gate: link-resolves check (opt-in — slow, needs network).
     if "--check-links" in sys.argv or os.environ.get("CHECK_LINKS") == "1":
-        check_links(cards, reports, errors, warnings)
+        check_links(cards, reports, errors, warnings, tools_data)
 
     for w in warnings:
         print("WARN: " + w)

@@ -157,6 +157,17 @@
     return null;
   }
 
+  // ---- tools directory (standalone reference; NOT a domain/hub) ----
+  async function loadTools() {
+    // returns { tools, jobs, top } or null — own try/catch, never throws
+    try {
+      const res = await fetch("reports/data/tools.json", { cache: "no-cache" });
+      if (!res.ok) throw new Error("tools " + res.status);
+      const d = await res.json();
+      return (d && typeof d === "object" && d.tools) ? d : null;
+    } catch (e) { return null; }
+  }
+
   // =========================================================================
   //  Top nav (route switcher) — injected so index.html stays minimal
   // =========================================================================
@@ -166,6 +177,7 @@
     { label: "Development", hash: "#/hub/development", on: v => v.view === "hub" && v.hub === "development" },
     { label: "Marketing", hash: "#/hub/marketing", on: v => v.view === "hub" && v.hub === "marketing" },
     { label: "AI", hash: "#/hub/ai", on: v => v.view === "hub" && v.hub === "ai" },
+    { label: "Tools", hash: "#/tools", on: v => v.view === "tools" },
     { label: "News", hash: "#/hub/news", on: v => v.view === "hub" && v.hub === "news" },
     { label: "Ask", hash: "#/ask", on: v => v.view === "ask" },
     { label: "Feed", hash: "#/feed", on: v => v.view === "feed" },
@@ -1012,6 +1024,81 @@
   }
 
   // =========================================================================
+  //  TOOLS (#/tools) — standalone ranked directory of AI tools by job.
+  //  NOT a domain/hub. Data from reports/data/tools.json (built by build-data.js
+  //  from reports/data/tools.js). All tool text is DATA — escaped, never HTML.
+  // =========================================================================
+  function toolSrcHTML(t) {
+    const s = (t.sources && t.sources[0]) ? t.sources[0] : null;
+    if (!s || !s.url) return "";
+    let host = ""; try { host = new URL(s.url).hostname.replace(/^www\./, ""); } catch (e) { host = s.url; }
+    return `<a class="tool-src" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label || host)} ↗</a>`;
+  }
+  function toolTileHTML(t, rank) {
+    if (!t) return "";
+    const rankBadge = rank ? `<span class="tool-rank">#${rank}</span>` : "";
+    const price = t.price ? `<span class="tool-price">${esc(t.price)}</span>` : "";
+    const foot = toolSrcHTML(t);
+    return `<div class="kcard tool-card${rank === 1 ? " is-top" : ""}">
+        <span class="kc-dot" aria-hidden="true"></span>
+        <div class="tool-head">${rankBadge}<h4 class="tool-name">${esc(t.name)}</h4>${price}</div>
+        <p class="tool-what">${esc(t.what)}</p>
+        <div class="tool-judge">
+          ${t.best_for ? `<span class="tool-good"><b>Good for</b> ${esc(t.best_for)}</span>` : ""}
+          ${t.weak_at ? `<span class="tool-weak"><b>Weak at</b> ${esc(t.weak_at)}</span>` : ""}
+        </div>
+        ${foot ? `<div class="tool-foot">${foot}</div>` : ""}
+      </div>`;
+  }
+  async function renderTools() {
+    viewEl.innerHTML = '<div class="loading">Loading the toolkit…</div>';
+    const data = await loadTools();
+    if (document.body.dataset.view !== "tools") return;   // superseded by another nav
+    if (!data || !data.tools) {
+      viewEl.innerHTML = `<section class="tools-view">
+        <div class="hh-kicker"><span class="kicker-rule"></span>Tools</div>
+        <p class="empty">The toolkit isn't ready yet — it lands here once the routine fills it. <a href="#/">Back to home</a></p>
+      </section>`;
+      return;
+    }
+    const T = data.tools;
+    const jobs = Array.isArray(data.jobs) ? data.jobs : [];
+    const jobsHTML = jobs
+      .filter(j => j && Array.isArray(j.ranked_tool_ids) && j.ranked_tool_ids.length)
+      .map(j => {
+        const ids = j.ranked_tool_ids;
+        const no1 = T[ids[0]];
+        const rest = ids.slice(1).map(id => T[id]).filter(Boolean);
+        const no1HTML = no1
+          ? `<div class="tool-no1">${toolTileHTML(no1, 1)}${j.why_number_one ? `<p class="tool-why"><span class="tool-why-label">Why #1</span> ${esc(j.why_number_one)}</p>` : ""}</div>`
+          : "";
+        const restHTML = rest.length
+          ? `<div class="kcard-grid tool-grid">${rest.map((t, i) => toolTileHTML(t, i + 2)).join("")}</div>`
+          : "";
+        return `<section class="home-block tool-job">
+            <div class="hb-head"><h2>${esc(j.label)}</h2></div>
+            ${no1HTML}${restHTML}
+          </section>`;
+      }).join("");
+    const topTiles = (Array.isArray(data.top) ? data.top : [])
+      .map(id => T[id]).filter(Boolean).map(t => toolTileHTML(t, 0)).join("");
+    const topHTML = topTiles
+      ? `<section class="home-block"><div class="hb-head"><h2>Overall top tools</h2></div><div class="kcard-grid tool-grid">${topTiles}</div></section>`
+      : "";
+    viewEl.innerHTML = `
+      <section class="home-hero">
+        <div class="hh-kicker"><span class="kicker-rule"></span>Tools</div>
+        <h1 class="hh-title">The toolkit</h1>
+        <p class="hh-sub">The best AI tools by job — ranked, with what each one is good and bad at. The routine re-ranks these as it learns what actually works.</p>
+      </section>
+      ${jobsHTML || `<p class="empty">No ranked jobs yet — they fill in as the routine ranks tools.</p>`}
+      ${topHTML}`;
+    Array.prototype.forEach.call(viewEl.children, (el, i) => el.style.setProperty("--i", Math.min(i, 6)));
+    revealTiles(viewEl);
+    window.scrollTo({ top: 0 });
+  }
+
+  // =========================================================================
   //  Router
   // =========================================================================
   function parseHash() {
@@ -1025,6 +1112,7 @@
     if (head === "card") return { view: "card", id: parts[1] ? decodeURIComponent(parts.slice(1).join("/")) : null };
     if (head === "inbox") return { view: "inbox" };
     if (head === "ask") return { view: "ask" };
+    if (head === "tools") return { view: "tools" };
     return { view: "home" };
   }
   let ready = false;
@@ -1044,6 +1132,8 @@
       renderInbox();
     } else if (route.view === "ask") {
       renderAsk();
+    } else if (route.view === "tools") {
+      renderTools();
     } else {
       renderHome();
     }
