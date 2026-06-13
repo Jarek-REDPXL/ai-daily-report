@@ -535,11 +535,13 @@ body[data-view="feed"] .view-page{display:none}
 body[data-view="home"] .layout,
 body[data-view="hub"] .layout,
 body[data-view="card"] .layout,
-body[data-view="inbox"] .layout{display:none}
+body[data-view="inbox"] .layout,
+body[data-view="ask"] .layout{display:none}
 body[data-view="home"] .view-page,
 body[data-view="hub"] .view-page,
 body[data-view="card"] .view-page,
-body[data-view="inbox"] .view-page{display:block}
+body[data-view="inbox"] .view-page,
+body[data-view="ask"] .view-page{display:block}
 
 /* staggered reveal (matches the feed) */
 .view-page > *{opacity:0;transform:translateY(14px);animation:reveal var(--t-slow) var(--ease-out) forwards;
