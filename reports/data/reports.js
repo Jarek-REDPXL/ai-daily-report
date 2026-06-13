@@ -84,6 +84,51 @@ window.AI_EDGE_REPORTS = [
     sources: "<a href='https://developer.chrome.com/blog/carousels-with-css' target='_blank' rel='noopener'>Chrome for Developers — Carousels with CSS</a> · <a href='https://developer.mozilla.org/en-US/docs/Web/CSS/::scroll-marker-group' target='_blank' rel='noopener'>MDN — ::scroll-marker-group</a> · <a href='https://www.sitepoint.com/scrolldriven-css-in-2026-building-carousels-without-javascript/' target='_blank' rel='noopener'>SitePoint — Scroll-driven CSS in 2026: carousels without JavaScript</a> · <a href='https://searchengineland.com/google-delays-dynamic-search-ads-migration-to-ai-max-480049' target='_blank' rel='noopener'>Search Engine Land — Google delays DSA migration to AI Max (Feb 2027)</a> · <a href='https://www.searchenginejournal.com/google-extends-dynamic-search-ads-migration-deadline/579074/' target='_blank' rel='noopener'>Search Engine Journal — Google extends DSA migration deadline</a> · <a href='https://ppc.land/google-delays-dsa-to-ai-max-automigration-to-february-2027/' target='_blank' rel='noopener'>PPC Land — DSA-to-AI Max automigration delayed to February 2027</a> · <a href='https://searchengineland.com/instagram-your-algorithm-expands-main-feed-479922' target='_blank' rel='noopener'>Search Engine Land — Instagram's Your Algorithm expands to the main feed</a> · <a href='https://www.socialmediatoday.com/news/instagram-extends-your-algorithm-to-the-main-feed/822576/' target='_blank' rel='noopener'>Social Media Today — Instagram extends Your Algorithm to the main feed</a> · <a href='https://www.engadget.com/2191695/you-can-personalize-your-instagram-algorithm-now/' target='_blank' rel='noopener'>Engadget — You can personalize your Instagram algorithm now</a> · <a href='https://www.cnbc.com/2026/06/13/from-10percent-chance-of-success-to-2-trillion-spacexs-historic-ipo.html' target='_blank' rel='noopener'>CNBC — From 10% chance of success to $2 trillion: SpaceX's historic IPO</a> · <a href='https://www.bloomberg.com/news/articles/2026-06-12/what-to-know-about-spacex-s-record-breaking-ipo' target='_blank' rel='noopener'>Bloomberg — What to know about SpaceX's record-breaking IPO</a> · <a href='https://www.cnn.com/2026/06/12/business/live-news/spacex-goes-public-ipo' target='_blank' rel='noopener'>CNN Business — SpaceX shares debut after biggest IPO in history</a> · <a href='https://www.aljazeera.com/economy/2026/6/12/spacex-ipo-debuts-in-us-markets-musk-becomes-worlds-first-trillionaire' target='_blank' rel='noopener'>Al Jazeera — SpaceX IPO debuts; Musk becomes world's first trillionaire</a> · <a href='https://www.anthropic.com/news/fable-mythos-access' target='_blank' rel='noopener'>Anthropic — Statement on the US government directive to suspend access to Fable 5 and Mythos 5</a> · <a href='https://thenextweb.com/news/anthropic-fable-mythos-us-government-suspension' target='_blank' rel='noopener'>The Next Web — US government orders Anthropic to kill Fable 5 and Mythos 5</a> · <a href='https://techcrunch.com/2026/06/11/jeff-bezoss-prometheus-raises-12b-to-build-an-artificial-general-engineer-for-the-physical-world/' target='_blank' rel='noopener'>TechCrunch — Bezos's Prometheus raises $12B</a>"
   },
 
+  /* ===================== DAILY — Fri Jun 12 ===================== */
+  {
+    id: "2026-06-12-daily",
+    type: "daily",
+    week: "Week of Jun 8 – 14, 2026",
+    title: "Daily Briefing — Friday, June 12",
+    dateLabel: "Friday, June 12, 2026",
+    sortDate: "2026-06-12",
+    domains: ["web-design", "web-dev", "email"],
+    tldr: [
+      "<b>A short catch-up edition for a day we missed.</b> No fabricated news — three durable, genuinely-true plays worth running whenever you ship them, each with a real working link.",
+      "<b>Web design — give a plain multi-page site app-like page transitions in ~5 lines of CSS.</b> Chrome's View Transitions API cross-fades (or morphs a shared element) between pages with no framework, and quietly does nothing where unsupported — safe to add today.",
+      "<b>Web dev — put a hard dollar cap on any AI feature before you ship it.</b> Route your AI calls through a gateway and set a spend limit; cross the budget and it blocks or fails over to a cheaper model, so a runaway loop can't quietly burn four figures.",
+      "<b>Email — land in the inbox and show your logo next to every send.</b> A one-time DNS setup (DMARC enforcement + BIMI) improves inbox placement and puts your verified logo beside your emails in Gmail and Apple Mail.",
+      "<b>Sharpen your edge:</b> a quiet day isn't an empty one — the durable plays are always worth a second pass. Pick the one that touches today's work and ship it."
+    ],
+    sections: [
+      { h: "Web design — run it today: app-like page transitions in ~5 lines of CSS",
+        blocks: [
+          { sub: "Chrome's View Transitions API animates page-to-page navigation with no framework", tags:["technique"],
+            p: "A 'page transition' is the smooth animation when one screen slides or morphs into the next — the polish native apps have and most websites don't. Chrome's View Transitions API gives a plain multi-page site that effect in about five lines of CSS. Where it isn't supported, navigation just happens normally, so there's zero downside to adding it now.",
+            doIt: "Turn it on in CSS with <code>@view-transition { navigation: auto; }</code> (that alone cross-fades pages). To morph one element across the change, give it the same <code>view-transition-name</code> on both pages. Wrap any bigger motion in <code>@media (prefers-reduced-motion: reduce)</code>, then ship.",
+            note: "Durable play resurfaced for the catch-up — see the card card-web-view-transitions. Support varies by browser; it degrades cleanly to a normal navigation." }
+        ]
+      },
+      { h: "Web dev — run it today: a hard dollar cap on any AI feature",
+        blocks: [
+          { sub: "Route LLM calls through an AI gateway and set a spend limit so a runaway loop can't burn four figures", tags:["technique"],
+            p: "The #1 reason teams won't ship AI features is fear of a surprise bill. An AI gateway is a middleman for your AI calls; Cloudflare's now enforces spend limits — real dollar budgets worked out from each model's token price. Cross the budget and it either blocks further calls or fails over to a cheaper model.",
+            doIt: "Point your OpenAI/Anthropic calls at an AI Gateway endpoint, add a <b>spend limit</b> scoped by model/team (e.g. $50/day on one pricey model), pick the window, and choose the over-limit behaviour (block, or fail over to a cheaper model). Reconcile the gateway's cost figures against your provider invoice for the first month.",
+            note: "Durable play resurfaced for the catch-up — see the card card-webdev-ai-gateway-spend-limits." }
+        ]
+      },
+      { h: "Email — run it today: land in the inbox and show your logo",
+        blocks: [
+          { sub: "A one-time DNS setup (DMARC + BIMI) that improves placement and shows your verified logo in Gmail and Apple Mail", tags:["technique"],
+            p: "These are email-authentication records: SPF and DKIM prove a message is really from you, DMARC tells inboxes what to do if it isn't, and BIMI (plus a VMC certificate) unlocks your logo beside the email. Two wins from one afternoon — better inbox placement after the 2024 sender rules, and free brand real estate most competitors haven't claimed.",
+            doIt: "Confirm SPF/DKIM pass, publish a DMARC record at <code>p=none</code> then tighten to <code>p=quarantine</code> and <code>p=reject</code>, then publish a BIMI record with a square SVG logo + a VMC certificate. Send yourself a test to confirm the logo shows and you land in the inbox.",
+            note: "Durable play resurfaced for the catch-up — see the card card-email-dmarc-bimi." }
+        ]
+      }
+    ],
+    sources: "<a href='https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API' target='_blank' rel='noopener'>MDN — View Transitions API</a> · <a href='https://blog.cloudflare.com/ai-gateway-spend-limits/' target='_blank' rel='noopener'>Cloudflare — AI Gateway spend limits</a> · <a href='https://developers.cloudflare.com/changelog/post/2026-06-05-spend-limits/' target='_blank' rel='noopener'>Cloudflare Changelog — Control AI costs with spend limits</a> · <a href='https://support.google.com/mail/answer/81126' target='_blank' rel='noopener'>Google — Email sender guidelines</a> · <a href='https://bimigroup.org/' target='_blank' rel='noopener'>BIMI Group</a>"
+  },
+
   /* ===================== DAILY — Thu Jun 11 ===================== */
   {
     id: "2026-06-11-daily",
