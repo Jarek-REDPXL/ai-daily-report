@@ -394,7 +394,7 @@
     container.innerHTML = '<div class="loading">Loading…</div>';
     const full = await getEntry(meta.id);
     if (currentId !== meta.id) return;
-    if (!full) { container.innerHTML = '<div class="loading">Could not load this report.</div>'; return; }
+    if (!full) { container.innerHTML = '<div class="loading">Couldn\'t load this edition. Try again in a moment.</div>'; return; }
     render(full);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -757,7 +757,7 @@
       const cs = cardsIndex.filter(c => (c.domains || []).includes(d)).sort(byUpdated);
       const body = cs.length
         ? `<div class="kcard-grid">${cs.map(cardTileHTML).join("")}</div>`
-        : `<p class="empty subtle">Building as the routine runs.</p>`;
+        : `<p class="empty subtle">Filling in as the routine runs.</p>`;
       return `<section class="hub-sub">
           <div class="hub-sub-head"><span class="hub-sub-dot" aria-hidden="true"></span>
             <h3>${esc(domFull(d))}</h3><span class="hub-sub-count">${cs.length}</span></div>
@@ -769,7 +769,7 @@
     const recent = META.filter(r => r.type === "daily" && (r.domains || []).some(d => set.has(d))).slice(0, 4);
     const recentHTML = recent.length
       ? `<div class="pulse-list">${recent.map(pulseItemHTML).join("")}</div>`
-      : `<p class="empty subtle">No recent intake tagged to this hub yet.</p>`;
+      : `<p class="empty subtle">Nothing fresh tagged to this hub yet — check back after the next run.</p>`;
 
     viewEl.innerHTML = `
       <section class="hub-header">
@@ -781,7 +781,7 @@
       </section>
       <div class="hub-subs">${subs}</div>
       <section class="home-block">
-        <div class="hb-head"><h2>Recent in ${esc(H.label)}</h2><a class="hb-more" href="#/feed">Open the feed →</a></div>
+        <div class="hb-head"><h2>Just landed in ${esc(H.label)}</h2><a class="hb-more" href="#/feed">Open the full feed →</a></div>
         ${recentHTML}
       </section>`;
     Array.prototype.forEach.call(viewEl.children, (el, i) => el.style.setProperty("--i", Math.min(i, 6)));
@@ -793,7 +793,7 @@
     viewEl.innerHTML = '<div class="loading">Loading…</div>';
     const c = id ? await getCard(id) : null;
     if (document.body.dataset.view !== "card") return; // superseded by another nav
-    if (!c) { viewEl.innerHTML = `<section class="card-view"><p class="empty">Card not found. <a href="#/">Back to home</a></p></section>`; return; }
+    if (!c) { viewEl.innerHTML = `<section class="card-view"><p class="empty">Couldn't find that play. <a href="#/">Back to home</a></p></section>`; return; }
 
     const f = freshness(c.updated);
     const how = (c.how || []).map(s => `<li>${s}</li>`).join("");
@@ -904,7 +904,7 @@
       <section class="home-hero">
         <div class="hh-kicker"><span class="kicker-rule"></span>Team Inbox</div>
         <h1 class="hh-title">Inbox</h1>
-        <p class="hh-sub">What the team shared, asked, and rated — the routine reads this each run and acts on it.</p>
+        <p class="hh-sub">What the team shared, asked, and rated — the routine reads this before each run and acts on it.</p>
       </section>
       <section class="home-block">
         <div class="hb-head"><h2>Rating highlights</h2></div>
@@ -926,7 +926,7 @@
       if (!res.ok || !data || !data.ok) throw new Error((data && data.error) || ("HTTP " + res.status));
     } catch (e) {
       if (document.body.dataset.view !== "inbox") return;
-      fbWrap.innerHTML = `<p class="empty">Couldn't load the inbox. <a href="#/inbox">Retry</a></p>`;
+      fbWrap.innerHTML = `<p class="empty">Couldn't load the inbox right now. <a href="#/inbox">Retry</a></p>`;
       rWrap.innerHTML = "";
       return;
     }
@@ -936,7 +936,7 @@
     const ratings = Array.isArray(data.ratings) ? data.ratings : [];
     rWrap.innerHTML = "";
     if (!ratings.length) {
-      rWrap.innerHTML = `<p class="empty subtle">No ratings yet — they appear as the team rates plays.</p>`;
+      rWrap.innerHTML = `<p class="empty subtle">No ratings yet — they show up here as the team rates plays.</p>`;
     } else {
       // ratings come avg-desc; split into best + worst with no overlap
       const k = Math.min(5, Math.ceil(ratings.length / 2));
@@ -950,14 +950,14 @@
         rWrap.appendChild(g);
       };
       group("Top rated", top);
-      group("Needs another look", low);
+      group("Worth a second look", low);
     }
 
     // feedback: new-first
     const feedback = Array.isArray(data.feedback) ? data.feedback : [];
     fbWrap.innerHTML = "";
     if (!feedback.length) {
-      fbWrap.innerHTML = `<p class="empty">No feedback yet — it lands here when the team uses the form.</p>`;
+      fbWrap.innerHTML = `<p class="empty">No feedback yet — it lands here the moment someone uses the form.</p>`;
     } else {
       const list = document.createElement("div"); list.className = "fb-list";
       feedback.forEach(f => list.appendChild(inboxFeedbackEl(f)));
@@ -974,8 +974,8 @@
     viewEl.innerHTML = `
       <section class="ask-view">
         <div class="hh-kicker"><span class="kicker-rule"></span>Ask the knowledge base</div>
-        <h1 class="ask-h1">Ask anything across our cards &amp; reports</h1>
-        <p class="ask-sub">Answers come only from RedPxl News's own curated base, with citations. No match yet? Your question becomes a learn-next priority for the routine.</p>
+        <h1 class="ask-h1">Ask anything in our cards &amp; reports</h1>
+        <p class="ask-sub">Every answer comes straight from RedPxl News's own base, with sources you can check. No match yet? The routine adds your question to what it learns before the next run.</p>
         <form class="ask-form" id="askForm">
           <input id="askInput" type="text" placeholder="e.g. how do we add app-like page transitions?" autocomplete="off" maxlength="500" required>
           <button type="submit">Ask</button>
@@ -989,7 +989,7 @@
       e.preventDefault();
       const q = input.value.trim();
       if (q.length < 3) return;
-      out.innerHTML = `<div class="loading">Searching the knowledge base…</div>`;
+      out.innerHTML = `<div class="loading">Searching our base…</div>`;
       try {
         const res = await fetch("/api/ask", {
           method: "POST", headers: { "Content-Type": "application/json" },
@@ -1001,9 +1001,9 @@
         const cites = (data.citations || []).map(c =>
           `<li><a href="${esc(c.hash)}">[${c.n}] ${esc(c.title)}</a> <span class="ask-kind">${esc(c.kind)}</span></li>`).join("");
         out.innerHTML = `<div class="ask-answer">${esc(data.answer).replace(/\n/g, "<br>")}</div>`
-          + (cites ? `<div class="ask-cites"><h3>Sources</h3><ol>${cites}</ol></div>` : "");
+          + (cites ? `<div class="ask-cites"><h3>Where this comes from</h3><ol>${cites}</ol></div>` : "");
       } catch (err) {
-        out.innerHTML = `<p class="ask-err">Couldn't reach the knowledge base. Try again in a moment.</p>`;
+        out.innerHTML = `<p class="ask-err">Couldn't reach the base just now. Give it a second and try again.</p>`;
       }
     });
     input.focus();
@@ -1064,7 +1064,7 @@
     hubs.forEach(h => { HUBS[h.key] = { label: h.label, scope: h.scope, domains: h.domains || [] }; });
     if (!META.length) {
       document.body.dataset.view = "feed";
-      container.innerHTML = '<div class="loading">No reports yet.</div>';
+      container.innerHTML = '<div class="loading">Nothing in the feed yet — the first run will fill it.</div>';
       latestPill.textContent = "No reports";
     } else {
       groupWeeks();
