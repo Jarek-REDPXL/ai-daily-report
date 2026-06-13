@@ -16,7 +16,7 @@ step. Ask it anything across years of mastery, get a cited answer, wherever we w
 
 ## FINISH LINE (done when ALL hold)
 - Every card is a practical run-it-today play with real links.
-- All 8 domains produce cards steadily (hubs full, not promises).
+- All 9 domains produce cards steadily (hubs full, not promises).
 - The team rates + contributes and the routine demonstrably adapts.
 - It ingests real results and calibrates to what works for us.
 - Ask-anything retrieval with cited answers, exposed as an MCP.

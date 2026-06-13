@@ -4,7 +4,7 @@
 Written MONDAY for the week just ended (Mon–Sun). Weekly sortDate = that week's SUNDAY.
 
 ## Mission
-Step back from the daily stream and synthesize the week across all 8 domains: what actually mattered, the throughlines, and what the team should DO next week. Synthesis over recap — connect dots the dailies couldn't. Shared standards: digest/_house.md.
+Step back from the daily stream and synthesize the week across all 9 domains: what actually mattered, the throughlines, and what the team should DO next week. Synthesis over recap — connect dots the dailies couldn't. Shared standards: digest/_house.md.
 
 ## Inputs
 The week's daily reports, the per-domain digests, predictions.md, sources.md.

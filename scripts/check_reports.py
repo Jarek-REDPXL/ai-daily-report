@@ -300,8 +300,14 @@ def main():
         newest = max(dates)
         allowed = {ref.isoformat(), (ref - timedelta(days=1)).isoformat()}
         if newest not in allowed:
-            warnings.append("newest entry %s is not %s or the day before — "
-                            "did today's report get added?" % (newest, ref.isoformat()))
+            # Date-arg path (the scheduled daily passes the run date): a stale newest
+            # entry means the run produced no fresh content. HARD FAIL (was WARN) so the
+            # engine fails loudly instead of silently shipping nothing — the workflow's
+            # failure-alert step then surfaces it. NOTE: the window still allows
+            # "yesterday", so this catches a >=2-day gap, not a single same-day miss.
+            errors.append("freshness: newest entry %s is not %s or the day before — "
+                          "today's report is missing/stale (run produced no fresh entry)"
+                          % (newest, ref.isoformat()))
 
     # weekly pdf paths exist
     for r in reports:

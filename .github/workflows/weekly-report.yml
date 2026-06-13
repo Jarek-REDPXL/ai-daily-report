@@ -23,6 +23,7 @@ on:
 permissions:
   contents: write           # native GITHUB_TOKEN push to the run's branch
   id-token: write           # lets claude-code-action fetch its OIDC token
+  issues: write             # open a tracking issue when a scheduled run fails (alerting)
 
 concurrency:
   group: ai-edge-publish   # shared with daily so the two never push concurrently
@@ -129,3 +130,17 @@ jobs:
             echo "push attempt $attempt rejected, retrying..."; sleep 5
           done
           echo "push failed after retries"; exit 1
+
+      # Failure alerting: if a SCHEDULED (unattended) run fails at ANY step above, open
+      # a tracking issue assigned to the repo owner so the failure isn't silent. Uses the
+      # built-in GITHUB_TOKEN (issues: write) — no new secret. Never runs on success or on
+      # a manual workflow_dispatch.
+      - name: Alert on scheduled-run failure (open a GitHub issue)
+        if: ${{ failure() && github.event_name == 'schedule' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DATE="$(date -u +'%Y-%m-%d')"
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          BODY="$(printf 'The scheduled **%s** run failed — the briefing may not have published.\n\n- Date (UTC): %s\n- Failed run: %s\n\ncc @%s — check the run log. The quality gate now hard-fails on a stale or missing entry instead of shipping nothing silently.' "${{ github.workflow }}" "$DATE" "$RUN_URL" "${{ github.repository_owner }}")"
+          gh issue create --repo "${{ github.repository }}" --title "${{ github.workflow }} failed — ${DATE}" --assignee "${{ github.repository_owner }}" --body "$BODY" || echo "alert: could not open the tracking issue"

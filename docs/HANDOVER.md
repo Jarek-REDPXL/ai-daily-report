@@ -170,10 +170,10 @@ Weekly summary pinned on top → 7 days listed Sunday→Monday.
 - `scripts/domains.js` — machine source of truth for valid domain slugs +
   labels (`DOMAINS`, `DOMAIN_LABELS`, `DOMAIN_LABELS_SHORT`, `PAID_PLATFORM_TAGS`);
   imported by build-data.js and parsed by the gate.
-- `docs/DOMAINS.md` — human-readable taxonomy: the **8** slugs + labels + scopes +
+- `docs/DOMAINS.md` — human-readable taxonomy: the **9** slugs + labels + scopes +
   the paid platform tags (`google-ads`, `meta-ads`, `snap-ads`) + the **hub mapping**.
-- **8 domains:** `web-design`, `web-dev`, `graphic`, `email`, `social`, `paid`,
-  `growth`, `ai-tooling` (web was split into design + dev so the Design and
+- **9 domains:** `web-design`, `web-dev`, `graphic`, `email`, `social`, `paid`,
+  `growth`, `ai-tooling`, `news` (web was split into design + dev so the Design and
   Development hubs are sharp).
 - **Hubs (rollup for navigation):** Design = `web-design` + `graphic`;
   Development = `web-dev`; Marketing = `email` + `social` + `paid` + `growth`;
@@ -197,14 +197,14 @@ Weekly summary pinned on top → 7 days listed Sunday→Monday.
   machine source of truth for valid slugs; the gate parses it).
 
 ### Prompts (the editorial spec the routine follows)
-- `docs/prompts/daily.md` — daily briefing instructions (canonical): the 8-domain
-  cadence (scan all 8 → deep-beat exactly one web slug daily, alternating
+- `docs/prompts/daily.md` — daily briefing instructions (canonical): the 9-domain
+  cadence (scan all 9 → deep-beat exactly one web slug daily, alternating
   web-design/web-dev, + the 2 least-recently-covered non-web domains → promote
   anything urgent), per-domain sourcing, the source-scoring loop, the
   exact-clickable-link rule, self-learning loop, the card-extraction step, output
   format, quality gate step.
 - `docs/prompts/weekly.md` — weekly synthesis instructions (Mon–Sun, written Monday;
-  synthesizes across all 8 domains).
+  synthesizes across all 9 domains).
 
 ### Tooling
 - `scripts/check_reports.py [YYYY-MM-DD]` — QUALITY GATE. Validates reports.js (valid
@@ -253,7 +253,7 @@ Configured in the Claude web/app (Routines), NOT in this repo. Key settings:
 - **Permissions:** allow git push to the repo; web search; Bash. Runs unattended.
 
 Its Instructions tell it to: read the per-domain knowledge files + recent reports →
-research the last ~24h on the **8-domain cadence** (scan all 8 domains → deep-beat
+research the last ~24h on the **9-domain cadence** (scan all 9 domains → deep-beat
 **exactly one web slug** daily, alternating **web-design/web-dev**, + the **2
 least-recently-covered non-web domains** + promote anything urgent a scan surfaces) →
 mine/update the **source-scoring loop** (`sources.md`) → CREATE/UPDATE durable
@@ -349,9 +349,9 @@ Deploy = `git push origin main` (Vercel auto-deploys in ~1 min). Verify a deploy
 
 `docs/KNOWLEDGE-BASE-ROADMAP.md` has the detail. Summary:
 - **Phase 1 (DONE):** split data + lazy-load + auto-regen. Scales to years.
-- **Domain expansion (DONE):** the platform now covers all 8 team domains (web split
+- **Domain expansion (DONE):** the platform now covers all 9 team domains (web split
   into web-design + web-dev) rolling up into 4 hubs — `domains` field on every report
-  (gate-validated), per-domain ledgers, the source-scoring ledger, the 8-domain daily
+  (gate-validated), per-domain ledgers, the source-scoring ledger, the 9-domain daily
   cadence, the durable **card layer**, and the sidebar domain filter.
 - **Phase 2 (when needed):** Postgres (Vercel Postgres / Supabase, free tier) for
   cross-year full-text + structured filtering (by ticker/company/topic) + an API.
