@@ -109,10 +109,9 @@ def check_links(cards, reports, errors, warnings, tools=None):
             urls |= _href_set_from_html(r["sources"])
     if tools:
         for t in (tools.get("tools") or {}).values():
-            for s in (t.get("sources") or []):
-                u = s.get("url") if isinstance(s, dict) else None
-                if isinstance(u, str) and u.startswith(("http://", "https://")):
-                    urls.add(u.strip())
+            u = t.get("url")
+            if isinstance(u, str) and u.startswith(("http://", "https://")):
+                urls.add(u.strip())
     dead, warned = 0, 0
     for u in sorted(urls):
         ok, code = _link_status(u)
@@ -341,19 +340,18 @@ def main():
                         errors.append("%s missing/empty field: %s" % (tw, f))
                 if t.get("id") and t.get("id") != key:
                     errors.append("%s id %r does not match its key" % (tw, t.get("id")))
-                src = t.get("sources")
-                if not isinstance(src, list) or not src:
-                    errors.append("%s sources must be a non-empty array with >=1 real http(s) url" % tw)
+                u = t.get("url")
+                if not (isinstance(u, str) and u.strip().lower().startswith(("http://", "https://"))):
+                    errors.append("%s missing/invalid url — a real http(s) official site is required" % tw)
+                tjs = t.get("jobs")
+                if tjs is None:
+                    tjs = []
+                if not isinstance(tjs, list):
+                    errors.append("%s jobs must be an array of job slugs" % tw)
                 else:
-                    real = 0
-                    for k, s in enumerate(src):
-                        u = s.get("url") if isinstance(s, dict) else None
-                        if not (isinstance(u, str) and u.strip().lower().startswith(("http://", "https://"))):
-                            errors.append("%s sources[%d] must be an object with a real http(s) url" % (tw, k))
-                        else:
-                            real += 1
-                    if real < 1:
-                        errors.append("%s must have >=1 real source url" % tw)
+                    badj = [s for s in tjs if s not in EXPECTED_TOOL_JOB_SLUGS]
+                    if badj:
+                        errors.append("%s jobs has invalid slug(s): %s" % (tw, ", ".join(map(str, badj))))
                 tool_ids.add(key)
                 inner_ids.append(t.get("id"))
             tdupes = set(x for x in inner_ids if x and inner_ids.count(x) > 1)

@@ -844,34 +844,56 @@ a.rh-row:hover{background:var(--panel-2);color:var(--fg);transform:translateX(2p
 .fb-body{margin:0;font-size:14px;line-height:1.6;color:var(--fg);white-space:pre-wrap;word-break:break-word}
 .fb-who{display:inline-block;margin-top:8px;font-family:var(--mono);font-size:11px;color:var(--fg-40)}
 
-/* ── Tools directory (#/tools) — standalone reference; reuses the .kcard tile look ── */
-.tool-grid{margin-top:var(--md)}
-.tool-card{gap:8px}
-.tool-head{display:flex;align-items:baseline;gap:8px;padding-right:14px}
-.tool-rank{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--red);flex:0 0 auto}
-.tool-name{font-size:16px;font-weight:700;letter-spacing:-.01em;margin:0;min-width:0}
-.tool-price{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--fg-40);white-space:nowrap;flex:0 0 auto}
-.tool-what{color:var(--fg-70);font-size:14px;line-height:1.5;margin:0}
-.tool-judge{display:flex;flex-direction:column;gap:4px;margin-top:2px}
-.tool-good,.tool-weak{font-size:12.5px;line-height:1.45;color:var(--fg-55)}
+/* ── Tools directory (#/tools) — standalone reference; Top-30 as single-column rows ── */
+.tools-byjob-label{display:flex;align-items:center;gap:10px;margin:var(--xxl) 0 var(--lg);
+  font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-70)}
+.tool-rows{display:flex;flex-direction:column;gap:10px;margin-top:var(--md)}
+.tool-rows-compact{gap:8px;margin-top:10px}
+/* one tool per row — horizontal card: rank · logo · main · side */
+.tool-row{display:grid;grid-template-columns:44px 40px minmax(0,1fr) auto;align-items:center;gap:16px;
+  background:var(--panel);border:1px solid var(--line);border-left:2px solid var(--line-2);
+  border-radius:0 var(--r-md) var(--r-md) 0;padding:14px 18px;color:var(--fg)}
+.tr-rank{font-family:var(--font-editorial);font-size:24px;font-weight:700;line-height:1;color:var(--fg-40);text-align:center}
+.tool-row.is-top .tr-rank{color:var(--red)}
+/* logo box — fixed size so layout never shifts; img falls back to favicon then monogram */
+.tool-logo{width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;
+  background:var(--panel-2);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.tool-logo-img{width:28px;height:28px;object-fit:contain;display:block}
+.tool-logo-mono{font-family:var(--font-editorial);font-weight:700;font-size:18px;color:var(--red);
+  width:100%;height:100%;display:grid;place-items:center;background:var(--red-glow)}
+.tr-main{min-width:0}
+.tr-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.tr-name{font-size:16px;font-weight:700;letter-spacing:-.01em;color:var(--fg);text-decoration:none}
+.tr-name:hover{color:var(--red)}
+.tr-jobs{display:inline-flex;flex-wrap:wrap;gap:5px}
+.tr-tag{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.04em;
+  color:var(--fg-55);background:var(--panel-2);border:1px solid var(--line);border-radius:var(--r-sm);padding:2px 6px}
+.tr-what{color:var(--fg-70);font-size:14px;line-height:1.5;margin:4px 0 6px}
+.tr-judge{display:flex;flex-wrap:wrap;gap:6px 18px}
+.tool-good,.tool-weak{font-size:12.5px;line-height:1.4;color:var(--fg-55)}
 .tool-good b,.tool-weak b{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-right:6px;color:var(--fg-40)}
 .tool-weak b{color:var(--red)}
-.tool-foot{margin-top:auto;padding-top:4px}
-.tool-src{font-family:var(--mono);font-size:11px;color:var(--fg-55);text-decoration:none;border-bottom:1px solid var(--line-2)}
-.tool-src:hover{color:var(--red);border-bottom-color:var(--red)}
-/* the #1 pick — red accent + the "why #1" callout */
-.tool-no1{margin-bottom:var(--md)}
-.tool-card.is-top{border-left:3px solid var(--red);background:var(--red-glow)}
+.tr-side{display:flex;flex-direction:column;align-items:flex-end;gap:8px;text-align:right;flex:0 0 auto}
+.tr-price{font-family:var(--mono);font-size:11px;color:var(--fg-55);white-space:nowrap}
+.tr-visit{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--red);text-decoration:none;white-space:nowrap;
+  border:1px solid var(--line-2);border-radius:var(--r-sm);padding:4px 9px}
+.tr-visit:hover{border-color:var(--red);background:var(--red-glow)}
+/* the #1 pick per job — red accent + the "why #1" callout */
+.tool-no1{margin-bottom:12px}
+.tool-row.is-top{border-left:3px solid var(--red);background:var(--red-glow)}
 .tool-why{margin:10px 0 0;padding:10px 14px;border-left:3px solid var(--red);background:var(--panel);
   font-size:13.5px;line-height:1.55;color:var(--fg-70);border-radius:0 var(--r-md) var(--r-md) 0}
 .tool-why-label{font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;
   letter-spacing:.08em;color:var(--red);margin-right:8px}
-.tool-job{margin-bottom:var(--xxl)}
-/* tools motion — same elevated feel as home/hub, scoped to the tools view */
-body[data-view="tools"] .tool-card{transition:transform var(--t-med) var(--ease-out),border-color var(--t-med) var(--ease),background-color var(--t-med) var(--ease),box-shadow var(--t-med) var(--ease-out)}
-body[data-view="tools"] .tool-card:hover{transform:translateY(-4px);box-shadow:0 12px 30px -16px rgba(10,13,18,.55)}
-body[data-view="tools"] .tool-card .kc-dot{transition:opacity var(--t-fast) var(--ease),transform var(--t-fast) var(--ease-out)}
-body[data-view="tools"] .tool-card:hover .kc-dot{transform:scale(1.3)}
+.tool-job{margin-bottom:var(--xl)}
+/* stack the row on small screens so nothing crushes */
+@media (max-width:640px){
+  .tool-row{grid-template-columns:32px 36px minmax(0,1fr);gap:10px 12px}
+  .tr-side{grid-column:2 / -1;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;gap:12px;margin-top:2px}
+}
+/* tools motion — elevated hover lift, scoped to the tools view */
+body[data-view="tools"] .tool-row{transition:transform var(--t-med) var(--ease-out),border-color var(--t-med) var(--ease),background-color var(--t-med) var(--ease),box-shadow var(--t-med) var(--ease-out)}
+body[data-view="tools"] .tool-row:hover{transform:translateY(-3px);box-shadow:0 12px 30px -16px rgba(10,13,18,.55)}
 
 /* ── Homepage personality pass (first pass; scoped to the #/ view) ──
    A touch more life on the landing view: a springier hover lift + a soft shadow
@@ -939,6 +961,5 @@ body[data-view="feed"] .report-nav button:hover:not(:disabled){transform:transla
   body[data-view="feed"] .nav-item:hover,
   body[data-view="feed"] .report-nav button:hover:not(:disabled){transform:none;box-shadow:none}
   body[data-view="hub"] .kcard:hover .kc-dot{transform:none}
-  body[data-view="tools"] .tool-card:hover{transform:none;box-shadow:none}
-  body[data-view="tools"] .tool-card:hover .kc-dot{transform:none}
+  body[data-view="tools"] .tool-row:hover{transform:none;box-shadow:none}
 }

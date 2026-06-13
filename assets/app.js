@@ -1028,26 +1028,47 @@
   //  NOT a domain/hub. Data from reports/data/tools.json (built by build-data.js
   //  from reports/data/tools.js). All tool text is DATA — escaped, never HTML.
   // =========================================================================
-  function toolSrcHTML(t) {
-    const s = (t.sources && t.sources[0]) ? t.sources[0] : null;
-    if (!s || !s.url) return "";
-    let host = ""; try { host = new URL(s.url).hostname.replace(/^www\./, ""); } catch (e) { host = s.url; }
-    return `<a class="tool-src" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label || host)} ↗</a>`;
+  function toolLogoHTML(t) {
+    let dom = ""; try { dom = new URL(t.url).hostname.replace(/^www\./, ""); } catch (e) { dom = ""; }
+    const letter = esc(((t.name || "?").trim().charAt(0) || "?").toUpperCase());
+    if (!dom) return `<span class="tool-logo"><span class="tool-logo-mono">${letter}</span></span>`;
+    return `<span class="tool-logo"><img class="tool-logo-img" src="https://logo.clearbit.com/${esc(dom)}" data-domain="${esc(dom)}" data-name="${esc(t.name || "")}" loading="lazy" alt=""></span>`;
   }
-  function toolTileHTML(t, rank) {
+  // logo fallback chain: clearbit -> google favicon -> monogram tile, so a row never breaks.
+  function wireLogos(root) {
+    root.querySelectorAll("img.tool-logo-img").forEach(img => {
+      img.addEventListener("error", function () {
+        const dom = img.dataset.domain || "";
+        if (img.dataset.step !== "fav") {
+          img.dataset.step = "fav";
+          img.src = "https://www.google.com/s2/favicons?domain=" + encodeURIComponent(dom) + "&sz=128";
+        } else {
+          const mono = document.createElement("span");
+          mono.className = "tool-logo-mono";
+          mono.textContent = ((img.dataset.name || "?").trim().charAt(0) || "?").toUpperCase();
+          if (img.parentNode) img.replaceWith(mono);
+        }
+      });
+    });
+  }
+  function jobTagsHTML(t, labelMap) {
+    const js = Array.isArray(t.jobs) ? t.jobs : [];
+    if (!js.length) return "";
+    return `<span class="tr-jobs">${js.map(s => `<span class="tr-tag">${esc(labelMap[s] || s)}</span>`).join("")}</span>`;
+  }
+  function toolRowHTML(t, rank, labelMap, top) {
     if (!t) return "";
-    const rankBadge = rank ? `<span class="tool-rank">#${rank}</span>` : "";
-    const price = t.price ? `<span class="tool-price">${esc(t.price)}</span>` : "";
-    const foot = toolSrcHTML(t);
-    return `<div class="kcard tool-card${rank === 1 ? " is-top" : ""}">
-        <span class="kc-dot" aria-hidden="true"></span>
-        <div class="tool-head">${rankBadge}<h4 class="tool-name">${esc(t.name)}</h4>${price}</div>
-        <p class="tool-what">${esc(t.what)}</p>
-        <div class="tool-judge">
-          ${t.best_for ? `<span class="tool-good"><b>Good for</b> ${esc(t.best_for)}</span>` : ""}
-          ${t.weak_at ? `<span class="tool-weak"><b>Weak at</b> ${esc(t.weak_at)}</span>` : ""}
+    const url = t.url || "#";
+    const rankStr = rank ? String(rank) : "•";
+    return `<div class="tool-row${top ? " is-top" : ""}">
+        <div class="tr-rank">${esc(rankStr)}</div>
+        ${toolLogoHTML(t)}
+        <div class="tr-main">
+          <div class="tr-head"><a class="tr-name" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(t.name)}</a>${jobTagsHTML(t, labelMap)}</div>
+          <p class="tr-what">${esc(t.what || "")}</p>
+          <div class="tr-judge">${t.best_for ? `<span class="tool-good"><b>Good for</b> ${esc(t.best_for)}</span>` : ""}${t.weak_at ? `<span class="tool-weak"><b>Weak at</b> ${esc(t.weak_at)}</span>` : ""}</div>
         </div>
-        ${foot ? `<div class="tool-foot">${foot}</div>` : ""}
+        <div class="tr-side">${t.price ? `<span class="tr-price">${esc(t.price)}</span>` : ""}<a class="tr-visit" href="${esc(url)}" target="_blank" rel="noopener noreferrer">Visit ↗</a></div>
       </div>`;
   }
   async function renderTools() {
@@ -1062,39 +1083,43 @@
       return;
     }
     const T = data.tools;
-    const jobs = Array.isArray(data.jobs) ? data.jobs : [];
-    const jobsHTML = jobs
+    const labelMap = {};
+    (Array.isArray(data.jobs) ? data.jobs : []).forEach(j => { if (j && j.slug) labelMap[j.slug] = j.label || j.slug; });
+
+    // Top 30 — single column, one tool per row
+    const topRows = (Array.isArray(data.top) ? data.top : [])
+      .map(id => T[id]).filter(Boolean)
+      .map((t, i) => toolRowHTML(t, i + 1, labelMap, false)).join("");
+    const topHTML = topRows
+      ? `<section class="home-block"><div class="tool-rows">${topRows}</div></section>`
+      : `<p class="empty">No ranked tools yet.</p>`;
+
+    // By job — populated jobs only (skip empties)
+    const jobsHTML = (Array.isArray(data.jobs) ? data.jobs : [])
       .filter(j => j && Array.isArray(j.ranked_tool_ids) && j.ranked_tool_ids.length)
       .map(j => {
         const ids = j.ranked_tool_ids;
         const no1 = T[ids[0]];
         const rest = ids.slice(1).map(id => T[id]).filter(Boolean);
         const no1HTML = no1
-          ? `<div class="tool-no1">${toolTileHTML(no1, 1)}${j.why_number_one ? `<p class="tool-why"><span class="tool-why-label">Why #1</span> ${esc(j.why_number_one)}</p>` : ""}</div>`
+          ? `<div class="tool-no1">${toolRowHTML(no1, 1, labelMap, true)}${j.why_number_one ? `<p class="tool-why"><span class="tool-why-label">Why #1</span> ${esc(j.why_number_one)}</p>` : ""}</div>`
           : "";
         const restHTML = rest.length
-          ? `<div class="kcard-grid tool-grid">${rest.map((t, i) => toolTileHTML(t, i + 2)).join("")}</div>`
+          ? `<div class="tool-rows tool-rows-compact">${rest.map((t, i) => toolRowHTML(t, i + 2, labelMap, false)).join("")}</div>`
           : "";
-        return `<section class="home-block tool-job">
-            <div class="hb-head"><h2>${esc(j.label)}</h2></div>
-            ${no1HTML}${restHTML}
-          </section>`;
+        return `<section class="home-block tool-job"><div class="hb-head"><h2>${esc(j.label)}</h2></div>${no1HTML}${restHTML}</section>`;
       }).join("");
-    const topTiles = (Array.isArray(data.top) ? data.top : [])
-      .map(id => T[id]).filter(Boolean).map(t => toolTileHTML(t, 0)).join("");
-    const topHTML = topTiles
-      ? `<section class="home-block"><div class="hb-head"><h2>Overall top tools</h2></div><div class="kcard-grid tool-grid">${topTiles}</div></section>`
-      : "";
+
     viewEl.innerHTML = `
       <section class="home-hero">
         <div class="hh-kicker"><span class="kicker-rule"></span>Tools</div>
-        <h1 class="hh-title">The toolkit</h1>
-        <p class="hh-sub">The best AI tools by job — ranked, with what each one is good and bad at. The routine re-ranks these as it learns what actually works.</p>
+        <h1 class="hh-title">The Top 30 AI tools</h1>
+        <p class="hh-sub">Ranked honestly — what each one is great and bad at, who it's for, and a link to try it. The routine re-ranks these as it learns what actually works. Best tool per job below.</p>
       </section>
-      ${jobsHTML || `<p class="empty">No ranked jobs yet — they fill in as the routine ranks tools.</p>`}
-      ${topHTML}`;
+      ${topHTML}
+      ${jobsHTML ? `<div class="tools-byjob-label"><span class="kicker-rule"></span>Best tools by job</div>${jobsHTML}` : ""}`;
     Array.prototype.forEach.call(viewEl.children, (el, i) => el.style.setProperty("--i", Math.min(i, 6)));
-    revealTiles(viewEl);
+    wireLogos(viewEl);
     window.scrollTo({ top: 0 });
   }
 
