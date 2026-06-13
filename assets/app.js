@@ -515,7 +515,7 @@
   function feedbackFormHTML() {
     return `<section class="home-block contribute" id="contribute">
       <div class="hb-head"><h2>Contribute</h2></div>
-      <p class="contribute-sub">Share a win, ask for a play, or tell the system what to learn next — it feeds the next run.</p>
+      <p class="contribute-sub">Share a win, ask for a play, or tell the routine what to chase next — it reads this before the next run.</p>
       <form class="cform" autocomplete="off" novalidate>
         <div class="cform-kinds" role="group" aria-label="Type of note">
           <button type="button" class="kind-btn active" data-kind="share">Share a win</button>
@@ -718,14 +718,14 @@
 
     viewEl.innerHTML = `
       <section class="home-hero">
-        <div class="hh-kicker"><span class="kicker-rule"></span>Knowledge Center</div>
+        <div class="hh-kicker"><span class="kicker-rule"></span>Knowledge Base</div>
         <h1 class="hh-title">The pulse</h1>
-        <p class="hh-sub">What changed across the crafts, and the plays worth keeping.</p>
+        <p class="hh-sub">What moved across the crafts lately — and the plays worth stealing.</p>
         <div class="at-glance"><span class="ag-dot" aria-hidden="true"></span>${esc(glance)}</div>
       </section>
 
       <section class="home-block">
-        <div class="hb-head"><h2>What changed</h2><a class="hb-more" href="#/feed">Open the feed →</a></div>
+        <div class="hb-head"><h2>What just moved</h2><a class="hb-more" href="#/feed">Open the full feed →</a></div>
         <div class="pulse-list">${changed}</div>
       </section>
 
@@ -735,7 +735,7 @@
       </section>
 
       <section class="home-block">
-        <div class="hb-head"><h2>Recent cards</h2></div>
+        <div class="hb-head"><h2>Freshly added plays</h2></div>
         ${recentHTML}
       </section>
 
