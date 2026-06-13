@@ -66,7 +66,7 @@ window.AI_EDGE_TOOL_JOBS = [
   { slug: "video-editing", label: "Video editing", ranked_tool_ids: ["premiere", "davinci-resolve", "descript", "runway", "opusclip"], why_number_one: "The professional standard, now with Firefly generative tools right in the timeline." },
   { slug: "research", label: "Research", ranked_tool_ids: ["perplexity", "chatgpt", "gemini", "claude", "notebooklm"], why_number_one: "Built for research — searches the live web and gives you cited answers you can verify fast." },
   { slug: "planning-sitemaps", label: "Planning & sitemaps", ranked_tool_ids: ["relume", "framer"], why_number_one: "Describe the site and it generates a full sitemap and wireframes, then exports to Figma or Webflow." },
-  { slug: "graphic-design", label: "Graphic design", ranked_tool_ids: ["figma", "canva", "firefly", "midjourney"], why_number_one: "Goes from a prompt to real UI layouts and even production-ready code, inside the tool teams already use." },
+  { slug: "graphic-design", label: "Graphic design", ranked_tool_ids: ["midjourney", "firefly", "canva", "figma"], why_number_one: "The best raw image quality for concepts, brand visuals, and art direction." },
   { slug: "web-design", label: "Web design", ranked_tool_ids: ["framer", "webflow", "figma", "v0", "relume"], why_number_one: "Prompt-to-site with the best design and animation, published straight to the web with no code." },
   { slug: "web-development", label: "Web development", ranked_tool_ids: ["claude-code", "cursor", "github-copilot", "v0", "webflow"], why_number_one: "The top-ranked coding agent — reads your whole project and ships real multi-file changes." },
   { slug: "email-retention", label: "Email & retention", ranked_tool_ids: ["klaviyo", "omnisend"], why_number_one: "Built for ecommerce — personalizes on real behavior and purchase history, the strongest for retention." },
@@ -75,4 +75,4 @@ window.AI_EDGE_TOOL_JOBS = [
   { slug: "copywriting-cro", label: "Copywriting & CRO", ranked_tool_ids: ["anyword", "jasper", "hotjar", "vwo", "chatgpt"], why_number_one: "Scores each variant on predictive performance, so you write conversion copy you can trust before it runs." }
 ];
 
-window.AI_EDGE_TOOLS_TOP = ["chatgpt", "claude", "claude-code", "gemini", "cursor", "perplexity", "github-copilot", "figma", "midjourney", "firefly", "canva", "veo", "runway", "elevenlabs", "premiere", "davinci-resolve", "claude-cowork", "zapier", "n8n", "openclaw", "framer", "webflow", "v0", "relume", "notebooklm", "klaviyo", "anyword", "descript", "buffer", "hotjar"];
+window.AI_EDGE_TOOLS_TOP = ["chatgpt", "claude", "gemini", "claude-code", "cursor", "perplexity", "github-copilot", "figma", "midjourney", "firefly", "canva", "veo", "runway", "elevenlabs", "premiere", "davinci-resolve", "zapier", "n8n", "framer", "webflow", "v0", "relume", "notebooklm", "klaviyo", "anyword", "openclaw", "claude-cowork", "descript", "buffer", "hotjar"];
