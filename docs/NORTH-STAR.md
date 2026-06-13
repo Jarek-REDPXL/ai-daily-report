@@ -36,6 +36,26 @@ step. Ask it anything across years of mastery, get a cited answer, wherever we w
 - Free/no-build by default; backend only where unavoidable.
 - RedPxl brand discipline, banned patterns honored.
 
+### THE 10/10 BAR — clarity, depth, grounding (every card, every day)
+Voice in one line: **explain a pro move to a smart 12-year-old — plain words, short
+sentences, every term glossed in the same breath, always end on the exact thing to do —
+but never dumb down the expertise.** Simple words, expert substance.
+
+Every card must satisfy ALL of:
+1. **Plain-language** — a sharp 12-year-old can follow it. Short sentences. No jargon
+   without a plain-words gloss in the same breath. Concrete over abstract. Simple words,
+   expert substance — never water down the actual play.
+2. **One unmistakable action** — the `action` field is a single do-it-today instruction.
+3. **Grounded, zero hallucination** — every claim traces to a real source on the card;
+   >=1 working http(s) source; never invent impressive-sounding "facts."
+4. **`why` = the stakes** — 1–2 plain sentences on why this matters to the operator now.
+5. **`how` = concrete numbered steps** with named tools/examples.
+6. **Operator voice** — direct, practical, "here's the play," no fluff, no hype.
+7. **Depth over volume** — only genuinely golden, corroborated items; never pad to a number.
+
+This raises the bar for clarity/depth/grounding — it does NOT change the output format or
+schema (fields, enums, >=1 real source); those stay exactly as specified in docs/prompts.
+
 ## ROADMAP
 - **A)** reset content DNA to practical plays [now]
 - **B)** team write-back loop — homepage form + ratings → routine adapts
