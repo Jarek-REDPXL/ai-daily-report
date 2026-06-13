@@ -21,10 +21,10 @@ async function sha256hex(s) {
 }
 
 function loginPage(error) {
-  const msg = error ? `<p class="err">Incorrect password.</p>` : '';
+  const msg = error ? `<p class="err">That password didn't match. Try again.</p>` : '';
   return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RedPxl News — Team Access</title>
+<title>REDPXL - Knowledge Base</title>
 <style>
   :root{color-scheme:dark}
   *{box-sizing:border-box}
@@ -59,7 +59,7 @@ function loginPage(error) {
     <label for="p">Team password</label>
     <input id="p" name="password" type="password" autofocus autocomplete="current-password" required>
     <button type="submit">Enter</button>
-    <div class="foot">Authorized team members only.</div>
+    <div class="foot">RedPxl team only.</div>
   </form>
 </body></html>`;
 }
