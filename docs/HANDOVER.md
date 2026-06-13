@@ -350,7 +350,7 @@ Deploy = `git push origin main` (Vercel auto-deploys in ~1 min). Verify a deploy
 `docs/KNOWLEDGE-BASE-ROADMAP.md` has the detail. Summary:
 - **Phase 1 (DONE):** split data + lazy-load + auto-regen. Scales to years.
 - **Domain expansion (DONE):** the platform now covers all 9 team domains (web split
-  into web-design + web-dev) rolling up into 4 hubs — `domains` field on every report
+  into web-design + web-dev) rolling up into 5 hubs — `domains` field on every report
   (gate-validated), per-domain ledgers, the source-scoring ledger, the 9-domain daily
   cadence, the durable **card layer**, and the sidebar domain filter.
 - **Phase 2 (when needed):** Postgres (Vercel Postgres / Supabase, free tier) for

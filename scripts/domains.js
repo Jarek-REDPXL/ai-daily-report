@@ -42,7 +42,7 @@ const DOMAIN_LABELS_SHORT = {
 // Platform granularity for the `paid` domain — lives in block-level tags.
 const PAID_PLATFORM_TAGS = ["google-ads", "meta-ads", "snap-ads"];
 
-// HUBS — the 4 navigable craft areas the 9 domains roll up into. SINGLE SOURCE
+// HUBS — the 5 navigable hubs the 9 domains roll up into. SINGLE SOURCE
 // OF TRUTH: build-data.js emits this for the site (reports/data/hubs.json) and the
 // gate validates each hub's domains against DOMAINS, so the mapping never drifts.
 // Human-readable version + rationale: docs/DOMAINS.md "Hubs".

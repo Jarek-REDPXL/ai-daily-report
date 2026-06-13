@@ -40,7 +40,7 @@
   const cardCache = {};          // id -> full card
   let legacyCards = null;        // window.AI_EDGE_CARDS fallback
 
-  // Hubs roll the 9 domains up into 4 craft areas. Loaded from reports/data/hubs.json
+  // Hubs roll the 9 domains up into 5 hubs. Loaded from reports/data/hubs.json
   // (emitted from scripts/domains.js — the single source of truth). Never mirrored
   // here; empty until loaded, and the views degrade gracefully if it's missing.
   let HUBS = {};
