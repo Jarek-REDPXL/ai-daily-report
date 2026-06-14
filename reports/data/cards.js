@@ -820,6 +820,337 @@ window.AI_EDGE_CARDS = [
     tags: ["workflow", "agents"],
     created: "2026-06-07",
     updated: "2026-06-13"
+  },
+
+  {
+    id: "card-webdesign-contrast-color",
+    domains: ["web-design"],
+    title: "Let CSS pick a guaranteed-readable text colour with contrast-color()",
+    action: "On any element whose background is a variable or brand token, set color: contrast-color(var(--bg)) and let the browser choose black or white for legible text.",
+    summary: "<code>contrast-color()</code> is a CSS function: hand it a background colour and it returns black or white — whichever reads more clearly on top. So text on a colour you don't know ahead of time (a user-picked theme, a brand token, a data-driven chip) stays legible without you computing anything. It went cross-browser in 2026 (part of Interop), shipping in Chrome 147+ and the latest Safari/Firefox.",
+    why: "Dynamic and themeable backgrounds are where readable text quietly breaks — a colour swaps in and the label vanishes against it. This deletes the little JavaScript brightness-calculator (or hand-maintained light/dark variants) teams bolt on, and makes 'text is always readable' a one-line rule the browser enforces.",
+    how: [
+      "Use it directly on the element: <code>.badge { background: var(--brand); color: contrast-color(var(--brand)); }</code> — change the background and the text re-picks itself.",
+      "Feature-detect for older browsers and give a deliberate fallback: <code>@supports (color: contrast-color(red)) { .badge { color: contrast-color(var(--brand)); } }</code>, with a hand-chosen colour outside the block.",
+      "Know the limit: it only returns black or white, and only guarantees a readable pair on clearly light or dark backgrounds — mid-tone colours (mid grey, medium blue) can still fail, so keep those off the auto path.",
+      "Don't treat it as full accessibility: it targets the WCAG AA minimum, so verify anything critical in a contrast checker.",
+      "Wire it to your tokens: feed brand hexes (e.g. from card-graphic-color-palette) straight in, so every themed surface gets legible text for free."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    thread_id: "thread-modern-css-primitives",
+    supersedes: [],
+    related: ["card-webdesign-gap-decorations", "card-webdesign-sibling-index", "card-graphic-color-palette"],
+    sources: [
+      { label: "MDN — contrast-color()", url: "https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/contrast-color" },
+      { label: "WebKit — How to have the browser pick a contrasting color in CSS", url: "https://webkit.org/blog/16929/contrast-color/" },
+      { label: "una.im — Automated accessible text with contrast-color()", url: "https://una.im/contrast-color" },
+      { label: "Smashing Magazine — Self-correcting color systems with contrast-color()", url: "https://www.smashingmagazine.com/2026/05/building-self-correcting-color-systems-contrast-color/" }
+    ],
+    tags: ["css", "accessibility", "color", "contrast"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+
+  {
+    id: "card-webdesign-ai-ready-design-system",
+    domains: ["web-design", "graphic"],
+    title: "Make your design system AI-ready so v0 and Figma Make stop drifting off-brand",
+    action: "Write a short spec of naming rules, component states and do's/don'ts, feed it to your AI prototyping tool, then audit the output for drift with the free FigmaLint plugin.",
+    summary: "AI prototyping tools (Vercel's v0, Figma Make) drift away from your real components even when a library is linked — they invent slightly-wrong buttons and spacing. The fix (Smashing Magazine): treat your design decisions as data the AI reads — a structured spec of names, states, principles and worked examples — plus an audit pass that catches detached instances and hard-coded values before they spread.",
+    why: "AI now does a big share of the mechanical UI build, but without explicit constraints it guesses your priorities and the inconsistencies compound across a project. A small, current spec turns the AI from a confident drifter into something that actually follows your system.",
+    how: [
+      "Write a short structured spec (markdown, or your tokens file): component names, the states each must have (default / hover / focus / disabled / error), 5–8 design principles, and explicit do's and don'ts — the AI doesn't infer priorities, you state them.",
+      "Make naming consistent across Figma and code (same token and component names) so the AI can map one to the other instead of guessing.",
+      "Give it examples, not just rules: paste 2–3 'good' components and 2–3 'bad' ones so it has a visible target.",
+      "Keep one reference file current and point the AI at it — design decisions are infrastructure; update the file whenever a decision changes so it never reads stale screens.",
+      "After each generation, run the free <b>FigmaLint</b> plugin to flag detached instances, missing states, hard-coded values and unbound tokens — fix those before the prototype gets reused."
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-webdev-v0-screenshot", "card-graphic-figma-capture-layers", "card-graphic-color-palette"],
+    sources: [
+      { label: "Smashing Magazine — How To Make Your Design System AI-Ready", url: "https://www.smashingmagazine.com/2026/06/how-make-design-system-ai-ready/" },
+      { label: "LogRocket — Figma AI in 2026: everything it can (and can't) do", url: "https://blog.logrocket.com/ux-design/figma-ai-2026-quick-overview/" }
+    ],
+    tags: ["design-system", "ai-prototyping", "figma", "v0", "tokens"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+
+  {
+    id: "card-webdev-bun-image",
+    domains: ["web-dev"],
+    title: "Resize and convert images in your backend with zero installs using Bun.Image",
+    action: "On Bun 1.3.14+, replace your sharp pipeline with Bun.file(path).image().resize(...).webp().write(...) — no native module to install.",
+    summary: "Bun 1.3.14 ships <code>Bun.Image</code>, a built-in image API. Decode, resize, crop, rotate and convert between JPEG / PNG / WebP (plus HEIC / AVIF / TIFF on macOS and Windows) with a chainable pipeline — a drop-in alternative to the <code>sharp</code> library, but with nothing to npm-install and no native build step.",
+    why: "<code>sharp</code> (the usual Node image library) is a heavy native dependency that breaks across OS/CPU combos and slows installs and deploys. If you're on Bun, this deletes that dependency entirely — and reports clock it ~30% faster at resizing and far faster at reading image metadata.",
+    how: [
+      "Be on Bun 1.3.14 or newer (<code>bun upgrade</code>).",
+      "Chain the pipeline in one line: <code>await Bun.file(\"photo.jpg\").image().resize(1024, 1024, { fit: \"inside\" }).webp({ quality: 85 }).write(\"thumb.webp\")</code> — decode, transform, encode, write.",
+      "Reach for the same transforms you'd use in sharp: <code>.resize(w,h,{fit,withoutEnlargement})</code>, <code>.rotate(90|180|270)</code>, <code>.flip()/.flop()</code>, <code>.modulate({brightness,saturation})</code>.",
+      "Convert format by choosing the encoder — <code>.webp()</code>, <code>.jpeg()</code>, <code>.png()</code> — and serve WebP to cut bytes on the wire.",
+      "Mind the platform gap: HEIC/AVIF/TIFF decode on macOS/Windows, so confirm your Linux deploy target supports the formats you need before relying on them in production."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    supersedes: [],
+    related: ["card-webdev-vercel-workflow-nitro"],
+    sources: [
+      { label: "Bun Blog — Bun v1.3.14 (Bun.Image)", url: "https://bun.com/blog/bun-v1.3.14" },
+      { label: "Geeky Gadgets — How Bun 1.3.14 speeds up image resizing", url: "https://www.geeky-gadgets.com/bun-image-api-replaces-sharp/" }
+    ],
+    tags: ["bun", "images", "backend", "performance", "webp"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+
+  {
+    id: "card-webdev-astro6-csp",
+    domains: ["web-dev"],
+    title: "Turn on a real Content Security Policy in Astro 6 with one config flag",
+    action: "In astro.config.mjs add security: { csp: true } and rebuild — Astro hashes every script and style and emits the CSP header for you.",
+    summary: "A Content Security Policy (CSP) is a browser rule that blocks injected/malicious scripts — strong protection against XSS (cross-site scripting attacks). It's historically painful because you must hash or allow-list every script and style by hand. Astro 6 makes it built-in and stable: one flag and Astro generates the hashes and headers automatically, for static and server-rendered pages alike.",
+    why: "CSP is one of the highest-leverage security headers, and most sites skip it because maintaining the hash list by hand is miserable and breaks on every change. Astro 6 removes the excuse: real XSS hardening on a client site for one line, with no ongoing maintenance.",
+    how: [
+      "On Astro 6, add to <code>astro.config.mjs</code>: <code>export default defineConfig({ security: { csp: true } })</code> — that auto-hashes all scripts/styles and emits the policy.",
+      "Build and load the site; check the response headers (or the generated <code>&lt;meta&gt;</code>) for <code>Content-Security-Policy</code> and confirm the console shows nothing blocked.",
+      "Need to allow a CDN, analytics or fonts? Switch to the object form: <code>security: { csp: { directives: [\"default-src 'self'\", \"img-src 'self' https://images.cdn.example.com\"] } }</code>.",
+      "Bump the hash strength if you want stricter: <code>csp: { algorithm: 'SHA-512' }</code>.",
+      "Test every page type (static pages plus any server-rendered routes / islands) before shipping — a too-tight policy silently blocks a script and breaks interactivity."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    supersedes: [],
+    related: ["card-webdev-rotate-ai-toolchain"],
+    sources: [
+      { label: "Astro Blog — Astro 6.0 (built-in CSP)", url: "https://astro.build/blog/astro-6/" },
+      { label: "Trevor Lasn — Content Security Policy headers for Astro", url: "https://www.trevorlasn.com/blog/csp-headers-astro" }
+    ],
+    tags: ["astro", "security", "csp", "headers"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+
+  {
+    id: "card-email-dark-mode",
+    domains: ["email"],
+    title: "Make your emails dark-mode-proof so the logo and text don't vanish",
+    action: "Put your logo on a small rounded colour chip (not a bare transparent PNG), swap pure #000/#fff for softer tones, then send a test with dark mode ON across Gmail, Apple Mail and Outlook.",
+    summary: "Many inboxes (Apple Mail, Outlook, some Gmail) repaint emails in dark mode and partially invert your colours. A dark logo on a transparent PNG then disappears against the dark background, and pure-black text on a now-dark card turns unreadable. The fix is a handful of deliberate choices made before you send — not a hope that it renders.",
+    why: "A large share of opens happen in dark mode, and a vanished logo or invisible text on those opens quietly kills your click-through with no error to warn you. Design for it once and every future send is protected.",
+    how: [
+      "Give the logo a guaranteed backdrop: place it on a small rounded coloured rectangle (a 'chip') so it has contrast in both modes — a bare transparent PNG with dark artwork disappears on dark backgrounds.",
+      "Avoid pure extremes: replace <code>#000000</code> / <code>#FFFFFF</code> with near-black/near-white (e.g. <code>#1a1a1a</code> / <code>#f5f5f5</code>) so clients invert them more gracefully; keep body text at a 4.5:1 contrast ratio.",
+      "Add the dark-mode hooks: the <code>&lt;meta name=\"color-scheme\" content=\"light dark\"&gt;</code> tag plus <code>@media (prefers-color-scheme: dark)</code> overrides, and supply dark-friendly versions of key images and buttons.",
+      "Test every send with dark mode ON: preview in Email on Acid or Litmus, and also eyeball it on a real phone in dark mode — check the logo, button fills, borders and any fine lines.",
+      "Re-check anything with transparency or thin strokes specifically — those are the elements that flip from fine to invisible between clients."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    supersedes: [],
+    related: ["card-email-micro-animation", "card-email-dmarc-bimi"],
+    sources: [
+      { label: "Email on Acid — Master dark mode for email design and coding", url: "https://www.emailonacid.com/blog/article/email-development/dark-mode-for-email/" },
+      { label: "crafting.email — Fix an email logo that disappears in dark mode", url: "https://crafting.email/dark-mode-email-logo-fix/" }
+    ],
+    tags: ["email", "dark-mode", "design", "deliverability"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+
+  {
+    id: "card-paid-chatgpt-ads-feed",
+    domains: ["paid"],
+    title: "Get your products into ChatGPT Ads by reusing your Google Shopping feed",
+    action: "In ChatGPT Ads Manager, open the Feeds section and connect the same product feed you already send to Google Shopping — it auto-builds one ad per SKU.",
+    summary: "ChatGPT now shows shopping ads, and its Ads Manager has a Feeds section: connect a product feed and ChatGPT auto-generates a sponsored placement for each item from your titles, images, prices and attributes. Crucially you can reuse the structured catalog you already send to Google Shopping, so there's almost no new setup.",
+    why: "Buyers increasingly start purchase research inside ChatGPT, and OpenAI says feed-based ads have been among the strongest-performing formats in its beta. Getting your catalog onto a brand-new shopping surface while it's still uncrowded is cheap first-mover reach.",
+    how: [
+      "In <b>ChatGPT Ads Manager</b>, go to the <b>Feeds</b> section (product-feed management moved there on Jun 2, 2026).",
+      "Connect the same structured product feed you send to <b>Google Shopping</b> (title, image, price, attributes) — no need to build a new one.",
+      "Provide the required ~100-product sample to start; once connected, the system supports up to ~1,000,000 SKUs per advertiser.",
+      "Let it auto-generate an ad per SKU, then <b>review the drafts</b> — confirm titles and images map to the right products before going live.",
+      "Start with your best-margin or best-converting SKUs, benchmark performance against your Google Shopping numbers, and scale the feed once you see which products land."
+    ],
+    confidence: "emerging",
+    status: "active",
+    thread_id: "thread-ai-ad-surfaces",
+    corroboration_count: 3,
+    supersedes: [],
+    related: ["card-paid-aimax-dsa-experiment"],
+    sources: [
+      { label: "OpenAI — New ways to buy ChatGPT ads", url: "https://openai.com/index/new-ways-to-buy-chatgpt-ads/" },
+      { label: "OpenAI Help — Create campaigns from product feeds", url: "https://help.openai.com/en/articles/20001268-create-campaigns-from-product-feeds" },
+      { label: "Search Engine Land — OpenAI launches product feed ads in Ads Manager beta", url: "https://searchengineland.com/openai-launches-product-feed-ads-in-ads-manager-beta-479900" }
+    ],
+    tags: ["chatgpt-ads", "openai", "shopping", "product-feed", "ecommerce"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+
+  {
+    id: "card-paid-server-side-tracking",
+    domains: ["paid"],
+    title: "Recover the conversions browsers now hide — switch on server-side tracking",
+    action: "Stand up a server-side Google Tag Manager container and send Meta's Conversions API events from your server, deduplicated against the browser pixel with a shared event_id.",
+    summary: "Browser pixels (the snippets that report conversions to Meta and Google) are increasingly blocked by ad-blockers, Apple's tracking prevention and cookie limits — so your ad platforms under-count sales and optimise on bad data. Server-side tracking sends those events from your own server instead, recovering the lost signal. In 2026 it's table stakes, not a nice-to-have.",
+    why: "When the platform can't see conversions, its AI bidding (which every modern campaign relies on) optimises blind: CPA looks worse than reality and you scale the wrong ads. Restoring the conversion signal is one of the highest-leverage fixes in paid media right now.",
+    how: [
+      "Stand up a <b>server-side Google Tag Manager</b> container (Google's hosted option or your own Cloud Run) and route your web events through it.",
+      "Turn on <b>Meta's Conversions API (CAPI)</b> to send key events (Purchase, Lead, AddToCart) straight from your server, and pass the <b>same event_id</b> as the browser pixel so Meta de-duplicates instead of double-counting.",
+      "Do the same for Google with server-side tags / enhanced conversions so Google Ads gets the recovered signal too.",
+      "Pass strong, permitted identifiers — hashed email, click IDs like <code>fbclid</code>/<code>gclid</code> — to lift match quality; the match rate is what makes CAPI worth the effort.",
+      "Verify in Meta's <b>Events Manager</b> (Event Match Quality + deduplication) and in GA4 / Tag Assistant that each event arrives <b>once</b>, not twice, before trusting the numbers."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    supersedes: [],
+    related: ["card-paid-meta-advantage-plus"],
+    sources: [
+      { label: "Meta — Conversions API (Marketing API docs)", url: "https://developers.facebook.com/docs/marketing-api/conversions-api" },
+      { label: "Google — Server-side tagging (Tag Manager)", url: "https://developers.google.com/tag-platform/tag-manager/server-side" }
+    ],
+    tags: ["tracking", "conversions-api", "server-side", "gtm", "measurement", "meta-ads", "google-ads"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+
+  {
+    id: "card-paid-ai-ad-creative",
+    domains: ["paid", "social"],
+    title: "Spin up Meta-volume ad creative with a brand-trained 3-step AI pipeline",
+    action: "Build a Claude Project trained on your brand (deep-research doc + reviews + brand guide + top ads), then generate copy in that Project and images via Nano Banana 2 Pro in Gemini.",
+    summary: "Meta's algorithm now needs a high volume of fresh creative, which burns out small design teams. A 3-step system (from Social Media Examiner): (1) build a brand knowledge base with AI deep research, (2) train a Claude Project on it, (3) generate copy and image/video concepts from that Project — with a human finishing every asset so the volume stays on-brand.",
+    why: "Ad fatigue is real and the platforms reward volume, but quality collapses if you just mass-produce. Anchoring every generation to a brand-trained Project keeps the output on-message instead of generic AI slop — so you feed the algorithm's appetite without diluting the brand.",
+    how: [
+      "<b>Step 1 — research:</b> use ChatGPT or Gemini deep research to build an external profile of the brand; verify it by pasting into Claude and having it ask clarifying questions, then add proprietary customer insights the AI can't know.",
+      "<b>Step 2 — train:</b> create a <b>Claude Project</b> and load the verified research doc, exported customer reviews/testimonials, a ~10-page internal brand doc (values + what makes a strong ad), and your top 10 past ads analysed for what drove performance.",
+      "<b>Step 3 — generate:</b> ask the trained Project for ad copy and image concepts in your brand voice.",
+      "For <b>images</b>: turn the concepts into prompts in Claude, generate visuals with <b>Nano Banana 2 Pro</b> (in Gemini), then layer the copy on manually.",
+      "For <b>video</b>: have Claude draft a timestamped script from the brief, and treat every AI output as a first draft a human creative finishes — never ship it raw."
+    ],
+    confidence: "emerging",
+    status: "active",
+    corroboration_count: 2,
+    supersedes: [],
+    related: ["card-graphic-ideogram-json-layout", "card-social-repurpose-claude"],
+    sources: [
+      { label: "Social Media Examiner — AI for Better Ad Creative: 3 Steps to Better Results", url: "https://www.socialmediaexaminer.com/ai-for-better-ad-creative-3-steps-to-better-results/" },
+      { label: "Google Ads & Commerce — Ads Decoded: leveraging AI creative", url: "https://blog.google/products/ads-commerce/ads-decoded-podcast-ai-creative/" }
+    ],
+    tags: ["ad-creative", "claude", "gemini", "nano-banana", "meta-ads", "ai-image"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+
+  {
+    id: "card-social-gemini-omni-avatar",
+    domains: ["social", "growth"],
+    title: "Make talking-head clips at scale by cloning yourself with Gemini Omni",
+    action: "In the Gemini app under Settings then Avatar, enrol your face and voice once, then type @me in a prompt to generate a short video of yourself delivering any script.",
+    summary: "Gemini Omni's avatar feature makes a video clone of you. You enrol once — record your face and read numbers aloud (Google's anti-deepfake step) — then summon yourself with <code>@me</code> in any Gemini prompt to generate a ~10-second clip of 'you' saying a script. Every clip carries an invisible SynthID watermark.",
+    why: "Short talking-head video is the format that builds trust and reach, but filming every variation is the bottleneck. This lets one person produce many on-message clips — ad hooks, FAQ answers, localized intros — without setting up a camera each time. Volume without a studio.",
+    how: [
+      "In the Gemini app, go to <b>Settings then Avatar</b> and run the guided enrolment: look into the camera, move your head, and read the numbers aloud so it maps your face and voice.",
+      "Generate a clip by writing your script with <code>@me</code> (or <code>@yourname</code>) in the Gemini prompt box, then pick your avatar from the pop-up.",
+      "Keep each beat under the ~10-second cap; storyboard a longer video as several short clips and stitch them.",
+      "Use it where you need many variations: multiple ad hooks, localized openers, or on-camera answers to your top customer questions.",
+      "Disclose AI use where required; note every clip carries a SynthID watermark, and access needs the free YouTube Shorts route or an AI Plus / Pro / Ultra plan."
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-social-repurpose-claude", "card-paid-ai-ad-creative"],
+    sources: [
+      { label: "Google — Introducing Gemini Omni", url: "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-omni/" },
+      { label: "Android Authority — I made an AI clone of myself with Gemini Avatar: how you can too", url: "https://www.androidauthority.com/gemini-avatar-hands-on-how-to-use-3673898/" }
+    ],
+    tags: ["gemini", "avatar", "video", "ugc", "content"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+
+  {
+    id: "card-ai-tooling-browser-use",
+    domains: ["ai-tooling"],
+    title: "Hand a repetitive web chore to an AI agent with browser-use",
+    action: "pip install browser-use, set your model API key, then write one Agent(task=\"...\") line describing the job in plain English and run it.",
+    summary: "browser-use is an open-source Python tool that drives a real browser for an AI agent. Instead of scripting every click, you describe the task in plain English ('log into X, open Reports, export the CSV') and the agent reads the page, decides what to click, handles hiccups, and adapts — a loop that mimics how a person browses.",
+    why: "Every team has soul-killing web chores: pulling numbers from a dashboard with no API, filling the same form, checking competitor prices. browser-use turns those into a one-paragraph instruction — hours back, without a brittle hand-written scraper that snaps the next time the layout changes.",
+    how: [
+      "Install it (needs Python 3.11+): <code>pip install browser-use</code>, then install the browser it drives.",
+      "Set your LLM key (an OpenAI / Anthropic / Gemini key) in your environment — the model is the agent's brain.",
+      "Write the task: <code>from browser_use import Agent</code>, then <code>agent = Agent(task=\"Go to &lt;site&gt;, log in, open Reports, export last month as CSV\", llm=...)</code> and <code>await agent.run()</code>.",
+      "Watch the first runs — it narrates each step; tighten the wording wherever it hesitates or clicks the wrong thing.",
+      "Start on low-stakes, repeatable jobs (research, data pulls). For anything touching real accounts, run in a throwaway browser profile and keep credentials in env vars, never in the prompt."
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-ai-tooling-claude-workflows", "card-ai-tooling-reusable-skills"],
+    sources: [
+      { label: "browser-use — GitHub", url: "https://github.com/browser-use/browser-use" },
+      { label: "Apidog — Build AI-powered browser automation with Python", url: "https://apidog.com/blog/browser-use-ai-agent/" }
+    ],
+    tags: ["agents", "automation", "python", "browser-use", "web-automation"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+
+  {
+    id: "card-ai-tooling-codex-goal",
+    domains: ["ai-tooling"],
+    title: "Let Codex grind through a big refactor overnight with /goal",
+    action: "Enable goals = true in ~/.codex/config.toml under [features], then start a /goal with a detailed 'done when' spec and leave it to plan, act, test and iterate on its own.",
+    summary: "Codex's <code>/goal</code> (CLI 0.128.0, 2026) is a long-horizon autonomous loop: you set one goal with clear 'done when' criteria and Codex runs plan → act → test → review → iterate continuously — pausing, resuming and writing notes — until it's met or it gives up. People have left it running for hours (one 14-hour driver project) while away from the keyboard.",
+    why: "The tasks that eat senior time are long and mechanical: framework migrations, adding hundreds of tests, repo-wide refactors. /goal is built to chew those for hours unattended, so you reclaim the evening and review a finished branch in the morning — but only if the goal is written well.",
+    how: [
+      "Switch it on: add <code>goals = true</code> to the <code>[features]</code> section of <code>~/.codex/config.toml</code>.",
+      "Write a tight goal with explicit <code>done_when</code> criteria — e.g. 'Migrate this project from Pydantic v1 to v2 and make all tests pass'; specification quality, not patience, decides success (strong goals can run hundreds of words of criteria).",
+      "Refine before launching: have Codex restate the goal a couple of times and fill gaps, so it can't drift mid-run.",
+      "Run it on a branch with a real test suite as the guardrail — the tests are what let it self-check and keep going safely.",
+      "Review the diff and the developer notes it leaves in the morning; never merge an overnight run without reading it."
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-ai-tooling-claude-workflows", "card-webdev-copilot-cli-lsp"],
+    sources: [
+      { label: "MindStudio — Codex /goal: the 'Ralph Loop' that ran 14 hours", url: "https://www.mindstudio.ai/blog/codex-goal-ralph-loop-14-hour-autonomous-task" },
+      { label: "Lenny's Newsletter — Codex Goals: turn 4-hour tasks into set-it-and-forget-it workflows", url: "https://www.lennysnewsletter.com/p/the-codex-feature-that-works-while" }
+    ],
+    tags: ["codex", "openai", "agents", "autonomous", "refactor"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+
+  {
+    id: "card-ai-tooling-local-coding-agent",
+    domains: ["ai-tooling", "web-dev"],
+    title: "Run a coding agent fully on your Mac so client code never leaves the laptop",
+    action: "Build llama.cpp with Metal, serve a local GGUF model with llama-server, then point a coding-agent CLI (e.g. Pi) at http://127.0.0.1:8080/v1.",
+    summary: "You can run an AI coding agent entirely offline on Apple Silicon: <b>llama.cpp</b> (a local model runner) serves an open model with Metal GPU acceleration, and a CLI agent talks to it over a local URL. No prompts, code or secrets leave your machine — the answer when an NDA or company policy bans sending client code to a cloud model.",
+    why: "The fastest AI coding tools send your code to someone else's servers, which is a non-starter for regulated or NDA'd work. A local agent keeps everything on the laptop, so you still get agentic help on the exact repos you're not allowed to upload.",
+    how: [
+      "Build the runner: <code>brew install cmake git</code>, clone <code>github.com/ggml-org/llama.cpp</code>, then <code>cmake -B build -DGGML_METAL=ON && cmake --build build --config Release -j</code> to enable Apple-GPU acceleration.",
+      "Download an open coding model in <b>GGUF</b> format (a quantised, laptop-sized model file) from Hugging Face — a ~16GB quant runs on a well-specced Mac.",
+      "Serve it locally: <code>llama-server -m &lt;model&gt;.gguf -ngl 999 -fa on -c 65536 --host 127.0.0.1 --port 8080</code> — that exposes an OpenAI-compatible endpoint.",
+      "Point a CLI agent at it — e.g. add a local provider to Pi's <code>~/.pi/agent/models.json</code> with <code>baseUrl: http://127.0.0.1:8080/v1</code>, then run <code>pi</code>.",
+      "Expect lower raw quality than a frontier cloud model: reserve the local agent for privacy-critical repos and keep a cloud agent (behind the gateway in card-ai-tooling-model-portability) for everything else."
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-ai-tooling-model-portability", "card-webdev-copilot-cli-lsp"],
+    sources: [
+      { label: "ikyle.me — How to set up a local coding agent on macOS", url: "https://ikyle.me/blog/2026/how-to-setup-a-local-coding-agent-on-macos" },
+      { label: "llama.cpp — GitHub", url: "https://github.com/ggml-org/llama.cpp" }
+    ],
+    tags: ["local-llm", "privacy", "llama-cpp", "coding-agent", "offline", "apple-silicon"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
   }
 
 ];
