@@ -72,6 +72,18 @@ jobs:
           fi
           echo "Prepared Content Desk run for job: ${JOB}"
 
+      # Refresh the team-demand backlog so SCOPE/RESEARCH open by reading what the team
+      # actually wants — unmatched Ask questions + low-rated topics — written to gaps and
+      # emitted as gaps-digest.md (the same signal the daily routine uses). FAIL-SOFT:
+      # without DATABASE_URL (or before 006_brain.sql is live) it logs and skips, and the
+      # desk proceeds on the job's own angles.
+      - name: Refresh team-demand gaps (close the loop)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          pip install --quiet "psycopg[binary]" || echo "psycopg install issue — continuing fail-soft"
+          python scripts/collectors/gaps_sync.py || echo "gaps_sync failed — continuing fail-soft"
+
       - name: 01 — SCOPE
         uses: anthropics/claude-code-action@v1
         with:

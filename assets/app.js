@@ -545,6 +545,7 @@
         <div class="cform-foot">
           <button type="submit" class="cform-submit" disabled>Send</button>
           <span class="cform-msg" role="status" aria-live="polite"></span>
+          <span class="cform-count" aria-hidden="true">0 / 2000</span>
         </div>
       </form>
       <div class="cform-thanks" hidden>
@@ -560,14 +561,19 @@
     const bodyEl = form.querySelector(".cform-body");
     const msg = form.querySelector(".cform-msg");
     const submit = form.querySelector(".cform-submit");
+    const count = form.querySelector(".cform-count");
     let kind = "share";
 
     form.querySelectorAll(".kind-btn").forEach(btn => btn.addEventListener("click", () => {
       kind = btn.dataset.kind;
       form.querySelectorAll(".kind-btn").forEach(b => b.classList.toggle("active", b === btn));
     }));
-    // disable Send until the message has content
-    const syncDisabled = () => { submit.disabled = (bodyEl.value || "").trim().length < 1; };
+    // disable Send until the message has content; live character count as a friendly nudge
+    const syncDisabled = () => {
+      const len = (bodyEl.value || "").length;
+      submit.disabled = (bodyEl.value || "").trim().length < 1;
+      if (count) { count.textContent = len + " / 2000"; count.classList.toggle("near", len > 1800); }
+    };
     bodyEl.addEventListener("input", syncDisabled);
     syncDisabled();
 
@@ -607,65 +613,95 @@
     });
   }
 
-  // ---- rating control (card view + feed editions) ----
+  // ---- reaction control (card view + feed editions) — one-tap emoji → /api/rating ----
+  // A reaction IS a rating: 😀=5 🙂=4 😐=3 🙁=2 😠=1, posted to the SAME endpoint and the SAME
+  // redpxl.ratings row, so every tap automatically feeds the loop (gaps_sync reads low ratings).
+  // One tap saves instantly; an optional "add a note" re-posts the same score with a comment.
+  const REACTIONS = [
+    { score: 5, emoji: "😀", label: "Loved it" },
+    { score: 4, emoji: "🙂", label: "Liked it" },
+    { score: 3, emoji: "😐", label: "It's okay" },
+    { score: 2, emoji: "🙁", label: "Not great" },
+    { score: 1, emoji: "😠", label: "Didn't land" },
+  ];
   function ratingControlHTML(type, id) {
     const prior = savedRating(type, id);
-    const dots = [1, 2, 3, 4, 5].map(n =>
-      `<button type="button" class="rate-dot${prior && n <= prior ? " on" : ""}" data-score="${n}" aria-label="Rate ${n} of 5"></button>`).join("");
-    return `<div class="rate" data-type="${esc(type)}" data-id="${esc(id)}">
-      <div class="rate-row">
-        <span class="rate-label">${prior ? "You rated this" : "Rate this play"}</span>
-        <div class="rate-dots" role="group" aria-label="Rating, 1 to 5">${dots}</div>
-        <span class="rate-state">${prior ? prior + "/5" : ""}</span>
+    const btns = REACTIONS.map(r =>
+      `<button type="button" class="react-btn${prior === r.score ? " on" : ""}" data-score="${r.score}" aria-label="${r.label}" title="${r.label}"><span class="react-emoji" aria-hidden="true">${r.emoji}</span></button>`).join("");
+    return `<div class="react" data-type="${esc(type)}" data-id="${esc(id)}">
+      <div class="react-head">
+        <span class="react-label">${prior ? "Thanks — you reacted" : "Was this useful?"}</span>
+        <button type="button" class="react-note-toggle">${prior ? "Edit note" : "Add a note"}</button>
       </div>
-      <div class="rate-expand" hidden>
-        <input type="text" class="rate-comment" maxlength="280" aria-label="Optional comment" placeholder="Optional — one line on why">
-        <button type="button" class="rate-submit btn-sm">Submit</button>
+      <div class="react-row" role="group" aria-label="React, loved it to didn't land">${btns}</div>
+      <div class="react-note" hidden>
+        <input type="text" class="react-comment" maxlength="280" aria-label="Optional comment" placeholder="Optional — one line on why">
+        <button type="button" class="react-note-send btn-sm">Send</button>
       </div>
-      <p class="rate-msg" role="status" aria-live="polite" hidden></p>
+      <p class="react-msg" role="status" aria-live="polite" hidden></p>
     </div>`;
   }
   function wireRating(root, type, id) {
-    const el = root.querySelector(".rate");
+    const el = root.querySelector(".react");
     if (!el) return;
-    const dots = Array.prototype.slice.call(el.querySelectorAll(".rate-dot"));
-    const expand = el.querySelector(".rate-expand");
-    const commentEl = el.querySelector(".rate-comment");
-    const submit = el.querySelector(".rate-submit");
-    const label = el.querySelector(".rate-label");
-    const state = el.querySelector(".rate-state");
-    const msg = el.querySelector(".rate-msg");
+    const btns = Array.prototype.slice.call(el.querySelectorAll(".react-btn"));
+    const label = el.querySelector(".react-label");
+    const noteToggle = el.querySelector(".react-note-toggle");
+    const note = el.querySelector(".react-note");
+    const commentEl = el.querySelector(".react-comment");
+    const noteSend = el.querySelector(".react-note-send");
+    const msg = el.querySelector(".react-msg");
     let selected = savedRating(type, id);
-    const paint = n => dots.forEach(d => d.classList.toggle("on", parseInt(d.dataset.score, 10) <= n));
-    if (selected) { paint(selected); el.classList.add("rated"); }
-    dots.forEach(d => d.addEventListener("click", () => {
-      selected = parseInt(d.dataset.score, 10);
-      paint(selected);
-      // micro-animation: pop the just-clicked square (reduced-motion disables it)
-      d.classList.remove("pop");
-      requestAnimationFrame(() => d.classList.add("pop"));
-      expand.hidden = false;
-      commentEl.focus();
-    }));
-    submit.addEventListener("click", async () => {
-      if (!selected) return;
-      submit.disabled = true; submit.textContent = "Saving…"; msg.hidden = true; msg.className = "rate-msg";
+    const paint = n => btns.forEach(b => b.classList.toggle("on", parseInt(b.dataset.score, 10) === n));
+    if (selected) { paint(selected); el.classList.add("reacted"); }
+
+    function flash(text, isErr) {
+      msg.hidden = false; msg.textContent = text;
+      msg.className = "react-msg " + (isErr ? "err" : "ok");
+    }
+    function send(score, comment) {
+      return postJSON("/api/rating", {
+        target_type: type, target_id: id, score: score,
+        comment: comment || "", client_token: clientToken(), hp: ""
+      });
+    }
+
+    // one tap = instant save
+    btns.forEach(b => b.addEventListener("click", async () => {
+      const score = parseInt(b.dataset.score, 10);
+      selected = score; paint(score);
+      // micro-animation: pop the chosen face (reduced-motion disables it)
+      b.classList.remove("pop");
+      requestAnimationFrame(() => b.classList.add("pop"));
       try {
-        await postJSON("/api/rating", {
-          target_type: type, target_id: id, score: selected,
-          comment: (commentEl.value || "").trim(),
-          client_token: clientToken(), hp: ""
-        });
-        storeRating(type, id, selected);
-        label.textContent = "You rated this";
-        state.textContent = selected + "/5";
-        el.classList.add("rated");
-        expand.hidden = true;
-        submit.disabled = false; submit.textContent = "Submit";
+        await send(score, (commentEl.value || "").trim());
+        storeRating(type, id, score);
+        el.classList.add("reacted");
+        label.textContent = "Thanks — you reacted";
+        flash("Saved — thanks!", false);
       } catch (err) {
-        submit.disabled = false; submit.textContent = "Submit";
-        msg.hidden = false; msg.textContent = "Couldn't save — try again."; msg.classList.add("err");
+        flash("Couldn't save — tap again.", true);
       }
+    }));
+
+    // optional note (re-posts the same score with a comment)
+    noteToggle.addEventListener("click", () => {
+      const show = note.hidden;
+      note.hidden = !show;
+      if (show) commentEl.focus();
+    });
+    noteSend.addEventListener("click", async () => {
+      if (!selected) { flash("Pick a reaction first.", true); return; }
+      noteSend.disabled = true; noteSend.textContent = "Saving…";
+      try {
+        await send(selected, (commentEl.value || "").trim());
+        note.hidden = true;
+        noteToggle.textContent = "Edit note";   // keeps the note text for a later edit
+        flash("Note saved — thanks!", false);
+      } catch (err) {
+        flash("Couldn't save — try again.", true);
+      }
+      noteSend.disabled = false; noteSend.textContent = "Send";
     });
   }
 
@@ -992,11 +1028,23 @@
           <input id="askInput" type="text" placeholder="e.g. how do we add app-like page transitions?" autocomplete="off" maxlength="500" required>
           <button type="submit">Ask</button>
         </form>
+        <div class="ask-suggest" aria-label="Example questions">
+          <span class="ask-suggest-label">Try</span>
+          <button type="button" class="ask-chip">How do we add app-like page transitions?</button>
+          <button type="button" class="ask-chip">Best tool for product photos?</button>
+          <button type="button" class="ask-chip">How do we lift email open rates?</button>
+        </div>
         <div class="ask-result" id="askResult"></div>
       </section>`;
     const form = viewEl.querySelector("#askForm");
     const input = viewEl.querySelector("#askInput");
     const out = viewEl.querySelector("#askResult");
+    // suggestion chips: fill the box and ask, one tap
+    viewEl.querySelectorAll(".ask-chip").forEach(chip => chip.addEventListener("click", () => {
+      input.value = chip.textContent;
+      if (form.requestSubmit) form.requestSubmit();
+      else form.dispatchEvent(new Event("submit", { cancelable: true }));
+    }));
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const q = input.value.trim();

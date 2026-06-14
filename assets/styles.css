@@ -4,7 +4,8 @@
    Type: Inter (primary) · DM Sans (editorial accent, italic in red) · JetBrains Mono (labels)
    Mandatory texture: grain overlay · ambient glow · red accent bar · geometric accent
    Honors the Banned Patterns list (no gradient text, no indigo, no #000/#ccc,
-   no emoji, no pure-symmetrical rounded-card grids).
+   no pure-symmetrical rounded-card grids). EXCEPTION: emoji are used deliberately in the
+   one-tap reaction control (the team's feedback affordance) — see `.react` below.
    =========================================================================== */
 :root{
   /* core brand colours */
@@ -47,6 +48,9 @@
   --shadow-subtle:0 2px 8px rgba(10,13,18,.4);
   --shadow-medium:0 4px 16px rgba(10,13,18,.5);
   --shadow-bold:0 8px 32px rgba(10,13,18,.6);
+  /* hover-lift shadows for tiles/rows — one place, used across every view's personality pass */
+  --shadow-hover:0 12px 30px -16px rgba(10,13,18,.55);
+  --shadow-hover-sm:0 10px 26px -16px rgba(10,13,18,.5);
 
   /* unified motion language (Apple/Samsung-grade: one easing, consistent timing) */
   --ease:cubic-bezier(.32,.72,0,1);
@@ -358,6 +362,15 @@ main::before{content:"";position:absolute;top:var(--xl);right:var(--lg);width:46
 .ask-form button{padding:13px 22px;background:var(--red);color:#fff;border:0;border-radius:var(--r-sm);
   font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:background var(--t-fast) var(--ease)}
 .ask-form button:hover{background:var(--red-2,#CC2522)}
+/* suggested-question chips — one tap to fill + ask */
+.ask-suggest{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:-6px 0 var(--lg)}
+.ask-suggest-label{font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--fg-40)}
+.ask-chip{font-size:12.5px;cursor:pointer;color:var(--fg-70);background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--r-pill);padding:6px 13px;font-family:var(--font);
+  transition:border-color var(--t-fast) var(--ease),color var(--t-fast) var(--ease),transform var(--t-fast) var(--ease-out)}
+.ask-chip:hover{border-color:var(--red);color:var(--fg)}
+.ask-chip:active{transform:scale(.97)}
 .ask-answer{padding:var(--md) var(--lg);background:var(--panel);border-left:3px solid var(--red);
   border-radius:0 var(--r-sm) var(--r-sm) 0;font-size:16px;line-height:1.75;color:var(--fg)}
 .ask-answer.ask-none{border-left-color:var(--line-2);color:var(--fg-55)}
@@ -721,9 +734,10 @@ body[data-view="tools"] .view-page{display:block}
 }
 
 /* ============================================================
-   WRITE-BACK (N3): contribute form + rating control.
-   RedPxl system — red sparingly, mono labels, square-dot motif,
-   no stock star widget, no emoji. Dark default + light.
+   WRITE-BACK: contribute form + one-tap emoji reaction control.
+   RedPxl system — red sparingly, mono labels, square-dot motif.
+   Reactions use emoji on purpose (instant, friendly feedback that
+   maps to a 1–5 rating). Dark default + light.
    ============================================================ */
 
 /* ---- contribute form (homepage) ---- */
@@ -743,12 +757,12 @@ body[data-view="tools"] .view-page{display:block}
 .kind-btn.active::before{content:"";position:absolute;left:7px;top:50%;transform:translateY(-50%);width:5px;height:5px;background:var(--red)}
 .cform-label{display:block;font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;
   letter-spacing:.1em;color:var(--fg-55);margin:0 0 7px}
-.cform-body,.cform-row input,.rate-comment{width:100%;background:var(--panel-2);border:1px solid var(--line);
+.cform-body,.cform-row input,.react-comment{width:100%;background:var(--panel-2);border:1px solid var(--line);
   border-radius:var(--r-md);color:var(--fg);font-family:var(--font);font-size:14px;padding:11px 13px;outline:none;
   transition:border-color var(--t-fast) var(--ease),box-shadow var(--t-fast) var(--ease)}
 .cform-body{resize:vertical;min-height:88px;line-height:1.6}
-.cform-body:focus,.cform-row input:focus,.rate-comment:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-glow)}
-.cform-body::placeholder,.cform-row input::placeholder,.rate-comment::placeholder{color:var(--fg-40)}
+.cform-body:focus,.cform-row input:focus,.react-comment:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-glow)}
+.cform-body::placeholder,.cform-row input::placeholder,.react-comment::placeholder{color:var(--fg-40)}
 .cform-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
 .cform-row input{flex:1;min-width:160px}
 /* honeypot — off-screen, never shown to humans */
@@ -762,6 +776,8 @@ body[data-view="tools"] .view-page{display:block}
 .cform-submit:disabled,.btn-sm:disabled{opacity:.55;cursor:default;transform:none}
 .cform-msg{font-family:var(--mono);font-size:11px;color:var(--fg-40)}
 .cform-msg.err{color:var(--red)}
+.cform-count{font-family:var(--mono);font-size:10px;color:var(--fg-40);margin-left:auto;letter-spacing:.04em}
+.cform-count.near{color:var(--red)}
 .cform-thanks{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--red);
   border-radius:0 var(--r-md) var(--r-md) 0;padding:20px 22px;animation:reveal var(--t-slow) var(--ease-out)}
 .cform-thanks[hidden]{display:none}
@@ -772,29 +788,40 @@ body[data-view="tools"] .view-page{display:block}
 .cform-again:hover{border-color:var(--red);background:var(--panel-2)}
 .cform-again:active{transform:scale(.97)}
 
-/* ---- rating control (card view + feed editions) — prominent CTA panel ---- */
-.rate{margin-top:var(--xl);background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--red);
+/* ---- reaction control (card view + feed editions) — one-tap emoji → /api/rating ----
+   A reaction IS a rating (😀=5 … 😠=1): same endpoint, same row, so it feeds the loop. Emoji are
+   used here deliberately as the team's one-tap feedback affordance (see the JS REACTIONS map). */
+.react{margin-top:var(--xl);background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--red);
   border-radius:0 var(--r-md) var(--r-md) 0;padding:16px 18px}
-.rate-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.rate-label{font-family:var(--mono);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--fg-70)}
-.rate.rated .rate-label{color:var(--red)}
-.rate-dots{display:inline-flex;gap:8px}
-/* 1–5 as the brand's square-dot motif (NOT stars/emoji) — fills red up to the score */
-.rate-dot{width:26px;height:26px;padding:0;cursor:pointer;background:var(--panel-2);
-  border:1px solid var(--line-2);border-radius:3px;
+.react-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.react-label{font-family:var(--mono);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--fg-70)}
+.react.reacted .react-label{color:var(--red)}
+.react-note-toggle{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  cursor:pointer;background:none;border:0;color:var(--fg-40);padding:2px 0;border-bottom:1px solid transparent;
+  transition:color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease)}
+.react-note-toggle:hover{color:var(--red);border-bottom-color:var(--red)}
+.react-row{display:inline-flex;gap:8px;flex-wrap:wrap}
+.react-btn{width:46px;height:46px;padding:0;cursor:pointer;display:grid;place-items:center;
+  background:var(--panel-2);border:1px solid var(--line-2);border-radius:var(--r-md);
   transition:background-color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease),transform var(--t-med) var(--ease-out)}
-.rate-dot:hover{border-color:var(--red);transform:translateY(-2px)}
-.rate-dot:focus-visible{outline:2px solid var(--red);outline-offset:3px}
-.rate-dot:active{transform:scale(.92)}
-.rate-dot.on{background:var(--red);border-color:var(--red)}
-.rate-dot.pop{animation:ratePop .32s var(--ease-out)}
-@keyframes ratePop{0%{transform:scale(.7)}55%{transform:scale(1.22)}100%{transform:scale(1)}}
-.rate-state{margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--red);font-weight:700;letter-spacing:.04em}
-.rate-expand{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
-.rate-expand[hidden]{display:none}  /* explicit display:flex would otherwise override the hidden attribute */
-.rate-expand .rate-comment{flex:1;min-width:180px}
-.rate-msg{font-family:var(--mono);font-size:11px;color:var(--fg-40);margin:10px 0 0}
-.rate-msg.err{color:var(--red)}
+.react-emoji{font-size:24px;line-height:1;display:block;filter:grayscale(.4) opacity(.85);
+  transition:filter var(--t-fast) var(--ease),transform var(--t-fast) var(--ease-out)}
+.react-btn:hover{border-color:var(--red);transform:translateY(-2px)}
+.react-btn:hover .react-emoji{filter:none;transform:scale(1.12)}
+.react-btn:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.react-btn:active{transform:scale(.92)}
+.react-btn.on{background:var(--red-glow);border-color:var(--red)}
+.react-btn.on .react-emoji{filter:none}
+.react-btn.pop{animation:reactPop .34s var(--ease-out)}
+@keyframes reactPop{0%{transform:scale(.8)}55%{transform:scale(1.22)}100%{transform:scale(1)}}
+.react-note{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.react-note[hidden]{display:none}  /* explicit display:flex would otherwise override the hidden attribute */
+.react-note .react-comment{flex:1;min-width:180px}
+.react-msg{font-family:var(--mono);font-size:11px;color:var(--fg-40);margin:10px 0 0}
+.react-msg[hidden]{display:none}
+.react-msg.ok{color:var(--sky)}
+.react-msg.err{color:var(--red)}
+[data-theme="light"] .react-msg.ok{color:#2C7DB0}
 
 /* outcome tracking (Phase 5) — one-tap "did you run this?" on cards */
 .outcome{margin-top:var(--md);background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--sky);
@@ -893,7 +920,7 @@ a.rh-row:hover{background:var(--panel-2);color:var(--fg);transform:translateX(2p
 }
 /* tools motion — elevated hover lift, scoped to the tools view */
 body[data-view="tools"] .tool-row{transition:transform var(--t-med) var(--ease-out),border-color var(--t-med) var(--ease),background-color var(--t-med) var(--ease),box-shadow var(--t-med) var(--ease-out)}
-body[data-view="tools"] .tool-row:hover{transform:translateY(-3px);box-shadow:0 12px 30px -16px rgba(10,13,18,.55)}
+body[data-view="tools"] .tool-row:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover)}
 
 /* ── Homepage personality pass (first pass; scoped to the #/ view) ──
    A touch more life on the landing view: a springier hover lift + a soft shadow
@@ -907,7 +934,7 @@ body[data-view="home"] .kcard{
              background-color var(--t-med) var(--ease),
              box-shadow var(--t-med) var(--ease-out)}
 body[data-view="home"] .hub-tile:hover,
-body[data-view="home"] .kcard:hover{transform:translateY(-4px);box-shadow:0 12px 30px -16px rgba(10,13,18,.55)}
+body[data-view="home"] .kcard:hover{transform:translateY(-4px);box-shadow:var(--shadow-hover)}
 body[data-view="home"] .pulse-item:hover{transform:translateX(4px)}
 body[data-view="home"] .hub-tile .ht-dot,
 body[data-view="home"] .kcard .kc-dot{transition:opacity var(--t-fast) var(--ease),transform var(--t-fast) var(--ease-out)}
@@ -920,16 +947,16 @@ body[data-view="home"] .kcard:hover .kc-dot{transform:scale(1.3)}
    under prefers-reduced-motion below. Entrance is already wired per view. */
 /* hub — same elevated tile lift + dot wink as home */
 body[data-view="hub"] .kcard{transition:transform var(--t-med) var(--ease-out),border-color var(--t-med) var(--ease),background-color var(--t-med) var(--ease),box-shadow var(--t-med) var(--ease-out)}
-body[data-view="hub"] .kcard:hover{transform:translateY(-4px);box-shadow:0 12px 30px -16px rgba(10,13,18,.55)}
+body[data-view="hub"] .kcard:hover{transform:translateY(-4px);box-shadow:var(--shadow-hover)}
 body[data-view="hub"] .pulse-item:hover{transform:translateX(4px)}
 body[data-view="hub"] .kcard .kc-dot{transition:opacity var(--t-fast) var(--ease),transform var(--t-fast) var(--ease-out)}
 body[data-view="hub"] .kcard:hover .kc-dot{transform:scale(1.3)}
 /* card — lift the related / same-thread tiles */
 body[data-view="card"] .rel-tile{transition:transform var(--t-med) var(--ease-out),border-color var(--t-med) var(--ease),box-shadow var(--t-med) var(--ease-out)}
-body[data-view="card"] .rel-tile:hover{transform:translateY(-3px);box-shadow:0 10px 26px -16px rgba(10,13,18,.5)}
+body[data-view="card"] .rel-tile:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover-sm)}
 /* inbox — lift the feedback cards, nudge the rating rows */
 body[data-view="inbox"] .fb-item{transition:transform var(--t-med) var(--ease-out),box-shadow var(--t-med) var(--ease-out)}
-body[data-view="inbox"] .fb-item:hover{transform:translateY(-3px);box-shadow:0 10px 26px -16px rgba(10,13,18,.5)}
+body[data-view="inbox"] .fb-item:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover-sm)}
 body[data-view="inbox"] a.rh-row{transition:transform var(--t-fast) var(--ease-out),background-color var(--t-fast) var(--ease),color var(--t-fast) var(--ease)}
 body[data-view="inbox"] a.rh-row:hover{transform:translateX(4px)}
 /* ask — nudge the citation links */
@@ -962,4 +989,7 @@ body[data-view="feed"] .report-nav button:hover:not(:disabled){transform:transla
   body[data-view="feed"] .report-nav button:hover:not(:disabled){transform:none;box-shadow:none}
   body[data-view="hub"] .kcard:hover .kc-dot{transform:none}
   body[data-view="tools"] .tool-row:hover{transform:none;box-shadow:none}
+  /* reaction control: no hover lift / pop, emoji stays put (colour still resolves) */
+  .react-btn:hover,.react-btn:active{transform:none}
+  .react-btn:hover .react-emoji{transform:none}
 }
