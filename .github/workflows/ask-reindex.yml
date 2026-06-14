@@ -1,0 +1,74 @@
+name: Ask reindex + acceptance test
+
+# MANUAL (workflow_dispatch). Rebuilds the Ask knowledge base — cards + reports + TOOLS — into
+# redpxl.kb_embeddings (FORCE_REEMBED=1 = clean full rebuild), then runs the acceptance test:
+# re-runs the real questions from redpxl.ask_log through the EXACT retrieval logic in api/ask.js
+# and reports OLD -> NEW top_score per question (printed + uploaded as acceptance-results.md).
+# READ/WRITE is DB-side only (embeddings + a read of ask_log) — it never pushes to the repo.
+#
+# Run this AFTER merging the retrieval overhaul so the rebuilt index + new ask.js logic are tested
+# together. Re-embedding needs OPENAI_API_KEY + DATABASE_URL (CI secrets) — that's why it runs here,
+# not locally.
+on:
+  workflow_dispatch:
+    inputs:
+      questions:
+        description: 'Optional extra questions to test (space-separated, quoted) — appended to the ask_log set'
+        required: false
+        default: ''
+
+permissions:
+  contents: read            # checkout only; nothing is committed
+
+concurrency:
+  group: ask-reindex
+  cancel-in-progress: false
+
+jobs:
+  reindex:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+
+      - name: Install deps
+        run: |
+          pip install --quiet "psycopg[binary]" || echo "psycopg install issue — embed step will degrade"
+          npm init -y >/dev/null 2>&1 || true
+          npm install --no-fund --no-audit @neondatabase/serverless
+
+      # Ensure the embedding sources are current (sync.json + tools.json), then full-rebuild the index.
+      - name: Rebuild Ask index (cards + reports + tools)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          FORCE_REEMBED: "1"
+        run: |
+          node scripts/build-data.js
+          python scripts/collectors/embed_kb.py
+
+      - name: Acceptance test — re-run the real questions (OLD -> NEW)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: node scripts/ask_acceptance_test.js ${{ github.event.inputs.questions }}
+
+      - name: Upload acceptance results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ask-acceptance-results
+          path: acceptance-results.md
+          if-no-files-found: warn
+          retention-days: 90
