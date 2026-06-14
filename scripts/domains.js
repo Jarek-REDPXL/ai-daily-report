@@ -10,7 +10,7 @@
  * Paid-platform granularity (google-ads / meta-ads / snap-ads) is a BLOCK-level
  * tag, NOT a domain — see PAID_PLATFORM_TAGS below and docs/DOMAINS.md.
  */
-const DOMAINS = ["web-design", "web-dev", "graphic", "email", "social", "paid", "growth", "ai-tooling", "news"];
+const DOMAINS = ["web-design", "web-dev", "graphic", "email", "social", "paid", "growth", "ai-tooling", "news", "cro"];
 
 const DOMAIN_LABELS = {
   "web-design": "Web design (UI/UX & frontend craft)",
@@ -22,6 +22,7 @@ const DOMAIN_LABELS = {
   "growth": "Marketing & growth strategy",
   "ai-tooling": "AI tools, skills & techniques",
   "news": "News (markets & the AI landscape)",
+  "cro": "CRO & AOV (conversion rate & average order value)",
 };
 
 // Short labels for compact UI (e.g. sidebar filter chips). Source of truth for
@@ -37,18 +38,20 @@ const DOMAIN_LABELS_SHORT = {
   "growth": "Growth",
   "ai-tooling": "AI Tooling",
   "news": "News",
+  "cro": "CRO & AOV",
 };
 
 // Platform granularity for the `paid` domain — lives in block-level tags.
 const PAID_PLATFORM_TAGS = ["google-ads", "meta-ads", "snap-ads"];
 
-// HUBS — the 5 navigable hubs the 9 domains roll up into. SINGLE SOURCE
+// HUBS — the 5 navigable hubs the 10 domains roll up into. SINGLE SOURCE
 // OF TRUTH: build-data.js emits this for the site (reports/data/hubs.json) and the
 // gate validates each hub's domains against DOMAINS, so the mapping never drifts.
 // Human-readable version + rationale: docs/DOMAINS.md "Hubs".
+// NOTE: `cro` (CRO & AOV) is intentionally cross-listed in BOTH design and development.
 const HUBS = {
-  design:      { label: "Design",      scope: "UI/UX, frontend craft, brand & visual systems.",  domains: ["web-design", "graphic"] },
-  development: { label: "Development", scope: "Build, code, performance, architecture & tooling.", domains: ["web-dev"] },
+  design:      { label: "Design",      scope: "UI/UX, frontend craft, brand & visual systems.",  domains: ["web-design", "graphic", "cro"] },
+  development: { label: "Development", scope: "Build, code, performance, architecture & tooling.", domains: ["web-dev", "cro"] },
   marketing:   { label: "Marketing",   scope: "Email, social, paid and growth strategy.",          domains: ["email", "social", "paid", "growth"] },
   ai:          { label: "AI",          scope: "AI tools, skills & techniques for every craft.",    domains: ["ai-tooling"] },
   news:        { label: "News",        scope: "Markets, what companies are building, what to expect & the AI landscape.", domains: ["news"] },
