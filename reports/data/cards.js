@@ -1423,7 +1423,58 @@ window.AI_EDGE_CARDS = [
     tags: ["pricing", "psychology", "aov"],
     created: "2026-06-14",
     updated: "2026-06-14"
+  },
+  {
+    id: "card-cro-pdp-reviews",
+    domains: ["cro", "web-design"],
+    title: "Put real reviews on every product page — the first five do the heavy lifting",
+    action: "Show the star rating + review count near the product title, prioritise getting the first ~5 reviews per product, mark verified buyers, and keep the negatives.",
+    summary: "Northwestern's Spiegel Research Center found a product page with around 5 reviews converts ~270% higher than one with zero — and most of that lift comes from the FIRST handful (≈5 reviews ≈ 4× the purchase likelihood vs none). The effect is bigger on higher-priced / higher-consideration items (~+380% vs ~+190% for low-priced), and a 'verified buyer' badge raises purchase odds ~15%.",
+    why: "Reviews are the social proof shoppers look for before buying, and the data here is unusually clear: you don't need hundreds — going from zero to a handful is where the conversion jump happens. So the priority isn't 'collect thousands', it's 'get the first five onto every product, and make them credible'.",
+    how: [
+      "Show the star rating + review count right by the product title, and reflect it on listing/category pages.",
+      "Prioritise getting the first ~5 reviews on each product — post-purchase email/SMS asks, or seeding new SKUs with sampling; that's where most of the lift is.",
+      "Mark 'verified buyer' on genuine purchasers (it lifts purchase odds ~15%).",
+      "Don't scrub negative reviews — an all-perfect score reads as fake; a few critical reviews (with your replies) build credibility.",
+      "Push hardest for reviews on your higher-priced / higher-consideration products — they benefit most."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    supersedes: [],
+    related: [],
+    sources: [
+      { label: "Northwestern Medill Spiegel Research Center — How Online Reviews Influence Sales", url: "https://spiegel.medill.northwestern.edu/how-online-reviews-influence-sales" }
+    ],
+    tags: ["pdp", "reviews", "social-proof"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+  {
+    id: "card-cro-cross-sell-bundles",
+    domains: ["cro", "web-design"],
+    title: "Lift average order value with relevant cross-sells and bundles — placed so they don't break the buy",
+    action: "Add a 'frequently bought together' / bundle-and-save block after add-to-cart (not in the middle of checkout), recommending genuinely related items.",
+    summary: "Showing relevant add-ons and bundles is a sound way to grow average order value — the shopper has already decided to buy, so a useful, related suggestion can grow the basket. HONEST: there is no trustworthy public 'lift %' for this — the widely-quoted figures don't trace to a credible primary source — so treat it as a mechanism to TEST on your own store, not a guaranteed number.",
+    why: "The cheapest extra revenue comes from a customer who's already buying. But irrelevant or pushy cross-sells add friction and can hurt conversion — Baymard's checkout research warns against cluttering the checkout path — so the win is RELEVANT suggestions placed where they don't get in the way of paying.",
+    how: [
+      "Cross-sell AFTER add-to-cart, or on the cart/PDP — keep the checkout path itself clean (Baymard).",
+      "Recommend genuinely related items ('frequently bought together', accessories, consumables), not random products.",
+      "Offer a 'bundle and save' only where the discount is real and the items make sense together.",
+      "Make recommendations threshold-aware — nudge items that also help clear the free-shipping bar.",
+      "Measure AOV AND conversion together on your own store, and keep only what lifts AOV without denting conversion — there's no reliable public number to copy."
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-cro-free-shipping-threshold"],
+    sources: [
+      { label: "Baymard Institute — Checkout Usability (cross-sells & the checkout path)", url: "https://baymard.com/checkout-usability" }
+    ],
+    tags: ["aov", "cross-sell", "bundles"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
   }
+
 
 
 ];
