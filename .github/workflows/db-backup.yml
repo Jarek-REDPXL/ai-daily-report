@@ -1,0 +1,62 @@
+name: Weekly DB backup (redpxl schema)
+
+# Belt-and-braces OFFLINE copy of the Neon `redpxl` schema. Neon's built-in point-in-time history
+# is the FIRST line of defense (instant restore within its retention window); THIS is a weekly
+# pg_dump uploaded as a GitHub Actions artifact (~90-day retention) — an extra, downloadable copy
+# with no repo bloat. READ-ONLY against the DB (pg_dump only).
+#
+# FAIL-SOFT on availability: if DATABASE_URL is not set it skips cleanly. A present-but-failing
+# dump fails the run on purpose (a silently-broken backup is worse than a visibly-red one).
+#
+# Secret: DATABASE_URL (the same Neon connection string the collectors use).
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * 0"      # Sundays 03:00 UTC (off-peak; separate from daily/tools/heartbeat)
+
+permissions:
+  contents: read            # no checkout needed; the dump is uploaded as an artifact, never committed
+
+concurrency:
+  group: db-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Install PostgreSQL client 17 (matches Neon's server version)
+        run: |
+          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/pgdg.gpg
+          echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list >/dev/null
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-17
+
+      - name: Dump the redpxl schema
+        id: dump
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          if [ -z "${DATABASE_URL}" ]; then
+            echo "DATABASE_URL not set — skipping backup (Neon PITR remains the first line of defense)."
+            echo "made=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          STAMP="$(date -u +'%Y-%m-%d')"
+          OUT="redpxl-${STAMP}.sql.gz"
+          # --no-owner / --no-privileges keep the dump portable for restore into any role.
+          pg_dump --schema=redpxl --no-owner --no-privileges "${DATABASE_URL}" | gzip > "${OUT}"
+          ls -lh "${OUT}"
+          echo "file=${OUT}" >> "$GITHUB_OUTPUT"
+          echo "stamp=${STAMP}" >> "$GITHUB_OUTPUT"
+          echo "made=true" >> "$GITHUB_OUTPUT"
+
+      - name: Upload backup artifact (~90-day retention)
+        if: ${{ steps.dump.outputs.made == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: redpxl-db-backup-${{ steps.dump.outputs.stamp }}
+          path: ${{ steps.dump.outputs.file }}
+          retention-days: 90
+          if-no-files-found: error

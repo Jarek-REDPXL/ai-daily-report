@@ -176,6 +176,18 @@ jobs:
           done
           echo "push failed after retries"; exit 1
 
+      # Measurement (substrate): snapshot one row/day to redpxl.metrics so the system's size +
+      # the signal real use generates becomes a curve, not a guess. cards/reports counted from the
+      # gate-regenerated derived files; signals/feedback/ratings/outcomes/open-gaps from the DB.
+      # FAIL-SOFT (no-op without DATABASE_URL or before 006_brain.sql is live); never blocks a run.
+      - name: Snapshot daily metrics to Brain (fail-soft)
+        if: ${{ always() }}
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          pip install --quiet "psycopg[binary]" || echo "psycopg install issue — continuing fail-soft"
+          python scripts/collectors/metrics_snapshot.py || echo "metrics snapshot failed — continuing fail-soft"
+
       # Failure alerting: if a SCHEDULED (unattended) run fails at ANY step above, open
       # a tracking issue assigned to the repo owner so the failure isn't silent (e.g.
       # 2026-06-12 failed with no alert). Uses the built-in GITHUB_TOKEN (issues: write)

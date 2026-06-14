@@ -1,0 +1,68 @@
+name: Daily heartbeat (no-run alarm)
+
+# READ-ONLY watchdog for the Daily AI Briefing. The daily can't detect its OWN non-run — if it
+# never fires, nothing checks. This SEPARATE schedule runs ~2h after the daily's cron and asks one
+# question: did today's edition publish? Check (no DB needed): grep reports/data/reports.js for an
+# entry whose sortDate == today (UTC).
+#   - MISSING -> open/refresh a GitHub issue (the repo owner gets notified) AND exit non-zero (red run).
+#   - PRESENT -> exit 0 quietly.
+# It NEVER publishes or edits the repo — a check + alert only.
+#
+# Cadence: the daily cron is 06:17 UTC; this runs 08:30 UTC (~2h later, after the 40-min daily
+# finishes). NOTE: if you ever PAUSE the daily schedule, pause this too (else it alarms every day).
+# Edge: on a Sunday a weekly edition also carries today's sortDate, so a daily miss that coincides
+# with a weekly publish would not alarm — acceptable for the zero-DB simplest check.
+on:
+  workflow_dispatch:        # run the check on demand
+  schedule:
+    - cron: "30 8 * * *"    # 08:30 UTC daily, ~2h after the daily briefing (06:17 UTC)
+
+permissions:
+  contents: read            # checkout only — the heartbeat never writes to the repo
+  issues: write             # open/refresh the alert issue via the built-in GITHUB_TOKEN
+
+concurrency:
+  group: heartbeat
+  cancel-in-progress: true
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Check today's edition published — alert loudly if not
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DATE="$(date -u +'%Y-%m-%d')"
+          # Source of truth: an entry in reports/data/reports.js carrying today's sortDate.
+          if grep -q "sortDate: \"${DATE}\"" reports/data/reports.js; then
+            echo "OK: today's edition (${DATE}) is present in reports.js."
+            exit 0
+          fi
+
+          echo "ALARM: no entry with sortDate ${DATE} in reports/data/reports.js — the daily did not publish."
+          TITLE="⚠️ Daily report did not publish (${DATE})"
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          BODY="$(printf 'The heartbeat watchdog found NO edition with sortDate **%s** in reports/data/reports.js — the Daily AI Briefing appears not to have published today.\n\n- Date (UTC): %s\n- Heartbeat run: %s\n- Check: grep reports/data/reports.js for `sortDate \"%s\"`\n\ncc @%s — check the Daily AI Briefing run. Likely causes: the scheduled run did not fire, failed before commit, or the gate rejected a stale/missing entry.' "$DATE" "$DATE" "$RUN_URL" "$DATE" "${{ github.repository_owner }}")"
+
+          # Open OR refresh: if an open issue with this exact title exists, comment on it; else create it.
+          EXISTING="$(gh issue list --repo "${{ github.repository }}" --state open --limit 100 --json number,title --jq "map(select(.title == \"${TITLE}\")) | .[0].number // empty")"
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --repo "${{ github.repository }}" --body "$BODY" || echo "alert: could not refresh issue #$EXISTING"
+            echo "refreshed existing alert issue #$EXISTING"
+          else
+            gh issue create --repo "${{ github.repository }}" --title "$TITLE" --assignee "${{ github.repository_owner }}" --body "$BODY" || echo "alert: could not open the tracking issue"
+            echo "opened a new alert issue"
+          fi
+
+          # TODO (louder channel): post to a Slack/Discord webhook here for an instant push alert.
+          # Default is the zero-dependency GitHub-issue alert above. To enable, add a SLACK_WEBHOOK_URL
+          # secret and, before `exit 1`:
+          #   curl -fsS -X POST -H 'Content-type: application/json' \
+          #     --data "{\"text\":\"${TITLE} — ${RUN_URL}\"}" "${{ secrets.SLACK_WEBHOOK_URL }}" || true
+
+          exit 1
