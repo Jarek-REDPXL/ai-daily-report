@@ -80,6 +80,19 @@ jobs:
           python scripts/collectors/cluster.py || echo "cluster step failed — continuing fail-soft"
           python scripts/collectors/curate_sources.py || echo "source-curation step failed — continuing fail-soft"
 
+      # Close the feedback loop (Phase 1): turn the team's demand signals into Brain
+      # `gaps` rows — unmatched Ask questions (ask_no_match) + low-rated cards/reports
+      # (low_rating) — deduped against open gaps, then emit gaps-digest.md the routine
+      # reads below. Runs CI-side with direct DATABASE_URL, so the demand reaches the
+      # routine even if the live /api/intake read is unavailable. FAIL-SOFT — without
+      # DATABASE_URL (or before the 006_brain.sql migration is live) it logs and skips.
+      - name: Sync team feedback into Brain gaps (close the loop)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          pip install --quiet "psycopg[binary]" || echo "psycopg install issue — continuing fail-soft"
+          python scripts/collectors/gaps_sync.py || echo "gaps_sync failed — continuing fail-soft"
+
       - name: Generate today's briefing with Claude
         uses: anthropics/claude-code-action@v1
         env:
