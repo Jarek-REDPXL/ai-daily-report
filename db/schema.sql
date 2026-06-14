@@ -149,3 +149,81 @@ CREATE UNIQUE INDEX IF NOT EXISTS outcomes_token_card_uniq
 CREATE INDEX IF NOT EXISTS outcomes_card_idx ON redpxl.outcomes (card_id);
 CREATE OR REPLACE VIEW redpxl.outcome_summary AS
   SELECT card_id, outcome, count(*) AS n FROM redpxl.outcomes GROUP BY card_id, outcome;
+
+-- ── Phase 0: the Brain's memory (see db/migrations/006_brain.sql) ────────────
+-- Additive memory layer: the system's record of its own work + what matters.
+-- Read/written via scripts/collectors/brain.py (Python) and lib/brain.js (Node).
+CREATE TABLE IF NOT EXISTS redpxl.run_log (
+  id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  desk          text NOT NULL,                                   -- 'daily' | 'expand' | 'tools' | ...
+  started       timestamptz NOT NULL DEFAULT now(),
+  finished      timestamptz,
+  status        text NOT NULL DEFAULT 'running' CHECK (status IN ('running','ok','failed','skipped')),
+  summary       text,
+  artifacts     jsonb,
+  audit_verdict text
+);
+CREATE INDEX IF NOT EXISTS run_log_desk_idx    ON redpxl.run_log (desk, started DESC);
+CREATE INDEX IF NOT EXISTS run_log_started_idx ON redpxl.run_log (started DESC);
+
+CREATE TABLE IF NOT EXISTS redpxl.metrics (
+  id             uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  captured       date NOT NULL DEFAULT (now() AT TIME ZONE 'utc')::date,
+  signals_total  integer,
+  cards_total    integer,
+  reports_total  integer,
+  feedback_total integer,
+  ratings_total  integer,
+  extra          jsonb
+);
+CREATE UNIQUE INDEX IF NOT EXISTS metrics_captured_uniq ON redpxl.metrics (captured);
+CREATE INDEX IF NOT EXISTS metrics_captured_idx ON redpxl.metrics (captured DESC);
+
+CREATE TABLE IF NOT EXISTS redpxl.themes (
+  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug         text NOT NULL,
+  label        text,
+  domains      text[] NOT NULL DEFAULT '{}',
+  signal_count integer NOT NULL DEFAULT 0,
+  last_seen    timestamptz,
+  notes        text
+);
+CREATE UNIQUE INDEX IF NOT EXISTS themes_slug_uniq ON redpxl.themes (slug);
+CREATE INDEX IF NOT EXISTS themes_signal_count_idx ON redpxl.themes (signal_count DESC);
+
+CREATE TABLE IF NOT EXISTS redpxl.gaps (
+  id      uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  source  text NOT NULL CHECK (source IN ('ask_no_match','low_rating','manual')),
+  topic   text NOT NULL,
+  detail  text,
+  weight  numeric,
+  status  text NOT NULL DEFAULT 'open' CHECK (status IN ('open','planned','done','dismissed')),
+  created timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS gaps_status_idx  ON redpxl.gaps (status);
+CREATE INDEX IF NOT EXISTS gaps_weight_idx  ON redpxl.gaps (weight DESC);
+CREATE INDEX IF NOT EXISTS gaps_created_idx ON redpxl.gaps (created DESC);
+
+CREATE TABLE IF NOT EXISTS redpxl.tool_state (
+  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  tool_id    text NOT NULL,
+  captured   date NOT NULL DEFAULT (now() AT TIME ZONE 'utc')::date,
+  version    text,
+  price      text,
+  status     text,
+  source_url text
+);
+CREATE UNIQUE INDEX IF NOT EXISTS tool_state_tool_day_uniq ON redpxl.tool_state (tool_id, captured);
+CREATE INDEX IF NOT EXISTS tool_state_tool_idx ON redpxl.tool_state (tool_id, captured DESC);
+
+CREATE TABLE IF NOT EXISTS redpxl.ideas (
+  id        uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  kind      text NOT NULL CHECK (kind IN ('guide','page','tool_category')),
+  title     text NOT NULL,
+  rationale text,
+  evidence  jsonb,
+  status    text NOT NULL DEFAULT 'proposed' CHECK (status IN ('proposed','accepted','rejected','shipped')),
+  created   timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS ideas_status_idx ON redpxl.ideas (status);
+CREATE INDEX IF NOT EXISTS ideas_kind_idx   ON redpxl.ideas (kind);
