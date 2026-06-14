@@ -1,0 +1,344 @@
+name: Tools Desk (weekly Top-30 refresh)
+
+# WEEKLY + on-demand. Keeps reports/data/tools.js — the overall Top-30 AND each of the 12 FIXED
+# job categories — accurate, current, and fully sourced. A sibling of the Content Desk: one role
+# per claude-code-action step (clean context) handing off via .tools-run/ (gitignored), with a
+# ranking stage and a bounded audit loop. The contract lives in docs/prompts/tools/00-tools.md.
+#
+#   01 SCOPE → 02 RESEARCH → 03 VERIFY → 04 RANK → 05 WRITE → 06 AUDIT
+# AUDIT emits .tools-run/05-verdict.md whose first line is exactly `VERDICT: PASS` or
+# `VERDICT: CHANGES-REQUESTED`. On CHANGES-REQUESTED the desk runs ONE revise (WRITE again, then
+# AUDIT again) — maximum one. It publishes to main ONLY if BOTH hold:
+#   - the project quality gate (scripts/check_reports.py, CHECK_LINKS=1) passes, AND
+#   - the final verdict's first line is exactly `VERDICT: PASS`.
+# On any failure the job FAILS and main is left untouched. The run + each tool's state are logged
+# to the Brain (run_log / tool_state) fail-soft, so the rankings become a week-over-week record.
+#
+# AUTH GUARDRAIL (identical to daily-report.yml): authenticate ONLY with CLAUDE_CODE_OAUTH_TOKEN so a
+# run bills the Max subscription, never the paid API. Do NOT add anthropic_api_key to any step and do
+# NOT put ANTHROPIC_API_KEY in the job env.
+#
+# Secrets: CLAUDE_CODE_OAUTH_TOKEN (auth, required). DATABASE_URL (optional — Brain tool_state/run_log;
+# every Brain call is fail-soft, so without it the desk still refreshes and publishes normally).
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 8 * * 5"      # Fridays 08:00 UTC (~09:00 London)
+
+permissions:
+  contents: write           # native GITHUB_TOKEN push to the run's branch
+  id-token: write           # lets claude-code-action fetch its OIDC token
+
+concurrency:
+  group: ai-edge-publish    # shared with daily/weekly/expand/content-desk so the engines never push concurrently
+  cancel-in-progress: false
+
+jobs:
+  tools:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+
+      - name: Install Brain deps (tool_state + run-log; fail-soft)
+        run: pip install --quiet "psycopg[binary]" || echo "psycopg install issue — Brain calls will degrade (fail-soft)"
+
+      - name: Prepare run
+        run: |
+          mkdir -p .tools-run
+          echo "Prepared Tools Desk run."
+
+      # Week-over-week baseline: dump last week's Brain tool_state to a file SCOPE reads. FAIL-SOFT:
+      # without DATABASE_URL (or before 006_brain.sql is live) it writes a "no prior snapshot" note.
+      - name: Load last week's tool_state (week-over-week baseline)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          python - <<'PY' || echo "tool_state preload skipped (fail-soft)"
+          import sys
+          sys.path.insert(0, "scripts/collectors")
+          import brain
+          rows = brain.getLatestToolStates() or []
+          lines = ["# Last week's tool_state snapshot (Brain) — week-over-week baseline", ""]
+          if rows:
+              for r in rows:
+                  lines.append("- %s: version=%s price=%s status=%s (captured %s)" % (
+                      r.get("tool_id"), r.get("version"), r.get("price"), r.get("status"), r.get("captured")))
+          else:
+              lines.append("- (no prior snapshot — first run, or the Brain isn't live yet)")
+          open(".tools-run/last-state.md", "w", encoding="utf-8").write("\n".join(lines) + "\n")
+          print("tool_state: wrote .tools-run/last-state.md (%d tools)" % len(rows))
+          PY
+
+      - name: 01 — SCOPE
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are the SCOPE role of the Tools Desk. Read and obey, in order:
+              - docs/prompts/tools/00-tools.md   (the contract)
+              - docs/prompts/tools/01-scope.md   (your role)
+              - .tools-run/last-state.md         (last week's Brain snapshot, if present)
+            Do exactly what 01-scope.md says and write ONLY .tools-run/00-baseline.md.
+          claude_args: |
+            --max-turns 25
+            --model claude-opus-4-8
+            --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
+
+      - name: 02 — RESEARCH
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are the RESEARCH role of the Tools Desk. Read and obey, in order:
+              - docs/prompts/tools/00-tools.md      (the contract)
+              - docs/prompts/tools/02-research.md   (your role)
+              - .tools-run/00-baseline.md           (the current directory)
+            Do exactly what 02-research.md says — current version/price/status per tool + challengers, every
+            line a real source URL — and write ONLY .tools-run/01-dossier.md. Never invent a fact or a link.
+          claude_args: |
+            --max-turns 90
+            --model claude-opus-4-8
+            --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
+
+      - name: 03 — VERIFY
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are the VERIFY role of the Tools Desk. Read and obey, in order:
+              - docs/prompts/tools/00-tools.md     (the contract)
+              - docs/prompts/tools/03-verify.md    (your role)
+              - .tools-run/01-dossier.md           (the material to check)
+            Do exactly what 03-verify.md says — FETCH every source + every tool url — and write ONLY
+            .tools-run/02-verified.md.
+          claude_args: |
+            --max-turns 80
+            --model claude-opus-4-8
+            --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
+
+      - name: 04 — RANK
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are the RANK role of the Tools Desk. Read and obey, in order:
+              - docs/prompts/tools/00-tools.md     (the contract)
+              - docs/prompts/tools/04-rank.md      (your role + the ranking criteria)
+              - .tools-run/00-baseline.md   and   .tools-run/02-verified.md
+            Do exactly what 04-rank.md says — Top-30 + each of the 12 categories' order from VERIFIED facts
+            only — and write ONLY .tools-run/03-rankings.md.
+          claude_args: |
+            --max-turns 40
+            --model claude-opus-4-8
+            --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
+
+      - name: 05 — WRITE
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are the WRITE role of the Tools Desk. Read and obey, in order:
+              - docs/prompts/tools/00-tools.md     (the contract — esp. the tools.js schema)
+              - docs/prompts/tools/05-write.md     (your role)
+              - .tools-run/02-verified.md   and   .tools-run/03-rankings.md
+              - reports/data/tools.js              (match the exact shape)
+            Do exactly what 05-write.md says: apply verified facts + rankings to reports/data/tools.js, and
+            write .tools-run/04-changelog.md and .tools-run/tool_state.json. CI OVERRIDES: do NOT run
+            scripts/check_reports.py and do NOT git commit/push — later steps run the gate, the Brain
+            snapshot, and the publish.
+          claude_args: |
+            --max-turns 60
+            --model claude-opus-4-8
+            --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
+
+      - name: 06 — AUDIT
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are the AUDIT role of the Tools Desk. Read and obey, in order:
+              - docs/prompts/tools/00-tools.md     (the contract)
+              - docs/prompts/tools/06-audit.md     (your role)
+              - .tools-run/02-verified.md , .tools-run/03-rankings.md , .tools-run/04-changelog.md
+            Inspect the real change with `git diff -- reports/data/tools.js`. Do exactly what 06-audit.md says
+            and write ONLY .tools-run/05-verdict.md — its FIRST LINE exactly `VERDICT: PASS` or
+            `VERDICT: CHANGES-REQUESTED`.
+          claude_args: |
+            --max-turns 50
+            --model claude-opus-4-8
+            --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
+
+      # Parse the FIRST audit verdict. Drives whether the single revise loop runs.
+      - name: Parse first verdict
+        id: verdict1
+        run: |
+          if [ ! -f .tools-run/05-verdict.md ]; then
+            echo "value=MISSING" >> "$GITHUB_OUTPUT"; echo "no verdict file produced"; exit 0
+          fi
+          LINE="$(head -n 1 .tools-run/05-verdict.md | tr -d '\r')"
+          echo "first line: $LINE"
+          case "$LINE" in
+            "VERDICT: PASS")              echo "value=PASS"              >> "$GITHUB_OUTPUT" ;;
+            "VERDICT: CHANGES-REQUESTED") echo "value=CHANGES-REQUESTED" >> "$GITHUB_OUTPUT" ;;
+            *)                            echo "value=MALFORMED"         >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      # ---- The ONE revise loop (runs only if the first verdict was CHANGES-REQUESTED) ----
+      - name: 05 — WRITE (revise)
+        if: ${{ steps.verdict1.outputs.value == 'CHANGES-REQUESTED' }}
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are the WRITE role of the Tools Desk, on its ONE AND ONLY revise pass. Read and obey, in order:
+              - docs/prompts/tools/00-tools.md     (the contract — esp. the schema)
+              - docs/prompts/tools/05-write.md     (your role — see "Revise pass")
+              - .tools-run/05-verdict.md           (the fix list to act on)
+              - .tools-run/02-verified.md , .tools-run/03-rankings.md , reports/data/tools.js
+            Fix in reports/data/tools.js EXACTLY the issues the verdict lists — nothing more — and update
+            .tools-run/04-changelog.md and .tools-run/tool_state.json. Do NOT run the gate or git commit/push.
+          claude_args: |
+            --max-turns 50
+            --model claude-opus-4-8
+            --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
+
+      - name: 06 — AUDIT (re-audit)
+        if: ${{ steps.verdict1.outputs.value == 'CHANGES-REQUESTED' }}
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are the AUDIT role of the Tools Desk, re-auditing after the single revise. Read and obey:
+              - docs/prompts/tools/00-tools.md , docs/prompts/tools/06-audit.md
+              - .tools-run/02-verified.md , .tools-run/03-rankings.md , .tools-run/04-changelog.md
+            Inspect the revised change with `git diff -- reports/data/tools.js`. OVERWRITE
+            .tools-run/05-verdict.md with your final verdict — FIRST LINE exactly `VERDICT: PASS` or
+            `VERDICT: CHANGES-REQUESTED`. There is NO further revise: if it still isn't PASS the run fails and
+            main stays untouched, which is the correct outcome.
+          claude_args: |
+            --max-turns 50
+            --model claude-opus-4-8
+            --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
+
+      # Parse the FINAL verdict (after the optional revise). Always runs so the gate/publish decision is
+      # made even if an earlier role errored (verdict will then not be PASS).
+      - name: Parse final verdict
+        id: verdict
+        if: ${{ always() }}
+        run: |
+          if [ ! -f .tools-run/05-verdict.md ]; then
+            echo "value=MISSING" >> "$GITHUB_OUTPUT"; echo "no verdict file produced"; exit 0
+          fi
+          LINE="$(head -n 1 .tools-run/05-verdict.md | tr -d '\r')"
+          echo "final first line: $LINE"
+          case "$LINE" in
+            "VERDICT: PASS")              echo "value=PASS"              >> "$GITHUB_OUTPUT" ;;
+            "VERDICT: CHANGES-REQUESTED") echo "value=CHANGES-REQUESTED" >> "$GITHUB_OUTPUT" ;;
+            *)                            echo "value=MALFORMED"         >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      # Quality gate — regenerate derived data + validate, every link checked. Runs only if the final
+      # verdict is PASS. continue-on-error so the log/fail steps still run; publish gates on gate.outcome.
+      - name: Quality gate — regenerate derived data + validate
+        id: gate
+        if: ${{ always() && steps.verdict.outputs.value == 'PASS' }}
+        continue-on-error: true
+        env:
+          CHECK_LINKS: "1"
+        run: python scripts/check_reports.py
+
+      # Commit & push — ONLY if the gate passed AND the final verdict is PASS. Scoped to reports/data
+      # (the source tools.js + the gate-regenerated tools.json both live there).
+      - name: Commit & push
+        id: publish
+        if: ${{ always() && steps.gate.outcome == 'success' && steps.verdict.outputs.value == 'PASS' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "AI Edge Bot"
+          git config user.email "bot@users.noreply.github.com"
+          if [ -z "$(git status --porcelain -- reports/data)" ]; then
+            echo "No tool changes — nothing to commit."; exit 0
+          fi
+          git add -A -- reports/data
+          git commit -m "tools: weekly Top-30 refresh ($(date -u +'%Y-%m-%d'))"
+          # Push with rebase-and-retry: if main moved ahead mid-run, fetch + rebase and retry instead of
+          # failing on a non-fast-forward.
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+          for attempt in 1 2 3; do
+            git fetch origin "${{ github.ref_name }}"
+            git rebase "origin/${{ github.ref_name }}" || { git rebase --abort; echo "rebase conflict — failing safely"; exit 1; }
+            git push origin HEAD:"${{ github.ref_name }}" && { echo "pushed"; exit 0; }
+            echo "push attempt $attempt rejected, retrying..."; sleep 5
+          done
+          echo "push failed after retries"; exit 1
+
+      # Snapshot each tool's verified state to the Brain (week-over-week record) — ONLY after a successful
+      # publish, reading the JSON the WRITE role produced. FAIL-SOFT.
+      - name: Snapshot tool_state to Brain
+        if: ${{ always() && steps.publish.outcome == 'success' }}
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          python - <<'PY' || echo "tool_state snapshot skipped (fail-soft)"
+          import json, sys
+          sys.path.insert(0, "scripts/collectors")
+          import brain
+          try:
+              data = json.load(open(".tools-run/tool_state.json", encoding="utf-8"))
+          except Exception as e:
+              print("no tool_state.json (%s) — skipping" % e); data = []
+          n = 0
+          for t in (data or []):
+              tid = t.get("tool_id")
+              if not tid:
+                  continue
+              brain.recordToolState(tid, version=t.get("version"), price=t.get("price"),
+                                    status=t.get("status"), source_url=t.get("source_url"))
+              n += 1
+          print("tool_state: recorded %d snapshot(s)" % n)
+          PY
+
+      # Log the run to the Brain (run_log) — ALWAYS, fail-soft. status=ok only if we published.
+      - name: Log run to Brain
+        if: ${{ always() }}
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DESK_VERDICT: ${{ steps.verdict.outputs.value }}
+          DESK_GATE: ${{ steps.gate.outcome }}
+          DESK_PUBLISH: ${{ steps.publish.outcome }}
+        run: |
+          python - <<'PY' || echo "brain log skipped (fail-soft)"
+          import os, sys
+          sys.path.insert(0, "scripts/collectors")
+          import brain
+          verdict = os.environ.get("DESK_VERDICT", "?")
+          gate = os.environ.get("DESK_GATE", "?")
+          publish = os.environ.get("DESK_PUBLISH", "?")
+          status = "ok" if publish == "success" else "failed"
+          summary = "verdict=%s gate=%s publish=%s" % (verdict, gate, publish)
+          brain.logRun(desk="tools-desk", status=status, summary=summary, audit_verdict=verdict)
+          print("brain: logged tools-desk run (%s) — %s" % (status, summary))
+          PY
+
+      # Make the job's status honest: if we did not publish, FAIL (main is already untouched).
+      - name: Fail if not published
+        if: ${{ always() && steps.publish.outcome != 'success' }}
+        run: |
+          echo "Tools Desk did not publish — gate or verdict was not PASS. Main left untouched."
+          echo "verdict=${{ steps.verdict.outputs.value }} gate=${{ steps.gate.outcome }} publish=${{ steps.publish.outcome }}"
+          exit 1

@@ -20,6 +20,9 @@ venv/
 # Content Desk hand-off artifacts (regenerated every run; never committed)
 .desk-run/
 
+# Tools Desk hand-off artifacts (regenerated every run; never committed)
+.tools-run/
+
 # Transient harvest output (regenerated every run by scripts/collectors/ingest.py)
 scripts/collectors/harvest-digest.md
 scripts/collectors/harvest.json

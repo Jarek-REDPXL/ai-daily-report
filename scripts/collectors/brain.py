@@ -113,6 +113,14 @@ def getToolState(tool_id):
         "ORDER BY captured DESC LIMIT 1", (tool_id,), one=True)
 
 
+def getLatestToolStates(limit=500):
+    """The latest snapshot row PER tool (for week-over-week deltas in the Tools Desk)."""
+    return _read(
+        "SELECT DISTINCT ON (tool_id) tool_id, captured, version, price, status, source_url "
+        "FROM redpxl.tool_state "
+        "ORDER BY tool_id, captured DESC LIMIT %s", (limit,))
+
+
 # ===========================================================================
 #  WRITES
 # ===========================================================================
