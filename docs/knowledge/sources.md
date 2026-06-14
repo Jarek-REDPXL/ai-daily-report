@@ -51,7 +51,7 @@
 | Cloudflare (blog + dev changelog) | web-dev | 55 | 1 | 2026-06-08 | AI Gateway/Workers product + cost-control changes | primary; behind Jun 8 spend-limits card |
 | Axios | news | 52 | 1 | 2026-06-08 | funding/valuation, climate & deals desk | good non-paywalled 2nd source; behind Helion figure |
 | company newsroom / IR (Helion etc.) | news | 50 | 1 | 2026-06-08 | primary funding/round confirmation | authoritative for the round; cross-check valuation vs press |
-| HubSpot Blog (Marketing) | growth | 55 | 1 | 2026-06-08 | AEO/GEO, content strategy, original research | strong first-party research (State of AEO); behind Jun 8 AEO card |
+| HubSpot Blog (Marketing) | growth | 57 | 2 | 2026-06-14 | AEO/GEO, content strategy, original research | strong first-party research (State of AEO); behind Jun 8 AEO content-formats + Jun 14 schema-for-AEO cards |
 | Wix Studio (AI Search Lab) | growth | 50 | 1 | 2026-06-08 | AI-citation datasets, AEO research | corroborating dataset; cross-check against HubSpot |
 | Chrome for Developers (developer.chrome.com) | web-design | 58 | 2 | 2026-06-13 | Chrome release notes + web-platform explainers | primary/authoritative; behind Jun 9 gap-decorations + Jun 13 CSS-carousel (Overflow 5) cards |
 | Ideogram (official blog + GitHub docs) | graphic | 52 | 1 | 2026-06-09 | image-model releases, prompting schema | tool primary; behind Jun 9 Ideogram-4.0 JSON-layout card |
@@ -78,6 +78,13 @@
 | CNN Business | news | 50 | 1 | 2026-06-13 | markets/business breaking | behind Jun 13 SpaceX record IPO; non-paywalled 2nd source |
 | Al Jazeera | news | 49 | 1 | 2026-06-13 | markets/business 2nd source | behind Jun 13 SpaceX IPO; cross-check exact figures |
 | The Next Web | news | 49 | 1 | 2026-06-13 | tech/AI policy + product | behind Jun 13 Fable-5/Mythos-5 shutdown coverage; non-paywalled |
+| Pyodide (blog + docs) | web-dev | 53 | 1 | 2026-06-14 | Python-in-browser (WebAssembly) releases, micropip/Wasm-wheels how-to | tool primary; behind Jun 14 browser-Python card |
+| Simon Willison (simonwillison.net) | web-dev | 54 | 1 | 2026-06-14 | hands-on AI/dev tooling write-ups, primary-source links | high-signal practitioner; behind Jun 14 Pyodide WASM-wheels beat |
+| developers.google.com (Search Central) | growth | 52 | 1 | 2026-06-14 | structured-data/schema specs (FAQPage, HowTo) | primary/authoritative; behind Jun 14 schema-for-AEO card |
+| AirOps | growth | 50 | 1 | 2026-06-14 | AI-search/AEO research + schema implementation data | first-party dataset (State of AI Search, 2.8× citation stat); cross-check |
+| Recraft (recraft.ai) | graphic | 53 | 1 | 2026-06-14 | AI image/vector model — native SVG logos/icons | tool primary; behind Jun 14 editable-SVG card |
+| Abduzeedo | graphic | 49 | 1 | 2026-06-14 | design-tool coverage, technique showcases | practitioner; behind Jun 14 Recraft-V4 native-SVG card; cross-check |
+| MindStudio (blog) | graphic | 48 | 1 | 2026-06-14 | AI design-tool how-to guides | secondary how-to; behind Jun 14 Recraft SVG card; cross-check |
 
 <!-- Seed roster began as ai-tooling; web-design/paid/social/graphic rows added as
      those domains started producing. news/growth rows added 2026-06-08 on their

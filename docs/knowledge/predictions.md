@@ -47,6 +47,9 @@
 - [2026-06-13] [web-design] The CSS Overflow 5 carousel pseudo-elements (`::scroll-button()` / `::scroll-marker` / `scroll-marker-group`) ship in a 2nd browser engine (Firefox or Safari), putting native CSS carousels on the path to Baseline. — (due ~end of 2026)
 - [2026-06-13] [paid] Google's revised DSA → AI Max timeline holds: new-DSA creation ends Jan 2027 and automatic migration begins Feb 2027 with no further delay. — (due ~Feb 2027)
 - [2026-06-13] [social] User-facing plain-language topic controls spread: a 2nd major feed beyond Instagram (e.g. YouTube, Threads, or TikTok's main feed) ships an LLM-driven add/remove-topics control, OR Instagram exposes its inferred topic classification to creators/business accounts. — (due ~end of 2026)
+- [2026-06-14] [web-dev] The PyPI WebAssembly-wheel ecosystem grows: the number of PyPI packages publishing `pyemscripten`/Wasm wheels passes ~100 (from 28 on Jun 13 2026). — (due ~end of Q3 2026)
+- [2026-06-14] [graphic] A second major image model (Midjourney, Adobe Firefly, Google Imagen, or OpenAI/ChatGPT images) ships native vector/SVG output (not raster-to-vector tracing), following Recraft V4. — (due ~end of 2026)
+- [2026-06-14] [growth] Schema/structured-data generation becomes a default feature of a major AEO/AI-visibility tool (Semrush AI Toolkit, Ahrefs Brand Radar, or similar) — i.e. the tool ships JSON-LD output, not just measurement. — (due ~end of Q3 2026)
 
 ## Resolved predictions (outcome log — newest first)
 <!-- format: [made → resolved] [domain] ✅/❌/⚖️ claim — outcome note -->

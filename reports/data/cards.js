@@ -35,6 +35,98 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdev-pyodide-browser-python",
+    domains: ["web-dev"],
+    title: "Run real Python in the browser with no backend — install packages straight from PyPI",
+    action: "Add the Pyodide CDN script tag to a page, then call await loadPyodide() and micropip.install('yourpackage') to run a real Python library client-side — no server.",
+    summary: "Pyodide is CPython compiled to WebAssembly, so Python runs inside a browser tab with no server. The 314.0 release (Jun 13, 2026) means package authors can publish <code>WebAssembly wheels</code> (ready-to-install builds) straight to PyPI, so <code>micropip.install('somepkg')</code> now pulls real libraries at runtime. Use it to ship a calculator, CSV/data explorer, or image/PDF tool that runs entirely on the user's machine.",
+    why: "A whole class of small tools (calculators, data explorers, file processors) gets built and hosted as a backend you have to pay for and maintain. Running them client-side in Python deletes the server and the API bill — and the user's data never leaves their browser, which is a real selling point for client tools that touch financials, uploads, or personal data.",
+    how: [
+      "Add one CDN script tag to your page: <code>&lt;script src='https://cdn.jsdelivr.net/pyodide/v314.0.0/full/pyodide.js'&gt;&lt;/script&gt;</code>",
+      "Boot the runtime once: <code>const pyodide = await loadPyodide();</code>",
+      "Install a package at runtime: <code>await pyodide.loadPackage('micropip'); const micropip = pyodide.pyimport('micropip'); await micropip.install('snowballstemmer');</code> (swap in any PyPI package that ships a pure-Python or WebAssembly wheel)",
+      "Run Python and read the result back into JavaScript: <code>const out = await pyodide.runPythonAsync(\"import statistics; statistics.mean([2,4,6])\");</code>",
+      "Lazy-load it: trigger <code>loadPyodide()</code> on the click that opens the tool, not on page load, so only users who use the tool download the runtime (several MB).",
+      "Confirm your exact package installs in the Pyodide REPL at pyodide.org before wiring up the UI."
+    ],
+    confidence: "emerging",
+    corroboration_count: 2,
+    status: "active",
+    thread_id: "thread-no-backend-web",
+    supersedes: [],
+    related: ["card-webdev-bun-image", "card-webdev-astro6-csp"],
+    sources: [
+      { label: "Pyodide — 314.0 release (WASM wheels on PyPI)", url: "https://blog.pyodide.org/posts/314-release/" },
+      { label: "Pyodide Docs — Getting started / quickstart", url: "https://pyodide.org/en/stable/usage/quickstart.html" },
+      { label: "Simon Willison — Publishing WASM wheels to PyPI for Pyodide", url: "https://simonwillison.net/2026/Jun/13/publishing-wasm-wheels/" }
+    ],
+    tags: ["pyodide", "webassembly", "python", "no-backend"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+
+  {
+    id: "card-graphic-recraft-svg-vector",
+    domains: ["graphic"],
+    title: "Generate editable SVG logos & icons with AI — not flat PNGs you can't touch",
+    action: "In Recraft, pick a V4 Vector model, prompt your icon as a brief, download it as SVG, and drop it straight into Figma to recolour and resize.",
+    summary: "Most AI image tools hand you a flat PNG you can't edit. <b>Recraft V4's Vector models</b> output true SVG (math-defined shapes that stay sharp at any size) with clean, editable paths you open directly in Figma or Illustrator — the only major AI image model doing native SVG rather than tracing a raster image into a messy approximation.",
+    why: "The #1 problem with AI logos and icons is that they arrive as pixels: you can't recolour them cleanly, scale them without blur, or hand them to a developer. Native SVG turns a one-off picture into a real brand asset — an icon set that scales from 16px favicon to billboard, recolours to exact brand tokens, and drops into the design system without a redraw.",
+    how: [
+      "Open recraft.ai and pick a <b>V4 Vector</b> model (Vector or Vector Pro).",
+      "Prompt like a brief, not a sentence: <code>minimalist single-line icon of a paper plane, flat, one accent colour #2563EB on transparent, consistent 2px stroke</code>.",
+      "Generate, then download as <b>SVG</b>.",
+      "Drag the SVG into Figma — it lands as editable vector layers; recolour to your brand tokens and adjust stroke/shape.",
+      "Build a consistent set by reusing the exact same style clause across prompts (same stroke weight, fill rule, corner style) so the icons read as one family.",
+      "Keep a human in the loop: pick the 2–3 that fit, clean up the paths, and confirm on-brand before shipping."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    thread_id: "thread-structured-design-gen",
+    supersedes: [],
+    related: ["card-graphic-ideogram-json-layout", "card-graphic-color-palette", "card-graphic-font-pairing", "card-webdesign-ai-ready-design-system"],
+    sources: [
+      { label: "Recraft — AI models (V4 Vector)", url: "https://www.recraft.ai/ai-models/ideogram" },
+      { label: "Abduzeedo — Recraft V4 brings design taste and native SVG", url: "https://abduzeedo.com/recraft-v4-brings-design-taste-and-native-svg-ai-generation" },
+      { label: "MindStudio — Generate native SVG logos & icons with Recraft V4 Vector", url: "https://www.mindstudio.ai/blog/what-is-recraft-v4-vector-generate-svg-logos-icons-ai" }
+    ],
+    tags: ["recraft", "svg", "logos", "icons", "figma", "brand"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+
+  {
+    id: "card-growth-schema-aeo",
+    domains: ["growth"],
+    title: "Add FAQ schema so AI answer engines can quote your pages",
+    action: "Add a FAQPage JSON-LD block to one high-intent money page, validate it with Google's Rich Results Test, and re-check your AI visibility in a few weeks.",
+    summary: "Schema markup is invisible JSON-LD code that tells AI crawlers exactly what your page says. 2026 research found pages with clean structure plus schema earn ~2.8× the AI-citation rate of poorly-structured ones, and FAQ schema is on only ~10.5% of AI-cited pages — an under-used, low-effort edge. This is the machine-legibility leg of the answer-engine-optimization play.",
+    why: "Buyers increasingly ask an AI assistant instead of scrolling search results, so the question is whether ChatGPT/Perplexity/Google AI can cleanly lift an answer from your page and attribute it to you. <code>FAQPage</code> and <code>HowTo</code> schema map directly to how an LLM extracts answers — it's a cheap way to become the source it quotes.",
+    how: [
+      "Pick one high-intent money page that already answers real buyer questions (pricing, comparison, 'how does X work').",
+      "Generate a <code>FAQPage</code> JSON-LD block — Google's Structured Data Markup Helper, or on WordPress the Rank Math / All in One SEO FAQ block (no code).",
+      "Paste the JSON-LD into the page <code>&lt;head&gt;</code> (Google recommends JSON-LD because it sits apart from your layout and won't break it).",
+      "Add <code>Organization</code> + <code>Author</code> schema for trust/E-E-A-T signals.",
+      "Validate with Google's Rich Results Test and the Schema.org Validator; fix errors before shipping.",
+      "Re-run an AI-visibility check (see card-growth-ai-visibility-check) in ~2–4 weeks, then templatise the winning markup across similar pages."
+    ],
+    confidence: "emerging",
+    corroboration_count: 2,
+    status: "active",
+    thread_id: "thread-answer-engine-optimization",
+    supersedes: [],
+    related: ["card-growth-aeo-content-formats", "card-growth-ai-visibility-check"],
+    sources: [
+      { label: "AirOps — How to implement schema markup for AEO", url: "https://www.airops.com/blog/schema-markup-aeo" },
+      { label: "HubSpot — Schema markup for AEO", url: "https://blog.hubspot.com/marketing/schema-markup-aeo" },
+      { label: "Google Search Central — FAQPage structured data", url: "https://developers.google.com/search/docs/appearance/structured-data/faqpage" }
+    ],
+    tags: ["aeo", "schema", "json-ld", "faqpage", "seo"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+
+  {
     id: "card-webdesign-css-carousel",
     domains: ["web-design"],
     title: "Build an image carousel in pure CSS — no JavaScript, accessible out of the box",
