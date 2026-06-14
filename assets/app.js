@@ -33,6 +33,30 @@
       el.style.setProperty("--i", Math.min(i, 10));
       el.classList.add("rise");
     });
+    scrollReveal(root);
+  }
+
+  // scroll-reveal: top-level sections rise as they enter the viewport (IntersectionObserver).
+  // FAIL-SAFE: sections are visible by default; we only add the hidden ".sr" state when JS + IO
+  // are present AND motion is allowed, so reduced-motion / no-IO never strands content hidden.
+  function prefersReducedMotion() {
+    try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; }
+  }
+  let _revealIO = null;
+  function scrollReveal(root) {
+    if (!root || !("IntersectionObserver" in window) || prefersReducedMotion()) return;
+    if (!_revealIO) {
+      // threshold 0 = reveal as soon as ANY edge enters (a tall section can never reach a
+      // higher ratio, which would otherwise strand it hidden — caught by the audit's stuck check).
+      _revealIO = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("sr-in"); _revealIO.unobserve(e.target); } });
+      }, { rootMargin: "0px", threshold: 0 });
+    }
+    Array.prototype.forEach.call(root.children, el => {
+      if (el.offsetWidth === 0 && el.offsetHeight === 0) return;   // skip invisible/empty — can't intersect
+      el.classList.add("sr");
+      _revealIO.observe(el);
+    });
   }
 
   // ---- cards (durable knowledge atoms) ----
@@ -1168,6 +1192,7 @@
       ${jobsHTML ? `<div class="tools-byjob-label"><span class="kicker-rule"></span>Best tools by job</div>${jobsHTML}` : ""}`;
     Array.prototype.forEach.call(viewEl.children, (el, i) => el.style.setProperty("--i", Math.min(i, 6)));
     wireLogos(viewEl);
+    scrollReveal(viewEl);
     window.scrollTo({ top: 0 });
   }
 

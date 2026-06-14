@@ -23,6 +23,12 @@ venv/
 # Tools Desk hand-off artifacts (regenerated every run; never committed)
 .tools-run/
 
+# Dev-only UI audit (Playwright) — output + the ephemeral dev install. Never shipped. The
+# tracked root package.json (serverless deps) stays clean: install playwright with --no-save.
+.ui-audit/
+/node_modules/
+/package-lock.json
+
 # Transient harvest output (regenerated every run by scripts/collectors/ingest.py)
 scripts/collectors/harvest-digest.md
 scripts/collectors/harvest.json

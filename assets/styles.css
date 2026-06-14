@@ -146,6 +146,13 @@ b,strong{font-weight:700;color:var(--fg)}
   font-family:var(--mono);background:var(--panel-2);border:1px solid var(--line);color:var(--fg-70);
   padding:6px 13px;border-radius:var(--r-pill);font-size:11px;font-weight:500;white-space:nowrap;letter-spacing:.02em;
 }
+/* live status dot — a subtle "fresh" pulse on the latest-edition pill (reduced-motion-safe: the
+   global animation:none leaves it a static dot). */
+#latest-pill{position:relative;padding-left:23px}
+#latest-pill::before{content:"";position:absolute;left:11px;top:50%;width:7px;height:7px;border-radius:50%;
+  transform:translateY(-50%);background:#7FD8A4;animation:statusPulse 2.6s var(--ease) infinite}
+@keyframes statusPulse{0%,100%{opacity:.45;box-shadow:0 0 0 0 rgba(127,216,164,.5)}
+  50%{opacity:1;box-shadow:0 0 0 5px rgba(127,216,164,0)}}
 #theme-toggle,#menu-btn{
   background:var(--panel-2);border:1px solid var(--line);color:var(--fg);
   width:38px;height:38px;border-radius:var(--r-md);cursor:pointer;flex:0 0 auto;
@@ -389,7 +396,11 @@ main::before{content:"";position:absolute;top:var(--xl);right:var(--lg);width:46
 .note{font-size:13px;color:var(--fg-40);font-style:italic;font-family:var(--font-editorial);
   margin:var(--md) 0 0;line-height:1.6;padding-left:13px;border-left:2px solid var(--line-2)}
 code{font-family:var(--mono);font-size:12.5px;background:var(--panel-2);padding:2px 7px;border-radius:var(--r-sm);
-  color:var(--fg);border:1px solid var(--line)}
+  color:var(--fg);border:1px solid var(--line);overflow-wrap:anywhere}
+/* responsive safety net: long tokens (inline code, URLs) must wrap, never push the page wide.
+   The routine generates new content continuously, so this is a general guard, not a per-item fix. */
+.block,.tldr,.why,.do,.cv-summary,.cv-how,.ask-answer,.note,.fb-body,.intro,.cv-action{overflow-wrap:break-word}
+.block a,.cv-links a,.sources a,.ask-cites a,.tldr a,.why a,.do a{overflow-wrap:anywhere}
 
 /* tables */
 .tbl-wrap{overflow-x:auto;margin:var(--md) 0;border:1px solid var(--line);border-radius:var(--r-md)}
@@ -472,11 +483,13 @@ td b,td strong{color:var(--fg)}
 
 /* one orchestrated entrance: masthead → pager → tldr → sections → sources,
    staggered via --i set per child. High-impact single page-load reveal. */
-#report-container > *{
-  opacity:0;transform:translateY(14px);
-  animation:reveal var(--t-slow) var(--ease-out) forwards;
-  animation-delay:calc(var(--i,0) * 70ms);
-}
+/* Scroll-reveal: top-level view sections are VISIBLE by default; app.js adds .sr (then .sr-in
+   once they enter the viewport, via IntersectionObserver) only when JS is present AND motion is
+   allowed — so no-JS / reduced-motion always shows content, never stuck hidden. Tiles keep their
+   own .rise load-stagger (@keyframes reveal, below). */
+.sr{opacity:0;transform:translateY(16px);
+  transition:opacity var(--t-slow) var(--ease-out),transform var(--t-slow) var(--ease-out)}
+.sr.sr-in{opacity:1;transform:none}
 @keyframes reveal{to{opacity:1;transform:none}}
 
 /* nav items: subtle press + a red tick that grows in on hover (brand dot motion) */
@@ -558,9 +571,7 @@ body[data-view="inbox"] .view-page,
 body[data-view="ask"] .view-page,
 body[data-view="tools"] .view-page{display:block}
 
-/* staggered reveal (matches the feed) */
-.view-page > *{opacity:0;transform:translateY(14px);animation:reveal var(--t-slow) var(--ease-out) forwards;
-  animation-delay:calc(var(--i,0) * 70ms)}
+/* view-page sections are revealed via .sr scroll-reveal (see the .sr utility above) */
 
 /* ---- shared headers ---- */
 .hh-kicker{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;
@@ -901,7 +912,8 @@ a.rh-row:hover{background:var(--panel-2);color:var(--fg);transform:translateX(2p
 .tool-good b,.tool-weak b{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-right:6px;color:var(--fg-40)}
 .tool-weak b{color:var(--red)}
 .tr-side{display:flex;flex-direction:column;align-items:flex-end;gap:8px;text-align:right;flex:0 0 auto}
-.tr-price{font-family:var(--mono);font-size:11px;color:var(--fg-55);white-space:nowrap}
+/* long multi-tier prices must wrap (was white-space:nowrap → overflowed at ≤390px) */
+.tr-price{font-family:var(--mono);font-size:11px;color:var(--fg-55);overflow-wrap:anywhere}
 .tr-visit{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--red);text-decoration:none;white-space:nowrap;
   border:1px solid var(--line-2);border-radius:var(--r-sm);padding:4px 9px}
 .tr-visit:hover{border-color:var(--red);background:var(--red-glow)}
@@ -966,12 +978,22 @@ body[data-view="ask"] .ask-cites a:hover{transform:translateX(3px)}
 body[data-view="feed"] .nav-item:hover{transform:translateX(3px)}
 body[data-view="feed"] .report-nav button:hover:not(:disabled){transform:translateY(-2px)}
 
+/* Touch input: guarantee >=44px tap targets on the small controls. Scoped to coarse pointers so
+   desktop/mouse keeps its denser sizing. */
+@media (pointer:coarse){
+  #theme-toggle,#menu-btn{width:44px;height:44px}
+  .topnav-link{padding-top:15px;padding-bottom:15px}
+  .nav-item{min-height:44px}
+  .btn,.report-nav button,.cform-submit,.cform-again,.btn-sm,.ask-form button,
+  .dchip,.kind-btn,.oc-btn,.ask-chip,.tr-visit,.react-note-toggle,.hb-more{
+    min-height:44px;display:inline-flex;align-items:center}
+}
+
 /* respect reduced motion — kill all of the above */
 @media (prefers-reduced-motion:reduce){
   *{transition:none !important;scroll-behavior:auto;animation:none !important}
-  #report-container > *{opacity:1;transform:none}
-  .view-page > *{opacity:1;transform:none}
-  .rise{opacity:1;transform:none}   /* never leave a tile stuck hidden */
+  #report-container > *,.view-page > *,.sr{opacity:1 !important;transform:none !important}
+  .rise{opacity:1;transform:none}   /* never leave a tile/section stuck hidden */
   /* homepage personality pass: no positional jump on hover either */
   body[data-view="home"] .hub-tile:hover,
   body[data-view="home"] .kcard:hover,
