@@ -22,6 +22,7 @@ scripts/collectors/harvest-digest.md
 scripts/collectors/harvest.json
 scripts/collectors/clusters-digest.md
 scripts/collectors/sources-suggestions.md
+scripts/collectors/signals-digest-full.md
 
 # Design feedback loop (dev-only tooling — not part of the site)
 shots/

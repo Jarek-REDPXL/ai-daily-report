@@ -1,0 +1,139 @@
+name: Expand Cards (deep signal mining)
+
+# MANUAL ONLY (workflow_dispatch). Mines the full Neon signals store into NEW golden
+# cards for the craft domains, on demand. Runs the SAME engine as the daily routine:
+# scripts/collectors/signals_digest.py builds a deep, clustered digest, then Claude
+# (Max-billed via CLAUDE_CODE_OAUTH_TOKEN) mines it into cards per docs/prompts/expand.md,
+# then the project quality gate validates and a deterministic step commits + pushes.
+#
+# AUTH GUARDRAIL (identical to daily-report.yml): authenticate ONLY with
+# CLAUDE_CODE_OAUTH_TOKEN so a run bills the Max subscription, never the paid API. Do NOT
+# add anthropic_api_key to the step and do NOT put ANTHROPIC_API_KEY in the job env.
+#
+# Secrets needed: CLAUDE_CODE_OAUTH_TOKEN (auth) + DATABASE_URL + OPENAI_API_KEY (the
+# deep digest reads the signals store and embeds). No card generation runs without them
+# — every step is fail-soft, so a missing secret just yields a thinner/empty digest.
+on:
+  workflow_dispatch:
+    inputs:
+      domain:
+        description: 'Craft domain to expand ("all", or one slug: web-design, web-dev, graphic, email, social, paid, growth, ai-tooling)'
+        required: true
+        default: 'all'
+      max_per_domain:
+        description: 'Max NEW cards per domain (a ceiling, never a target)'
+        required: true
+        default: '10'
+
+permissions:
+  contents: write           # native GITHUB_TOKEN push to the run's branch
+  id-token: write           # lets claude-code-action fetch its OIDC token
+
+concurrency:
+  group: ai-edge-publish    # shared with daily/weekly so the engines never push concurrently
+  cancel-in-progress: false
+
+jobs:
+  expand:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+
+      - name: Install deps
+        run: |
+          pip install --quiet -r scripts/collectors/requirements.txt || echo "collector dep install issue — continuing fail-soft"
+          pip install --quiet numpy "psycopg[binary]" || echo "numpy/psycopg install issue — continuing fail-soft"
+
+      # Deep digest: mine the FULL redpxl.signals store, cluster + corroborate per craft
+      # domain, emit scripts/collectors/signals-digest-full.md (the generation input).
+      # FAIL-SOFT — without DATABASE_URL/OPENAI_API_KEY it logs and skips.
+      - name: Build deep signals digest
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python scripts/collectors/signals_digest.py || echo "signals_digest failed — continuing fail-soft"
+
+      - name: Mine new cards with Claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          # Max-subscription auth ONLY. Never add anthropic_api_key here (it would take
+          # precedence and bill the paid API).
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            Execute the RedPxl News CARD EXPANSION routine. Read and follow, in order:
+              - docs/NORTH-STAR.md      (mission + THE STANDARD — the 10/10 bar)
+              - docs/prompts/expand.md  (the canonical card-expansion spec — authoritative)
+
+            Then mine scripts/collectors/signals-digest-full.md for the target domain(s) and
+            APPEND up to {max_per_domain} NEW cards per domain to reports/data/cards.js, exactly
+            as expand.md specifies: clear the 10/10 bar, NEVER duplicate or lightly reword an
+            existing card (check cards.js first), real http(s) sources only, valid card schema,
+            and depth over volume — write fewer than the cap if the signals don't support more.
+
+            Parameters for THIS run:
+              domain         = ${{ github.event.inputs.domain }}
+              max_per_domain = ${{ github.event.inputs.max_per_domain }}
+            If domain is "all", do EACH of the 8 craft domains in turn; otherwise just that one
+            slug. Never touch the news domain, existing cards, or reports.
+
+            CI OVERRIDES (only these differ from expand.md's closing steps):
+            - Do NOT run scripts/check_reports.py yourself — a later workflow step runs the gate.
+            - Do NOT git commit or push — a later workflow step does that.
+            Everything else in expand.md still applies.
+          claude_args: |
+            --max-turns 80
+            --model claude-opus-4-8
+            --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
+
+      - name: Quality gate — regenerate derived data + validate (FAILS the run if invalid)
+        env:
+          CHECK_LINKS: "1"   # every new card link must resolve (404/410 fails)
+        run: python scripts/check_reports.py
+
+      # Embed the newly-published cards into pgvector so /api/ask can retrieve over them.
+      # Idempotent + FAIL-SOFT (skips without DATABASE_URL/OPENAI_API_KEY).
+      - name: Embed knowledge base for Ask (RAG)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          pip install --quiet "psycopg[binary]" || echo "psycopg install issue — continuing"
+          python scripts/collectors/embed_kb.py || echo "kb embed failed — continuing fail-soft"
+
+      - name: Commit & push
+        env:
+          # claude-code-action clears the checkout-persisted credential, so the push must
+          # re-authenticate explicitly with the native token.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "AI Edge Bot"
+          git config user.email "bot@users.noreply.github.com"
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No new cards — nothing to commit."; exit 0
+          fi
+          git add -A
+          git commit -m "expand: new cards for ${{ github.event.inputs.domain }} ($(date -u +'%Y-%m-%d'))"
+          # Push with rebase-and-retry: if main moved ahead mid-run, fetch + rebase and retry
+          # instead of failing on a non-fast-forward.
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+          for attempt in 1 2 3; do
+            git fetch origin "${{ github.ref_name }}"
+            git rebase "origin/${{ github.ref_name }}" || { git rebase --abort; echo "rebase conflict — failing safely"; exit 1; }
+            git push origin HEAD:"${{ github.ref_name }}" && { echo "pushed"; exit 0; }
+            echo "push attempt $attempt rejected, retrying..."; sleep 5
+          done
+          echo "push failed after retries"; exit 1
