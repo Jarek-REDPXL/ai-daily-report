@@ -17,6 +17,9 @@ venv/
 # scratch
 *.tmp
 
+# Content Desk hand-off artifacts (regenerated every run; never committed)
+.desk-run/
+
 # Transient harvest output (regenerated every run by scripts/collectors/ingest.py)
 scripts/collectors/harvest-digest.md
 scripts/collectors/harvest.json

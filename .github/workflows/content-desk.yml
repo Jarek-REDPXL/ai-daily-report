@@ -1,0 +1,304 @@
+name: Content Desk (multi-agent card desk)
+
+# MANUAL ONLY (workflow_dispatch). Runs the reusable Content Desk: a 5-role, single-writer
+# loop driven by a JOB SPEC (docs/prompts/desk/jobs/<job>.md). Each role is its OWN
+# claude-code-action step (clean context) and hands work to the next via files in .desk-run/
+# (gitignored). The contract lives in docs/prompts/desk/00-desk.md.
+#
+#   01 SCOPE → 02 RESEARCH → 03 VERIFY → 04 WRITE → 05 AUDIT
+# AUDIT emits .desk-run/04-verdict.md whose first line is exactly `VERDICT: PASS` or
+# `VERDICT: CHANGES-REQUESTED`. On CHANGES-REQUESTED the desk runs ONE revise (WRITE again,
+# then AUDIT again) — maximum one. It publishes to main ONLY if BOTH hold:
+#   - the project quality gate (scripts/check_reports.py, CHECK_LINKS=1) passes, AND
+#   - the final verdict's first line is exactly `VERDICT: PASS`.
+# On any failure (a role errors, gate red, or final verdict not PASS) the job FAILS and main
+# is left untouched. Every run is logged to the Brain (run_log) fail-soft.
+#
+# AUTH GUARDRAIL (identical to daily-report.yml): authenticate ONLY with
+# CLAUDE_CODE_OAUTH_TOKEN so a run bills the Max subscription, never the paid API. Do NOT add
+# anthropic_api_key to any step and do NOT put ANTHROPIC_API_KEY in the job env.
+#
+# Secrets: CLAUDE_CODE_OAUTH_TOKEN (auth, required). DATABASE_URL (optional — only the Brain
+# run-log; every Brain call is fail-soft, so without it the desk still publishes normally).
+on:
+  workflow_dispatch:
+    inputs:
+      job:
+        description: 'Job spec to run (a file under docs/prompts/desk/jobs/, without .md)'
+        required: true
+        default: 'news-landscape'
+
+permissions:
+  contents: write           # native GITHUB_TOKEN push to the run's branch
+  id-token: write           # lets claude-code-action fetch its OIDC token
+
+concurrency:
+  group: ai-edge-publish    # shared with daily/weekly/expand so the engines never push concurrently
+  cancel-in-progress: false
+
+jobs:
+  desk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+
+      - name: Install Brain deps (run-log; fail-soft)
+        run: pip install --quiet "psycopg[binary]" || echo "psycopg install issue — Brain log will degrade (fail-soft)"
+
+      # Create the artifact dir and fail fast if the requested job spec doesn't exist
+      # (before any expensive Claude step). JOB is bound via env, never interpolated into
+      # the shell, to avoid command injection from the dispatch input.
+      - name: Prepare run
+        env:
+          JOB: ${{ github.event.inputs.job }}
+        run: |
+          mkdir -p .desk-run
+          if [ ! -f "docs/prompts/desk/jobs/${JOB}.md" ]; then
+            echo "Job spec not found: docs/prompts/desk/jobs/${JOB}.md"; exit 1
+          fi
+          echo "Prepared Content Desk run for job: ${JOB}"
+
+      - name: 01 — SCOPE
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are the SCOPE role of the Content Desk. Read and obey, in order:
+              - docs/prompts/desk/00-desk.md                                  (the contract)
+              - docs/prompts/desk/jobs/${{ github.event.inputs.job }}.md      (THIS job spec)
+              - docs/prompts/desk/01-scope.md                                 (your role)
+            Do exactly what 01-scope.md says and write ONLY .desk-run/00-baseline.md.
+          claude_args: |
+            --max-turns 25
+            --model claude-opus-4-8
+            --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
+
+      - name: 02 — RESEARCH
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are the RESEARCH role of the Content Desk. Read and obey, in order:
+              - docs/prompts/desk/00-desk.md                                  (the contract)
+              - docs/prompts/desk/jobs/${{ github.event.inputs.job }}.md      (THIS job spec)
+              - docs/prompts/desk/02-research.md                              (your role)
+              - .desk-run/00-baseline.md                                      (what already exists)
+            Do exactly what 02-research.md says and write ONLY .desk-run/01-dossier.md.
+            Real, working http(s) sources only — never fabricate a link or a number.
+          claude_args: |
+            --max-turns 70
+            --model claude-opus-4-8
+            --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
+
+      - name: 03 — VERIFY
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are the VERIFY role of the Content Desk. Read and obey, in order:
+              - docs/prompts/desk/00-desk.md                                  (the contract)
+              - docs/prompts/desk/jobs/${{ github.event.inputs.job }}.md      (THIS job spec)
+              - docs/prompts/desk/03-verify.md                                (your role)
+              - .desk-run/01-dossier.md                                       (the material to check)
+            Do exactly what 03-verify.md says — FETCH every source — and write ONLY
+            .desk-run/02-verified.md.
+          claude_args: |
+            --max-turns 70
+            --model claude-opus-4-8
+            --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
+
+      - name: 04 — WRITE
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are the WRITE role of the Content Desk. Read and obey, in order:
+              - docs/prompts/desk/00-desk.md                                  (the contract)
+              - docs/prompts/desk/jobs/${{ github.event.inputs.job }}.md      (THIS job spec)
+              - docs/prompts/desk/04-write.md                                 (your role)
+              - docs/NORTH-STAR.md                                            (THE STANDARD)
+              - .desk-run/02-verified.md                                      (your verified material)
+              - reports/data/cards.js                                         (match the exact shape)
+            Do exactly what 04-write.md says: APPEND new cards to reports/data/cards.js and
+            write .desk-run/03-changelog.md. CI OVERRIDES: do NOT run scripts/check_reports.py
+            and do NOT git commit/push — later steps handle the gate and publish.
+          claude_args: |
+            --max-turns 60
+            --model claude-opus-4-8
+            --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
+
+      - name: 05 — AUDIT
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are the AUDIT role of the Content Desk. Read and obey, in order:
+              - docs/prompts/desk/00-desk.md                                  (the contract)
+              - docs/prompts/desk/jobs/${{ github.event.inputs.job }}.md      (THIS job spec)
+              - docs/prompts/desk/05-audit.md                                 (your role)
+              - .desk-run/02-verified.md   and   .desk-run/03-changelog.md
+            Inspect the real change with `git diff -- reports/data/cards.js`. Do exactly what
+            05-audit.md says and write ONLY .desk-run/04-verdict.md — its FIRST LINE must be
+            exactly `VERDICT: PASS` or `VERDICT: CHANGES-REQUESTED`.
+          claude_args: |
+            --max-turns 50
+            --model claude-opus-4-8
+            --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
+
+      # Parse the FIRST audit verdict. Drives whether the single revise loop runs.
+      - name: Parse first verdict
+        id: verdict1
+        run: |
+          if [ ! -f .desk-run/04-verdict.md ]; then
+            echo "value=MISSING" >> "$GITHUB_OUTPUT"; echo "no verdict file produced"; exit 0
+          fi
+          LINE="$(head -n 1 .desk-run/04-verdict.md | tr -d '\r')"
+          echo "first line: $LINE"
+          case "$LINE" in
+            "VERDICT: PASS")              echo "value=PASS"              >> "$GITHUB_OUTPUT" ;;
+            "VERDICT: CHANGES-REQUESTED") echo "value=CHANGES-REQUESTED" >> "$GITHUB_OUTPUT" ;;
+            *)                            echo "value=MALFORMED"         >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      # ---- The ONE revise loop (runs only if the first verdict was CHANGES-REQUESTED) ----
+      - name: 04 — WRITE (revise)
+        if: ${{ steps.verdict1.outputs.value == 'CHANGES-REQUESTED' }}
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are the WRITE role of the Content Desk, on its ONE AND ONLY revise pass. Read
+            and obey, in order:
+              - docs/prompts/desk/00-desk.md                                  (the contract)
+              - docs/prompts/desk/jobs/${{ github.event.inputs.job }}.md      (THIS job spec)
+              - docs/prompts/desk/04-write.md                                 (your role — see "Revise pass")
+              - .desk-run/04-verdict.md                                       (the fix list to act on)
+              - .desk-run/02-verified.md   and   reports/data/cards.js
+            Fix in reports/data/cards.js EXACTLY the issues the verdict lists — nothing more,
+            nothing speculative — and update .desk-run/03-changelog.md. Do NOT run the gate or
+            git commit/push.
+          claude_args: |
+            --max-turns 50
+            --model claude-opus-4-8
+            --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
+
+      - name: 05 — AUDIT (re-audit)
+        if: ${{ steps.verdict1.outputs.value == 'CHANGES-REQUESTED' }}
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are the AUDIT role of the Content Desk, re-auditing after the single revise.
+            Read and obey, in order:
+              - docs/prompts/desk/00-desk.md                                  (the contract)
+              - docs/prompts/desk/jobs/${{ github.event.inputs.job }}.md      (THIS job spec)
+              - docs/prompts/desk/05-audit.md                                 (your role)
+              - .desk-run/02-verified.md   and   .desk-run/03-changelog.md
+            Inspect the revised change with `git diff -- reports/data/cards.js`. OVERWRITE
+            .desk-run/04-verdict.md with your final verdict — FIRST LINE exactly `VERDICT: PASS`
+            or `VERDICT: CHANGES-REQUESTED`. There is NO further revise: if it still isn't PASS,
+            the run will fail and main stays untouched, which is the correct outcome.
+          claude_args: |
+            --max-turns 50
+            --model claude-opus-4-8
+            --allowedTools "Read,Edit,Write,MultiEdit,Bash,WebSearch,WebFetch,Glob,Grep"
+
+      # Parse the FINAL verdict (after the optional revise). Always runs so the gate/publish
+      # decision is made even if an earlier role errored (verdict will then not be PASS).
+      - name: Parse final verdict
+        id: verdict
+        if: ${{ always() }}
+        run: |
+          if [ ! -f .desk-run/04-verdict.md ]; then
+            echo "value=MISSING" >> "$GITHUB_OUTPUT"; echo "no verdict file produced"; exit 0
+          fi
+          LINE="$(head -n 1 .desk-run/04-verdict.md | tr -d '\r')"
+          echo "final first line: $LINE"
+          case "$LINE" in
+            "VERDICT: PASS")              echo "value=PASS"              >> "$GITHUB_OUTPUT" ;;
+            "VERDICT: CHANGES-REQUESTED") echo "value=CHANGES-REQUESTED" >> "$GITHUB_OUTPUT" ;;
+            *)                            echo "value=MALFORMED"         >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      # Quality gate — regenerate derived data + validate, every link checked. Runs only if the
+      # final verdict is PASS. continue-on-error so a gate failure still lets the log/fail steps
+      # run; the publish step gates on gate.outcome == 'success'.
+      - name: Quality gate — regenerate derived data + validate
+        id: gate
+        if: ${{ always() && steps.verdict.outputs.value == 'PASS' }}
+        continue-on-error: true
+        env:
+          CHECK_LINKS: "1"
+        run: python scripts/check_reports.py
+
+      # Commit & push — ONLY if the gate passed AND the final verdict is PASS. Scoped to
+      # reports/data (the source cards.js + all gate-regenerated derived files live there).
+      - name: Commit & push
+        id: publish
+        if: ${{ always() && steps.gate.outcome == 'success' && steps.verdict.outputs.value == 'PASS' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "AI Edge Bot"
+          git config user.email "bot@users.noreply.github.com"
+          if [ -z "$(git status --porcelain -- reports/data)" ]; then
+            echo "No card changes — nothing to commit."; exit 0
+          fi
+          git add -A -- reports/data
+          git commit -m "desk: ${{ github.event.inputs.job }} cards ($(date -u +'%Y-%m-%d'))"
+          # Push with rebase-and-retry: if main moved ahead mid-run, fetch + rebase and retry
+          # instead of failing on a non-fast-forward.
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+          for attempt in 1 2 3; do
+            git fetch origin "${{ github.ref_name }}"
+            git rebase "origin/${{ github.ref_name }}" || { git rebase --abort; echo "rebase conflict — failing safely"; exit 1; }
+            git push origin HEAD:"${{ github.ref_name }}" && { echo "pushed"; exit 0; }
+            echo "push attempt $attempt rejected, retrying..."; sleep 5
+          done
+          echo "push failed after retries"; exit 1
+
+      # Log the run to the Brain (run_log) — ALWAYS, fail-soft. status=ok only if we published.
+      - name: Log run to Brain
+        if: ${{ always() }}
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DESK_JOB: ${{ github.event.inputs.job }}
+          DESK_VERDICT: ${{ steps.verdict.outputs.value }}
+          DESK_GATE: ${{ steps.gate.outcome }}
+          DESK_PUBLISH: ${{ steps.publish.outcome }}
+        run: |
+          python - <<'PY' || echo "brain log skipped (fail-soft)"
+          import os, sys
+          sys.path.insert(0, "scripts/collectors")
+          import brain
+          job = os.environ.get("DESK_JOB", "?")
+          verdict = os.environ.get("DESK_VERDICT", "?")
+          gate = os.environ.get("DESK_GATE", "?")
+          publish = os.environ.get("DESK_PUBLISH", "?")
+          status = "ok" if publish == "success" else "failed"
+          summary = "job=%s verdict=%s gate=%s publish=%s" % (job, verdict, gate, publish)
+          brain.logRun(desk="content-desk", status=status, summary=summary, audit_verdict=verdict)
+          print("brain: logged content-desk run (%s) — %s" % (status, summary))
+          PY
+
+      # Make the job's status honest: if we did not publish, FAIL (main is already untouched).
+      - name: Fail if not published
+        if: ${{ always() && steps.publish.outcome != 'success' }}
+        run: |
+          echo "Content Desk did not publish — gate or verdict was not PASS. Main left untouched."
+          echo "verdict=${{ steps.verdict.outputs.value }} gate=${{ steps.gate.outcome }} publish=${{ steps.publish.outcome }}"
+          exit 1
