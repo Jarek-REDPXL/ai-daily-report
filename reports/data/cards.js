@@ -1473,8 +1473,222 @@ window.AI_EDGE_CARDS = [
     tags: ["aov", "cross-sell", "bundles"],
     created: "2026-06-14",
     updated: "2026-06-14"
+  },
+  {
+    id: "card-news-power-is-the-constraint",
+    domains: ["news"],
+    title: "Plan AI capacity around power and chip packaging — not just GPUs — because that's the real bottleneck now",
+    action: "Before you bank on cheap, unlimited AI capacity, treat electricity and advanced chip packaging as the limiting factors — build a fallback plan (a second provider/model) for the periods when supply is tight and prices spike.",
+    summary: "As of mid-2026 the thing holding back AI isn't 'are there enough chips designed' — it's the boring physical stuff around them. Gartner expects data-center power demand to jump 27% in 2026, to 132 GW (a gigawatt is a billion watts — roughly a large city's worth of electricity), up from 104 GW in 2025; the IEA projects data centers worldwide going from ~415 TWh of electricity in 2024 to ~945 TWh by 2030 (a terawatt-hour is a billion kilowatt-hours — your home uses maybe 10,000 kWh a year). On the chip side, the squeeze isn't the memory people often blame — analysts at SemiAnalysis point to 'CoWoS' advanced packaging at TSMC (the step that stitches the chip and its memory onto one module) as the real choke point.",
+    why: "If your business plan assumes AI compute will keep getting cheaper and more available in a straight line, these two limits — grid power and packaging capacity — are why it won't, smoothly. They cause the supply crunches and price spikes that strand teams who designed for endless cheap capacity. Knowing the bottleneck is physical (power plants and packaging lines take years to build), not a quick software fix, tells you to design for scarcity, not abundance.",
+    how: [
+      "Don't architect around 'compute will be cheap and infinite' — assume capacity tightens in waves. Keep your AI features able to fall back to a smaller/cheaper model when your main one is throttled or pricey.",
+      "Sign up with at least two providers (e.g. one frontier lab plus a hosted open-weight option) so a single provider's capacity crunch doesn't take you offline — pair with card-ai-tooling-model-portability.",
+      "When you read 'AI shortage' headlines, check which limit it's about: chip design, advanced packaging (CoWoS), or electricity/grid — they ease on very different timelines (packaging in quarters, new power in years).",
+      "For your own usage, watch your provider's status and price pages; budget for the spike, not the average (pair with card-webdev-ai-gateway-spend-limits to cap spend automatically).",
+      "Date your assumptions: re-check these numbers each year — 'as of mid-2026, power is the binding constraint' is a snapshot, not a permanent law."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    corroboration_count: 2,
+    supersedes: [],
+    related: ["card-ai-tooling-model-portability", "card-webdev-ai-gateway-spend-limits"],
+    sources: [
+      { label: "Gartner — Data center electricity demand to grow 26% in 2026", url: "https://www.gartner.com/en/newsroom/press-releases/2026-06-10-gartner-says-data-center-electricity-demand-to-grow-26-percent-in-2026" },
+      { label: "IEA — Energy and AI: energy demand from AI", url: "https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai" },
+      { label: "SemiAnalysis — Nvidia's Blackwell reworked shipment (CoWoS packaging, rack density)", url: "https://newsletter.semianalysis.com/p/nvidias-blackwell-reworked-shipment" }
+    ],
+    tags: ["compute", "infrastructure", "power", "chips", "landscape"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+  {
+    id: "card-news-inference-cost-curve",
+    domains: ["news"],
+    title: "Re-price your AI build every few months — running a model keeps getting ~10× cheaper a year",
+    action: "Put a recurring reminder (quarterly) to recheck model prices and re-run the 'is this AI feature affordable yet?' math — things you ruled out as too expensive may now be cheap enough to ship.",
+    summary: "The cost to run an AI model (called 'inference' — what you pay each time it answers, usually priced per million tokens, where a token is roughly ¾ of a word) keeps falling fast. Venture firm a16z measured it at about 10× cheaper per year for the same quality — one example dropped from $60 per million tokens in late 2021 to about $0.06 for an equal-skill model, ~1,000× in three years. Research group Epoch found the same trend but bumpier: across models, prices fell anywhere from 9× to 900× per year, median ~50×, with the fastest drops kicking in after early 2024. HONEST: both groups warn this pace may slow, so treat it as a strong recent trend, not a guarantee.",
+    why: "Because of this drop, the 'we can't afford to run that on every request' verdict you reached last year is often wrong this year. Teams that re-check pricing on a schedule ship AI features their competitors still think are too expensive. The catch: the savings are uneven across tasks, so you have to check YOUR actual workload, not a headline average.",
+    how: [
+      "List the AI features you shelved as 'too expensive' — those are your re-pricing candidates.",
+      "Every quarter, pull current per-million-token prices for the models you'd use (input and output are priced separately; output usually costs more) and redo the cost-per-request math for your real traffic.",
+      "Check whether a cheaper, newer model now matches the quality you needed — the 10×/yr figure is for EQUAL quality, so the same job often moves to a much cheaper tier.",
+      "Don't assume the trend holds forever — both a16z and Epoch flag it may slow; keep a cost ceiling so a pricing surprise can't blow your budget (card-webdev-ai-gateway-spend-limits).",
+      "Date it: 'as of mid-2026, ~10×/yr and recently accelerating' — re-verify the rate, don't extrapolate it blindly."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    corroboration_count: 2,
+    supersedes: [],
+    related: ["card-webdev-ai-gateway-spend-limits", "card-news-power-is-the-constraint"],
+    sources: [
+      { label: "a16z — LLMflation: LLM inference cost is dropping ~10× per year", url: "https://a16z.com/llmflation-llm-inference-cost/" },
+      { label: "Epoch AI — LLM inference price trends", url: "https://epoch.ai/data-insights/llm-inference-price-trends" }
+    ],
+    tags: ["cost", "inference", "pricing", "landscape"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+  {
+    id: "card-news-smb-adoption-shallow",
+    domains: ["news"],
+    title: "Most companies barely use AI yet — go deep in one workflow to lap competitors who only dabble",
+    action: "Pick ONE business function (e.g. sales-and-marketing) and wire AI deeply into its daily workflow, instead of sprinkling a chatbot across everything — that's where the early lead is.",
+    summary: "Despite the hype, US government data shows adoption is real but shallow. The Federal Reserve found about 18% of firms had adopted AI as of end-2025 (though 78% of the workforce is at firms that have, so big companies dominate). The Census Bureau's survey (collected Nov 2025–Jan 2026) found the same ~18% of firms using AI, and that 57% of users apply it in three or fewer business functions — most common in sales-and-marketing (52%) and strategy (45%). Reassuringly, only ~2% of firms reported AI reducing employment, and 66% use it purely to help staff do tasks, not replace them.",
+    why: "This is the opportunity: the field is wide open and most who've started are only dabbling. A small operator who picks one workflow and goes genuinely deep — not a token chatbot, but AI woven into how the work actually gets done — can out-execute bigger rivals who've spread themselves thin. 'Everyone's using AI' is, for now, not true.",
+    how: [
+      "Choose ONE high-volume function where AI already shows traction — sales-and-marketing (52% of adopters) or strategy/planning (45%) are the proven entry points.",
+      "Map that function's real daily steps, then insert AI at the specific points that eat the most time — not a generic 'we have a chatbot now'.",
+      "Aim for depth: the data shows most users touch ≤3 functions shallowly; your edge is doing one of them properly end-to-end.",
+      "Frame it as augmentation (66% of firms do) — it lands better with your team and matches what's actually working, since job-cutting from AI is still rare (~2% of firms).",
+      "Re-check yearly: this is 'US, as of early 2026' — adoption will deepen, so bank the head start while the field is still shallow."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    corroboration_count: 2,
+    supersedes: [],
+    related: [],
+    sources: [
+      { label: "Federal Reserve (FEDS Notes, Apr 2026) — Monitoring AI adoption in the U.S. economy", url: "https://www.federalreserve.gov/econres/notes/feds-notes/monitoring-ai-adoption-in-the-u-s-economy-20260403.html" },
+      { label: "U.S. Census Bureau (CES-WP-26-25) — AI use and integration across firms", url: "https://www.census.gov/library/working-papers/2026/adrm/CES-WP-26-25.html" }
+    ],
+    tags: ["adoption", "smb", "strategy", "landscape"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+  {
+    id: "card-news-open-vs-closed-gap",
+    domains: ["news"],
+    title: "Default to open-weight models for most work — they trail the closed frontier by only ~3 months",
+    action: "For routine tasks, try a top open-weight model (one you can download and run/host yourself) first; reserve the priciest closed model for the genuinely hardest jobs where the small quality gap actually matters.",
+    summary: "'Open-weight' means the model's trained parameters are published, so you can download, self-host, or use cheap hosting instead of one company's API. Research group Epoch finds frontier open-weight models lag the very best closed models by about 3 months on average (a measured range of roughly 1–5 months) — close enough that for most work the open option is plenty. The nuance: at the absolute top, the gap recently widened — Stanford's AI Index reports the best closed model led the best open one by 3.3% as of March 2026, up from 0.5% in August 2024. So open is great for the bulk of tasks, while the closed frontier keeps a thin lead on the hardest.",
+    why: "Treating 'closed and expensive' as the only serious option overpays for most tasks and locks you to one vendor. Open-weight models you can host give you cost control, privacy (data needn't leave your environment), and a fallback if a provider raises prices or cuts access — at a quality cost that, for everyday work, is small. But don't claim open has 'caught up' at the very top; the data says it hasn't, quite.",
+    how: [
+      "For routine jobs (drafting, summarizing, classifying, most coding help), test a leading open-weight model first — the ~3-month lag rarely changes the outcome.",
+      "Run open-weight either via cheap hosted endpoints or self-hosted for sensitive data (pair with card-ai-tooling-local-coding-agent for a fully offline setup).",
+      "Keep one top closed model on hand for the hardest reasoning/quality-critical tasks where that thin top-end lead (a few %) actually pays off.",
+      "Route by difficulty, not habit: tag tasks 'routine' vs 'hard' and send each to the cheapest model that clears the bar.",
+      "Re-check each release — Epoch notes the gap 'sometimes closes completely' and may even be overstated; this is a moving snapshot ('as of mid-2026'), not a fixed rank."
+    ],
+    confidence: "emerging",
+    status: "active",
+    corroboration_count: 2,
+    supersedes: [],
+    related: ["card-ai-tooling-local-coding-agent", "card-ai-tooling-model-portability"],
+    sources: [
+      { label: "Epoch AI — Open-weight vs closed-weight models (~3-month lag)", url: "https://epoch.ai/data-insights/open-weights-vs-closed-weights-models" },
+      { label: "Stanford HAI — 2026 AI Index, Technical Performance (top closed vs open gap)", url: "https://hai.stanford.edu/ai-index/2026-ai-index-report/technical-performance" }
+    ],
+    tags: ["open-weights", "models", "strategy", "landscape"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+  {
+    id: "card-news-capability-acceleration",
+    domains: ["news"],
+    title: "Re-test your hardest AI workflows every release — reasoning is improving faster than it used to",
+    action: "Keep a small file of your 5–10 toughest real tasks and re-run them on each new model release; the jobs an AI failed six months ago may now pass.",
+    summary: "AI capability isn't just rising — it sped up. Research group Epoch found the best score on its Capabilities Index grew almost twice as fast over the last two years as the two before, an ~90% acceleration around April 2024, which it credits to 'reasoning models' (models trained to think step by step before answering) and reinforcement learning. You can see it on a hard science-question test called GPQA Diamond: GPT-4 scored 39% in late 2023; by mid-2026 top models hit ~92%. HONEST limit: the hardest math is NOT solved — on the toughest benchmark (FrontierMath) frontier models sit near ~40%, so real headroom remains on genuinely hard reasoning.",
+    why: "Because the curve bent upward, a 'we tried AI for that and it couldn't' verdict goes stale fast — faster than most teams re-check. The ones who re-test on every release catch the moment a previously-impossible workflow becomes reliable, and ship it first. Equally, the FrontierMath gap is the honest counterweight: don't assume it can now do EVERYTHING hard — the toughest reasoning still trips it up.",
+    how: [
+      "Write down 5–10 of YOUR genuinely hard tasks (the ones models have failed or done shakily) with a clear pass/fail you can judge.",
+      "On each major model release, re-run that exact set — same prompts — and note which flipped from fail to pass.",
+      "Watch the reasoning models specifically (the step-by-step 'thinking' variants) — that's where the recent jump concentrated.",
+      "Stay skeptical on the hardest stuff: top models are still ~40% on FrontierMath-level problems, so verify hard-reasoning output, don't trust it blind.",
+      "Date your test results ('as of mid-2026, model X passed 7/10') so you can see the trajectory on YOUR work, not just headline benchmarks."
+    ],
+    confidence: "emerging",
+    status: "active",
+    corroboration_count: 2,
+    supersedes: [],
+    related: [],
+    sources: [
+      { label: "Epoch AI — AI capabilities progress has sped up", url: "https://epoch.ai/data-insights/ai-capabilities-progress-has-sped-up" },
+      { label: "GPQA paper (OpenReview) — GPT-4 baseline 39% on GPQA Diamond", url: "https://openreview.net/pdf?id=Ti67584b98" },
+      { label: "Epoch AI — FrontierMath Tier 4 (the hardest math, far from solved)", url: "https://epoch.ai/benchmarks/frontiermath-tier-4" }
+    ],
+    tags: ["capability", "reasoning", "benchmarks", "landscape"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+  {
+    id: "card-news-agent-reliability-map",
+    domains: ["news"],
+    title: "Treat 'AI can do hours-long tasks' as a 50/50 claim — add a human check before it ships",
+    action: "When you hand an AI agent a long, multi-step job, build in a human review gate before anything goes live — the impressive 'works for hours' numbers are measured at only 50% success, not production-grade.",
+    summary: "An 'agent' is an AI that takes many steps on its own — using tools, browsing, writing and running code — instead of giving one answer. Research lab METR measures how long a task an agent can finish, and how often. As of early 2026 a top model could handle tasks taking a skilled human around 5 hours — but that's at 50% reliability, i.e. it succeeds about half the time. METR also found this 'time horizon' is doubling roughly every ~3 months (88.6 days for recent models) — fast — while stressing its own confidence ranges are 'still very wide'. Push for 80% reliability and the doable task length drops sharply.",
+    why: "The headline 'AI now does hours-long work' is true and misleading at once: a coin-flip success rate is fine for a draft you'll review, and dangerous for anything that ships unchecked. Knowing the number is a 50%-reliability figure tells you exactly where the human belongs — at the end, as a gate — and stops you from trusting a long autonomous run you didn't verify.",
+    how: [
+      "For any multi-step agent task, decide up front: is a ~50% first-try success acceptable? If not, you need a checkpoint.",
+      "Put a human (or a separate checking step) between the agent's output and anything irreversible — money moving, code deploying, emails sending.",
+      "Keep agent runs short and reviewable rather than one giant unattended job — shorter tasks succeed more often.",
+      "When a vendor cites 'completes N-hour tasks', ask the reliability number: 50% and 80% can mean very different task lengths.",
+      "Re-check each release — the doubling is fast (~3 months), so where the human gate sits will move; treat this as 'as of early-to-mid 2026'."
+    ],
+    confidence: "emerging",
+    status: "active",
+    corroboration_count: 1,
+    supersedes: [],
+    related: ["card-ai-tooling-codex-goal", "card-ai-tooling-browser-use"],
+    sources: [
+      { label: "METR — Time Horizon 1.1 (2026): ~5h tasks at 50% reliability, ~3-month doubling", url: "https://metr.org/blog/2026-1-29-time-horizon-1-1/" },
+      { label: "METR — Measuring AI ability to complete long tasks (methodology, 50%/80%)", url: "https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/" }
+    ],
+    tags: ["agents", "reliability", "automation", "landscape"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+  {
+    id: "card-news-eu-ai-act-2026",
+    domains: ["news"],
+    title: "If you touch the EU market, check the AI Act's high-risk rules now — they apply Aug 2, 2026",
+    action: "Before Aug 2, 2026, list any AI you build or use that could be 'high-risk' under the EU AI Act (hiring, credit, education, etc.) and confirm who's responsible for compliance — you or your vendor.",
+    summary: "The EU AI Act is Europe's law governing AI, phasing in by date. Rules for 'general-purpose AI' models took effect 2 Aug 2025. The big next step: most of the high-risk obligations start applying 2 Aug 2026 — 'high-risk' meaning AI used in sensitive areas like hiring, credit scoring, education, or essential services, which then carries duties around data quality, transparency, human oversight and record-keeping. Models already on the market before Aug 2025 get until 2 Aug 2027 to comply. A final voluntary Code of Practice for general-purpose AI was published 10 Jul 2025.",
+    why: "This is a hard legal deadline, not a trend — if your product or workflow uses AI in a high-risk area and touches EU users, the obligations land on a fixed date with real penalties behind them. The operator move is to find out NOW whether you're in scope and who carries the duty (you as the deployer, or the model provider), rather than discovering it after Aug 2026.",
+    how: [
+      "Inventory every AI feature you build or rely on; flag any used in EU-sensitive areas (hiring, credit, education, healthcare, essential services) as possibly high-risk.",
+      "For each flagged use, check the official implementation timeline and confirm whether the 2 Aug 2026 obligations apply to you.",
+      "Pin down responsibility in writing: ask vendors which AI Act duties THEY cover vs what falls on you as the deployer.",
+      "If you only use general-purpose models, note those rules are already in force (since Aug 2025) and the 10 Jul 2025 Code of Practice is the practical guide.",
+      "Scope it honestly: this is EU-specific — if you have no EU users it may not bind you, but verify rather than assume, and re-check as guidance updates."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    corroboration_count: 2,
+    supersedes: [],
+    related: ["card-ai-tooling-fable5-retention"],
+    sources: [
+      { label: "EU AI Act — Official implementation timeline", url: "https://artificialintelligenceact.eu/implementation-timeline/" },
+      { label: "Latham & Watkins — EU AI Act GPAI obligations in force; final Code of Practice", url: "https://www.lw.com/en/insights/eu-ai-act-gpai-model-obligations-in-force-and-final-gpai-code-of-practice-in-place" }
+    ],
+    tags: ["regulation", "eu-ai-act", "compliance", "landscape"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
+  },
+  {
+    id: "card-news-frontier-cluster",
+    domains: ["news"],
+    title: "Don't chase 'the best AI model' — the top few are a tight cluster, so pick on price and fit",
+    action: "Stop re-tooling around whichever model tops the leaderboard this week; pick the top-tier model that best fits your price, latency and platform, since the leaders are within a few points of each other.",
+    summary: "There's no single runaway 'best' AI right now. On the Artificial Analysis Intelligence Index (a composite score across many tests), the top three as of mid-2026 sat within about 5 points of each other and spanned two different labs — a tight cluster, not one king. The exact numbers reshuffle with each release, but the durable shape is what matters: several models are close enough that, for almost any real task, the difference between #1 and #3 is smaller than the difference your prompt, data, and workflow make.",
+    why: "Teams burn real time and money re-building around each new 'we're #1' announcement. When the leaders are this close, that chasing buys almost nothing — the better return is choosing on the things that actually differ: price, speed, context limits, privacy terms, and how well it plugs into your stack. The leaderboard crown moves monthly; those practical factors are where your edge is.",
+    how: [
+      "Shortlist 2–3 top-cluster models rather than fixating on the single current #1 — they're within a few points.",
+      "Decide on what differs: per-token price, response speed, context window, data-retention terms (see card-ai-tooling-fable5-retention), and ecosystem fit.",
+      "Run YOUR real tasks through the shortlist — your workflow usually separates them more than the benchmark does.",
+      "Keep switching cheap: route through a gateway with a backup model list so you can move when the cluster reshuffles (card-ai-tooling-model-portability).",
+      "Treat any ranking as a dated snapshot ('as of mid-2026') — re-check the cluster occasionally, but don't re-architect for every reshuffle."
+    ],
+    confidence: "emerging",
+    status: "active",
+    corroboration_count: 1,
+    supersedes: [],
+    related: ["card-ai-tooling-model-portability", "card-ai-tooling-fable5-retention"],
+    sources: [
+      { label: "Artificial Analysis — Intelligence Index (frontier model leaderboard)", url: "https://artificialanalysis.ai/evaluations/artificial-analysis-intelligence-index" }
+    ],
+    tags: ["models", "frontier", "strategy", "landscape"],
+    created: "2026-06-14",
+    updated: "2026-06-14"
   }
-
-
-
 ];
