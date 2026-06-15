@@ -35,6 +35,64 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdesign-anchor-positioning-menus",
+    domains: ["web-design"],
+    title: "Build tooltips, dropdowns & menus with zero JS — the native trio is now Baseline",
+    action: "Replace one tooltip/menu's JavaScript with the Popover API + invoker commands + CSS anchor positioning, then delete the Floating-UI/Popper dependency.",
+    summary: "The overlay UI you used to ship with a positioning library (Floating UI/Popper) plus toggle JS is now three native, cross-browser features: the Popover API (top-layer overlay + light-dismiss), invoker commands (open/close from a button with no JS), and CSS anchor positioning (tether to the trigger and flip on overflow in pure CSS). All three are Baseline (Chrome, Edge, Safari, Firefox), so it's safe for production — unlike the Chromium-only CSS primitives.",
+    why: "It deletes a JS dependency, its hydration cost, and a whole class of positioning + accessibility bugs — and because it's Baseline it works for all users, with no fallback to write. The cheapest, most durable overlay you can ship.",
+    how: [
+      "Markup, no JS: <code>&lt;button commandfor='menu' command='toggle-popover'&gt;Menu&lt;/button&gt;</code> then <code>&lt;div id='menu' popover&gt;…&lt;/div&gt;</code> — a working, dismissible menu.",
+      "Tether in CSS: on the button <code>anchor-name: --menu-btn;</code>, on the popover <code>position-anchor: --menu-btn; position-area: bottom span-right;</code>.",
+      "Stop it overflowing: add <code>position-try-fallbacks: flip-block, flip-inline;</code> so the browser flips it when there's no room (the job Floating UI did).",
+      "For a tooltip, use the hover/focus invoker (<code>interesttarget</code>) instead of click-to-open; for click menus keep <code>command</code>.",
+      "Delete the old Floating-UI/Popper init + toggle handler, then tab through it to confirm keyboard/screen-reader behaviour."
+    ],
+    thread_id: "thread-modern-css-primitives",
+    confidence: "confirmed",
+    status: "active",
+    supersedes: [],
+    related: ["card-webdesign-css-carousel", "card-webdesign-sibling-index", "card-web-view-transitions"],
+    sources: [
+      { label: "MDN — Using CSS anchor positioning", url: "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning/Using" },
+      { label: "web.dev — The Popover API is Baseline", url: "https://web.dev/blog/popover-baseline" },
+      { label: "web.dev — New to the web platform Jan 2026 (anchor positioning Baseline)", url: "https://web.dev/blog/web-platform-01-2026" },
+      { label: "InfoQ — HTML Invoker Commands achieve Baseline support", url: "https://www.infoq.com/news/2026/01/html-invoker-commands/" }
+    ],
+    tags: ["css", "popover", "anchor-positioning", "baseline", "no-js"],
+    created: "2026-06-15",
+    updated: "2026-06-15"
+  },
+  {
+    id: "card-ai-tooling-agent-sdk-credit",
+    domains: ["ai-tooling", "web-dev"],
+    title: "Claim your Claude Agent SDK credit before the Jun 15 billing split — then cap it",
+    action: "Open your Claude account billing, claim the one-time Agent SDK credit today, decide on usage-credit overflow, and put a hard dollar cap in front of any agent/CI workload.",
+    summary: "From Jun 15, 2026, Claude Agent SDK, the claude -p headless command, third-party Agent-SDK apps, and the Claude Code GitHub Actions integration stop drawing on your normal Claude plan. They move to a separate monthly credit ($20 Pro / $100 Max 5x / $200 Max 20x), metered at full API rates. It's a one-time opt-in you must claim; past the credit, jobs only continue if you've enabled usage credits — otherwise they halt until the credit refreshes. Interactive use (the Claude Code TUI/IDE, Coworking, chat) is unaffected.",
+    why: "Anything you run on automation — a scheduled agent, a CI job, a GitHub Action that calls Claude — can silently stop on a teammate's account if the credit isn't claimed, or quietly bill at full API rates if it is. Claiming + capping is the 'govern the AI default' move with a hard deadline.",
+    how: [
+      "Today: claim the Agent SDK credit in your Claude account billing (one-time; then it refreshes each cycle).",
+      "Decide whether to enable usage credits so jobs don't hard-stop when the monthly credit runs out — and treat that as real API spend if you do.",
+      "Put a hard dollar cap in front of agent/CI workloads — route through a gateway with a spend limit (card-webdev-ai-gateway-spend-limits) and set per-model/per-day budgets.",
+      "Audit which automations call the Agent SDK / claude -p / Claude Code Actions and confirm each runs on an account that has claimed the credit.",
+      "Keep your toolchain swap-ready (card-ai-tooling-model-portability) so a billing change never single-points your pipeline."
+    ],
+    confidence: "confirmed",
+    corroboration_count: 3,
+    status: "active",
+    supersedes: [],
+    related: ["card-webdev-ai-gateway-spend-limits", "card-ai-tooling-model-portability"],
+    sources: [
+      { label: "Anthropic Help Center — Use the Claude Agent SDK with your Claude plan", url: "https://support.claude.com/en/articles/15036540-use-the-claude-agent-sdk-with-your-claude-plan" },
+      { label: "The New Stack — Anthropic Agent SDK credits", url: "https://thenewstack.io/anthropic-agent-sdk-credits/" },
+      { label: "XDA — Claude subscriptions no longer include Agent SDK / claude -p usage", url: "https://www.xda-developers.com/anthropics-claude-subscriptions-no-longer-include-agent-sdk-and-claude-p-usage/" }
+    ],
+    tags: ["anthropic", "claude-code", "agent-sdk", "billing", "cost-control"],
+    created: "2026-06-15",
+    updated: "2026-06-15"
+  },
+
+  {
     id: "card-webdev-pyodide-browser-python",
     domains: ["web-dev"],
     title: "Run real Python in the browser with no backend — install packages straight from PyPI",
@@ -1473,24 +1531,27 @@ window.AI_EDGE_CARDS = [
     domains: ["cro", "web-design"],
     title: "Add a free-shipping threshold + progress bar to lift average order value",
     action: "Set a free-shipping minimum modestly above your current average order value and show a 'you're $X away from free shipping' bar in the cart.",
-    summary: "Shipping cost is the top checkout objection (Baymard), and free shipping is the incentive shoppers want most — so a threshold turns it into an AOV lever: people add items to qualify (the 'goal-gradient' effect — we push harder as a reward gets closer). HONEST FLAG: the popular 'set it 15–30% above AOV for ~30% AOV lift' figures are directional starting points to TEST on your store, not guarantees.",
+    summary: "Shipping cost is the top checkout objection (Baymard), and free shipping is the incentive shoppers want most — ~81% say it makes them more likely to buy and ~51% add items specifically to qualify (Capital One Shopping), so a threshold turns it into an AOV lever via the 'goal-gradient' effect (people push harder as a reward gets closer). Pair it with showing the full price early (card-cro-show-total-cost-early): the same bar that nudges basket size also removes the shipping surprise. HONEST FLAG: the popular 'set it ~15–25% above AOV for ~15–30% AOV lift' figures are well-supported starting points to TEST on your store, not guarantees.",
     why: "Free shipping removes the #1 objection AND nudges basket size — but only if the threshold is reachable. Too high and it deflates; too low and you give away margin. The mechanism is well-supported; the exact number is yours to find.",
     how: [
-      "Start the threshold ~15–30% above your current AOV and watch margin and AOV together.",
-      "Show a live progress bar in the cart / mini-cart: 'Add $12 for free shipping'.",
-      "Suggest a relevant low-cost add-on right next to the bar.",
-      "Measure AOV, conversion AND shipping-cost margin for 3–4 weeks before locking the number — treat the percentages above as a hypothesis, not a setting."
+      "Pull your real AOV (last 90 days) and set the threshold ~15–25% above it (e.g. AOV $65 → ~$75–$85) so the largest cluster of orders is one nudge away.",
+      "Show a live progress bar in the cart / mini-cart: 'You're $12 away from free shipping', with one relevant low-cost add-on suggested beside it.",
+      "AI step: export your order-value distribution and ask Claude/ChatGPT for the threshold that captures the most 'one-nudge-away' orders, and to draft the bar + cart copy.",
+      "Measure AOV, conversion AND shipping-cost margin for 3–4 weeks before locking the number — treat the percentages as a hypothesis, not a setting.",
+      "Re-peg it in 2026: Deloitte's retail survey found 67% of execs plan to RAISE their free-shipping threshold this year to defend margins against carrier/tariff costs — if yours is a year old, re-check it against current AOV and re-run the margin math."
     ],
     confidence: "emerging",
     status: "active",
     supersedes: [],
-    related: [],
+    related: ["card-cro-show-total-cost-early", "card-cro-cross-sell-bundles"],
     sources: [
-      { label: "Baymard Institute — Cart Abandonment Rate (shipping cost / free shipping)", url: "https://baymard.com/lists/cart-abandonment-rate" }
+      { label: "Baymard Institute — Cart Abandonment Rate (shipping cost / free shipping)", url: "https://baymard.com/lists/cart-abandonment-rate" },
+      { label: "Capital One Shopping — Free Shipping Statistics 2026", url: "https://capitaloneshopping.com/research/free-shipping-statistics/" },
+      { label: "Deloitte — 2026 Retail Industry Outlook (free-shipping threshold reset)", url: "https://www.deloitte.com/us/en/insights/industry/retail-distribution/retail-distribution-industry-outlook.html" }
     ],
     tags: ["aov", "shipping", "cart"],
     created: "2026-06-14",
-    updated: "2026-06-14"
+    updated: "2026-06-15"
   },
   {
     id: "card-cro-price-anchoring",

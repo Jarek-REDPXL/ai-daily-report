@@ -50,6 +50,9 @@
 - [2026-06-14] [web-dev] The PyPI WebAssembly-wheel ecosystem grows: the number of PyPI packages publishing `pyemscripten`/Wasm wheels passes ~100 (from 28 on Jun 13 2026). — (due ~end of Q3 2026)
 - [2026-06-14] [graphic] A second major image model (Midjourney, Adobe Firefly, Google Imagen, or OpenAI/ChatGPT images) ships native vector/SVG output (not raster-to-vector tracing), following Recraft V4. — (due ~end of 2026)
 - [2026-06-14] [growth] Schema/structured-data generation becomes a default feature of a major AEO/AI-visibility tool (Semrush AI Toolkit, Ahrefs Brand Radar, or similar) — i.e. the tool ships JSON-LD output, not just measurement. — (due ~end of Q3 2026)
+- [2026-06-15] [web-design] A major UI/component library (Floating UI, Radix, React Aria, or a CSS framework) ships or documents a first-class pure-CSS anchor-positioning mode for its popovers/tooltips/menus, reducing or removing its JS positioning dependency. — (due ~end of 2026)
+- [2026-06-15] [cro] The 2026 free-shipping "reset year" holds — a follow-up retail dataset (Deloitte, Digital Commerce 360, or a Shopify/commerce report) shows the median ecommerce free-shipping threshold rose year-over-year (above ~$64). — (due ~Q1 2027)
+- [2026-06-15] [ai-tooling] Following the Jun 15 Agent SDK billing split, Anthropic ships an in-product Agent SDK spend/credit dashboard or hard cap (usage against the new credit), OR a major Claude-Code-based tool adds Agent-SDK spend controls. — (due ~end of Q3 2026)
 
 ## Resolved predictions (outcome log — newest first)
 <!-- format: [made → resolved] [domain] ✅/❌/⚖️ claim — outcome note -->

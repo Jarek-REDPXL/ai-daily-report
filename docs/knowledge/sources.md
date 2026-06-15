@@ -32,7 +32,7 @@
 | GitHub releases | ai-tooling | 53 | 1 | 2026-06-04 | shipped tools, open-weight drops | primary source |
 | company IR / SEC filings | ai-tooling | 57 | 1 | 2026-06-04 | hard financials, S-1s | authoritative |
 | earnings-call transcripts (YouTube) | ai-tooling | 50 | 1 | 2026-06-04 | exec guidance, capex/compute | cite video + timestamp |
-| MDN Web Docs | web-design | 61 | 3 | 2026-06-13 | CSS properties/values, Baseline support | primary/authoritative; behind Jun 11 sibling-index()/sibling-count() + Jun 13 ::scroll-marker-group carousel beat |
+| MDN Web Docs | web-design | 62 | 4 | 2026-06-15 | CSS properties/values, Baseline support | primary/authoritative; behind Jun 11 sibling-index() + Jun 13 carousel + Jun 15 anchor-positioning/Popover overlay-trio beat |
 | Smashing Magazine | web-design | 54 | 2 | 2026-06-11 | frontend technique deep-dives | practitioner, cross-check support %; behind Jun 11 sibling-index math-layouts piece |
 | PPC Land | paid | 56 | 4 | 2026-06-13 | ad-platform product/API changes; AI-search/GEO research | good Meta/Google changelog signal; behind Semrush LinkedIn study (Jun 10) + Jun 13 DSA→AI Max Feb-2027 delay |
 | Meta Business Help (official) | paid | 56 | 2 | 2026-06-10 | Advantage+ / ads policy / Opportunity Score | primary; Help Center lags real behavior |
@@ -61,7 +61,7 @@
 | The Verge | news | 52 | 1 | 2026-06-10 | tech-business, AI policy/product, scoops | non-paywalled; behind Jun 10 Microsoft–Fable-5 restriction |
 | TipRanks | news | 49 | 1 | 2026-06-10 | daily markets/ticker moves + the why | useful for intraday direction; treat exact percentages as directional, cross-check |
 | LogRocket Blog | web-design | 50 | 1 | 2026-06-11 | frontend/CSS technique deep-dives, JS | practitioner; behind Jun 11 native-CSS-stagger sibling-index piece; cross-check support % |
-| InfoQ | ai-tooling | 50 | 1 | 2026-06-11 | dev-tooling/agent product coverage, conf reporting | behind Jun 11 Claude Code /workflows beat (Code with Claude coverage) |
+| InfoQ | ai-tooling | 51 | 2 | 2026-06-15 | dev-tooling/agent product coverage, conf reporting | behind Jun 11 /workflows beat + Jun 15 HTML invoker-commands Baseline (web-design) |
 | Ahrefs (Brand Radar) | growth | 50 | 1 | 2026-06-11 | AI-visibility / brand-mention tracking across LLMs | tool primary; behind Jun 11 AI-visibility-check card |
 | CoinDesk | news | 50 | 1 | 2026-06-11 | crypto/agentic-payments, fintech product | behind Jun 11 Coinbase-for-Agents; cross-check figures |
 | SiliconANGLE | news | 50 | 1 | 2026-06-11 | enterprise tech/AI product launches | non-paywalled; behind Jun 11 Coinbase-for-Agents |
@@ -85,6 +85,13 @@
 | Recraft (recraft.ai) | graphic | 53 | 1 | 2026-06-14 | AI image/vector model — native SVG logos/icons | tool primary; behind Jun 14 editable-SVG card |
 | Abduzeedo | graphic | 49 | 1 | 2026-06-14 | design-tool coverage, technique showcases | practitioner; behind Jun 14 Recraft-V4 native-SVG card; cross-check |
 | MindStudio (blog) | graphic | 48 | 1 | 2026-06-14 | AI design-tool how-to guides | secondary how-to; behind Jun 14 Recraft SVG card; cross-check |
+| Baymard Institute | cro | 58 | 2 | 2026-06-15 | checkout/cart-abandonment research, usability guidelines | authoritative primary research; backs the card-cro-* library (guest-checkout rated 5★) + Jun 15 CRO/AOV beat; PROMOTE per ratings advisory |
+| Capital One Shopping (research) | cro | 50 | 1 | 2026-06-15 | ecommerce/free-shipping consumer statistics | aggregated stats; behind Jun 15 free-shipping-threshold card; cross-check the underlying sources |
+| Deloitte (Insights) | cro | 52 | 1 | 2026-06-15 | retail-industry outlook, exec surveys (margins, shipping, pricing) | authoritative survey (2026 Retail Outlook, n=330); behind Jun 15 "reset year" threshold call |
+| web.dev (Baseline/blog) | web-design | 52 | 1 | 2026-06-15 | Baseline status + web-platform monthly explainers | primary/authoritative (Google); behind Jun 15 Popover/anchor-positioning Baseline overlay beat |
+| support.claude.com (Help Center) | ai-tooling | 56 | 2 | 2026-06-15 | Claude plan/billing/retention terms, Agent SDK setup | authoritative for plan mechanics; behind Jun 10 Fable-5 retention + Jun 15 Agent SDK billing-split beat; PROMOTE per advisory |
+| The New Stack | ai-tooling | 50 | 1 | 2026-06-15 | dev-tooling/agent product + business coverage | non-paywalled; behind Jun 15 Agent SDK billing-split corroboration; cross-check |
+| XDA Developers | ai-tooling | 49 | 1 | 2026-06-15 | consumer/dev tech product + AI-tooling coverage | non-paywalled 2nd source; behind Jun 15 Agent SDK billing-split beat |
 
 <!-- Seed roster began as ai-tooling; web-design/paid/social/graphic rows added as
      those domains started producing. news/growth rows added 2026-06-08 on their
