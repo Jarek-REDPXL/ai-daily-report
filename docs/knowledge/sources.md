@@ -24,8 +24,8 @@
 | blog.google | ai-tooling | 60 | 3 | 2026-06-09 | Google/Gemini primary announcements | primary source; behind Gemini 3.5 Live Translate (Jun 9) |
 | Anthropic (official) | ai-tooling | 65 | 6 | 2026-06-13 | Claude features, research, policy posts | primary source; behind Jun 10 Fable-5 retention, Jun 11 /workflows + Jun 13 Fable-5/Mythos-5 government-suspension statement |
 | OpenAI (official) | ai-tooling | 59 | 3 | 2026-06-07 | ChatGPT/model releases, memory | primary source |
-| Bloomberg | ai-tooling | 59 | 5 | 2026-06-13 | markets, M&A, funding, infra financing, IPOs | paywalled; cross-check; behind Jun 11 Anthropic $35B TPU deal, Jun 13 Fable-5/Mythos-5 order + Jun 13 SpaceX IPO |
-| CNBC | news | 60 | 6 | 2026-06-13 | markets/tech business, sell-offs, earnings, funding, IPOs | solid 2nd source; behind Jun 8 sell-off, Jun 11 chip-rebound/Coinbase, Jun 13 Fable-5/Mythos-5 shutdown + Jun 13 SpaceX record IPO |
+| Bloomberg | ai-tooling | 60 | 6 | 2026-06-16 | markets, M&A, funding, infra financing, IPOs | paywalled; cross-check; behind Jun 11 Anthropic $35B TPU deal, Jun 13 Fable-5/Mythos-5 order, Jun 13 SpaceX IPO + Jun 16 Cursor deal / Nvidia $25B bond |
+| CNBC | news | 61 | 7 | 2026-06-16 | markets/tech business, sell-offs, earnings, funding, IPOs | solid 2nd source; behind Jun 8 sell-off, Jun 11 chip-rebound/Coinbase, Jun 13 Fable-5/Mythos-5 shutdown, Jun 13 SpaceX record IPO + Jun 16 IPO $85.7B greenshoe / Salesforce-Fin |
 | The Information | ai-tooling | 56 | 2 | 2026-06-11 | scoops, deep tech-business, infra deals | paywalled; high signal; behind Jun 11 Anthropic data-center leases scoop |
 | Reuters | ai-tooling | 54 | 2 | 2026-06-09 | wire confirmation, policy | good 2nd source; behind EU–Meta WhatsApp order (Jun 9) |
 | arXiv | ai-tooling | 55 | 1 | 2026-06-04 | primary research papers | cite specific abstract |
@@ -56,7 +56,7 @@
 | Chrome for Developers (developer.chrome.com) | web-design | 58 | 2 | 2026-06-13 | Chrome release notes + web-platform explainers | primary/authoritative; behind Jun 9 gap-decorations + Jun 13 CSS-carousel (Overflow 5) cards |
 | Ideogram (official blog + GitHub docs) | graphic | 52 | 1 | 2026-06-09 | image-model releases, prompting schema | tool primary; behind Jun 9 Ideogram-4.0 JSON-layout card |
 | Omnisend (Help Center + product/blog) | email | 52 | 1 | 2026-06-09 | ESP MCP setup, lifecycle/deliverability how-to | tool primary; behind Jun 9 Omnisend-MCP card |
-| TechCrunch | news | 51 | 2 | 2026-06-11 | tech-business, security, funding/M&A, agentic products | non-paywalled; behind Jun 9 MS OSS supply-chain + Jun 11 Coinbase-for-Agents |
+| TechCrunch | news | 53 | 3 | 2026-06-16 | tech-business, security, funding/M&A, agentic products | non-paywalled; behind Jun 9 MS OSS supply-chain, Jun 11 Coinbase-for-Agents + Jun 16 ChatGPT<50% / Cursor / Salesforce-Fin / Threads 500M |
 | The Hacker News | web-dev | 50 | 1 | 2026-06-09 | CVEs, exploits, supply-chain security | good security signal; cross-check CVSS/patch dates with vendor advisory |
 | The Verge | news | 52 | 1 | 2026-06-10 | tech-business, AI policy/product, scoops | non-paywalled; behind Jun 10 Microsoft–Fable-5 restriction |
 | TipRanks | news | 49 | 1 | 2026-06-10 | daily markets/ticker moves + the why | useful for intraday direction; treat exact percentages as directional, cross-check |
@@ -66,13 +66,14 @@
 | CoinDesk | news | 50 | 1 | 2026-06-11 | crypto/agentic-payments, fintech product | behind Jun 11 Coinbase-for-Agents; cross-check figures |
 | SiliconANGLE | news | 50 | 1 | 2026-06-11 | enterprise tech/AI product launches | non-paywalled; behind Jun 11 Coinbase-for-Agents |
 | Motley Fool | news | 49 | 1 | 2026-06-11 | markets context/ticker analysis | directional; useful for the "why" behind a move, cross-check exact figures |
-| Vercel (changelog + docs) | web-dev | 53 | 1 | 2026-06-13 | framework/runtime product changes, Workflow/AI Gateway | primary; behind Jun 13 Workflow-SDK-on-Nitro-v3 card |
+| Vercel (changelog + docs) | web-dev | 56 | 2 | 2026-06-16 | framework/runtime product changes, Workflow/AI Gateway | primary; behind Jun 13 Workflow-SDK-on-Nitro-v3 card + Jun 16 30-min Functions / inflight-cancellation beat |
 | workflow-sdk.dev (docs) | web-dev | 50 | 1 | 2026-06-13 | Workflow SDK directives/setup ("use workflow"/"use step") | tool docs; behind Jun 13 durable-workflows card |
 | Figma (release notes + Learn) | graphic | 55 | 1 | 2026-06-13 | Figma product releases + how-to (AI, capture, design QA) | primary; behind Jun 13 capture-webpage-to-layers card |
-| Litmus | email | 53 | 1 | 2026-06-13 | email design/motion technique, deliverability, client rendering | practitioner authority; behind Jun 13 micro-animation card |
+| Litmus | email | 56 | 2 | 2026-06-16 | email design/motion technique, deliverability, client rendering | practitioner authority; behind Jun 13 micro-animation card + Jun 16 inbox-placement audit |
 | Ars Technica | news | 50 | 1 | 2026-06-13 | tech-policy/AI deep coverage | non-paywalled; behind Jun 13 Fable-5/Mythos-5 government shutdown |
 | Search Engine Land | paid | 50 | 1 | 2026-06-13 | Google Ads/AI + platform product changes | behind Jun 13 DSA→AI Max delay + Instagram "Your Algorithm" main-feed beat (social); practitioner, cross-check |
-| Search Engine Journal | paid | 50 | 1 | 2026-06-13 | Google Ads/SEO product changes, AI-search | behind Jun 13 DSA migration-deadline extension; practitioner, cross-check |
+| Search Engine Journal | paid | 53 | 2 | 2026-06-16 | Google Ads/SEO product changes, AI-search | behind Jun 13 DSA migration-deadline extension + Jun 16 Google bidding-changes + Microsoft Product Explorer beat; practitioner, cross-check |
+| Search Engine Roundtable | paid | 50 | 1 | 2026-06-16 | Google Ads/SEO product-change recaps, search-forum signal | behind Jun 16 Google bidding-changes beat (cross-checked SEJ); bot-blocks WebFetch — verify via search snippet |
 | SitePoint | web-design | 50 | 1 | 2026-06-13 | frontend/CSS technique tutorials | behind Jun 13 CSS-carousel beat; practitioner, cross-check support % |
 | Engadget | news | 50 | 1 | 2026-06-13 | consumer-tech/AI product + platform changes | behind Jun 13 Instagram "Your Algorithm" beat (social); non-paywalled |
 | CNN Business | news | 50 | 1 | 2026-06-13 | markets/business breaking | behind Jun 13 SpaceX record IPO; non-paywalled 2nd source |
@@ -92,6 +93,10 @@
 | support.claude.com (Help Center) | ai-tooling | 56 | 2 | 2026-06-15 | Claude plan/billing/retention terms, Agent SDK setup | authoritative for plan mechanics; behind Jun 10 Fable-5 retention + Jun 15 Agent SDK billing-split beat; PROMOTE per advisory |
 | The New Stack | ai-tooling | 50 | 1 | 2026-06-15 | dev-tooling/agent product + business coverage | non-paywalled; behind Jun 15 Agent SDK billing-split corroboration; cross-check |
 | XDA Developers | ai-tooling | 49 | 1 | 2026-06-15 | consumer/dev tech product + AI-tooling coverage | non-paywalled 2nd source; behind Jun 15 Agent SDK billing-split beat |
+| Chronos Agency | email | 50 | 1 | 2026-06-16 | deliverability / sender-requirement guides (Gmail/Yahoo/MS) | behind Jun 16 inbox-placement beat (2026 0.10%/0.30% thresholds, rejection codes); practitioner, cross-check |
+| Sensor Tower | news | 50 | 1 | 2026-06-16 | app-usage market-share data (AI assistants, apps) | behind Jun 16 ChatGPT<50% reading; app-usage NOT web-traffic — always label the metric; one tracker, directional |
+| Yahoo Finance | news | 50 | 1 | 2026-06-16 | markets/wire 2nd source (Reuters syndication), app-tracker writeups | behind Jun 16 Cursor + ChatGPT-share corroboration; non-paywalled, cross-check primary |
+| Meta Newsroom (about.fb.com) | social | 50 | 1 | 2026-06-16 | Meta/Threads/Instagram primary product + metrics announcements | primary; behind Jun 16 Threads 500M MAU / 'Your Algo'; first-party, cross-check MAU framing |
 
 <!-- Seed roster began as ai-tooling; web-design/paid/social/graphic rows added as
      those domains started producing. news/growth rows added 2026-06-08 on their

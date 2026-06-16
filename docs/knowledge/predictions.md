@@ -53,6 +53,10 @@
 - [2026-06-15] [web-design] A major UI/component library (Floating UI, Radix, React Aria, or a CSS framework) ships or documents a first-class pure-CSS anchor-positioning mode for its popovers/tooltips/menus, reducing or removing its JS positioning dependency. — (due ~end of 2026)
 - [2026-06-15] [cro] The 2026 free-shipping "reset year" holds — a follow-up retail dataset (Deloitte, Digital Commerce 360, or a Shopify/commerce report) shows the median ecommerce free-shipping threshold rose year-over-year (above ~$64). — (due ~Q1 2027)
 - [2026-06-15] [ai-tooling] Following the Jun 15 Agent SDK billing split, Anthropic ships an in-product Agent SDK spend/credit dashboard or hard cap (usage against the new credit), OR a major Claude-Code-based tool adds Agent-SDK spend controls. — (due ~end of Q3 2026)
+- [2026-06-16] [web-dev] Vercel's >800s/30-minute Functions duration tier AND the Workflow SDK's inflight cancellation both exit beta to GA (stable `workflow`, no `@beta` tag; duration tier no longer beta-flagged). — (due ~Sep 16 2026)
+- [2026-06-16] [email] A major ESP/deliverability vendor (Klaviyo, Mailchimp, HubSpot, Omnisend, Braze, or similar) surfaces inbox-placement rate (IPR) as a DEFAULT metric in its standard campaign report (not a paid add-on), making "delivery rate" the secondary number. — (due ~end of Q3 2026)
+- [2026-06-16] [paid] Google Ads' Promotion Mode exits beta to general availability for Search + Performance Max (schedulable ROAS-tolerance + extra daily budget). — (due ~end of 2026)
+- [2026-06-16] [news] Gemini keeps gaining on ChatGPT in app-assistant usage: the next comparable Sensor Tower-style reading shows Gemini ≥30% OR ChatGPT below 45% (app-usage share, not web traffic). — (due ~end of Q3 2026)
 
 ## Resolved predictions (outcome log — newest first)
 <!-- format: [made → resolved] [domain] ✅/❌/⚖️ claim — outcome note -->

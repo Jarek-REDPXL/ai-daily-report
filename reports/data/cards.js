@@ -35,6 +35,95 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdev-vercel-cancelable-jobs",
+    domains: ["web-dev"],
+    title: "Run a 30-minute AI job on Vercel — and cancel it mid-flight",
+    action: "Bump one long route to maxDuration: 1800 on Fluid Compute, then thread an AbortController.signal through its steps so you can abort the job the instant the user cancels.",
+    summary: "Vercel Functions now run up to 30 minutes (1,800s, up from 800s) on Fluid Compute, and the Workflow SDK added inflight cancellation built on the standard AbortController — the cancel signal survives suspensions/replays and crosses step boundaries. Together: long-running serverless jobs (report builds, multi-model pipelines, scrapes) that you can also stop mid-flight, with no queue/worker infra.",
+    why: "The long jobs you used to push onto a worker now run serverless — and the cancel signal is what makes that safe: race a durable timeout against a slow model, cancel siblings after the first success, or kill the pipeline when the user leaves, without leaking compute (Fluid bills active CPU only). The off-switch is the half that stops a runaway from burning spend.",
+    how: [
+      "On a Pro/Enterprise team, enable Fluid Compute (Project → Settings → Functions).",
+      "Install the beta SDK: <code>npm i workflow@beta</code>.",
+      "Raise the limit: Next.js App Router → <code>export const maxDuration = 1800;</code> in the route; other frameworks → <code>{ \"functions\": { \"api/long-task.py\": { \"maxDuration\": 1800 } } }</code> in <code>vercel.json</code>.",
+      "Make it cancelable: create an <code>AbortController</code>, pass <code>controller.signal</code> into each step / <code>fetch</code>, and call <code>controller.abort()</code> on the losing branch of a <code>Promise.race</code> (work vs a <code>sleep('30s')</code> timeout).",
+      "Deploy, trigger a run, confirm the cancel propagates in Dashboard → Observability → Workflows.",
+      "Put a hard dollar cap in front of model calls inside the job (see card-webdev-ai-gateway-spend-limits)."
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-webdev-vercel-workflow-nitro", "card-webdev-ai-gateway-spend-limits", "card-ai-tooling-model-portability"],
+    sources: [
+      { label: "Vercel Changelog — Workflow SDK now supports inflight cancellation", url: "https://vercel.com/changelog/workflow-sdk-now-supports-inflight-cancellation" },
+      { label: "Vercel Changelog — Functions can now run up to 30 minutes", url: "https://vercel.com/changelog/vercel-functions-can-now-run-up-to-30-minutes" },
+      { label: "Vercel Docs — Workflows", url: "https://vercel.com/docs/workflows" }
+    ],
+    tags: ["vercel", "workflows", "durable-execution", "abortcontroller", "backend"],
+    created: "2026-06-16",
+    updated: "2026-06-16"
+  },
+
+  {
+    id: "card-email-inbox-placement-audit",
+    domains: ["email"],
+    title: "Audit inbox PLACEMENT, not 'delivery rate' — the metric quietly costing revenue",
+    action: "Run a seed/spam-list test on one live, high-revenue campaign and read folder placement per provider before you send — fix anything under ~85% inbox rate first.",
+    summary: "An ESP 'delivery rate' only means the provider accepted the message — not that it reached the inbox; a 98% delivery rate can hide a ~60% inbox-placement rate. With Gmail/Yahoo/Microsoft now permanently rejecting rule-breakers (spam-complaint ceiling 0.30%, target <0.10%), measure inbox placement rate (IPR) with a seed test and fix failing auth/reputation before send.",
+    why: "Clients pay for revenue, and revenue tracks inbox placement, not delivery. A campaign whose IPR has slid to 70% loses 3-in-10 emails of pipeline while the dashboard says 'delivered' — an invisible leak. Measuring it turns the leak into a billable win and a recurring deliverability retainer.",
+    how: [
+      "Pick one live, high-revenue campaign (top automation or next broadcast); use the real final creative, not a stripped test.",
+      "Run a seed/spam-list test (Litmus: Test tab → 'View and create spam tests', or ESP Sync the draft) — it checks ~11 providers (Gmail, Yahoo, Office 365, Outlook, AOL, GMX…).",
+      "Read folder placement per provider: Primary = pass, Promotions/Tabs = partial, Spam = reputation problem, Missing = blocked at gateway.",
+      "Compute IPR = (inbox ÷ delivered) × 100; flag any major provider under ~85%.",
+      "Check the auth row (SPF, DKIM, DMARC, one-click List-Unsubscribe RFC 8058, TLS, BIMI) — red here is the first fix; it's what triggers permanent rejection (see card-email-dmarc-bimi).",
+      "Cross-check live reputation in Google Postmaster Tools (spam <0.10%) and Microsoft SNDS; prune low-engagement/invalid addresses, re-test until IPR clears, then ship.",
+      "Deliver a one-page 'Inbox Placement Scorecard' to the client — that's the upsell."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    supersedes: [],
+    related: ["card-email-dmarc-bimi", "card-email-omnisend-mcp"],
+    sources: [
+      { label: "Litmus — Deliverability Myth: Why You Need to Measure Inbox Placement", url: "https://www.litmus.com/blog/deliverability-myth-why-you-need-measure-inbox-placement" },
+      { label: "Litmus — Make It to the Inbox with Litmus' Spam Testing", url: "https://www.litmus.com/blog/make-it-to-the-inbox-not-the-spam-folder-with-litmus-spam-testing" },
+      { label: "Chronos Agency — Gmail & Yahoo Sender Requirements 2026", url: "https://chronos.agency/blog/gmail-yahoo-email-sender-requirements-2026/" }
+    ],
+    tags: ["email", "deliverability", "inbox-placement", "audit"],
+    created: "2026-06-16",
+    updated: "2026-06-16"
+  },
+
+  {
+    id: "card-paid-google-bidding-recalibration",
+    domains: ["paid"],
+    title: "Re-baseline your budget-limited Google Ads targets before the Aug 17 recalibration",
+    action: "Filter for 'Limited by budget' tCPA/tROAS campaigns, compare each set target to its trailing 30–90-day actuals, and pull stale/aspirational targets toward reality before Aug 17.",
+    summary: "Google is recalibrating how budget-constrained Smart Bidding (tCPA/tROAS) campaigns optimize toward targets — account notices ~Jul 6, rollout starts Aug 17 with a short calibration wobble. Alongside: Promotion Mode (beta) to schedule a temporary ROAS-loosen + extra budget for sales spikes, and Smart Bidding Exploration now global for Search + feed-less PMax (plus a Shopping beta).",
+    why: "The recalibration will quietly move spend and CPA/ROAS on every budget-capped campaign during the window — if a client's targets are stale or aspirational, you'll see efficiency swing and could misread a normal wobble as a bug (or let a loose target overspend). Re-baselining now means the AI optimizes against a sane goal.",
+    how: [
+      "Find the exposed campaigns: Campaigns table → add the 'Budget' status column or filter <code>Status: Limited by budget</code>; flag every Search/PMax/Shopping campaign showing it.",
+      "For each, record current Target CPA / Target ROAS (Settings → Bidding) and pull trailing 30–90-day actual CPA/ROAS (Columns → Conv., Cost/conv., Conv. value/cost).",
+      "Re-baseline before Aug 17: if the set target is far from trailing actuals, move it toward an achievable number.",
+      "Set a notifications watch (bell icon) for the bidding-target notice ~Jul 6; screenshot it for the account log.",
+      "Enable Smart Bidding Exploration where you want volume (Search / feed-less PMax); check eligibility for the Shopping beta.",
+      "Pre-stage Promotion Mode on top promo campaigns so it's ready to schedule for the next sale instead of a manual override.",
+      "Diary an Aug 17–Sep 7 'calibration watch': annotate accounts, hold big manual bid edits ~2 weeks, judge on a rolling 14-day window."
+    ],
+    confidence: "emerging",
+    corroboration_count: 2,
+    status: "active",
+    supersedes: [],
+    related: ["card-paid-aimax-dsa-experiment", "card-paid-meta-advantage-plus"],
+    sources: [
+      { label: "Search Engine Journal — Google Ads: 3 bidding updates PPC managers need to know", url: "https://www.searchenginejournal.com/google-ads-three-bidding-budgeting-updates/579292/" },
+      { label: "Search Engine Roundtable — Promotion Mode beta, Smart Bidding Exploration, bidding-target change", url: "https://www.seroundtable.com/google-ads-promotion-mode-smart-bidding-bidding-target-41501.html" }
+    ],
+    tags: ["google-ads", "smart-bidding", "tcpa", "troas", "promotion-mode"],
+    created: "2026-06-16",
+    updated: "2026-06-16"
+  },
+
+  {
     id: "card-webdesign-anchor-positioning-menus",
     domains: ["web-design"],
     title: "Build tooltips, dropdowns & menus with zero JS — the native trio is now Baseline",
