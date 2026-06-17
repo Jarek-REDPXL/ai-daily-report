@@ -35,6 +35,97 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdesign-figma-mcp-design-to-code",
+    domains: ["web-design"],
+    title: "Turn a Figma frame into code — and push code back to canvas — with the Dev Mode MCP server",
+    action: "Enable Figma's Dev Mode MCP server, connect Claude Code or Cursor, select ONE frame, and prompt 'implement the selected frame, reuse my existing components and variables.'",
+    summary: "Figma's Dev Mode MCP server hands your AI coding tool (Claude Code, Cursor, VS Code) the real design data — node tree, variables/design tokens, layout constraints, assets — instead of a screenshot, so generated code matches your components. A Jun 16 2026 Figma post shows the workflow maturing both ways: design→code, and code→canvas (pull a built screen back in as editable Figma layers via Figma Make).",
+    why: "Screenshot-to-code guesses at spacing and tokens; the MCP server passes the structured design (variables, components, layout) so the agent reuses your actual design system instead of one-off CSS. The new code↔canvas round-trip kills the design/code drift that eats teams — a dev's change can come back as editable layers, and a designer's frame becomes real code in one prompt.",
+    how: [
+      "On a Figma plan that includes Dev Mode, open a design file → Figma menu → Preferences → check 'Enable Dev Mode MCP Server' (starts a local MCP server).",
+      "Connect your AI tool: in Claude Code add the Figma MCP server (Figma Learn has the exact 'Claude Code and Figma' setup steps); in Cursor/VS Code add it under MCP settings. Confirm the figma tools appear.",
+      "Design→code: select ONE frame or component in Figma, then prompt the agent 'implement the selected frame; reuse my existing components, variables and tokens' — keep the selection small for accuracy.",
+      "Code→canvas: in Figma Make, prompt 'bring this preview back into Figma as design layers' (or 'push this dashboard into Figma, reuse existing components and variables') to round-trip a built screen into editable frames.",
+      "Review the output diff — MCP gives structure, not pixel-perfection; spot-check spacing, tokens and a11y before committing.",
+      "Run it on one real client component first to feel the speed-up, then fold it into your design-system workflow."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    supersedes: [],
+    related: ["card-graphic-figma-capture-layers", "card-webdesign-ai-ready-design-system", "card-graphic-canva-brand-kit-ai"],
+    sources: [
+      { label: "Figma Blog — 4 ways we're using our MCP server at Figma (Jun 16 2026)", url: "https://www.figma.com/blog/4-ways-were-using-our-mcp-server-at-figma/" },
+      { label: "Figma Learn — Claude Code and Figma: Set up the MCP server", url: "https://help.figma.com/hc/en-us/articles/39888612464151-Claude-Code-and-Figma-Set-up-the-MCP-server" },
+      { label: "Figma Blog — Introducing our Dev Mode MCP server", url: "https://www.figma.com/blog/introducing-figmas-dev-mode-mcp-server/" }
+    ],
+    tags: ["figma", "mcp", "design-to-code", "dev-mode", "claude-code", "cursor"],
+    created: "2026-06-17",
+    updated: "2026-06-17"
+  },
+
+  {
+    id: "card-graphic-canva-brand-kit-ai",
+    domains: ["graphic"],
+    title: "Make AI design on-brand from the first draft — connect your Canva Brand Kit to your AI assistant",
+    action: "Set up your Brand Kit in Canva (colors, fonts, logo, voice), connect Canva to Claude/ChatGPT/Perplexity, and prompt for a deck or social set 'using my Canva Brand Kit' — you get editable, on-brand assets, not generic AI art.",
+    summary: "Canva now plugs into the major AI assistants: the new Perplexity Computer connector (announced ~Jun 4 2026) turns research/briefs into editable Canva presentations, social campaigns, infographics and brand kits across 11 languages, joining the Claude (Apr) and ChatGPT/Gemini Brand Kit connectors. Set your Brand Kit once and generated designs apply your colors, fonts and voice from the outset — and stay fully editable in Canva.",
+    why: "The usual knock on AI design is 'random outputs that ignore the brand.' Pinning generation to your Brand Kit fixes that at the source: the first draft already uses your palette, type and voice and lands as editable Canva layers your team can finish — so AI speeds up on-brand production instead of creating off-brand cleanup work.",
+    how: [
+      "In Canva, build/confirm your Brand Kit — brand colors (hex), fonts, logo and (where available) brand voice: Brand Hub → Brand Kit. (Brand Kit needs Canva Pro/Teams.)",
+      "Connect Canva to your assistant: in Perplexity (Pro/Max/Enterprise) add the Canva connector in Perplexity Computer; in Claude or ChatGPT enable the Canva app/connector.",
+      "Do the research/brief in the assistant (meeting notes, data, live web context), then prompt: 'Turn this into an on-brand [deck / 5 social posts / infographic] using my Canva Brand Kit.'",
+      "Open the result in Canva — it arrives as editable assets; refine copy/layout, swap images, finalize.",
+      "Got a flat AI-generated image to edit? Use Magic Layers (now in Gemini & ChatGPT) to convert it into a layered, editable Canva design.",
+      "Save winners as reusable Canva templates so the next on-brand asset is one prompt away."
+    ],
+    confidence: "confirmed",
+    corroboration_count: 3,
+    status: "active",
+    supersedes: [],
+    related: ["card-graphic-color-palette", "card-graphic-recraft-svg-vector", "card-webdesign-figma-mcp-design-to-code"],
+    sources: [
+      { label: "9to5Mac — Canva launches Perplexity Computer connector (Jun 4 2026)", url: "https://9to5mac.com/2026/06/04/canva-launches-perplexity-computer-connector/" },
+      { label: "Storyboard18 — Canva integrates with Perplexity Computer to turn AI research into editable creative", url: "https://www.storyboard18.com/brand-marketing/canva-integrates-with-perplexity-computer-to-turn-ai-research-into-editable-creative-assets-100265.htm" },
+      { label: "Social Samosa — Canva launches connector for Perplexity Computer", url: "https://www.socialsamosa.com/industry-updates/canva-connector-perplexity-computer-editable-design-12005527" },
+      { label: "Canva / BusinessWire — Canva Brings On-Brand Designs Directly into AI Assistants", url: "https://www.businesswire.com/news/home/20260205384226/en/Canva-Brings-On-Brand-Designs-Directly-into-AI-Assistants" }
+    ],
+    tags: ["canva", "brand-kit", "ai-assistant", "perplexity", "on-brand", "magic-layers"],
+    created: "2026-06-17",
+    updated: "2026-06-17"
+  },
+
+  {
+    id: "card-social-x-conversion-tracking",
+    domains: ["social"],
+    title: "Prove your X presence drives sales — wire up no-code conversion tracking via GTM",
+    action: "In X's rebuilt Ads Manager, use the new Google Tag Manager integration to deploy the X Pixel + Conversion API with no code, then watch the real-time diagnostics dashboard to confirm events fire.",
+    summary: "X rebuilt its Ads Manager (announced Jun 16 2026) with three things that matter for measuring X: a Google Tag Manager integration that sets up the Pixel + Conversion API (CAPI) through a guided no-code flow, all CAPI resources consolidated in Events Manager, and a real-time conversion diagnostics dashboard to spot and fix broken events. You no longer need a developer on standby to track what your X activity converts.",
+    why: "Most teams can't prove X is worth the effort because conversion tracking never got set up — it needed dev time. No-code GTM setup plus a live health dashboard removes that excuse, so you can finally attribute signups/sales to your X content and campaigns, cut what doesn't convert, and defend (or drop) the channel with data instead of vibes.",
+    how: [
+      "Open X Ads Manager → Events Manager (the rebuilt one) and start the Google Tag Manager integration.",
+      "Connect your GTM container through the guided flow — it deploys the X Pixel + Conversion API (CAPI) without hand-coding tags.",
+      "Define your key conversion events (purchase, signup, lead) and map them to the right pages/actions.",
+      "Open the real-time conversion diagnostics dashboard, trigger a test event, and confirm both Pixel and CAPI events show as healthy.",
+      "Fix anything flagged (event deduplication, missing parameters) using the consolidated CAPI tools now in Events Manager.",
+      "Once events are clean, judge your X presence on conversions — not likes — and reallocate effort accordingly."
+    ],
+    confidence: "confirmed",
+    corroboration_count: 3,
+    status: "active",
+    supersedes: [],
+    related: ["card-social-instagram-your-algorithm", "card-social-linkedin-ai-citations"],
+    sources: [
+      { label: "Social Media Today — X adds Google Tag Manager integration", url: "https://www.socialmediatoday.com/news/x-adds-google-tag-manager-integration/823100/" },
+      { label: "Social Samosa — X Ads Manager introduces Google Tag Manager integration", url: "https://www.socialsamosa.com/news-2/x-ads-manager-google-tag-manager-integration-campaign-set-up-12046633" },
+      { label: "PPC Land — X adds GTM integration and live diagnostics to its rebuilt Ads Manager", url: "https://ppc.land/x-adds-gtm-integration-and-live-diagnostics-to-its-rebuilt-ads-manager/" },
+      { label: "X Business — Conversion tracking for websites", url: "https://business.x.com/en/help/campaign-measurement-and-analytics/conversion-tracking-for-websites" }
+    ],
+    tags: ["x", "twitter", "conversion-tracking", "gtm", "capi", "measurement"],
+    created: "2026-06-17",
+    updated: "2026-06-17"
+  },
+
+  {
     id: "card-webdev-vercel-cancelable-jobs",
     domains: ["web-dev"],
     title: "Run a 30-minute AI job on Vercel — and cancel it mid-flight",

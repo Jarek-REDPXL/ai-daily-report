@@ -57,6 +57,9 @@
 - [2026-06-16] [email] A major ESP/deliverability vendor (Klaviyo, Mailchimp, HubSpot, Omnisend, Braze, or similar) surfaces inbox-placement rate (IPR) as a DEFAULT metric in its standard campaign report (not a paid add-on), making "delivery rate" the secondary number. — (due ~end of Q3 2026)
 - [2026-06-16] [paid] Google Ads' Promotion Mode exits beta to general availability for Search + Performance Max (schedulable ROAS-tolerance + extra daily budget). — (due ~end of 2026)
 - [2026-06-16] [news] Gemini keeps gaining on ChatGPT in app-assistant usage: the next comparable Sensor Tower-style reading shows Gemini ≥30% OR ChatGPT below 45% (app-usage share, not web traffic). — (due ~end of Q3 2026)
+- [2026-06-17] [web-design] A second major design tool (Adobe XD/Express, Sketch, Framer, Penpot, or Builder.io) ships or documents a first-class bidirectional code↔canvas sync (a built/coded screen round-tripped back into editable design layers reusing existing components), following Figma's Dev Mode MCP + Figma Make. — (due ~end of Q1 2027)
+- [2026-06-17] [graphic] A second major design tool (Adobe Express/Firefly, Figma, Recraft, or Adobe) ships a Brand-Kit-aware connector into a major AI assistant (Claude, ChatGPT, Gemini, or Perplexity) — i.e. generate on-brand, editable assets applying a saved brand kit from inside the assistant, matching Canva. — (due ~end of 2026)
+- [2026-06-17] [social] A second major social platform (LinkedIn, Snap, Reddit, TikTok, or Pinterest) ships an equivalent guided no-code conversion-setup flow (Pixel/CAPI via Google Tag Manager) inside its own ads/events manager, following X's Jun 16 rebuild. — (due ~end of Q1 2027)
 
 ## Resolved predictions (outcome log — newest first)
 <!-- format: [made → resolved] [domain] ✅/❌/⚖️ claim — outcome note -->

@@ -34,9 +34,9 @@
 | earnings-call transcripts (YouTube) | ai-tooling | 50 | 1 | 2026-06-04 | exec guidance, capex/compute | cite video + timestamp |
 | MDN Web Docs | web-design | 62 | 4 | 2026-06-15 | CSS properties/values, Baseline support | primary/authoritative; behind Jun 11 sibling-index() + Jun 13 carousel + Jun 15 anchor-positioning/Popover overlay-trio beat |
 | Smashing Magazine | web-design | 54 | 2 | 2026-06-11 | frontend technique deep-dives | practitioner, cross-check support %; behind Jun 11 sibling-index math-layouts piece |
-| PPC Land | paid | 56 | 4 | 2026-06-13 | ad-platform product/API changes; AI-search/GEO research | good Meta/Google changelog signal; behind Semrush LinkedIn study (Jun 10) + Jun 13 DSA→AI Max Feb-2027 delay |
+| PPC Land | paid | 58 | 5 | 2026-06-17 | ad-platform product/API changes; AI-search/GEO research | good Meta/Google changelog signal; behind Semrush LinkedIn study (Jun 10) + Jun 13 DSA→AI Max delay + Jun 17 X Ads Manager GTM/CAPI beat; PROMOTE per advisory |
 | Meta Business Help (official) | paid | 56 | 2 | 2026-06-10 | Advantage+ / ads policy / Opportunity Score | primary; Help Center lags real behavior |
-| Social Media Today | paid | 53 | 2 | 2026-06-13 | ad-platform + social product changes | behind Jun 10 Meta Opportunity Score + Jun 13 Instagram "Your Algorithm" main-feed beat (social); practitioner news, cross-check |
+| Social Media Today | paid | 55 | 3 | 2026-06-17 | ad-platform + social product changes | behind Jun 10 Meta Opportunity Score + Jun 13 Instagram "Your Algorithm" + Jun 17 X Ads Manager GTM/CAPI beat (social); PROMOTE per ratings advisory; practitioner news, cross-check |
 | Semrush (blog/research) | social | 54 | 2 | 2026-06-11 | AI-search/GEO citation studies, SEO data, AI-visibility tooling | behind Jun 10 LinkedIn-AI-citations card + Jun 11 free AI Search Visibility Checker (growth); first-party dataset |
 | Google Ads blog (blog.google/ads) | paid | 55 | 1 | 2026-06-07 | Google Ads/AI Max announcements | primary source |
 | Sprout Social | social | 53 | 2 | 2026-06-07 | platform algorithm/ranking guides | refreshed annually; solid baseline; behind weekly keeper |
@@ -68,7 +68,7 @@
 | Motley Fool | news | 49 | 1 | 2026-06-11 | markets context/ticker analysis | directional; useful for the "why" behind a move, cross-check exact figures |
 | Vercel (changelog + docs) | web-dev | 56 | 2 | 2026-06-16 | framework/runtime product changes, Workflow/AI Gateway | primary; behind Jun 13 Workflow-SDK-on-Nitro-v3 card + Jun 16 30-min Functions / inflight-cancellation beat |
 | workflow-sdk.dev (docs) | web-dev | 50 | 1 | 2026-06-13 | Workflow SDK directives/setup ("use workflow"/"use step") | tool docs; behind Jun 13 durable-workflows card |
-| Figma (release notes + Learn) | graphic | 55 | 1 | 2026-06-13 | Figma product releases + how-to (AI, capture, design QA) | primary; behind Jun 13 capture-webpage-to-layers card |
+| Figma (release notes + Learn + Dev Mode MCP) | graphic | 58 | 2 | 2026-06-17 | Figma product releases + how-to (AI, capture, MCP design-to-code) | primary; behind Jun 13 capture-to-layers (graphic) + Jun 16/17 Dev Mode MCP design↔code beat (web-design) |
 | Litmus | email | 56 | 2 | 2026-06-16 | email design/motion technique, deliverability, client rendering | practitioner authority; behind Jun 13 micro-animation card + Jun 16 inbox-placement audit |
 | Ars Technica | news | 50 | 1 | 2026-06-13 | tech-policy/AI deep coverage | non-paywalled; behind Jun 13 Fable-5/Mythos-5 government shutdown |
 | Search Engine Land | paid | 50 | 1 | 2026-06-13 | Google Ads/AI + platform product changes | behind Jun 13 DSA→AI Max delay + Instagram "Your Algorithm" main-feed beat (social); practitioner, cross-check |
@@ -97,6 +97,11 @@
 | Sensor Tower | news | 50 | 1 | 2026-06-16 | app-usage market-share data (AI assistants, apps) | behind Jun 16 ChatGPT<50% reading; app-usage NOT web-traffic — always label the metric; one tracker, directional |
 | Yahoo Finance | news | 50 | 1 | 2026-06-16 | markets/wire 2nd source (Reuters syndication), app-tracker writeups | behind Jun 16 Cursor + ChatGPT-share corroboration; non-paywalled, cross-check primary |
 | Meta Newsroom (about.fb.com) | social | 50 | 1 | 2026-06-16 | Meta/Threads/Instagram primary product + metrics announcements | primary; behind Jun 16 Threads 500M MAU / 'Your Algo'; first-party, cross-check MAU framing |
+| Canva (newsroom + connectors) | graphic | 53 | 1 | 2026-06-17 | Canva product/connector launches (Brand Kit in AI assistants: Perplexity/Claude/ChatGPT/Gemini, Magic Layers) | primary; behind Jun 17 Canva-Brand-Kit-AI card; first-party, cross-check rollout/tier gating |
+| 9to5Mac | graphic | 50 | 1 | 2026-06-17 | Apple + creative/AI tool product coverage | non-paywalled; behind Jun 17 Canva-Perplexity connector (graphic); cross-check |
+| Storyboard18 | graphic | 49 | 1 | 2026-06-17 | brand-marketing + creative-tool launches | 2nd source; behind Jun 17 Canva-Perplexity connector; cross-check |
+| Social Samosa | social | 50 | 1 | 2026-06-17 | social/ad-platform product + brand-marketing news | non-paywalled; behind Jun 17 X Ads Manager GTM beat + Canva-Perplexity connector; cross-check |
+| X Business (help/docs) | social | 50 | 1 | 2026-06-17 | X conversion tracking / Pixel + CAPI / Ads Manager setup docs | primary; behind Jun 17 X conversion-tracking card |
 
 <!-- Seed roster began as ai-tooling; web-design/paid/social/graphic rows added as
      those domains started producing. news/growth rows added 2026-06-08 on their
