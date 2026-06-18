@@ -64,6 +64,125 @@ window.AI_EDGE_CARDS = [
   },
 
   {
+    id: "card-webdev-flue-cloudflare-agent",
+    domains: ["web-dev"],
+    title: "Deploy a durable AI agent that survives crashes and lives in Slack/GitHub — with Cloudflare's Agents SDK + Flue",
+    action: "Scaffold a Flue agent (npm i @flue/runtime; npm i -D @flue/cli; npx flue init), wire a Slack/GitHub channel, wrap long work in runFiber() for crash recovery, and deploy to Cloudflare.",
+    summary: "On Jun 17 2026 Cloudflare shipped its Agents SDK (a runtime giving agents compute, state, storage and durable-execution primitives) and the Astro team released Flue 1.0 Beta, the first open-source framework on it. Flue gives you durable execution (runFiber() checkpoints + recovers), channels (Slack/GitHub/Linear/Discord), a code sandbox, a durable filesystem and dynamic workflows — a durable agent with the plumbing wired in, no lock-in.",
+    why: "Most agent prototypes lose the job on a crash, timeout or redeploy, and you hand-build the queue, recovery and channel integration yourself. Flue gives a durable agent that resumes where it stopped and is reachable in the tools the team already uses — so a client support/ops/content agent is a few clicks to the edge instead of a backend project.",
+    how: [
+      "Scaffold: <code>npm install @flue/runtime</code>, <code>npm install -D @flue/cli</code>, then <code>npx flue init</code> (or point your coding agent at <code>https://flueframework.com/start.md</code> to bootstrap).",
+      "Define the agent declaratively ('describe what it knows', not script every step) and give it one tool to start.",
+      "Wire a channel — connect Slack or GitHub so the agent is reachable where the team works.",
+      "Make work durable: wrap long/multi-step tasks in <code>runFiber()</code> so they checkpoint (<code>stash()</code>) and recover (<code>onFiberRecovered()</code>) after a crash.",
+      "Sandbox any LLM-generated code via <code>@cloudflare/codemode</code> (its own Worker isolate) instead of running it inline.",
+      "Deploy to Cloudflare (agents scale as needed), then route model calls through a gateway with a dollar cap + fallback model so a looping agent can't run away (card-webdev-ai-gateway-spend-limits)."
+    ],
+    confidence: "emerging",
+    corroboration_count: 2,
+    thread_id: "thread-durable-execution",
+    status: "active",
+    supersedes: [],
+    related: ["card-webdev-vercel-cancelable-jobs", "card-webdev-vercel-workflow-nitro", "card-ai-tooling-model-portability"],
+    sources: [
+      { label: "Cloudflare Blog — Agent harnesses and frameworks, starting with Flue (Jun 17 2026)", url: "https://blog.cloudflare.com/agents-platform-flue-sdk/" },
+      { label: "Flue — 1.0 Beta announcement", url: "https://flueframework.com/blog/flue-1-0-beta/" },
+      { label: "Flue Docs — Deploy to Cloudflare", url: "https://flueframework.com/docs/ecosystem/deploy/cloudflare/" }
+    ],
+    tags: ["cloudflare", "flue", "agents", "durable-execution", "astro", "edge"],
+    created: "2026-06-18",
+    updated: "2026-06-18"
+  },
+
+  {
+    id: "card-graphic-firefly-brand-batch-creatives",
+    domains: ["graphic"],
+    title: "Generate on-brand ad creatives that keep the product's real details — train Firefly on your brand, generate in Boards with Nano Banana 2",
+    action: "Train a Firefly Custom Model on your best on-brand creatives, then in Firefly Boards pick the Nano Banana 2 (Gemini 3.1) model, upload the real product image, and prompt it to place the product in a scene — driven by a reusable Claude brief.",
+    summary: "The slow manual loop (drop a product into Firefly, prompt, pick 1 of 10, build the scene separately, composite in Photoshop, and the AI still loses small product details) collapses into a pipeline: a brand-trained Firefly Custom Model (public beta, Mar 19 2026) makes output on-brand by default; Firefly Boards' Nano Banana 2 partner model keeps product consistency and does targeted edits while preserving the scene; and a reusable Claude brief turns a client brief into a structured prompt set.",
+    why: "AI ad-creative usually means re-describing the brand every time and re-hallucinating the product, so you composite by hand and the small details drift. Training the brand once + using a reference-aware model that holds product fidelity turns '30 minutes per image' into 'brief in → a collection of on-brand, product-accurate options out' — AI that saves time instead of making cleanup work.",
+    how: [
+      "Train the brand model: in Adobe Firefly → Custom Models (public beta), upload a representative set of your best on-brand creatives; the model stays private and preserves your stroke weight, palette, lighting and product/character features.",
+      "Build the brief once in Claude: a Claude Project holding your design principles, prompted to 'turn this client brief into 5 ad-creative prompts — each with subject, scene, lighting, composition, what to KEEP from the product reference, negative constraints, and placement aspect ratio.'",
+      "Generate in Firefly Boards: select the Nano Banana 2 (Gemini 3.1) partner model, upload the real product image(s), paste a prompt, and generate a grid.",
+      "Fix details with targeted-edit prompts ('keep the bottle label exactly, change the background to a sunlit kitchen') instead of re-compositing.",
+      "Pick winners and finish in Photoshop (partner models + generative fill available there) for last-mile retouching.",
+      "Scale it: move the proven brief into Firefly Services / GenStudio to batch-generate on-brand variations per channel (enterprise/API). Save the brief + model as the team standard."
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-graphic-canva-brand-kit-ai", "card-ai-tooling-reusable-skills", "card-graphic-color-palette"],
+    sources: [
+      { label: "Adobe Blog — Firefly expands with new AI capabilities + Custom Models (Mar 19 2026)", url: "https://blog.adobe.com/en/publish/2026/03/19/adobe-firefly-expands-video-image-creation-with-new-ai-capabilities-custom-models" },
+      { label: "Adobe Firefly — Nano Banana (Gemini) partner model", url: "https://www.adobe.com/products/firefly/partner-models/google-gemini-nano-banana.html" },
+      { label: "Adobe Firefly — Custom Models", url: "https://business.adobe.com/products/firefly-business/custom-models.html" },
+      { label: "Adobe Help — Partner models to generate images in Firefly Boards", url: "https://helpx.adobe.com/firefly/web/create-mood-boards/firefly-boards/use-non-adobe-models-to-generate-images.html" }
+    ],
+    tags: ["adobe-firefly", "custom-models", "nano-banana", "ad-creative", "meta-ads", "google-ads", "brand"],
+    created: "2026-06-18",
+    updated: "2026-06-18"
+  },
+
+  {
+    id: "card-growth-n8n-ai-agent-workflows",
+    domains: ["growth", "ai-tooling"],
+    title: "Automate marketing ops with n8n — start from a template, build ONE AI Agent node with 1–2 tools, keep flows small",
+    action: "Self-host n8n (or start a Cloud trial), import the 'Build your first AI agent' template, attach a Chat Model + Simple Memory + one tool (e.g. SerpApi or an HTTP call to your CRM), and test it with a Chat Trigger.",
+    summary: "n8n is a visual, node-based automation builder (free to self-host, or n8n Cloud) with a first-class AI Agent node: give it a Chat Model (OpenAI/Anthropic/Gemini), a Memory store and Tools (web search, HTTP, sub-workflows, your APIs) and it reasons step-by-step to do real work. The 'templates vs custom?' answer: start from the template gallery, customize, build fully custom only when nothing fits.",
+    why: "n8n is the connective tissue that turns the team's AI tools into automated marketing ops — lead capture → enrich → score → route, content repurposing, scheduled report builds — without a backend or a dev. Starting from templates and keeping flows small is what makes them maintainable instead of a fragile all-in-one that breaks halfway through.",
+    how: [
+      "Pick how to run it: self-host n8n (free, open source) or start an n8n Cloud trial.",
+      "Start from a template, not a blank canvas: import 'Build your first AI agent' from the template gallery (n8n.io/workflows/6270).",
+      "Wire the AI Agent node: attach a Chat Model (your OpenAI/Anthropic key), add Simple Memory, and give it ONE tool to start (SerpApi web search or an HTTP call to your CRM).",
+      "Test with a Chat Trigger: send a simple prompt and watch the node-by-node execution to see exactly what it called.",
+      "Keep it small: as the flow grows, extract steps into sub-workflows and call them — easier to debug, cheaper to run (prefer chained model calls over one monolith).",
+      "Add a guardrail: for customer-facing or money-touching actions, insert a manual-approval/human-review node before the action fires; never send unmasked PII to third-party models. Save the working flow as a reusable template."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    supersedes: [],
+    related: ["card-ai-tooling-reusable-skills", "card-ai-tooling-claude-workflows"],
+    sources: [
+      { label: "n8n — Build Custom AI Agents", url: "https://n8n.io/ai-agents/" },
+      { label: "n8n Docs — Build an AI workflow (intro tutorial)", url: "https://docs.n8n.io/advanced-ai/intro-tutorial/" },
+      { label: "n8n — Build your first AI agent (template)", url: "https://n8n.io/workflows/6270-build-your-first-ai-agent/" }
+    ],
+    tags: ["n8n", "automation", "ai-agents", "no-code", "workflows", "marketing-ops"],
+    created: "2026-06-18",
+    updated: "2026-06-18"
+  },
+
+  {
+    id: "card-cro-post-purchase-upsell",
+    domains: ["cro"],
+    title: "Stack a ONE-click post-purchase upsell on the order you just won — near-zero conversion risk",
+    action: "Add a Shopify post-purchase upsell app (AfterSell, Zipify OCU, Gro) that uses the native post-purchase checkout extension, and offer ONE complementary item the buyer accepts in one tap — no payment re-entry.",
+    summary: "After checkout completes, on the confirmation page, offer one complementary add-on the buyer can accept in a single tap because payment is already on file. The original order is already secured, so a declined upsell costs nothing — it can only add upside. The whole game is one-tap accept with no payment re-entry.",
+    why: "It's a high-leverage, low-risk AOV lever that stacks on the free-shipping threshold: the threshold lifts the cart before checkout (goal-gradient), the post-purchase upsell lifts the order after it (the buyer is already committed), so they don't cannibalize. Directional data: ~8–18% AOV lift (Finaloop 9.74% avg; Focus Digital 14.6% post-purchase conversion across 1,847 stores) — but requiring payment re-entry cuts conversion ~78% (GemPages), so the mechanic matters more than the offer.",
+    how: [
+      "Install a post-purchase upsell app that uses Shopify's native post-purchase checkout extension so 'accept' is one tap with no re-auth — AfterSell, Zipify OneClickUpsell (OCU), or Gro.",
+      "Offer exactly ONE complementary item priced ~30–50% of cart value (a true add-on to what they bought) — avoid multiple choices (decision fatigue).",
+      "Guarantee one-tap accept (the extension applies the change via Shopify's applyChangeset — the buyer never re-enters payment).",
+      "Cover the wallet gap: Apple Pay / Google Pay / Klarna orders skip the on-page offer, so pair it with a post-purchase upsell email.",
+      "Pick the offer with AI: ask Claude/ChatGPT to mine your order data for the most-bought-together complement and draft the offer copy.",
+      "Measure for 2–4 weeks — track AOV, take-rate AND margin together; a discounted upsell that erodes margin can be a net loss."
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-cro-free-shipping-threshold", "card-cro-show-total-cost-early", "card-cro-guest-checkout"],
+    sources: [
+      { label: "Digital Applied — Post-Purchase Upsell 2026 AOV Playbook", url: "https://www.digitalapplied.com/blog/post-purchase-upsell-thank-you-page-2026-ecommerce-playbook" },
+      { label: "AfterSell — Best Shopify checkout upsell apps to boost AOV (2026)", url: "https://www.aftersell.com/blog/best-9-shopify-checkout-upsell-apps-to-boost-aov-in-2026-aftersell" },
+      { label: "Shopify App Store — AfterSell Post-Purchase Upsell", url: "https://apps.shopify.com/aftersell" }
+    ],
+    tags: ["aov", "upsell", "post-purchase", "shopify", "checkout"],
+    created: "2026-06-18",
+    updated: "2026-06-18"
+  },
+
+  {
     id: "card-graphic-canva-brand-kit-ai",
     domains: ["graphic"],
     title: "Make AI design on-brand from the first draft — connect your Canva Brand Kit to your AI assistant",
@@ -481,7 +600,7 @@ window.AI_EDGE_CARDS = [
 
   {
     id: "card-graphic-figma-capture-layers",
-    domains: ["graphic"],
+    domains: ["web-design"],
     title: "Capture any live webpage as editable Figma layers — not a flat screenshot",
     action: "Install the Figma Capture Chrome extension, open a page, click Capture page (or Select element), then paste into Figma as editable layers.",
     summary: "Figma's official Chrome extension (Jun 11, 2026) pulls a live webpage onto your canvas as real, editable pieces — frames, text, images and vectors — instead of a flat screenshot. So you can restyle the type, recolour it to a client's palette, and reuse the layout as a starting point, rather than tracing over a picture.",
@@ -503,9 +622,9 @@ window.AI_EDGE_CARDS = [
       { label: "Figma — Release notes (Jun 11, 2026)", url: "https://www.figma.com/release-notes/" },
       { label: "Chrome Web Store — Figma Capture", url: "https://chromewebstore.google.com/detail/figma-capture/hpfddkbihgmhfbbimeoipehenhijemph" }
     ],
-    tags: ["figma", "chrome-extension", "layout", "ui"],
+    tags: ["figma", "chrome-extension", "layout", "ui", "ux"],
     created: "2026-06-13",
-    updated: "2026-06-13"
+    updated: "2026-06-18"
   },
 
   {

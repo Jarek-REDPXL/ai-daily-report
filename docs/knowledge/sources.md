@@ -22,7 +22,7 @@
 | llm-stats.com | ai-tooling | 55 | 2 | 2026-06-06 | model benchmark/price comparison | good for model-router calls |
 | digitalapplied tracker | ai-tooling | 50 | 2 | 2026-06-06 | release/figures tracker | figures directional unless confirmed |
 | blog.google | ai-tooling | 60 | 3 | 2026-06-09 | Google/Gemini primary announcements | primary source; behind Gemini 3.5 Live Translate (Jun 9) |
-| Anthropic (official) | ai-tooling | 65 | 6 | 2026-06-13 | Claude features, research, policy posts | primary source; behind Jun 10 Fable-5 retention, Jun 11 /workflows + Jun 13 Fable-5/Mythos-5 government-suspension statement |
+| Anthropic (official) | ai-tooling | 66 | 7 | 2026-06-18 | Claude features, research, policy posts | primary source; behind Jun 10 Fable-5 retention, Jun 11 /workflows + Jun 13 Fable-5/Mythos-5 government-suspension statement; reusable-Skills/workflows plays rated 5★, cross-linked from Jun 18 Firefly + n8n cards (PROMOTE per advisory) |
 | OpenAI (official) | ai-tooling | 59 | 3 | 2026-06-07 | ChatGPT/model releases, memory | primary source |
 | Bloomberg | ai-tooling | 60 | 6 | 2026-06-16 | markets, M&A, funding, infra financing, IPOs | paywalled; cross-check; behind Jun 11 Anthropic $35B TPU deal, Jun 13 Fable-5/Mythos-5 order, Jun 13 SpaceX IPO + Jun 16 Cursor deal / Nvidia $25B bond |
 | CNBC | news | 61 | 7 | 2026-06-16 | markets/tech business, sell-offs, earnings, funding, IPOs | solid 2nd source; behind Jun 8 sell-off, Jun 11 chip-rebound/Coinbase, Jun 13 Fable-5/Mythos-5 shutdown, Jun 13 SpaceX record IPO + Jun 16 IPO $85.7B greenshoe / Salesforce-Fin |
@@ -40,7 +40,7 @@
 | Semrush (blog/research) | social | 54 | 2 | 2026-06-11 | AI-search/GEO citation studies, SEO data, AI-visibility tooling | behind Jun 10 LinkedIn-AI-citations card + Jun 11 free AI Search Visibility Checker (growth); first-party dataset |
 | Google Ads blog (blog.google/ads) | paid | 55 | 1 | 2026-06-07 | Google Ads/AI Max announcements | primary source |
 | Sprout Social | social | 53 | 2 | 2026-06-07 | platform algorithm/ranking guides | refreshed annually; solid baseline; behind weekly keeper |
-| Khroma | graphic | 66 | 1 | 2026-06-13 | AI colour palette tool | behind card-graphic-color-palette — team rated 5★ (re-confirmed Jun 13 intake); reinforced via Figma-capture card cross-link; keep high |
+| Khroma | graphic | 67 | 2 | 2026-06-18 | AI colour palette tool | behind card-graphic-color-palette — team rated 5★ (re-confirmed Jun 13 + Jun 18 intake); reinforced via Figma-capture + Firefly brand-batch card cross-links; keep high |
 | Ollama (ollama.com) | ai-tooling | 54 | 2 | 2026-06-07 | run open-weight models locally (free/private) | tool primary; behind Jun 1 daily + weekly keeper |
 | Google NotebookLM | ai-tooling | 54 | 2 | 2026-06-07 | grounded, cited Q&A over your own docs | tool primary; behind Jun 4 daily + weekly keeper |
 | Artificial Analysis | ai-tooling | 56 | 3 | 2026-06-07 | model price/speed/quality comparison | load-bearing for router/verdict-kit plays |
@@ -48,7 +48,7 @@
 | OpenRouter | ai-tooling | 54 | 3 | 2026-06-13 | A/B models behind one API; model-fallback/failover routing | behind two-gate picker, router + Jun 13 model-portability card (models-array fallback) |
 | GitHub Docs (Copilot) | web-dev | 57 | 3 | 2026-06-10 | repo custom-instructions / Copilot config / CLI LSP setup | primary; behind Jun 2 daily + Jun 10 Copilot-CLI-LSP card |
 | GitHub Blog (github.blog) | web-dev | 53 | 1 | 2026-06-10 | Copilot/dev product launches + how-to | primary; behind Jun 10 Copilot CLI language-server card |
-| Cloudflare (blog + dev changelog) | web-dev | 55 | 1 | 2026-06-08 | AI Gateway/Workers product + cost-control changes | primary; behind Jun 8 spend-limits card |
+| Cloudflare (blog + dev changelog) | web-dev | 58 | 2 | 2026-06-18 | AI Gateway/Workers product + cost-control + Agents SDK/agent-platform changes | primary; behind Jun 8 spend-limits card + Jun 17 Agents SDK / Flue durable-agent beat |
 | Axios | news | 52 | 1 | 2026-06-08 | funding/valuation, climate & deals desk | good non-paywalled 2nd source; behind Helion figure |
 | company newsroom / IR (Helion etc.) | news | 50 | 1 | 2026-06-08 | primary funding/round confirmation | authoritative for the round; cross-check valuation vs press |
 | HubSpot Blog (Marketing) | growth | 57 | 2 | 2026-06-14 | AEO/GEO, content strategy, original research | strong first-party research (State of AEO); behind Jun 8 AEO content-formats + Jun 14 schema-for-AEO cards |
@@ -102,6 +102,11 @@
 | Storyboard18 | graphic | 49 | 1 | 2026-06-17 | brand-marketing + creative-tool launches | 2nd source; behind Jun 17 Canva-Perplexity connector; cross-check |
 | Social Samosa | social | 50 | 1 | 2026-06-17 | social/ad-platform product + brand-marketing news | non-paywalled; behind Jun 17 X Ads Manager GTM beat + Canva-Perplexity connector; cross-check |
 | X Business (help/docs) | social | 50 | 1 | 2026-06-17 | X conversion tracking / Pixel + CAPI / Ads Manager setup docs | primary; behind Jun 17 X conversion-tracking card |
+| Flue (flueframework.com) | web-dev | 50 | 1 | 2026-06-18 | open-source durable-agent framework (Astro team) — docs, blog, quickstart | tool primary; behind Jun 18 Flue/Cloudflare durable-agent card; beta, pin versions |
+| Adobe (blog + Firefly product/help) | graphic | 53 | 1 | 2026-06-18 | Firefly releases, Custom Models, partner models (Nano Banana), Boards/GenStudio how-to | primary; behind Jun 18 Firefly brand-batch-creative beat; note beta/enterprise tiers + credits |
+| n8n (site + docs + templates) | growth | 52 | 1 | 2026-06-18 | visual automation + AI Agent node, template gallery, advanced-AI tutorials | tool primary; behind Jun 18 n8n AI-agent-workflows card; docs are source of truth, practitioner posts directional |
+| Digital Applied (blog) | cro | 50 | 1 | 2026-06-18 | ecommerce CRO/AOV playbooks (post-purchase upsell, thank-you page) | practitioner; behind Jun 18 post-purchase-upsell card; vendor stats directional, prefer Baymard/Focus Digital anchors |
+| AfterSell | cro | 49 | 1 | 2026-06-18 | Shopify post-purchase/checkout upsell tooling + AOV roundups | tool/practitioner; behind Jun 18 post-purchase-upsell card; vendor AOV figures not independently audited — directional |
 
 <!-- Seed roster began as ai-tooling; web-design/paid/social/graphic rows added as
      those domains started producing. news/growth rows added 2026-06-08 on their
