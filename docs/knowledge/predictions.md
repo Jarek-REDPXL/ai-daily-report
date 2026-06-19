@@ -64,6 +64,9 @@
 - [2026-06-18] [graphic] A second major creative suite (Canva, Figma, Recraft, or Google/Gemini) ships brand-trained custom models PLUS multi-reference, product-consistent generation aimed at ad creative, matching Adobe Firefly Custom Models + Nano Banana 2 in Boards. — (due ~end of 2026)
 - [2026-06-18] [growth] A mainstream no-code automation platform (Zapier or Make) ships a first-class visual AI-Agent node with pluggable tools + memory comparable to n8n's AI Agent node (not just a single "AI step"). — (due ~end of Q1 2027)
 - [2026-06-18] [cro] An independently-audited dataset (Baymard, a Shopify/commerce report, or an academic/large-n study — not vendor self-report) confirms post-purchase one-click upsell AOV lift in the ~high-single-to-mid-teens % range. — (due ~Q2 2027)
+- [2026-06-19] [web-design] A mainstream CSS framework or component library ships a declarative "live custom property" helper (runtime data → CSS variables, à la Argyle's 'Prop For That'), OR the library itself reaches meaningful adoption (~1k+ GitHub stars), signaling demand for stylesheet-native reactivity. — (due ~2026-09-19)
+- [2026-06-19] [ai-tooling] GLM-5.2 (or a same-family point release) appears among the top 3 models by token volume in OpenRouter's coding/agentic category leaderboard, confirming open-weights routing went mainstream. — (due ~2026-07-19)
+- [2026-06-19] [email] A major ESP or deliverability vendor (Klaviyo, Validity/Everest, Suped, Mailchimp, or similar) ingests Gmail's Postmaster Tools "Deliverability analysis" verdict (USER_FEEDBACK/SPAM_RATE codes via the API) and surfaces it as a default alert in its dashboard. — (due ~2026-09-19)
 
 ## Resolved predictions (outcome log — newest first)
 <!-- format: [made → resolved] [domain] ✅/❌/⚖️ claim — outcome note -->

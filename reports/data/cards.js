@@ -35,6 +35,123 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdesign-prop-for-that",
+    domains: ["web-design"],
+    title: "Move slider-fill, form-validity and pointer effects out of JS and into CSS with 'Prop For That'",
+    action: "Import 'prop-for-that/auto' once, add data-props-for=\"range\" to a slider, and fill its track in pure CSS with linear-gradient(... calc(var(--live-value-pct) * 100%) ...).",
+    summary: "Adam Argyle's 'Prop For That' (Jun 13 2026) turns runtime browser data — input values, form validity, pointer/scroll position, media progress, image-extracted colors — into live --live-* CSS custom properties via a single data-props-for attribute, so reactivity that normally needs a per-frame JS loop lives in your stylesheet instead.",
+    why: "A whole class of UI (filling range tracks, gating a button on validity, pointer-follow/scroll effects) normally means hand-written requestAnimationFrame loops and event listeners just to keep a CSS variable updated. Pushing that into declarative --live-* props means fewer listener bugs, less glue code, designer-ownable interaction, and effects that degrade to a sensible static state when a signal is missing.",
+    how: [
+      "Import once — bundler: <code>import 'prop-for-that/auto'</code>; or no-build CDN: <code>import 'https://esm.sh/prop-for-that/auto'</code>.",
+      "Tag the element — slider: <code>&lt;input type=\"range\" data-props-for=\"range\" min=\"0\" max=\"100\" value=\"40\"&gt;</code>.",
+      "Style with the generated prop — fill the track with no JS: <code>background: linear-gradient(to right in oklab, var(--theme) calc(var(--live-value-pct) * 100%), var(--track) 0)</code>.",
+      "Form UX — add <code>data-props-for=\"form-state\"</code> and gate a submit button or success styling on <code>--live-all-valid</code> (dirty/touched/pristine states are exposed too).",
+      "Pointer / scroll / media — use the <code>pointer</code>, <code>scroll</code>, <code>time</code> props for window/element coordinates, video progress/FPS, or image average/accent colors.",
+      "Guard Chromium-only signals (network status, battery, geolocation) with a fallback in var()'s second arg, e.g. <code>var(--live-pointer-x, 0)</code>, so the CSS degrades gracefully."
+    ],
+    confidence: "emerging",
+    corroboration_count: 2,
+    status: "active",
+    supersedes: [],
+    related: ["card-webdesign-sibling-index", "card-webdesign-gap-decorations"],
+    sources: [
+      { label: "nerdy.dev — Prop For That (Adam Argyle, Jun 13 2026)", url: "https://nerdy.dev/prop-for-that" },
+      { label: "CSS-Tricks — Prop For That", url: "https://css-tricks.com/prop-for-that/" }
+    ],
+    tags: ["css", "custom-properties", "style-queries", "interaction", "forms", "library"],
+    created: "2026-06-19",
+    updated: "2026-06-19"
+  },
+
+  {
+    id: "card-ai-tooling-glm-5-2-route",
+    domains: ["ai-tooling"],
+    title: "Route your bulk, long-running coding/agent jobs to open-weights GLM-5.2 in Claude Code at ~1/6th the cost",
+    action: "Set ANTHROPIC_BASE_URL to the Z.ai coding endpoint + your key, map ANTHROPIC_DEFAULT_SONNET_MODEL=\"glm-5.2[1m]\", and send one real refactor/test-gen ticket to GLM-5.2 before routing your high-volume work to it.",
+    summary: "Z.ai's GLM-5.2 (shipped Jun 16–17 2026) is the new #1 open-weights model on the Artificial Analysis Intelligence Index — MIT-licensed, ~1M-token context — and reportedly matches or beats GPT-5.5 on several long-horizon coding benchmarks at roughly a sixth of the token cost. It drops into Claude Code / Cline / Cursor with two env vars, so it's a 'model router' move: bulk/long jobs to GLM-5.2, hardest agentic work stays on Opus/GPT-5.5.",
+    why: "Token cost is the tax on running agents at volume. A near-frontier open model that plugs into the harness the team already uses turns 'too expensive to run on everything' into 'cheap enough to leave running' — and the ~1M context fits whole-repo refactors and big-brief synthesis.",
+    how: [
+      "Get a key: a Z.ai GLM Coding Plan at z.ai, OR pay-as-you-go via OpenRouter (model id <code>z-ai/glm-5.2</code>, OpenAI-compatible).",
+      "Point Claude Code at it (it reads env, not .env): <code>ANTHROPIC_BASE_URL=\"https://api.z.ai/api/coding/paas/v4\"</code>, <code>ANTHROPIC_API_KEY=\"&lt;key&gt;\"</code>, and <code>ANTHROPIC_DEFAULT_SONNET_MODEL=\"glm-5.2[1m]\"</code> / <code>ANTHROPIC_DEFAULT_OPUS_MODEL=\"glm-5.2[1m]\"</code> ([1m] unlocks full context).",
+      "Long-run guardrails: raise <code>API_TIMEOUT_MS</code> and the auto-compact window so long agent loops don't truncate or time out.",
+      "OpenRouter alternative: <code>ANTHROPIC_BASE_URL=\"https://openrouter.ai/api\"</code>, <code>ANTHROPIC_AUTH_TOKEN=&lt;key&gt;</code>, <code>ANTHROPIC_MODEL=z-ai/glm-5.2</code>.",
+      "Validate on one real ticket and eye the diff against your usual model before trusting it on the critical path.",
+      "Triage: bulk refactors / test generation / batch fixes / big-context synthesis → GLM-5.2; hardest agentic/terminal tasks → keep Opus/GPT-5.5. For sensitive work, self-host the MIT weights (zai-org/GLM-5.2) or use a Western host (Fireworks, Baseten, DeepInfra) — the hosted Z.ai API routes through China-based infra."
+    ],
+    confidence: "emerging",
+    corroboration_count: 3,
+    thread_id: "thread-open-weight-price-pressure",
+    status: "active",
+    supersedes: [],
+    related: ["card-ai-tooling-model-portability", "card-ai-tooling-local-coding-agent"],
+    sources: [
+      { label: "Artificial Analysis — GLM-5.2 is the new leading open-weights model", url: "https://artificialanalysis.ai/articles/glm-5-2-is-the-new-leading-open-weights-model-on-the-artificial-analysis-intelligence-index" },
+      { label: "OpenRouter — GLM-5.2 API pricing & benchmarks", url: "https://openrouter.ai/z-ai/glm-5.2" },
+      { label: "apidog — How to use GLM-5.2 with Claude Code, Cline, and Cursor", url: "https://apidog.com/blog/glm-5-2-claude-code-cline-cursor/" }
+    ],
+    tags: ["glm-5-2", "open-weights", "claude-code", "openrouter", "model-router", "cost"],
+    created: "2026-06-19",
+    updated: "2026-06-19"
+  },
+
+  {
+    id: "card-email-postmaster-deliverability-analysis",
+    domains: ["email"],
+    title: "Read Gmail's new plain-English deliverability verdict in Postmaster Tools v2, then map it straight to a fix",
+    action: "Open postmaster.google.com/v2/sender_compliance, read the new 'Deliverability analysis' verdict for your domain, and act on the code — sunset non-openers for USER_FEEDBACK_NEGATIVE, fix auth + one-click unsubscribe for SENDER_NOT_COMPLIANT.",
+    summary: "Google quietly added a 'Deliverability analysis' panel to Postmaster Tools v2 (early Jun 2026) that states, in one sentence, whether Gmail users actually WANT your mail — backed by verdict codes (USER_FEEDBACK_POSITIVE/LOW/NEGATIVE, SPAM_RATE_HIGH, SENDER_NOT_COMPLIANT, SMTP_ERRORS_HIGH, MESSAGE_VOLUME_LOW). It grades engagement/wantedness, not just whether your auth passes.",
+    why: "It's Gmail's own first-party verdict on your domain — free, and it maps cleanly to an action — versus a third-party seed-list test that only estimates placement from outside. With Gmail/Yahoo/Microsoft now permanently rejecting rule-breakers, a 'users don't want this' verdict is lost revenue, not a soft warning. Rollout is staggered, so checking yours now is the edge.",
+    how: [
+      "Go to <code>postmaster.google.com/v2/sender_compliance</code> and sign in with a Google account that controls your sending domain's DNS.",
+      "If the domain isn't added: add the domain you authenticate with (the DKIM/SPF d= domain), publish the verification TXT record, Verify, and allow ~24h for data.",
+      "Open the Compliance Status dashboard, find the 'Deliverability analysis' panel, and read the one-sentence verdict + recommended action.",
+      "Map the verdict to a fix: SENDER_NOT_COMPLIANT → fix SPF/DKIM/DMARC From-alignment, TLS, one-click unsubscribe (RFC 8058 List-Unsubscribe-Post); SPAM_RATE_HIGH / USER_FEEDBACK_NEGATIVE → cut complaints, tighten audience.",
+      "Check the spam-rate band: under 0.10% healthy, 0.10–0.29% watch, 0.30%+ fix now. Drifting? Run a sunset flow (suppress 90–180-day non-openers) before the next big send.",
+      "Re-check in ~7 days to confirm the verdict moved (e.g. USER_FEEDBACK_NEGATIVE → POSITIVE)."
+    ],
+    confidence: "emerging",
+    corroboration_count: 2,
+    status: "active",
+    supersedes: [],
+    related: ["card-email-inbox-placement-audit", "card-email-dmarc-bimi"],
+    sources: [
+      { label: "emailexpert — Gmail will now tell you, in plain language, whether users want your email (Jun 11 2026)", url: "https://emailexpert.com/gmail-will-now-tell-you-in-plain-language-whether-users-want-your-email/" },
+      { label: "DMARC Report — Google Postmaster Tools introduces Deliverability analysis (Jun 16 2026)", url: "https://dmarcreport.com/blog/google-postmaster-tools-deliverability-analysis-feature-email-senders-guide" },
+      { label: "Suped — What is Google Postmaster Tools v2 and how do I access it", url: "https://www.suped.com/learn/email-deliverability/what-is-google-postmaster-tools-v2-and-how-do-i-access-it" }
+    ],
+    tags: ["deliverability", "gmail", "postmaster-tools", "sender-reputation", "spam-rate"],
+    created: "2026-06-19",
+    updated: "2026-06-19"
+  },
+
+  {
+    id: "card-webdev-node-security-patch",
+    domains: ["web-dev"],
+    title: "Patch Node.js now — a HIGH-severity TLS auth-bypass + WebCrypto DoS shipped Jun 18 2026",
+    action: "Run node -v, then upgrade to the matching patched line (v24.17.0 LTS / v26.3.1 / v22.23.0), redeploy every service that terminates TLS or uses WebCrypto, and confirm with node -v.",
+    summary: "Node.js shipped coordinated security releases across all active lines on Jun 18 2026 (v26.3.1 Current, v24.17.0 LTS, v22.23.0) fixing two HIGH-severity bugs — a WebCrypto AES integer overflow that remotely aborts the process (DoS, CVE-2026-48933) and a TLS hostname-normalization mismatch that can bypass wildcard-cert authentication (CVE-2026-48618) — plus MEDIUM TLS/HTTP-2/proxy fixes.",
+    why: "Any service that terminates TLS or uses WebCrypto is in scope — most production Node apps and a lot of edge/serverless functions. A wildcard-cert auth bypass is a path to MITM, and the DoS is trivially weaponizable; this is a five-minute fix with a real downside if skipped.",
+    how: [
+      "Check what you're on: <code>node -v</code>, plus CI/base images (<code>node:24</code> tags, Lambda layers, Dockerfiles).",
+      "Upgrade to the matching line: LTS → <code>nvm install 24.17.0 &amp;&amp; nvm alias default 24.17.0</code>; Current → v26.3.1; maintenance → v22.23.0; bump the Docker base tag and rebuild.",
+      "Redeploy every service that terminates TLS or uses WebCrypto/HTTP-2 (APIs, SSR servers, proxies, edge functions).",
+      "Verify: <code>node -v</code> reports the patched version and your TLS endpoints still handshake.",
+      "Automate the next one: enable Dependabot/Renovate on your engines + base images and subscribe to the Node.js security feed."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    supersedes: [],
+    related: [],
+    sources: [
+      { label: "Node.js Blog — June 2026 Security Releases", url: "https://nodejs.org/en/blog/vulnerability/june-2026-security-releases" },
+      { label: "Node.js — v24.17.0 (LTS) release notes", url: "https://nodejs.org/en/blog/release/v24.17.0" }
+    ],
+    tags: ["nodejs", "security", "cve", "tls", "webcrypto", "patch"],
+    created: "2026-06-19",
+    updated: "2026-06-19"
+  },
+
+  {
     id: "card-webdesign-figma-mcp-design-to-code",
     domains: ["web-design"],
     title: "Turn a Figma frame into code — and push code back to canvas — with the Dev Mode MCP server",
