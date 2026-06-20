@@ -67,6 +67,9 @@
 - [2026-06-19] [web-design] A mainstream CSS framework or component library ships a declarative "live custom property" helper (runtime data → CSS variables, à la Argyle's 'Prop For That'), OR the library itself reaches meaningful adoption (~1k+ GitHub stars), signaling demand for stylesheet-native reactivity. — (due ~2026-09-19)
 - [2026-06-19] [ai-tooling] GLM-5.2 (or a same-family point release) appears among the top 3 models by token volume in OpenRouter's coding/agentic category leaderboard, confirming open-weights routing went mainstream. — (due ~2026-07-19)
 - [2026-06-19] [email] A major ESP or deliverability vendor (Klaviyo, Validity/Everest, Suped, Mailchimp, or similar) ingests Gmail's Postmaster Tools "Deliverability analysis" verdict (USER_FEEDBACK/SPAM_RATE codes via the API) and surfaces it as a default alert in its dashboard. — (due ~2026-09-19)
+- [2026-06-20] [web-dev] A second major deploy/serverless platform (Vercel, Netlify, Deno Deploy, Railway, or a hyperscaler) ships disposable or short-lived agent-deploy credentials (deploy with no long-lived token, auto-expiring preview/account), following Cloudflare's Temporary Accounts for AI agents. — (due ~end of Q1 2027)
+- [2026-06-20] [paid] Google's conversion-based customer-list auto-classification ships broadly as described (auto-labeling list customer-types from ~August 2026) OR is walked back / made opt-in after advertiser feedback — i.e. the practitioner-sourced auto-classification claim resolves one way or the other. — (due ~end of Q3 2026)
+- [2026-06-20] [social] A second major short-video editor or platform (CapCut, TikTok, YouTube/Shorts, or Snap) ships in-app audience-timing insights PLUS side-by-side performance comparison with a shareable/exportable report, matching Meta's Edits update. — (due ~end of Q1 2027)
 
 ## Resolved predictions (outcome log — newest first)
 <!-- format: [made → resolved] [domain] ✅/❌/⚖️ claim — outcome note -->

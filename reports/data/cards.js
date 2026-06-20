@@ -35,6 +35,94 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdev-cloudflare-temporary-accounts",
+    domains: ["web-dev"],
+    title: "Let your AI coding agent deploy to Cloudflare with a disposable account — no long-lived API token",
+    action: "Have your agent run `wrangler deploy --temporary` for prototypes — it deploys the Worker + bindings to an isolated account it can iterate on for 60 minutes, then you claim only what's worth keeping (everything else auto-deletes).",
+    summary: "Cloudflare's Temporary Accounts for AI agents (Jun 19 2026): an agent that runs Wrangler with no credentials is prompted to rerun with --temporary, deploying the Worker and its associated resources (D1/KV/R2) to a fresh isolated preview account with short-lived creds. A human claims it within 60 minutes to keep it; otherwise it auto-deletes.",
+    why: "The old way to let an agent deploy was to hand it a long-lived API token or production credential — exactly what you don't want sitting in an autonomous tool's context. Disposable accounts make least-privilege the default: the agent never touches your real account, and abandoned experiments clean themselves up instead of becoming orphaned Workers and leaked keys.",
+    how: [
+      "Deploy with the flag: <code>wrangler deploy --temporary</code> — no prior login, no API token required (Wrangler even prompts the agent to add the flag when it has no creds).",
+      "Read the output: Wrangler returns the live preview URL plus short-lived credentials; the agent can keep redeploying for the 60-minute window.",
+      "Review the result at the preview URL — treat the temporary account as a sandbox before committing.",
+      "Claim only what's worth keeping: open the claim link, sign in/up, and convert the temporary account (Worker + D1/KV/R2 bindings) into a permanent account you own.",
+      "Let the rest expire: anything unclaimed within 60 minutes auto-deletes — no cleanup, no orphaned resources, no leaked keys.",
+      "Make it policy: default agents to <code>--temporary</code> for prototypes; reserve real, scoped tokens for the few things that ship to production."
+    ],
+    confidence: "confirmed",
+    thread_id: "thread-ai-toolchain-attack-surface",
+    status: "active",
+    supersedes: [],
+    related: ["card-webdev-rotate-ai-toolchain", "card-webdev-ai-gateway-spend-limits", "card-webdev-flue-cloudflare-agent"],
+    sources: [
+      { label: "Cloudflare Blog — Temporary Cloudflare Accounts for AI agents", url: "https://blog.cloudflare.com/temporary-accounts/" },
+      { label: "Cloudflare Developer Changelog — Temporary accounts for AI agent deployments (Jun 19 2026)", url: "https://developers.cloudflare.com/changelog/post/2026-06-19-temporary-accounts-for-agents/" }
+    ],
+    tags: ["cloudflare", "workers", "wrangler", "ai-agents", "least-privilege", "security"],
+    created: "2026-06-20",
+    updated: "2026-06-20"
+  },
+
+  {
+    id: "card-paid-google-conversion-customer-lists",
+    domains: ["paid"],
+    title: "Audit and classify your Customer Match audiences before Google auto-enrolls and auto-labels them (deadline Aug 18)",
+    action: "Open Tools → Shared Library → Audience Manager, review every conversion-based customer list, set your own customer-type classifications now, and decide per-account whether to keep or switch off conversion-based customer lists before Aug 18 2026.",
+    summary: "Google Ads is auto-enabling conversion-based customer lists for advertisers already running Enhanced Conversions + Customer Match (data processing starts Aug 18 2026), and from August will start auto-classifying list customer-types. A wrong auto-label can quietly skew Smart Bidding and targeting, so set your own classifications and opt-in/out choice before the platform sets them for you.",
+    why: "This pushes every advertiser onto first-party-data audiences by default — useful, but it removes a layer of control. If Google mislabels a list's customer type, that classification feeds bidding and targeting and can mis-steer spend without anyone noticing. The operator edge with AI/automatic platform defaults is the same as always: get in front of the default instead of reacting to it.",
+    how: [
+      "Audit now: open <b>Tools → Shared Library → Audience Manager</b> and review every conversion-based / Customer Match list — flag which are about to be auto-created or relabeled.",
+      "Set your own classifications on those lists before August, so Google adopts your labels instead of guessing the customer type.",
+      "Decide on the auto-enrollment per account: Account settings (Admin) → <b>Customer match → Conversion-based customer lists</b> → check/uncheck <b>'Turn on conversion-based customer lists'</b> and Save — opt out before Aug 18 if you don't want auto-built lists.",
+      "Re-check downstream: confirm Smart Bidding / targeting on affected campaigns still reflects the segments you intend.",
+      "Confirm the plumbing: Enhanced Conversions must be firing correctly for these lists to be accurate — verify in Conversions before relying on them."
+    ],
+    confidence: "emerging",
+    corroboration_count: 2,
+    status: "active",
+    supersedes: [],
+    related: ["card-paid-meta-advantage-plus", "card-paid-google-bidding-recalibration"],
+    sources: [
+      { label: "Search Engine Land — Google Ads automatically enrols advertisers in conversion-based customer lists", url: "https://searchengineland.com/google-ads-automatically-enrols-advertisers-in-conversion-based-customer-lists-480693" },
+      { label: "Search Engine Roundtable — Google Ads turning on conversion-based customer lists", url: "https://www.seroundtable.com/google-ads-conversion-based-customer-lists-41529.html" },
+      { label: "Google Ads Help — Set up conversion-based customer lists", url: "https://support.google.com/google-ads/answer/13471685?hl=en" }
+    ],
+    tags: ["google-ads", "customer-match", "first-party-data", "audiences", "privacy", "smart-bidding"],
+    created: "2026-06-20",
+    updated: "2026-06-20"
+  },
+
+  {
+    id: "card-social-edits-creator-analytics",
+    domains: ["social"],
+    title: "Use Meta's free Edits app as a Reels research-and-pitch desk — best-time-to-post, 3-Reel A/B, brand-ready PDF",
+    action: "In Edits, check your audience-insights peak window and post your best cut into it, then use side-by-side compare on your last 3 Reels to find the winning hook and export that comparison to a PDF for brand pitches.",
+    summary: "Meta's free Edits app (CapCut-style, wired into Instagram Reels; update Jun 17 2026) added audience insights (when followers are online), side-by-side comparison of up to 3 Reels, one-tap PDF export of that data for brands/partners, text-prompt AI restyle of clips, and longer exports (up to 15 min on iOS).",
+    why: "It collapses a multi-tool routine — edit in one app, pull analytics in another, screenshot results into a deck — into one free app that lives next to where the content posts. For anyone running organic Reels or pitching influencer/UGC work, 'best-time-to-post + side-by-side A/B + clean PDF' is a real workflow upgrade, and it reinforces the core move: design and time content for the signal the platform ranks, then prove the channel with the platform's own numbers.",
+    how: [
+      "Install Edits (free, iOS/Android) and connect your Instagram account.",
+      "Check audience insights to find your followers' peak-active window, and post your best cut into that slot instead of guessing.",
+      "Run a real A/B: pick your last three Reels (or three variants of one idea) and use side-by-side compare to see which hook/length/format won — then make more of the winner.",
+      "Export the comparison to a PDF for brand pitches or internal reporting instead of stitching screenshots.",
+      "Try AI restyle on a clip via a text prompt for fast variations — check it's available in your region and mind the regeneration limit.",
+      "Use the 15-min iOS export for longer-form vertical cuts where it fits."
+    ],
+    confidence: "confirmed",
+    corroboration_count: 2,
+    status: "active",
+    supersedes: [],
+    related: ["card-social-instagram-your-algorithm", "card-social-repurpose-claude", "card-social-instagram-sends"],
+    sources: [
+      { label: "Social Media Today — Meta adds expanded analytics and AI restyle options to Edits", url: "https://www.socialmediatoday.com/news/meta-adds-expanded-analytics-and-ai-restyle-options-to-edits/823228/" },
+      { label: "Social Samosa — Meta adds AI restyle tools & audience insights to Edits", url: "https://www.socialsamosa.com/news-2/meta-ai-restyle-tools-audience-insights-edits-app-12050187" },
+      { label: "TechCrunch — Meta's Edits app is getting an AI assistant and a desktop version", url: "https://techcrunch.com/2026/06/11/metas-edits-app-is-getting-an-ai-assistant-and-a-desktop-version/" }
+    ],
+    tags: ["instagram", "reels", "meta", "edits", "analytics", "ai-video", "creators"],
+    created: "2026-06-20",
+    updated: "2026-06-20"
+  },
+
+  {
     id: "card-webdesign-prop-for-that",
     domains: ["web-design"],
     title: "Move slider-fill, form-validity and pointer effects out of JS and into CSS with 'Prop For That'",

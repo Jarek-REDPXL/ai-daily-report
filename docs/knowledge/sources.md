@@ -25,9 +25,9 @@
 | Anthropic (official) | ai-tooling | 66 | 7 | 2026-06-18 | Claude features, research, policy posts | primary source; behind Jun 10 Fable-5 retention, Jun 11 /workflows + Jun 13 Fable-5/Mythos-5 government-suspension statement; reusable-Skills/workflows plays rated 5★, cross-linked from Jun 18 Firefly + n8n cards (PROMOTE per advisory) |
 | OpenAI (official) | ai-tooling | 59 | 3 | 2026-06-07 | ChatGPT/model releases, memory | primary source |
 | Bloomberg | ai-tooling | 60 | 6 | 2026-06-16 | markets, M&A, funding, infra financing, IPOs | paywalled; cross-check; behind Jun 11 Anthropic $35B TPU deal, Jun 13 Fable-5/Mythos-5 order, Jun 13 SpaceX IPO + Jun 16 Cursor deal / Nvidia $25B bond |
-| CNBC | news | 62 | 8 | 2026-06-19 | markets/tech business, sell-offs, earnings, funding, IPOs | solid 2nd source; behind Jun 8 sell-off, Jun 11 chip-rebound, Jun 13 SpaceX IPO, Jun 16 greenshoe + Jun 18 Intel/Apple chip claim (unconfirmed) + Cramer next-week-data note |
+| CNBC | news | 63 | 9 | 2026-06-20 | markets/tech business, sell-offs, earnings, funding, IPOs | solid 2nd source; behind Jun 8 sell-off, Jun 11 chip-rebound, Jun 13 SpaceX IPO, Jun 16 greenshoe, Jun 18 Intel/Apple chip claim (unconfirmed) + Cramer note + Jun 20 Korea chip-bonus inflation read |
 | The Information | ai-tooling | 56 | 2 | 2026-06-11 | scoops, deep tech-business, infra deals | paywalled; high signal; behind Jun 11 Anthropic data-center leases scoop |
-| Reuters | ai-tooling | 56 | 3 | 2026-06-19 | wire confirmation, policy, M&A | good 2nd source; behind EU–Meta WhatsApp order (Jun 9) + Jun 16 SpaceX–Anysphere/Cursor $60B confirmation |
+| Reuters | ai-tooling | 58 | 4 | 2026-06-20 | wire confirmation, policy, M&A | good 2nd source; behind EU–Meta WhatsApp order (Jun 9), Jun 16 SpaceX–Anysphere/Cursor $60B + Jun 19 Norway AI-in-schools near-ban |
 | arXiv | ai-tooling | 55 | 1 | 2026-06-04 | primary research papers | cite specific abstract |
 | GitHub releases | ai-tooling | 53 | 1 | 2026-06-04 | shipped tools, open-weight drops | primary source |
 | company IR / SEC filings | ai-tooling | 57 | 1 | 2026-06-04 | hard financials, S-1s | authoritative |
@@ -36,7 +36,7 @@
 | Smashing Magazine | web-design | 54 | 2 | 2026-06-11 | frontend technique deep-dives | practitioner, cross-check support %; behind Jun 11 sibling-index math-layouts piece |
 | PPC Land | paid | 58 | 5 | 2026-06-17 | ad-platform product/API changes; AI-search/GEO research | good Meta/Google changelog signal; behind Semrush LinkedIn study (Jun 10) + Jun 13 DSA→AI Max delay + Jun 17 X Ads Manager GTM/CAPI beat; PROMOTE per advisory |
 | Meta Business Help (official) | paid | 56 | 2 | 2026-06-10 | Advantage+ / ads policy / Opportunity Score | primary; Help Center lags real behavior |
-| Social Media Today | paid | 56 | 4 | 2026-06-19 | ad-platform + social product changes | behind Jun 10 Meta Opportunity Score, Jun 13 Instagram "Your Algorithm", Jun 17 X Ads Manager GTM/CAPI + Jun 18 Pinterest AI ad/shopping-tools scan; PROMOTE per ratings advisory; cross-check |
+| Social Media Today | paid | 58 | 5 | 2026-06-20 | ad-platform + social product changes | behind Jun 10 Meta Opportunity Score, Jun 13 Instagram "Your Algorithm", Jun 17 X Ads Manager GTM/CAPI, Jun 18 Pinterest scan + Jun 20 Meta Edits analytics/AI-restyle beat; PROMOTE per ratings advisory; cross-check |
 | Semrush (blog/research) | social | 54 | 2 | 2026-06-11 | AI-search/GEO citation studies, SEO data, AI-visibility tooling | behind Jun 10 LinkedIn-AI-citations card + Jun 11 free AI Search Visibility Checker (growth); first-party dataset |
 | Google Ads blog (blog.google/ads) | paid | 55 | 1 | 2026-06-07 | Google Ads/AI Max announcements | primary source |
 | Sprout Social | social | 53 | 2 | 2026-06-07 | platform algorithm/ranking guides | refreshed annually; solid baseline; behind weekly keeper |
@@ -56,7 +56,7 @@
 | Chrome for Developers (developer.chrome.com) | web-design | 58 | 2 | 2026-06-13 | Chrome release notes + web-platform explainers | primary/authoritative; behind Jun 9 gap-decorations + Jun 13 CSS-carousel (Overflow 5) cards |
 | Ideogram (official blog + GitHub docs) | graphic | 52 | 1 | 2026-06-09 | image-model releases, prompting schema | tool primary; behind Jun 9 Ideogram-4.0 JSON-layout card |
 | Omnisend (Help Center + product/blog) | email | 52 | 1 | 2026-06-09 | ESP MCP setup, lifecycle/deliverability how-to | tool primary; behind Jun 9 Omnisend-MCP card |
-| TechCrunch | news | 55 | 4 | 2026-06-19 | tech-business, security, funding/M&A, agentic products | non-paywalled; behind Jun 9 MS OSS supply-chain, Jun 11 Coinbase-for-Agents, Jun 16 ChatGPT<50% / Cursor + Jun 18 Waymo recall / Baseten $1.5B / Snap-Dotmo |
+| TechCrunch | news | 57 | 5 | 2026-06-20 | tech-business, security, funding/M&A, agentic products | non-paywalled; behind Jun 9 MS OSS supply-chain, Jun 11 Coinbase-for-Agents, Jun 16 ChatGPT<50% / Cursor, Jun 18 Waymo / Baseten / Snap-Dotmo + Jun 18 Apple Brazil app stores / Elastic–Deductive AI |
 | The Hacker News | web-dev | 50 | 1 | 2026-06-09 | CVEs, exploits, supply-chain security | good security signal; cross-check CVSS/patch dates with vendor advisory |
 | The Verge | news | 54 | 2 | 2026-06-19 | tech-business, AI policy/product, scoops | non-paywalled; behind Jun 10 Microsoft–Fable-5 restriction + Jun 18 Adobe Firefly AI-assistants-in-apps beta |
 | TipRanks | news | 49 | 1 | 2026-06-10 | daily markets/ticker moves + the why | useful for intraday direction; treat exact percentages as directional, cross-check |
@@ -71,11 +71,12 @@
 | Figma (release notes + Learn + Dev Mode MCP) | graphic | 58 | 2 | 2026-06-17 | Figma product releases + how-to (AI, capture, MCP design-to-code) | primary; behind Jun 13 capture-to-layers (graphic) + Jun 16/17 Dev Mode MCP design↔code beat (web-design) |
 | Litmus | email | 56 | 2 | 2026-06-16 | email design/motion technique, deliverability, client rendering | practitioner authority; behind Jun 13 micro-animation card + Jun 16 inbox-placement audit |
 | Ars Technica | news | 50 | 1 | 2026-06-13 | tech-policy/AI deep coverage | non-paywalled; behind Jun 13 Fable-5/Mythos-5 government shutdown |
-| Search Engine Land | paid | 50 | 1 | 2026-06-13 | Google Ads/AI + platform product changes | behind Jun 13 DSA→AI Max delay + Instagram "Your Algorithm" main-feed beat (social); practitioner, cross-check |
+| Search Engine Land | paid | 52 | 2 | 2026-06-20 | Google Ads/AI + platform product changes | behind Jun 13 DSA→AI Max delay, Instagram "Your Algorithm" + Jun 20 Google conversion-based customer-lists auto-enroll/classify beat; practitioner, cross-check |
 | Search Engine Journal | paid | 54 | 3 | 2026-06-19 | Google Ads/SEO product changes, AI-search (Bing Citation Share) | behind Jun 13 DSA migration-deadline extension + Jun 16 Google bidding-changes + Jun 19 Bing AI Citation Share scan; practitioner, cross-check |
-| Search Engine Roundtable | paid | 50 | 1 | 2026-06-16 | Google Ads/SEO product-change recaps, search-forum signal | behind Jun 16 Google bidding-changes beat (cross-checked SEJ); bot-blocks WebFetch — verify via search snippet |
+| Search Engine Roundtable | paid | 52 | 2 | 2026-06-20 | Google Ads/SEO product-change recaps, search-forum signal | behind Jun 16 Google bidding-changes + Jun 20 conversion-based customer-lists beat; bot-blocks WebFetch — verify via search snippet |
+| Google Ads Help (official) | paid | 50 | 1 | 2026-06-20 | official Google Ads feature docs + exact setup/opt-out toggles | primary; behind Jun 20 conversion-based customer-lists toggle (Account settings → Customer match) |
 | SitePoint | web-design | 50 | 1 | 2026-06-13 | frontend/CSS technique tutorials | behind Jun 13 CSS-carousel beat; practitioner, cross-check support % |
-| Engadget | news | 50 | 1 | 2026-06-13 | consumer-tech/AI product + platform changes | behind Jun 13 Instagram "Your Algorithm" beat (social); non-paywalled |
+| Engadget | news | 52 | 2 | 2026-06-20 | consumer-tech/AI product + platform changes | behind Jun 13 Instagram "Your Algorithm" + Jun 19 Norway AI-in-schools / Apple Brazil app-stores corroboration; non-paywalled |
 | CNN Business | news | 50 | 1 | 2026-06-13 | markets/business breaking | behind Jun 13 SpaceX record IPO; non-paywalled 2nd source |
 | Al Jazeera | news | 49 | 1 | 2026-06-13 | markets/business 2nd source | behind Jun 13 SpaceX IPO; cross-check exact figures |
 | The Next Web | news | 49 | 1 | 2026-06-13 | tech/AI policy + product | behind Jun 13 Fable-5/Mythos-5 shutdown coverage; non-paywalled |
@@ -100,7 +101,7 @@
 | Canva (newsroom + connectors) | graphic | 53 | 1 | 2026-06-17 | Canva product/connector launches (Brand Kit in AI assistants: Perplexity/Claude/ChatGPT/Gemini, Magic Layers) | primary; behind Jun 17 Canva-Brand-Kit-AI card; first-party, cross-check rollout/tier gating |
 | 9to5Mac | graphic | 50 | 1 | 2026-06-17 | Apple + creative/AI tool product coverage | non-paywalled; behind Jun 17 Canva-Perplexity connector (graphic); cross-check |
 | Storyboard18 | graphic | 49 | 1 | 2026-06-17 | brand-marketing + creative-tool launches | 2nd source; behind Jun 17 Canva-Perplexity connector; cross-check |
-| Social Samosa | social | 50 | 1 | 2026-06-17 | social/ad-platform product + brand-marketing news | non-paywalled; behind Jun 17 X Ads Manager GTM beat + Canva-Perplexity connector; cross-check |
+| Social Samosa | social | 52 | 2 | 2026-06-20 | social/ad-platform product + brand-marketing news | non-paywalled; behind Jun 17 X Ads Manager GTM, Canva-Perplexity connector + Jun 20 Meta Edits analytics/restyle beat; PROMOTE per advisory; cross-check |
 | X Business (help/docs) | social | 50 | 1 | 2026-06-17 | X conversion tracking / Pixel + CAPI / Ads Manager setup docs | primary; behind Jun 17 X conversion-tracking card |
 | Flue (flueframework.com) | web-dev | 50 | 1 | 2026-06-18 | open-source durable-agent framework (Astro team) — docs, blog, quickstart | tool primary; behind Jun 18 Flue/Cloudflare durable-agent card; beta, pin versions |
 | Adobe (blog + Firefly product/help) | graphic | 55 | 2 | 2026-06-19 | Firefly releases, Custom Models, partner models (Nano Banana), Boards/GenStudio + in-app AI-assistant news | primary; behind Jun 18 Firefly brand-batch-creative beat + Jun 18 Firefly-assistant-in-Photoshop/Premiere beta (news scan); note beta/enterprise tiers + credits |
