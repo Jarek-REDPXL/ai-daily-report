@@ -35,6 +35,65 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdesign-scroll-triggered-animations",
+    domains: ["web-design"],
+    title: "Fire reveal-on-scroll animations from pure CSS — no IntersectionObserver, no JavaScript",
+    action: "On the element you want to reveal, add `timeline-trigger: --reveal view() entry 100% exit 0%;` and `animation-trigger: --reveal play-forwards;` so its keyframe animation plays once when it scrolls into view.",
+    summary: "Chrome shipped scroll-TRIGGERED animations (Chrome 145/146, 2026) — the counterpart to scroll-driven animation. Scroll-driven scrubs an animation to your scroll position; scroll-triggered plays a normal, timed @keyframes animation ONCE when an element crosses a viewport threshold (CSS's own version of IntersectionObserver). Two new properties do it: timeline-trigger defines when it fires, animation-trigger binds your animation to that trigger. Action keywords: play-forwards, play-backwards, play-once, pause, reset, replay, none.",
+    why: "Reveal-on-scroll is on nearly every marketing site, and today it costs a JS bundle plus a class of bugs (observers that never disconnect, animations re-firing on every scroll jiggle). Moving it into the stylesheet makes it declarative and designer-editable — and an unsupported browser just shows the element in its final state, so it degrades cleanly.",
+    how: [
+      "Write the keyframes + animation as normal: <code>@keyframes fade-up { from { opacity:0; translate:0 1rem } to { opacity:1; translate:0 0 } }</code> and on the element <code>animation: fade-up .35s ease both;</code>.",
+      "Define the trigger: <code>timeline-trigger: --reveal view() entry 100% exit 0%;</code> — the <code>view()</code> timeline + entry/exit range decides exactly when it fires.",
+      "Bind the animation to it: <code>animation-trigger: --reveal play-forwards;</code> — now it runs once on entry instead of immediately on load.",
+      "Pick the behaviour with the action keyword: <code>play-once</code> for a one-time reveal, <code>play-forwards</code>/<code>play-backwards</code> for enter/leave pairs, plus <code>pause</code>/<code>reset</code>/<code>replay</code>.",
+      "Keep a fallback for non-Chromium: gate the JS path with <code>@supports not (animation-trigger: --x play-forwards)</code> and keep your existing <code>IntersectionObserver</code> reveal for Firefox/Safari — or just let elements render in their final state there.",
+      "Try it on one section (a testimonials row or feature grid) before removing your animation library."
+    ],
+    confidence: "emerging",
+    thread_id: "thread-modern-css-primitives",
+    status: "active",
+    supersedes: [],
+    related: ["card-webdesign-sibling-index", "card-webdesign-css-carousel", "card-webdesign-prop-for-that"],
+    sources: [
+      { label: "Chrome for Developers — CSS scroll-triggered animations are coming!", url: "https://developer.chrome.com/blog/scroll-triggered-animations" },
+      { label: "CSS-Tricks — A First Look at Scroll-Triggered Animations", url: "https://css-tricks.com/css-scroll-triggered-animations-first-look/" },
+      { label: "utilitybend — CSS Animation Triggers: playing animations on scroll without scrubbing", url: "https://utilitybend.com/blog/css-animation-triggers-playing-animations-on-scroll-without-scrubbing-its-a-match" }
+    ],
+    tags: ["css", "animation", "scroll", "progressive-enhancement"],
+    created: "2026-06-21",
+    updated: "2026-06-21"
+  },
+
+  {
+    id: "card-graphic-runway-aleph-figma-weave",
+    domains: ["graphic"],
+    title: "Re-direct footage you already shot — change the angle, swap the background, restyle from a reference — inside Figma, no reshoot",
+    action: "Drop your clip onto the Figma Weave canvas, add a reference image or type the change (new camera angle / environment / look), preview, then commit.",
+    summary: "Figma put Runway's Aleph 2.0 video model into Figma Weave (Jun 18 2026): frame-level video direction on the design canvas. It edits clips up to 30 seconds, takes a reference image to apply a look while preserving everything you didn't ask to change, and carries a keyframe edit through every frame a subject appears in — so you can change camera angle, add a character, or transform the environment without a reshoot.",
+    why: "Video is table-stakes for brand and social, and the expensive part is re-shooting for every variant, ratio, or client note. Re-directing the clip you already have — in the same Figma file as the rest of the creative — turns 'another angle / different background / on-brand restyle' from a production day into a canvas edit the designer can do.",
+    how: [
+      "Open Figma Weave and drop your existing clip (or a generated one) onto the canvas.",
+      "Restyle from a reference: add a reference image and prompt the look — Aleph 2.0 applies it while keeping untouched elements intact (match a campaign's grade/palette).",
+      "Re-direct the scene: prompt a new camera angle, a swapped environment, or an added element instead of scheduling a reshoot.",
+      "Use keyframe edits when a change needs to track a subject across the shot — set it once and let it carry through frames.",
+      "Preview each change in the connected workflow before committing; iterate on the parts that miss.",
+      "Check cost first: Figma says pricing is moving to scale with input length — confirm current credits/pricing before batch-running client variants, and review outputs for artifacts + likeness/rights when people are involved."
+    ],
+    confidence: "emerging",
+    corroboration_count: 2,
+    status: "active",
+    supersedes: [],
+    related: ["card-graphic-firefly-brand-batch-creatives"],
+    sources: [
+      { label: "Figma Blog — Direct Every Frame with Runway Aleph 2.0, Now in Figma Weave", url: "https://www.figma.com/blog/direct-every-frame-with-runway-aleph-2/" },
+      { label: "Runway — Aleph 2.0", url: "https://runwayml.com/product/aleph-2" }
+    ],
+    tags: ["video", "ai-video", "figma", "runway", "brand"],
+    created: "2026-06-21",
+    updated: "2026-06-21"
+  },
+
+  {
     id: "card-webdev-cloudflare-temporary-accounts",
     domains: ["web-dev"],
     title: "Let your AI coding agent deploy to Cloudflare with a disposable account — no long-lived API token",
@@ -950,29 +1009,32 @@ window.AI_EDGE_CARDS = [
     id: "card-growth-ai-visibility-check",
     domains: ["growth"],
     title: "Check today whether ChatGPT and Gemini actually mention your brand (free, no login)",
-    action: "Paste your domain into Semrush's free AI Search Visibility Checker, read the 0–100 score, and grab the high-volume prompts where you're not mentioned.",
-    summary: "AEO (Answer Engine Optimization — getting named in AI answers) finally has a free measuring tool. Semrush's AI Search Visibility Checker takes just your domain (no sign-up) and returns a 0–100 visibility score, which engines mention you (ChatGPT, SearchGPT, Gemini, Google AI, Perplexity), how you compare to competitors, the prompts that trigger your brand, and — most useful — the popular prompts where you're invisible. That last list is your ready-made fix-list.",
-    why: "AEO advice is only worth acting on if you can see whether it worked — and buyers increasingly start at an AI answer, where most brands don't show up. This closes the loop: measure where you're absent, fix exactly those pages, then re-measure.",
+    action: "Paste your domain into Semrush's free AI Search Visibility Checker, read the 0–100 score, grab the high-volume prompts where you're not mentioned — and check your AI Citation Share in Bing Webmaster Tools. Skip llms.txt: 97% of files go unread.",
+    summary: "AEO (Answer Engine Optimization — getting named in AI answers) is measurable for free. Semrush's AI Search Visibility Checker takes just your domain (no sign-up) and returns a 0–100 score across ChatGPT/SearchGPT/Gemini/Google AI/Perplexity, competitor comparison, the prompts that trigger your brand, and the popular prompts where you're invisible (your fix-list). NEW (Jun 19 2026): Bing Webmaster Tools shipped an AI Citation Share report (preview, global) — the % of AI citations your site wins for a grounding query vs competitors (Bing/Copilot only). And NEW data (Ahrefs, 137k domains, Jun 15 2026) shows llms.txt is not a visibility lever: 97% of files got zero requests; spend the time on structure instead.",
+    why: "AEO advice is only worth acting on if you can see whether it worked — and buyers increasingly start at an AI answer, where most brands don't show up. This closes the loop: measure where you're absent, fix exactly those pages, then re-measure. Part of that is NOT wasting the hour on llms.txt — the data says crawlers ignore it.",
     how: [
       "Open <b>Semrush's free AI Search Visibility Checker</b>, enter your (or a client's) domain, and hit <b>Check Visibility</b>.",
       "Read the <b>0–100 score</b> and platform coverage to see which AI engines name you and which don't.",
+      "Turn on <b>AI Citation Share</b> in <b>Bing Webmaster Tools → AI Performance</b> (preview) — read your share of AI citations per grounding query and the competitor comparison (Bing/Copilot only; Google Search Console still has no citation metric).",
       "Jump to the <b>opportunities</b> — popular prompts where competitors get named and you don't; that's your prioritized target list.",
       "For each gap, run the AEO formatting pass on the most relevant money page (intent-matched title, a one-sentence answer up top, a list/table, an original first-party stat, and FAQ schema + a last-updated date).",
+      "Don't invest in <b>llms.txt</b> for visibility (97% of files go unread — Ahrefs); leave any existing file in place but reallocate the effort to clean HTML structure + internal links.",
       "Re-run in ~2–4 weeks to confirm new mentions; for ongoing tracking use Ahrefs Brand Radar or Semrush's AI Toolkit, and read a few real AI answers by hand to see how you're described."
     ],
     confidence: "emerging",
-    status: "active",
     thread_id: "thread-answer-engine-optimization",
+    status: "active",
     supersedes: [],
-    related: ["card-growth-aeo-content-formats", "card-social-linkedin-ai-citations"],
+    related: ["card-growth-aeo-content-formats", "card-growth-schema-aeo", "card-social-linkedin-ai-citations"],
     sources: [
       { label: "Semrush — Free AI Search Visibility Checker", url: "https://www.semrush.com/free-tools/ai-search-visibility-checker/" },
-      { label: "Semrush — AI Visibility features", url: "https://www.semrush.com/kb/1626-ai-visibility-features" },
+      { label: "Search Engine Journal — SEO Pulse: AI Citation Share ships, new data doubts llms.txt", url: "https://www.searchenginejournal.com/seo-pulse-ai-citation-share-ships-new-data-doubts-llms-txt/579942/" },
+      { label: "Ahrefs — We analyzed 137K sites: 97% of llms.txt files never get read", url: "https://ahrefs.com/blog/llmstxt-study/" },
       { label: "Ahrefs — Brand Radar", url: "https://ahrefs.com/brand-radar" }
     ],
-    tags: ["aeo", "geo", "ai-search", "measurement"],
+    tags: ["aeo", "geo", "ai-search", "measurement", "llms-txt", "bing"],
     created: "2026-06-11",
-    updated: "2026-06-13"
+    updated: "2026-06-21"
   },
 
   {
@@ -2034,28 +2096,32 @@ window.AI_EDGE_CARDS = [
     id: "card-cro-free-shipping-threshold",
     domains: ["cro", "web-design"],
     title: "Add a free-shipping threshold + progress bar to lift average order value",
-    action: "Set a free-shipping minimum modestly above your current average order value and show a 'you're $X away from free shipping' bar in the cart.",
-    summary: "Shipping cost is the top checkout objection (Baymard), and free shipping is the incentive shoppers want most — ~81% say it makes them more likely to buy and ~51% add items specifically to qualify (Capital One Shopping), so a threshold turns it into an AOV lever via the 'goal-gradient' effect (people push harder as a reward gets closer). Pair it with showing the full price early (card-cro-show-total-cost-early): the same bar that nudges basket size also removes the shipping surprise. HONEST FLAG: the popular 'set it ~15–25% above AOV for ~15–30% AOV lift' figures are well-supported starting points to TEST on your store, not guarantees.",
-    why: "Free shipping removes the #1 objection AND nudges basket size — but only if the threshold is reachable. Too high and it deflates; too low and you give away margin. The mechanism is well-supported; the exact number is yours to find.",
+    action: "Set the threshold by margin, not a round number: keep candidate thresholds only where (Threshold − AOV) × gross-margin% covers the shipping you'd absorb — then set a separate, lower mobile threshold and show a 'you're $X away' bar.",
+    summary: "Shipping cost is the top checkout objection (Baymard), and free shipping is the incentive shoppers want most — ~81% say it makes them more likely to buy and ~51% add items specifically to qualify (Capital One Shopping), so a threshold turns it into an AOV lever via the 'goal-gradient' effect (people push harder as a reward gets closer). The PROGRESS BAR is the highest-ROI single AOV widget; the threshold is just the target it points at. Pick the number by contribution margin, not the '~15–25% above AOV' folklore — and because mobile AOV runs ~20–30% lower than desktop, set mobile its own lower bar. Pair with showing the full price early (card-cro-show-total-cost-early). HONEST FLAG: the specific percentages are well-supported starting points to TEST, not guarantees.",
+    why: "Free shipping removes the #1 objection AND nudges basket size — but a threshold that lifts AOV while you eat shipping can be a NET LOSS, and a single blended bar sets a goal most mobile shoppers (your largest traffic) can't reach. The mechanism (goal-gradient) is settled; the right number is a margin calculation and a device segmentation, not a vibe.",
     how: [
-      "Pull your real AOV (last 90 days) and set the threshold ~15–25% above it (e.g. AOV $65 → ~$75–$85) so the largest cluster of orders is one nudge away.",
-      "Show a live progress bar in the cart / mini-cart: 'You're $12 away from free shipping', with one relevant low-cost add-on suggested beside it.",
-      "AI step: export your order-value distribution and ask Claude/ChatGPT for the threshold that captures the most 'one-nudge-away' orders, and to draft the bar + cart copy.",
+      "Pull the inputs split by device: last-90-day AOV, gross-margin %, and real average shipping cost per order (mobile vs desktop).",
+      "Run the margin test, not the round number: for a candidate threshold, compute <code>(Threshold − AOV) × gross-margin%</code> and keep only thresholds where that covers the shipping you'd absorb on a nudged order.",
+      "Set a separate mobile threshold ~20–30% below your desktop number (mobile AOV runs ~20–30% lower), so phone shoppers see a goal they can actually hit.",
+      "Show a live progress bar in cart / mini-cart: 'You're $12 away from free shipping', with one relevant low-cost add-on beside it — that widget is the lift.",
+      "AI step: export your order-value distribution and ask Claude/ChatGPT for the threshold that captures the most 'one-nudge-away' orders at or above your margin floor, per device, and to draft the bar copy.",
       "Measure AOV, conversion AND shipping-cost margin for 3–4 weeks before locking the number — treat the percentages as a hypothesis, not a setting.",
       "Re-peg it in 2026: Deloitte's retail survey found 67% of execs plan to RAISE their free-shipping threshold this year to defend margins against carrier/tariff costs — if yours is a year old, re-check it against current AOV and re-run the margin math."
     ],
     confidence: "emerging",
     status: "active",
     supersedes: [],
-    related: ["card-cro-show-total-cost-early", "card-cro-cross-sell-bundles"],
+    related: ["card-cro-show-total-cost-early", "card-cro-cross-sell-bundles", "card-cro-post-purchase-upsell"],
     sources: [
+      { label: "Digital Applied — Free Shipping Threshold Strategy 2026 (contribution-margin method)", url: "https://www.digitalapplied.com/blog/free-shipping-threshold-strategy-2026-ecommerce-playbook" },
+      { label: "Growth Suite — Free Shipping Threshold Strategy to Increase AOV (mobile vs desktop)", url: "https://www.growthsuite.net/resources/shopify-upsell-cross-sell/increase-average-order-value/free-shipping-threshold" },
       { label: "Baymard Institute — Cart Abandonment Rate (shipping cost / free shipping)", url: "https://baymard.com/lists/cart-abandonment-rate" },
       { label: "Capital One Shopping — Free Shipping Statistics 2026", url: "https://capitaloneshopping.com/research/free-shipping-statistics/" },
       { label: "Deloitte — 2026 Retail Industry Outlook (free-shipping threshold reset)", url: "https://www.deloitte.com/us/en/insights/industry/retail-distribution/retail-distribution-industry-outlook.html" }
     ],
-    tags: ["aov", "shipping", "cart"],
+    tags: ["aov", "shipping", "cart", "margin", "mobile"],
     created: "2026-06-14",
-    updated: "2026-06-15"
+    updated: "2026-06-21"
   },
   {
     id: "card-cro-price-anchoring",

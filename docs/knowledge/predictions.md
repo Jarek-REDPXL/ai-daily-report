@@ -70,6 +70,9 @@
 - [2026-06-20] [web-dev] A second major deploy/serverless platform (Vercel, Netlify, Deno Deploy, Railway, or a hyperscaler) ships disposable or short-lived agent-deploy credentials (deploy with no long-lived token, auto-expiring preview/account), following Cloudflare's Temporary Accounts for AI agents. — (due ~end of Q1 2027)
 - [2026-06-20] [paid] Google's conversion-based customer-list auto-classification ships broadly as described (auto-labeling list customer-types from ~August 2026) OR is walked back / made opt-in after advertiser feedback — i.e. the practitioner-sourced auto-classification claim resolves one way or the other. — (due ~end of Q3 2026)
 - [2026-06-20] [social] A second major short-video editor or platform (CapCut, TikTok, YouTube/Shorts, or Snap) ships in-app audience-timing insights PLUS side-by-side performance comparison with a shareable/exportable report, matching Meta's Edits update. — (due ~end of Q1 2027)
+- [2026-06-21] [web-design] CSS scroll-triggered animations (`animation-trigger` / `timeline-trigger`) ship in a 2nd browser engine (Firefox or Safari), putting native trigger-once-on-scroll on the path to Baseline. — (due ~end of 2026)
+- [2026-06-21] [graphic] A 2nd major design/creative tool (Adobe Firefly/Premiere, Canva, Recraft, or Google/Gemini) ships in-canvas frame-level AI video DIRECTION — edit a 20s+ existing clip's camera angle/environment + restyle-from-reference with subject-tracking keyframes (not just text-to-video generation), matching Runway Aleph 2.0 in Figma Weave. — (due ~end of Q1 2027)
+- [2026-06-21] [growth] Google ships a first-party AI-citation / answer-visibility metric (in Search Console or a new surface) reporting how often a site is cited in AI Overviews/AI Mode, matching Bing Webmaster Tools' AI Citation Share. — (due ~end of Q1 2027)
 
 ## Resolved predictions (outcome log — newest first)
 <!-- format: [made → resolved] [domain] ✅/❌/⚖️ claim — outcome note -->
