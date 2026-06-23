@@ -35,6 +35,98 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdev-vercel-websockets",
+    domains: ["web-dev"],
+    title: "Ship realtime (chat, presence, AI streaming) from your existing Vercel Functions — no separate backend",
+    action: "Add one `api/ws.ts` that exports an HTTP server wrapping a `WebSocketServer`, deploy, and connect from the client with `new WebSocket('wss://your-domain.com/api/ws')`.",
+    summary: "Vercel moved WebSocket support for Functions into public beta (Jun 22 2026): a Function can hold a two-way WebSocket open using standard libraries (ws, Socket.IO, Hono, Express) with no extra config — the connection pins to one Fluid-compute instance and bills on Active CPU, so an idle open socket costs almost nothing. Closes the years-old gap that forced a second always-on box (Render/Railway/a dedicated Socket.IO server) onto every realtime build.",
+    why: "Realtime — live chat, presence cursors, collaborative editing, token-by-token AI streaming — was the #1 reason to bolt an always-on backend onto an otherwise-static client build. Keeping it all on Vercel deletes a moving part out of every realtime quote, and idle-time pricing means a chat widget open all day doesn't bleed compute the way a long-lived container does.",
+    how: [
+      "Confirm Fluid compute is on: default for projects created on/after Apr 23 2025; for older projects, Settings → Functions → Fluid compute → Enable.",
+      "Install the lib: <code>npm i ws</code> (or <code>npm i socket.io socket.io-client</code>).",
+      "Create <code>api/ws.ts</code> that builds an HTTP server and exports it: <code>const server = http.createServer(); const wss = new WebSocketServer({ server }); wss.on('connection', ws => ws.on('message', d => ws.send(d))); export default server;</code>.",
+      "Add client reconnect logic — connections close at the function's max duration, so wrap the <code>new WebSocket(...)</code> in a <code>connect()</code> that re-fires on <code>close</code> with exponential backoff (cap ~30s).",
+      "Move shared state out of memory: instances aren't sticky and a new deploy spins fresh ones, so put rooms/presence/pub-sub in Redis from the Vercel Marketplace, not in-process variables.",
+      "Deploy and test with <code>wscat -c wss://your-domain.com/api/ws</code>; for Next.js use the experimental <code>experimental_upgradeWebSocket()</code> from <code>@vercel/functions</code> in an <code>app/api/ws/route.ts</code> GET handler."
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-webdev-vercel-cancelable-jobs", "card-webdev-vercel-workflow-nitro"],
+    sources: [
+      { label: "Vercel Changelog — WebSocket support is now in Public Beta", url: "https://vercel.com/changelog/websocket-support-is-now-in-public-beta" },
+      { label: "Vercel Docs — WebSockets on Functions", url: "https://vercel.com/docs/functions/websockets" },
+      { label: "Vercel KB — Do Vercel Functions support WebSocket connections?", url: "https://vercel.com/kb/guide/do-vercel-serverless-functions-support-websocket-connections" }
+    ],
+    tags: ["vercel", "websockets", "realtime", "serverless", "fluid-compute"],
+    created: "2026-06-23",
+    updated: "2026-06-23"
+  },
+
+  {
+    id: "card-email-dmarcbis-np",
+    domains: ["email"],
+    title: "Close the phantom-subdomain spoofing hole in one DNS edit — add DMARCbis's np=reject tag",
+    action: "In your `_dmarc` TXT record (org domain, with an enforcing p= policy), append `np=reject` and remove any deprecated `pct=`/`rf=`/`ri=` tags.",
+    summary: "DMARC is now a full IETF standard — RFC 9989 (2026, the 'DMARCbis' upgrade) obsoletes the 2015 RFC 7489. The headline operator change is the np= tag (Non-existent-subdomain Policy): np=reject makes inboxes reject mail from subdomains that don't exist in your DNS — the exact marketing-typo.yourbrand.com phantoms spoofers ride to borrow your reputation. It also retires pct/rf/ri (use t=y for testing).",
+    why: "Gmail, Yahoo and Microsoft reject non-compliant bulk mail at the SMTP level in 2026, so deliverability and subscriber LTV ride on airtight auth. A spoofer abusing a subdomain you never created can torch your domain reputation and bin your real campaigns — np=reject closes that hole in one record edit, and it's prerequisite-grade before any BIMI logo play.",
+    how: [
+      "Pull your current record: <code>dig TXT _dmarc.yourbrand.com +short</code> (or a free DMARC lookup) and copy the existing string.",
+      "Confirm your base policy is enforcing — np only takes effect at the organizational domain, so make sure you already have <code>p=quarantine</code> or <code>p=reject</code> (still on p=none? keep monitoring first, but you can safely add np now).",
+      "Add the tag: append <code>np=reject</code> — e.g. <code>v=DMARC1; p=quarantine; np=reject; rua=mailto:reports@yourbrand.com; fo=1</code> (rejects non-existent-subdomain mail while real sending subdomains stay under p/sp).",
+      "Remove deprecated tags: delete any <code>pct=</code>, <code>rf=</code> or <code>ri=</code>; if you used pct= for a staged rollout, switch to <code>t=y</code> (testing mode).",
+      "Publish and validate the record through a DMARC checker so it parses cleanly.",
+      "Watch your <code>rua</code> aggregate reports for 3–7 days to confirm legitimate subdomain mail still authenticates before tightening p further."
+    ],
+    confidence: "confirmed",
+    corroboration_count: 4,
+    status: "active",
+    supersedes: [],
+    related: ["card-email-dmarc-bimi", "card-email-postmaster-deliverability-analysis", "card-email-inbox-placement-audit"],
+    sources: [
+      { label: "IETF — RFC 9989 (DMARCbis)", url: "https://www.rfc-editor.org/info/rfc9989" },
+      { label: "Validity — DMARC's New Upgrade Explained", url: "https://www.validity.com/blog/setting-the-standard-dmarcs-new-upgrade-explained/" },
+      { label: "dmarcwise — DMARCbis explained", url: "https://dmarcwise.io/blog/upcoming-dmarc-bis" },
+      { label: "Suped — List of DMARC tags and their meanings", url: "https://www.suped.com/learn/dmarc/list-of-dmarc-tags-and-their-meanings" }
+    ],
+    tags: ["deliverability", "dmarc", "authentication", "spoofing", "dns"],
+    created: "2026-06-23",
+    updated: "2026-06-23"
+  },
+
+  {
+    id: "card-ai-tooling-claude-loop-goal",
+    domains: ["ai-tooling"],
+    title: "Define an agent loop once and let Claude Code run it unattended with /loop and /goal",
+    action: "In Claude Code, run `/goal <task> until <provable done-when condition> or stop after N turns` for a work-until-done loop, or `/loop 5m <check>` for a recurring poll.",
+    summary: "Two commands already shipping in Claude Code turn babysitting into automation: /loop re-runs a prompt on a schedule (a cron interval like 5m, or self-paced when you give none), and /goal keeps a session working across turns until a SEPARATE cheap evaluator model (defaults to Haiku) confirms your 'done when' condition holds. This is the runnable substrate behind the Jun 17 2026 'loop engineering' technique (Claire Vo / ChatPRD, echoed by Addy Osmani's four loop types: heartbeat, cron, hook, goal).",
+    why: "The team burns real hours babysitting deploys, chasing stale PRs and re-running test/lint cycles by hand — exactly the toil these loops absorb. A /goal loop with a cheap separate evaluator turns 'implement this design doc until the acceptance tests pass' into a walk-away task, with zero new tools or infra.",
+    how: [
+      "Confirm you're current: <code>claude --version</code> — /loop needs v2.1.72+, /goal needs v2.1.139+; accept the workspace-trust dialog (/goal runs through hooks).",
+      "Quick poll loop: <code>/loop 5m check if the deploy finished and tell me what happened</code> — Claude converts 5m to cron and returns a job ID (Esc to stop while it waits).",
+      "Self-paced loop: <code>/loop check whether CI passed and address any review comments</code> (no interval) — Claude picks a 1-min-to-1-hr delay per iteration and can end itself once provably done.",
+      "Work-until-done goal: <code>/goal all tests in test/auth pass and the lint step is clean or stop after 20 turns</code> — a fast model checks the condition after each turn and feeds any 'no' back as guidance (bare <code>/goal</code> shows turns/tokens; <code>/goal clear</code> aborts).",
+      "Make a reusable default loop: create <code>.claude/loop.md</code> with maintenance instructions ('check the release PR; if CI is red, pull the failing log, diagnose, push a minimal fix') so a bare <code>/loop</code> runs it.",
+      "Manage jobs in plain English ('what scheduled tasks do I have?' / 'cancel the deploy check'); for schedule-sensitive runs pick a minute that isn't :00/:30 to dodge the jitter offset."
+    ],
+    confidence: "emerging",
+    corroboration_count: 3,
+    thread_id: "thread-multi-agent-orchestration",
+    status: "active",
+    supersedes: [],
+    related: ["card-ai-tooling-codex-goal", "card-ai-tooling-claude-workflows"],
+    sources: [
+      { label: "Claude Code Docs — Run prompts on a schedule (/loop)", url: "https://code.claude.com/docs/en/scheduled-tasks" },
+      { label: "Claude Code Docs — Keep Claude working toward a goal (/goal)", url: "https://code.claude.com/docs/en/goal" },
+      { label: "Lenny's Newsletter — How to design AI agent loops", url: "https://www.lennysnewsletter.com/p/how-to-design-ai-agent-loops-schedules" },
+      { label: "ChatPRD — How I AI: designing AI agent loops", url: "https://www.chatprd.ai/how-i-ai/how-i-ai-designing-ai-agent-loops-in-claude-code-and-codex" }
+    ],
+    tags: ["claude-code", "agents", "automation", "loops", "autonomous"],
+    created: "2026-06-23",
+    updated: "2026-06-23"
+  },
+
+  {
     id: "card-webdesign-scroll-triggered-animations",
     domains: ["web-design"],
     title: "Fire reveal-on-scroll animations from pure CSS — no IntersectionObserver, no JavaScript",

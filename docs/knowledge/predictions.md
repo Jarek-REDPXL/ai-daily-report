@@ -73,6 +73,10 @@
 - [2026-06-21] [web-design] CSS scroll-triggered animations (`animation-trigger` / `timeline-trigger`) ship in a 2nd browser engine (Firefox or Safari), putting native trigger-once-on-scroll on the path to Baseline. — (due ~end of 2026)
 - [2026-06-21] [graphic] A 2nd major design/creative tool (Adobe Firefly/Premiere, Canva, Recraft, or Google/Gemini) ships in-canvas frame-level AI video DIRECTION — edit a 20s+ existing clip's camera angle/environment + restyle-from-reference with subject-tracking keyframes (not just text-to-video generation), matching Runway Aleph 2.0 in Figma Weave. — (due ~end of Q1 2027)
 - [2026-06-21] [growth] Google ships a first-party AI-citation / answer-visibility metric (in Search Console or a new surface) reporting how often a site is cited in AI Overviews/AI Mode, matching Bing Webmaster Tools' AI Citation Share. — (due ~end of Q1 2027)
+- [2026-06-23] [web-dev] Vercel's WebSocket support for Functions exits beta to GA AND Next.js's `experimental_upgradeWebSocket` loses the `experimental_` prefix. — (due ~end of Q3 2026)
+- [2026-06-23] [email] A major mailbox provider (Gmail, Yahoo, or Microsoft) publishes updated bulk-sender guidance that explicitly references RFC 9989 / the `np` tag (recommending or rewarding adoption). — (due ~2026-09-30)
+- [2026-06-23] [ai-tooling] Anthropic relaxes the 7-day expiry on Claude Code session-scoped recurring tasks (`/loop`) OR ships an in-CLI renew command — closing the friction gap to durable cloud Routines. — (due ~end of Q3 2026)
+- [2026-06-23] [news] Within ~2 weeks, ≥1 US AI-megacap management team or major sell-side note explicitly defends AI-capex ROI in response to the Jun 22–23 selloff (earnings call, public memo, or flagged analyst note) — the market's question shifting from "can they build it?" to "will it pay off?" — (due ~2026-07-07)
 
 ## Resolved predictions (outcome log — newest first)
 <!-- format: [made → resolved] [domain] ✅/❌/⚖️ claim — outcome note -->

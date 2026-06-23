@@ -25,7 +25,7 @@
 | Anthropic (official) | ai-tooling | 66 | 7 | 2026-06-18 | Claude features, research, policy posts | primary source; behind Jun 10 Fable-5 retention, Jun 11 /workflows + Jun 13 Fable-5/Mythos-5 government-suspension statement; reusable-Skills/workflows plays rated 5★, cross-linked from Jun 18 Firefly + n8n cards (PROMOTE per advisory) |
 | OpenAI (official) | ai-tooling | 59 | 3 | 2026-06-07 | ChatGPT/model releases, memory | primary source |
 | Bloomberg | ai-tooling | 60 | 6 | 2026-06-16 | markets, M&A, funding, infra financing, IPOs | paywalled; cross-check; behind Jun 11 Anthropic $35B TPU deal, Jun 13 Fable-5/Mythos-5 order, Jun 13 SpaceX IPO + Jun 16 Cursor deal / Nvidia $25B bond |
-| CNBC | news | 63 | 9 | 2026-06-20 | markets/tech business, sell-offs, earnings, funding, IPOs | solid 2nd source; behind Jun 8 sell-off, Jun 11 chip-rebound, Jun 13 SpaceX IPO, Jun 16 greenshoe, Jun 18 Intel/Apple chip claim (unconfirmed) + Cramer note + Jun 20 Korea chip-bonus inflation read |
+| CNBC | news | 64 | 10 | 2026-06-23 | markets/tech business, sell-offs, earnings, funding, IPOs | solid 2nd source; behind Jun 8 sell-off, Jun 11 chip-rebound, Jun 13 SpaceX IPO, Jun 16 greenshoe, Jun 18 Intel/Apple chip claim (unconfirmed) + Cramer note + Jun 20 Korea chip-bonus inflation read + Jun 23 global tech rout (SpaceX bond/Alphabet exits) |
 | The Information | ai-tooling | 56 | 2 | 2026-06-11 | scoops, deep tech-business, infra deals | paywalled; high signal; behind Jun 11 Anthropic data-center leases scoop |
 | Reuters | ai-tooling | 58 | 4 | 2026-06-20 | wire confirmation, policy, M&A | good 2nd source; behind EU–Meta WhatsApp order (Jun 9), Jun 16 SpaceX–Anysphere/Cursor $60B + Jun 19 Norway AI-in-schools near-ban |
 | arXiv | ai-tooling | 55 | 1 | 2026-06-04 | primary research papers | cite specific abstract |
@@ -66,7 +66,7 @@
 | CoinDesk | news | 50 | 1 | 2026-06-11 | crypto/agentic-payments, fintech product | behind Jun 11 Coinbase-for-Agents; cross-check figures |
 | SiliconANGLE | news | 50 | 1 | 2026-06-11 | enterprise tech/AI product launches | non-paywalled; behind Jun 11 Coinbase-for-Agents |
 | Motley Fool | news | 49 | 1 | 2026-06-11 | markets context/ticker analysis | directional; useful for the "why" behind a move, cross-check exact figures |
-| Vercel (changelog + docs) | web-dev | 56 | 2 | 2026-06-16 | framework/runtime product changes, Workflow/AI Gateway | primary; behind Jun 13 Workflow-SDK-on-Nitro-v3 card + Jun 16 30-min Functions / inflight-cancellation beat |
+| Vercel (changelog + docs) | web-dev | 58 | 3 | 2026-06-23 | framework/runtime product changes, Workflow/AI Gateway, Functions WebSockets | primary; behind Jun 13 Workflow-SDK-on-Nitro-v3 card + Jun 16 30-min Functions / inflight-cancellation beat + Jun 23 WebSocket-public-beta realtime beat (changelog + docs + KB) |
 | workflow-sdk.dev (docs) | web-dev | 50 | 1 | 2026-06-13 | Workflow SDK directives/setup ("use workflow"/"use step") | tool docs; behind Jun 13 durable-workflows card |
 | Figma (release notes + Learn + Dev Mode MCP) | graphic | 60 | 3 | 2026-06-21 | Figma product releases + how-to (AI, capture, MCP design-to-code, Weave AI video) | primary; behind Jun 13 capture-to-layers (graphic) + Jun 16/17 Dev Mode MCP design↔code beat (web-design) + Jun 21 Runway Aleph 2.0 in Weave beat |
 | Runway (runwayml.com) | graphic | 50 | 1 | 2026-06-21 | AI video model releases (Aleph 2.0), capabilities/specs | tool primary; behind Jun 21 Runway-Aleph-in-Figma-Weave card; confirm commercial-use + pricing per plan |
@@ -78,7 +78,7 @@
 | Search Engine Roundtable | paid | 52 | 2 | 2026-06-20 | Google Ads/SEO product-change recaps, search-forum signal | behind Jun 16 Google bidding-changes + Jun 20 conversion-based customer-lists beat; bot-blocks WebFetch — verify via search snippet |
 | Google Ads Help (official) | paid | 50 | 1 | 2026-06-20 | official Google Ads feature docs + exact setup/opt-out toggles | primary; behind Jun 20 conversion-based customer-lists toggle (Account settings → Customer match) |
 | SitePoint | web-design | 50 | 1 | 2026-06-13 | frontend/CSS technique tutorials | behind Jun 13 CSS-carousel beat; practitioner, cross-check support % |
-| Engadget | news | 52 | 2 | 2026-06-20 | consumer-tech/AI product + platform changes | behind Jun 13 Instagram "Your Algorithm" + Jun 19 Norway AI-in-schools / Apple Brazil app-stores corroboration; non-paywalled |
+| Engadget | news | 53 | 3 | 2026-06-23 | consumer-tech/AI product + platform changes | behind Jun 13 Instagram "Your Algorithm" + Jun 19 Norway AI-in-schools / Apple Brazil app-stores corroboration + Jun 23 OpenAI Daybreak (single-source, directional); non-paywalled |
 | CNN Business | news | 50 | 1 | 2026-06-13 | markets/business breaking | behind Jun 13 SpaceX record IPO; non-paywalled 2nd source |
 | Al Jazeera | news | 49 | 1 | 2026-06-13 | markets/business 2nd source | behind Jun 13 SpaceX IPO; cross-check exact figures |
 | The Next Web | news | 49 | 1 | 2026-06-13 | tech/AI policy + product | behind Jun 13 Fable-5/Mythos-5 shutdown coverage; non-paywalled |
@@ -98,7 +98,7 @@
 | XDA Developers | ai-tooling | 49 | 1 | 2026-06-15 | consumer/dev tech product + AI-tooling coverage | non-paywalled 2nd source; behind Jun 15 Agent SDK billing-split beat |
 | Chronos Agency | email | 50 | 1 | 2026-06-16 | deliverability / sender-requirement guides (Gmail/Yahoo/MS) | behind Jun 16 inbox-placement beat (2026 0.10%/0.30% thresholds, rejection codes); practitioner, cross-check |
 | Sensor Tower | news | 50 | 1 | 2026-06-16 | app-usage market-share data (AI assistants, apps) | behind Jun 16 ChatGPT<50% reading; app-usage NOT web-traffic — always label the metric; one tracker, directional |
-| Yahoo Finance | news | 50 | 1 | 2026-06-16 | markets/wire 2nd source (Reuters syndication), app-tracker writeups | behind Jun 16 Cursor + ChatGPT-share corroboration; non-paywalled, cross-check primary |
+| Yahoo Finance | news | 52 | 2 | 2026-06-23 | markets/wire 2nd source (Reuters syndication), app-tracker writeups, index/ticker moves | behind Jun 16 Cursor + ChatGPT-share corroboration + Jun 23 Kospi-crash primary (loaded page: -8.11%, SK Hynix/Samsung, the why); non-paywalled, cross-check primary |
 | Meta Newsroom (about.fb.com) | social | 50 | 1 | 2026-06-16 | Meta/Threads/Instagram primary product + metrics announcements | primary; behind Jun 16 Threads 500M MAU / 'Your Algo'; first-party, cross-check MAU framing |
 | Canva (newsroom + connectors) | graphic | 53 | 1 | 2026-06-17 | Canva product/connector launches (Brand Kit in AI assistants: Perplexity/Claude/ChatGPT/Gemini, Magic Layers) | primary; behind Jun 17 Canva-Brand-Kit-AI card; first-party, cross-check rollout/tier gating |
 | 9to5Mac | graphic | 50 | 1 | 2026-06-17 | Apple + creative/AI tool product coverage | non-paywalled; behind Jun 17 Canva-Perplexity connector (graphic); cross-check |
@@ -118,8 +118,16 @@
 | CryptoBriefing | ai-tooling | 48 | 1 | 2026-06-19 | AI model/benchmark + crypto-adjacent business coverage | 2nd source; behind Jun 19 GLM-5.2 benchmark/cost corroboration; figures directional |
 | emailexpert | email | 50 | 1 | 2026-06-19 | email deliverability/industry news + provider-change coverage | behind Jun 19 Gmail Postmaster Deliverability-analysis beat (lists the 7 verdict codes); cross-check vs Google API ref |
 | DMARC Report (dmarcreport.com) | email | 49 | 1 | 2026-06-19 | email auth/deliverability (DMARC/Postmaster) guides | behind Jun 19 Postmaster Deliverability-analysis beat; practitioner, cross-check |
-| Suped | email | 49 | 1 | 2026-06-19 | deliverability tooling + Postmaster Tools v2 how-to/access | behind Jun 19 Postmaster v2 access steps + spam bands; practitioner |
+| Suped | email | 51 | 2 | 2026-06-23 | deliverability tooling + Postmaster Tools v2 how-to/access; DMARC tag reference | behind Jun 19 Postmaster v2 access steps + spam bands + Jun 23 DMARCbis tag reference (np / deprecated pct·rf·ri); practitioner |
 | Node.js (blog: releases + security) | web-dev | 56 | 1 | 2026-06-19 | Node release notes + security advisories (CVEs, versions, severities) | primary/authoritative; behind Jun 19 HIGH-severity security-patch card |
+| IETF / RFC Editor | email | 52 | 1 | 2026-06-23 | email-auth + protocol standards (DMARC/DMARCbis, SPF, DKIM) | authoritative primary; behind Jun 23 RFC 9989 DMARCbis np-tag beat (obsoletes RFC 7489/9091) |
+| Validity | email | 50 | 1 | 2026-06-23 | deliverability/auth explainers (DMARCbis, sender reputation), Everest tooling | behind Jun 23 DMARCbis np-tag beat; practitioner/vendor, cross-check vs RFC |
+| dmarcwise | email | 49 | 1 | 2026-06-23 | DMARC/DMARCbis implementation guides (np, t=y, DNS Tree Walk) | behind Jun 23 DMARCbis np-tag beat; practitioner, cross-check vs RFC |
+| Claude Code Docs (code.claude.com) | ai-tooling | 56 | 1 | 2026-06-23 | Claude Code feature docs (scheduled tasks /loop, /goal, hooks, skills) | primary/authoritative; behind Jun 23 /loop + /goal loop-engineering beat; PROMOTE per ratings advisory (backs rated-5★ Claude-workflows cards) |
+| Lenny's Newsletter | ai-tooling | 50 | 1 | 2026-06-23 | practitioner AI-workflow/product essays (loop engineering, Codex/Claude Code how-to) | behind Jun 14 Codex /goal + Jun 23 Claude Code loop-engineering beat; high-signal practitioner, cross-check product specifics vs docs |
+| ChatPRD (Claire Vo) | ai-tooling | 49 | 1 | 2026-06-23 | "How I AI" agent-workflow walkthroughs (loop types, Routines/Automations) | behind Jun 23 loop-engineering beat; practitioner, cross-check exact commands vs official docs |
+| Korea Times | news | 50 | 1 | 2026-06-23 | Korean markets/business (Kospi, Samsung/SK Hynix, foreign flows) | non-paywalled primary for KR session; behind Jun 23 Kospi-crash close (-9.99%, foreign net-sell ₩5.79T); cross-check intraday vs close |
+| EU Council (Consilium) | news | 51 | 1 | 2026-06-23 | EU policy/regulation primary (customs, trade, digital rules) | authoritative primary; behind Jun 23 €3 small-parcel customs duty (live Jul 1 2026) |
 
 <!-- Seed roster began as ai-tooling; web-design/paid/social/graphic rows added as
      those domains started producing. news/growth rows added 2026-06-08 on their
