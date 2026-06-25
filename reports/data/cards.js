@@ -35,6 +35,99 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdesign-figma-motion",
+    domains: ["web-design"],
+    title: "Animate a design on the Figma canvas — then copy the CSS/React easing straight from Dev Mode (no After Effects)",
+    action: "Switch one frame to Figma Motion mode, keyframe a single micro-interaction (a button hover or modal entrance) on the timeline, then open Dev Mode → Motion and copy the animation out as CSS.",
+    summary: "Figma Motion (announced at Config 2026, Jun 24 2026) adds a real animation timeline as a fourth canvas mode next to Design / Draw / Dev. You keyframe position, scale, rotation and opacity, drop fade/move/scale presets, define custom easing as reusable Motion variables, scrub to preview, and export MP4/WebM/GIF/SVG — and in Dev Mode a Motion tab exposes every timing value and easing curve so a dev can copy the animation as CSS, JSON, or framework-ready React (motion.dev).",
+    why: "Micro-interactions (hovers, modal entrances, page transitions) normally mean rebuilding the design in After Effects/Principle/Framer and then hand-translating the result to code — with the classic 'what easing did the designer actually mean?' guesswork at handoff. Motion collapses that: you animate where you already design, and the developer reads the exact curve and copies production code from the same file, killing the translation step.",
+    how: [
+      "Open a file you have edit access to and select the frame to animate; switch it to <b>Motion</b> mode (the new mode beside Design/Draw/Dev) — the timeline appears alongside the canvas.",
+      "Fast start: apply a preset (<b>fade</b>, <b>move</b>, or <b>scale</b>); stack several on the timeline to play together, or drag to sequence them.",
+      "Refine: move the playhead and keyframe <b>position / scale / rotation / opacity</b> independently, or let <b>auto-keyframing</b> record edits as you scrub; drag layers on the timeline to adjust timing.",
+      "Reuse easing: define a custom easing curve as a <b>Motion variable</b> so every animation referencing it updates at once.",
+      "Preview by scrubbing the timeline; leave time-based comments to flag a specific moment for teammates.",
+      "Hand off: open <b>Dev Mode → Motion</b> and copy the animation as <b>CSS</b>, JSON, or React (motion.dev), or export the clip as MP4/WebM/GIF/SVG. Validate the exported easing/keyframes against your real front-end before shipping."
+    ],
+    confidence: "emerging",
+    corroboration_count: 3,
+    status: "active",
+    supersedes: [],
+    related: ["card-webdesign-figma-mcp-design-to-code", "card-webdesign-scroll-triggered-animations", "card-graphic-figma-capture-layers"],
+    sources: [
+      { label: "Figma Blog — Introducing Figma Motion: Your canvas now has a timeline", url: "https://www.figma.com/blog/introducing-figma-motion/" },
+      { label: "Figma Blog — Config 2026: New materials, new tools and a more expressive canvas", url: "https://www.figma.com/blog/config-2026-recap/" },
+      { label: "TechCrunch — Figma adds code layers, support for animations, more AI features", url: "https://techcrunch.com/2026/06/24/figma-adds-code-layers-support-for-animations-more-ai-features-in-new-update/" },
+      { label: "The Next Web — Figma Config 2026: code layers, AI skills, plugins, animations", url: "https://thenextweb.com/news/figma-config-code-layers-ai-skills-plugins-animations" }
+    ],
+    tags: ["figma", "motion", "animation", "timeline", "dev-mode", "prototyping"],
+    created: "2026-06-25",
+    updated: "2026-06-25"
+  },
+
+  {
+    id: "card-social-facebook-creator-assistant",
+    domains: ["social"],
+    title: "Ask Facebook's free Creator Assistant why your best Reel won — then have it pitch 3 fresh angles off live trends",
+    action: "Open your Facebook creator dashboard (US/Canada/India) and ask Creator Assistant 'why did [my top Reel] outperform?', then 'give me 3 content angles off what's trending in my niche' — and turn the answer into this week's posts.",
+    summary: "Meta's Creator Assistant is a free conversational AI built into the Facebook creator dashboard (launched Jun 4 2026; Meta doubled down on Jun 24 2026 with a standalone Creator Studio app built around the same assistant). It answers questions against your OWN account data — why a post popped, when to post, how your audience shifted, what your comments are saying — and brainstorms content ideas off live Facebook trends (trending audio, cultural moments, top-performing styles).",
+    why: "It's a free, first-party organic-growth coach that sees your actual performance — so it beats generic best-time charts or a blank ChatGPT prompt that knows nothing about your account. The move that compounds: stop guessing why something worked, ask the model that has your numbers, and convert one diagnosed win into a week of variations.",
+    how: [
+      "Confirm eligibility: you need a creator account in the <b>US, Canada, or India</b> (current rollout); open the <b>Facebook mobile app → creator dashboard</b> and look for the assistant (no separate download).",
+      "Diagnose a winner: ask <i>'Why did [this specific Reel] outperform the rest?'</i> and pull out the repeatable variable (hook, length, audio, topic).",
+      "Read your audience: ask <i>'How has my audience changed over time?'</i> and <i>'What are people saying in my comments?'</i> to spot a new segment or sentiment to lean into.",
+      "Time it: ask <i>'When should I post?'</i> — it answers from your own engagement patterns, not a generic chart.",
+      "Brainstorm off trends: ask for fresh angles tied to what's trending on Facebook for your niche; capture 3.",
+      "Iterate conversationally: follow up ('give me 3 hook variations for that angle') to turn one insight into a week of posts. Pair with Edits for the A/B + brand PDF (card-social-edits-creator-analytics)."
+    ],
+    confidence: "confirmed",
+    corroboration_count: 3,
+    status: "active",
+    supersedes: [],
+    related: ["card-social-edits-creator-analytics", "card-social-instagram-your-algorithm", "card-social-repurpose-claude"],
+    sources: [
+      { label: "Meta Newsroom — Introducing Creator Assistant, plus more languages for AI translations on Facebook (Jun 4 2026)", url: "https://about.fb.com/news/2026/06/creator-assistant-more-languages-for-ai-translations-on-facebook/" },
+      { label: "TechCrunch — Meta rolls out a new AI creator assistant on Facebook (Jun 4 2026)", url: "https://techcrunch.com/2026/06/04/meta-rolls-out-a-new-ai-creator-assistant-on-facebook/" },
+      { label: "TechCrunch — Facebook rolls out an AI companion app for creators (Jun 24 2026)", url: "https://techcrunch.com/2026/06/24/facebook-rolls-out-an-ai-companion-app-for-creators/" },
+      { label: "Social Media Today — Meta brings back Facebook Creator Studio", url: "https://www.socialmediatoday.com/news/meta-brings-back-facebook-creator-studio/823716/" }
+    ],
+    tags: ["facebook", "meta", "creators", "ai-assistant", "organic", "reels"],
+    created: "2026-06-25",
+    updated: "2026-06-25"
+  },
+
+  {
+    id: "card-paid-meta-multimedia-creative",
+    domains: ["paid"],
+    title: "Pack ONE Meta ad with up to 10 mixed image + video assets across aspect ratios — let Advantage+ pick the winner per placement",
+    action: "In Ads Manager, build ONE ad and upload up to 10 genuinely different assets (mix video + images; include 9:16 and 1:1/4:5), keep Advantage+ creative on, and let delivery serve the best variation per user/placement.",
+    summary: "Meta's refreshed multimedia-ads guidance (reported Jun 24 2026, from Meta's own 'multi-media ads' help doc) says to stop splitting creative into a separate ad per placement: load up to 10 images and videos — including multiple aspect ratios — into a single ad and let Advantage+ delivery optimize which variation each user sees. Meta's line: the more creative options you give it, the more chances it has to optimize.",
+    why: "Building one ad per aspect ratio splinters the learning signal and bloats the account. Consolidating diverse assets into one ad concentrates the conversion signal and hands Meta's delivery a richer combination space — and it moves the lever back to the thing operators actually control: creative volume and variety, not audience micro-targeting.",
+    how: [
+      "In Ads Manager, create/open an ad and choose the Advantage+ / multimedia creative setup.",
+      "At the ad (creative) level, upload <b>up to 10 assets into the one ad</b> — deliberately mix at least one video with several images.",
+      "Include <b>multiple aspect ratios in that single ad</b>: 9:16 (vertical — most inventory) plus 1:1 or 4:5 for feed.",
+      "Make the assets <b>conceptually distinct, not minor variants</b> — e.g. a UGC clip, a product demo, a testimonial, a text-led explainer, a lifestyle shot. Five genuinely different angles beat fifty near-duplicates.",
+      "Keep Advantage+ creative delivery ON so Meta auto-selects the best variation per placement/user; design within placement safe zones so key visuals survive cropping.",
+      "If any asset is AI-generated, set Meta's <b>AI-content disclosure</b> before launch; refresh assets every 2–4 weeks, watching CPM/reach as the fatigue signal."
+    ],
+    confidence: "emerging",
+    corroboration_count: 2,
+    thread_id: "thread-platform-ai-defaults",
+    status: "active",
+    supersedes: [],
+    related: ["card-paid-meta-advantage-plus", "card-paid-ai-ad-creative", "card-graphic-firefly-brand-batch-creatives"],
+    sources: [
+      { label: "Meta for Business Help — About multi-media ads and customizing your ad creative", url: "https://www.facebook.com/business/help/1530327025203003" },
+      { label: "Social Media Today — Meta outlines best practices for AI-generated multimedia ads (Jun 24 2026)", url: "https://www.socialmediatoday.com/news/meta-outlines-best-practices-for-ai-generated-multimedia-ads/823720/" },
+      { label: "AdMove — Meta Advantage+ Creative best practices for 2026", url: "https://www.admove.ai/blog/meta-advantage-creative-best-practices-for-2026" }
+    ],
+    tags: ["meta-ads", "advantage-plus", "creative", "multimedia", "aspect-ratio", "andromeda"],
+    created: "2026-06-25",
+    updated: "2026-06-25"
+  },
+
+  {
     id: "card-webdev-vercel-websockets",
     domains: ["web-dev"],
     title: "Ship realtime (chat, presence, AI streaming) from your existing Vercel Functions — no separate backend",
