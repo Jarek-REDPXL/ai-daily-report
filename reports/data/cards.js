@@ -35,6 +35,94 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdev-nextjs-instant-navigations",
+    domains: ["web-dev"],
+    title: "Make Next.js navigations feel SPA-instant with two config flags — no SPA rewrite",
+    action: "On a branch, run `npm i next@preview`, set `cacheComponents: true` and `partialPrefetching: true` in next.config, run dev, then fix the one route Instant Insights flags by wrapping its awaited data in <Suspense> or marking it 'use cache'.",
+    summary: "Next.js 16.3 (preview, Jun 25 2026) ships Instant Navigations: enable `cacheComponents` and each awaited route data becomes a choice — Stream with <Suspense> (instant loading shell), Cache with 'use cache' (instant cached UI), or Block with `export const instant = false`. Turn on `partialPrefetching` and Next prefetches one reusable shell per route instead of one request per link. Instant Insights makes slow navs a dev-time error, an instant() Playwright helper guards regressions, and a Navigation Inspector shows what each shell prefetches.",
+    why: "'Navigation feels slow' is the most common, most valid complaint about Server-Components sites — and the usual fix is a painful rewrite toward a client SPA. This closes the gap with config plus a few <Suspense> boundaries, and the per-route shell prefetch trims the embarrassing per-link prefetch flurry (and wasted bandwidth) on link-heavy pages like sidebars, chat lists and dashboards.",
+    how: [
+      "On a branch, install the preview: <code>npm install next@preview</code> (pre-production — don't ship to real users yet).",
+      "In <code>next.config.ts</code> set <code>cacheComponents: true</code> and <code>partialPrefetching: true</code>.",
+      "Run dev and read <b>Instant Insights</b> — it turns any non-instant navigation into a dev-time error, giving you a worklist instead of a guess.",
+      "Fix the flagged route: wrap its slow awaited data in <code>&lt;Suspense&gt;</code> (Stream) or mark the function <code>'use cache'</code> (Cache); for a route that should wait, opt out with <code>export const instant = false</code> (Block).",
+      "Open the <b>Navigation Inspector</b> in DevTools, pause at the shell to confirm the instant part; add <code>&lt;Link prefetch&gt;</code> + <code>'use cache'</code> only where you want more than the shell to pop in (or <code>export const prefetch = 'allow-runtime'</code> for request-time content).",
+      "Lock it in with an <code>instant()</code> Playwright test (<code>import { instant } from '@next/playwright'</code>) so a refactor can't silently make the route slow again.",
+      "Use Chrome or Firefox for the dev tooling (Safari has known preview issues); reach for the official Cache Components adoption Skill to have a coding agent migrate an existing app."
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-webdev-vercel-cancelable-jobs", "card-webdev-vercel-websockets"],
+    sources: [
+      { label: "Next.js Blog — 16.3: Instant Navigations", url: "https://nextjs.org/blog/next-16-3-instant-navigations" },
+      { label: "Next.js Docs (preview) — Instant Navigation", url: "https://preview.nextjs.org/docs/app/guides/instant-navigation" },
+      { label: "GitHub — Next.js 16.3 preview discussion", url: "https://github.com/vercel/next.js/discussions/95130" }
+    ],
+    tags: ["nextjs", "performance", "prefetch", "react", "cache-components"],
+    created: "2026-06-26",
+    updated: "2026-06-26"
+  },
+
+  {
+    id: "card-graphic-figma-shaders",
+    domains: ["graphic"],
+    title: "Prompt Figma to build a custom WebGPU shader (frosted glass, chrome, halftone, grain) as a live, tweakable material",
+    action: "On a paid Full Figma seat, select a frame, add a Shader fill (new material) or Shader effect (transform existing art), and prompt the Figma agent for the look you want — e.g. 'halftone duotone in our brand red and ink' — then dial the on-canvas controls to brand.",
+    summary: "At Config 2026 (Jun 24 2026) Figma shipped Shader fills and effects (WebGPU): describe a look to the Figma agent (or drop a reference image) and it builds the shader for you. A 'fill' is a new material; an 'effect' transforms what's already in the layer. Named looks include frosted glass, chrome, dithering, pixelation, halftone and particles, with stackable ones like Gradient map, Riso print and Luminance particles — all parameterized by default, so you get adjustable controls right on the canvas.",
+    why: "Custom surface treatments — glassmorphism panels, duotone/halftone hero art, film grain, chrome type, dithered backgrounds — show up constantly in brand and UI work, and today they mean stock textures or a Photoshop detour that bakes the effect into pixels nobody can adjust. Prompt-to-shader keeps the treatment live and on-brand: type the look, dial sliders to the palette, and the team re-skins it without rebuilding.",
+    how: [
+      "Confirm access: you need a <b>Full seat on a paid Figma plan</b> (Pro/Org/Enterprise) — open beta from Jun 24 2026, not on Starter/Education/Gov.",
+      "Pick the verb: add a <b>Shader fill</b> for a new material (glass surface, gradient-mapped backdrop) or a <b>Shader effect</b> to transform existing art (halftone a photo, dither an illustration).",
+      "Prompt the Figma agent in plain words — e.g. 'frosted-glass card surface with subtle noise', 'brushed-chrome metal for this headline' — or drop a reference image to match.",
+      "Dial to brand using the on-canvas controls Figma exposes automatically (palette, scale, intensity); stack effects (e.g. Gradient map + Luminance particles) for a layered treatment.",
+      "Keep the parameters tidy so teammates re-skin the same shader for variants instead of regenerating from scratch.",
+      "Sanity-check delivery: WebGPU renders in-app — when you export to flat assets or hand to dev, confirm the look survives at the sizes/formats you ship."
+    ],
+    confidence: "emerging",
+    corroboration_count: 2,
+    status: "active",
+    supersedes: [],
+    related: ["card-webdesign-figma-motion", "card-graphic-recraft-svg-vector", "card-graphic-figma-capture-layers"],
+    sources: [
+      { label: "Figma Blog — Config 2026 recap (shaders)", url: "https://www.figma.com/blog/config-2026-recap/" },
+      { label: "Figma Learn — What's new from Config 2026", url: "https://help.figma.com/hc/en-us/articles/39582753756695-What-s-new-from-Config-2026" },
+      { label: "TechTimes — Figma Config 2026: GPU shaders hit paid plans", url: "https://www.techtimes.com/articles/319041/20260625/figma-config-2026-code-layers-challenge-cursor-gpu-shaders-hit-paid-plans.htm" }
+    ],
+    tags: ["figma", "shaders", "webgpu", "texture", "brand"],
+    created: "2026-06-26",
+    updated: "2026-06-26"
+  },
+
+  {
+    id: "card-cro-ai-diagnose-one-lever",
+    domains: ["cro"],
+    title: "Ask AI which single CRO/AOV lever to pull first — from your own order + funnel data",
+    action: "Export your last-90-day orders + GA4 funnel and ask Claude/ChatGPT to compute your AOV and modal (most common) order value, then name the single highest-dollar leak — basket size or checkout drop-off — and ship one lever for it this week.",
+    summary: "There's no universal 'best one thing' for CRO and AOV — it depends on your funnel — but you can decide it in under an hour. Let AI read your real order-value distribution and funnel, name the biggest leak, then pull exactly one lever. Default answers if you must pick blind: for AOV, a free-shipping threshold set just above your modal order value + a 'You're $X away' progress bar (goal-gradient); for conversion, remove checkout friction (guest checkout, fewer fields, full cost shown early).",
+    why: "Teams burn weeks debating CRO tactics copied from blog posts. An hour with your own export replaces that with a ranked, dollar-weighted worklist — and pegging the free-shipping threshold to your MODAL order value (not a round number, not the blunt 'set it ~30% above AOV' rule) is what makes free shipping feel attainable to the most shoppers and actually moves the basket distribution.",
+    how: [
+      "Pull the data: Shopify <b>Admin → Orders → Export</b> (last 90 days) + note where GA4 shows the funnel dropping (product → cart → checkout → purchase).",
+      "Ask the AI to diagnose: paste the order-value summary (use data-analysis mode for the raw CSV) and prompt 'Compute my AOV and modal order value, show the distribution shape, and tell me whether I lose more money to small baskets or checkout drop-off given this funnel.'",
+      "If the leak is basket size (AOV): set a free-shipping threshold just above your modal order value + a cart progress bar ('You're $X from free shipping') with one low-cost add-on beside it (card-cro-free-shipping-threshold for the margin math).",
+      "If the leak is checkout drop-off: fix friction first — guest checkout (card-cro-guest-checkout), cut form fields (card-cro-minimise-form-fields), show full cost incl. shipping early (card-cro-show-total-cost-early).",
+      "Bundle to the goal: ask the AI to mine co-purchase pairs from your export and propose 2–3 bundles priced to nudge orders over the threshold (card-cro-cross-sell-bundles).",
+      "Ship ONE change and measure AOV, conversion AND margin for 3–4 weeks before the next — a higher AOV you fund with absorbed shipping can be a net loss."
+    ],
+    confidence: "emerging",
+    status: "active",
+    supersedes: [],
+    related: ["card-cro-free-shipping-threshold", "card-cro-cross-sell-bundles", "card-cro-post-purchase-upsell", "card-cro-guest-checkout", "card-cro-show-total-cost-early"],
+    sources: [
+      { label: "Shopify — Average Order Value: formula, benchmarks & 7 ways to increase it (2026)", url: "https://www.shopify.com/blog/average-order-value" },
+      { label: "Baymard Institute — Cart Abandonment Rate (checkout friction)", url: "https://baymard.com/lists/cart-abandonment-rate" }
+    ],
+    tags: ["aov", "cro", "analytics", "ai-analysis", "ecommerce"],
+    created: "2026-06-26",
+    updated: "2026-06-26"
+  },
+
+  {
     id: "card-webdesign-figma-motion",
     domains: ["web-design"],
     title: "Animate a design on the Figma canvas — then copy the CSS/React easing straight from Dev Mode (no After Effects)",
@@ -2296,7 +2384,7 @@ window.AI_EDGE_CARDS = [
     confidence: "emerging",
     status: "active",
     supersedes: [],
-    related: ["card-cro-show-total-cost-early", "card-cro-cross-sell-bundles", "card-cro-post-purchase-upsell"],
+    related: ["card-cro-show-total-cost-early", "card-cro-cross-sell-bundles", "card-cro-post-purchase-upsell", "card-cro-ai-diagnose-one-lever"],
     sources: [
       { label: "Digital Applied — Free Shipping Threshold Strategy 2026 (contribution-margin method)", url: "https://www.digitalapplied.com/blog/free-shipping-threshold-strategy-2026-ecommerce-playbook" },
       { label: "Growth Suite — Free Shipping Threshold Strategy to Increase AOV (mobile vs desktop)", url: "https://www.growthsuite.net/resources/shopify-upsell-cross-sell/increase-average-order-value/free-shipping-threshold" },
@@ -2306,7 +2394,7 @@ window.AI_EDGE_CARDS = [
     ],
     tags: ["aov", "shipping", "cart", "margin", "mobile"],
     created: "2026-06-14",
-    updated: "2026-06-21"
+    updated: "2026-06-26"
   },
   {
     id: "card-cro-price-anchoring",
