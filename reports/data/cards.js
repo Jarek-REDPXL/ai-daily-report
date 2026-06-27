@@ -35,6 +35,70 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdesign-figma-agent-skills",
+    domains: ["web-design"],
+    title: "Teach the Figma design agent your design system once — as a reusable Skill (slash command)",
+    action: "In the Figma agent's prompt box, go Skills → Add skill → Start from scratch, name it `follow-ds-guidelines`, paste your design-system rules as numbered Markdown steps + one example, then test it with `/follow-ds-guidelines design a settings page`.",
+    summary: "Config 2026 (Jun 24 2026) launched Figma's on-canvas design agent to everyone (open beta) and gave it custom Skills, MCP Connectors and file/PDF context. A Skill is a Markdown instruction set you invoke as a slash command — the Skill's name becomes the command — so the agent designs to YOUR tokens, components and rules instead of generic defaults. You can also upload a .md skill (Agent Skills spec) and connect GitHub/Slack/Notion/Linear.",
+    why: "The #1 failure of AI-in-design is output that ignores your design system — wrong components, off-scale spacing, invented tokens — which means rework that eats the time the AI was supposed to save. A Skill turns your conventions into a portable, version-controllable instruction the agent obeys on command, so 'AI that guesses' becomes 'AI that follows our system.' It's a design-systems governance lever, no engineering required.",
+    how: [
+      "Check access: you need a <b>paid plan</b> (Professional/Organization/Enterprise) with AI features on, and a <b>Full seat</b> to use the agent in Design/Make files (View/Dev/Collab seats only get it in Draft files); not on Starter/Education/Government.",
+      "In the agent's prompt box go <b>Skills → Add skill → Start from scratch</b>; fill <b>Name</b> (this becomes your slash command, e.g. <code>follow-ds-guidelines</code> → <code>/follow-ds-guidelines</code>), <b>Description</b> (when to use it), and <b>Instructions</b> (Markdown).",
+      "Write the Instructions as numbered, imperative steps encoding your real conventions: which library/components to use, token names, the spacing scale and type ramp, do/don't rules, accessibility minimums (contrast, hit-target size). Add at least one <b>Examples</b> block (a request → the correct output). Click <b>Add</b>.",
+      "Test it: type <code>/follow-ds-guidelines</code> plus a request ('design a settings page using our DS') and confirm the output respects your rules; iterate the Instructions text until it does.",
+      "Scale it: reuse an existing skill via <b>Skills → Add skill → Upload a file</b> — drag in a <code>.md</code> written to the Agent Skills spec (the same format coding agents use).",
+      "Add live context where useful: attach a brief/PDF/spreadsheet to the thread, or add an <b>MCP Connector</b> (GitHub, Slack, Notion, Atlassian, Hex, Linear) to pull a ticket's spec into the design and write updates back.",
+      "Privacy: as of Jun 23 2026 new agent threads are visible by default to Full-seat teammates with edit access — set sensitive chats private."
+    ],
+    confidence: "emerging",
+    corroboration_count: 2,
+    status: "active",
+    supersedes: [],
+    related: ["card-webdesign-figma-motion", "card-graphic-figma-shaders", "card-webdesign-figma-mcp-design-to-code"],
+    sources: [
+      { label: "Figma Blog — The Figma agent: custom tools, context, and skills", url: "https://www.figma.com/blog/agent-custom-tools-context-skills/" },
+      { label: "Figma Learn — Custom skills for the Figma agent and Figma Make", url: "https://help.figma.com/hc/en-us/articles/40283639496599-Custom-skills-for-the-Figma-agent-and-Figma-Make" },
+      { label: "Figma Blog — Config 2026 recap", url: "https://www.figma.com/blog/config-2026-recap/" },
+      { label: "Web Developer — Figma Config 2026: Motion + design agent", url: "https://webdeveloper.com/news/figma-config-2026-motion-design-agent/" }
+    ],
+    tags: ["figma", "design-systems", "ai-agent", "skills", "governance", "config-2026"],
+    created: "2026-06-27",
+    updated: "2026-06-27"
+  },
+
+  {
+    id: "card-ai-tooling-gemini-computer-use",
+    domains: ["ai-tooling"],
+    title: "Let Gemini 3.5 Flash 'computer use' click through your repetitive browser ops — in a sandbox you control",
+    action: "Try the zero-code Browserbase demo linked from Google's computer-use docs, grab a Gemini API key in AI Studio, then clone google-gemini/computer-use-preview (Docker sandbox) and run a low-stakes task with confirm-before-action + injection-auto-halt turned ON.",
+    summary: "On Jun 24 2026 Google moved 'computer use' into mainline Gemini 3.5 Flash (`gemini-3.5-flash`) as a built-in tool: one fast/cheap model that sees a screen and acts — clicks, types, scrolls, navigates, drags — across browser/mobile/desktop, in public preview via the Gemini API. It scores 78.4 on OSWorld-Verified (vs GPT-5.5's 78.7) at $1.50 in / $9 out per M tokens (~⅓ of GPT-5.5), with a Browserbase demo and an official Docker-sandboxed reference repo.",
+    why: "It kills the long tail of GUI-bound grunt work that has no API and no export button — pulling numbers out of ad/analytics dashboards that won't export, filling repetitive intake/QA forms, scheduled competitor screenshots, bulk content-portal updates, and smoke-testing your own app's UI flows before launch. At Flash price/speed those become a daily loop, not a manual chore.",
+    how: [
+      "Feel the loop with zero code: open the <b>Browserbase-hosted demo</b> linked from the official docs and give it a plain task ('open this dashboard, read the 7-day spend, screenshot it').",
+      "Get an API key in <b>Google AI Studio</b> (ai.google.dev), prototype a prompt, then hit <b>'Get code'</b> to export the Gemini API call in your language.",
+      "Clone the official reference repo (<code>google-gemini/computer-use-preview</code>) — it ships a ready-to-use <b>Docker sandbox</b> so the agent never touches your real machine.",
+      "Set the model to <code>gemini-3.5-flash</code> with the computer-use tool enabled (the loop: model returns action + 0–999 coords → your client scales coords and executes via Playwright → send a fresh screenshot → repeat).",
+      "Flip ON the two opt-in safeguards before any real task (both OFF by default): (a) require explicit confirmation on sensitive/irreversible actions, (b) auto-terminate on detected prompt injection.",
+      "Lock the blast radius: run only in the Docker/VM sandbox, apply a website <b>allowlist</b>, keep a human in the loop for purchases/sends, turn on audit logging.",
+      "Start low-stakes: point it at an internal task first (e.g. a UI regression pass on staging) before anything that spends money or sends messages."
+    ],
+    confidence: "emerging",
+    corroboration_count: 3,
+    status: "active",
+    supersedes: [],
+    related: ["card-ai-tooling-claude-loop-goal", "card-ai-tooling-model-portability", "card-ai-tooling-glm-5-2-route"],
+    sources: [
+      { label: "Google — Introducing computer use in Gemini 3.5 Flash", url: "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-computer-use-gemini-3-5-flash/" },
+      { label: "Google AI for Developers — Computer use (Gemini API docs)", url: "https://ai.google.dev/gemini-api/docs/computer-use" },
+      { label: "The Next Web — Gemini 3.5 Flash computer use as a built-in tool", url: "https://thenextweb.com/news/google-gemini-3-5-flash-computer-use-built-in-tool" },
+      { label: "Search Engine Journal — Gemini can now control your computer; hackers are targeting AI agents", url: "https://www.searchenginejournal.com/google-gemini-can-now-control-your-computer-hackers-are-already-targeting-ai-agents/580578/" }
+    ],
+    tags: ["gemini", "computer-use", "agents", "automation", "browser", "prompt-injection", "sandbox"],
+    created: "2026-06-27",
+    updated: "2026-06-27"
+  },
+
+  {
     id: "card-webdev-nextjs-instant-navigations",
     domains: ["web-dev"],
     title: "Make Next.js navigations feel SPA-instant with two config flags — no SPA rewrite",
@@ -1282,17 +1346,17 @@ window.AI_EDGE_CARDS = [
     id: "card-growth-ai-visibility-check",
     domains: ["growth"],
     title: "Check today whether ChatGPT and Gemini actually mention your brand (free, no login)",
-    action: "Paste your domain into Semrush's free AI Search Visibility Checker, read the 0–100 score, grab the high-volume prompts where you're not mentioned — and check your AI Citation Share in Bing Webmaster Tools. Skip llms.txt: 97% of files go unread.",
-    summary: "AEO (Answer Engine Optimization — getting named in AI answers) is measurable for free. Semrush's AI Search Visibility Checker takes just your domain (no sign-up) and returns a 0–100 score across ChatGPT/SearchGPT/Gemini/Google AI/Perplexity, competitor comparison, the prompts that trigger your brand, and the popular prompts where you're invisible (your fix-list). NEW (Jun 19 2026): Bing Webmaster Tools shipped an AI Citation Share report (preview, global) — the % of AI citations your site wins for a grounding query vs competitors (Bing/Copilot only). And NEW data (Ahrefs, 137k domains, Jun 15 2026) shows llms.txt is not a visibility lever: 97% of files got zero requests; spend the time on structure instead.",
-    why: "AEO advice is only worth acting on if you can see whether it worked — and buyers increasingly start at an AI answer, where most brands don't show up. This closes the loop: measure where you're absent, fix exactly those pages, then re-measure. Part of that is NOT wasting the hour on llms.txt — the data says crawlers ignore it.",
+    action: "Open Google Search Console → Performance → Generative AI to baseline your real AI Overviews / AI Mode impressions, then cross-check with Semrush's free AI Search Visibility Checker and your Bing AI Citation Share. Skip llms.txt: 97% of files go unread.",
+    summary: "AEO (Answer Engine Optimization — getting named in AI answers) is measurable, now first-party. NEW (clarified Jun 25 2026): Google Search Console has a Generative AI performance report — YOUR impressions inside AI Overviews/AI Mode/Discover, segmentable by page/country/device (impressions-only in beta, gated to a subset of properties). Mueller's counting rules: a real LINK to your page must be shown (a favicon doesn't count), expandable links count only once expanded, and the same site twice in one answer = one impression. Cross-check with the free estimators: Semrush's AI Search Visibility Checker (no login — 0–100 across ChatGPT/SearchGPT/Gemini/Google AI/Perplexity + a gap-prompt list) and Bing Webmaster Tools' AI Citation Share (preview, Bing/Copilot only). And skip llms.txt: Ahrefs (137k domains) found 97% of files get zero requests.",
+    why: "AEO advice is only worth acting on if you can see whether it worked — and buyers increasingly start at an AI answer, where most brands don't show up. Google's first-party report is the source of truth that replaces guessing from third-party estimates: measure where you're absent, fix exactly those pages, then re-measure. Part of that is NOT wasting the hour on llms.txt — the data says crawlers ignore it.",
     how: [
-      "Open <b>Semrush's free AI Search Visibility Checker</b>, enter your (or a client's) domain, and hit <b>Check Visibility</b>.",
-      "Read the <b>0–100 score</b> and platform coverage to see which AI engines name you and which don't.",
-      "Turn on <b>AI Citation Share</b> in <b>Bing Webmaster Tools → AI Performance</b> (preview) — read your share of AI citations per grounding query and the competitor comparison (Bing/Copilot only; Google Search Console still has no citation metric).",
-      "Jump to the <b>opportunities</b> — popular prompts where competitors get named and you don't; that's your prioritized target list.",
+      "Open <b>Google Search Console → Performance → Generative AI</b> (rolling out to a subset of properties — if you don't see it, verify the property and check back). Pull your top-3 and bottom-3 URLs by AI-feature <b>impressions</b>, segment by Country/Device, and <b>export + date-stamp it as your baseline</b>.",
+      "Read it correctly (Mueller, Jun 25 2026): an impression fires only when a <b>link</b> to your page is shown (favicon alone doesn't count); expandable links count only once expanded; the same site twice in one AI answer = <b>one</b> impression — so the number can read lower than your true presence.",
+      "Cross-check with <b>Semrush's free AI Search Visibility Checker</b> (enter your domain, no sign-up) for the 0–100 score + the popular prompts where competitors get named and you don't — your prioritized target list.",
+      "Turn on <b>AI Citation Share</b> in <b>Bing Webmaster Tools → AI Performance</b> (preview) for your share of AI citations per grounding query vs competitors (Bing/Copilot only).",
       "For each gap, run the AEO formatting pass on the most relevant money page (intent-matched title, a one-sentence answer up top, a list/table, an original first-party stat, and FAQ schema + a last-updated date).",
       "Don't invest in <b>llms.txt</b> for visibility (97% of files go unread — Ahrefs); leave any existing file in place but reallocate the effort to clean HTML structure + internal links.",
-      "Re-run in ~2–4 weeks to confirm new mentions; for ongoing tracking use Ahrefs Brand Radar or Semrush's AI Toolkit, and read a few real AI answers by hand to see how you're described."
+      "Re-run / re-export in ~2–4 weeks to confirm new mentions; there's no API field for the Google report yet, so log weekly totals manually to prove cause-and-effect after content changes."
     ],
     confidence: "emerging",
     thread_id: "thread-answer-engine-optimization",
@@ -1300,14 +1364,15 @@ window.AI_EDGE_CARDS = [
     supersedes: [],
     related: ["card-growth-aeo-content-formats", "card-growth-schema-aeo", "card-social-linkedin-ai-citations"],
     sources: [
+      { label: "Google Search Console Help — Generative AI performance report (Search)", url: "https://support.google.com/webmasters/answer/16984139" },
+      { label: "Google Search Console Help — Generative AI performance report (Discover)", url: "https://support.google.com/webmasters/answer/16983858" },
+      { label: "Search Engine Journal — Mueller explains how AI search impressions get counted", url: "https://www.searchenginejournal.com/googles-mueller-explains-how-ai-search-impressions-get-counted/580491/" },
       { label: "Semrush — Free AI Search Visibility Checker", url: "https://www.semrush.com/free-tools/ai-search-visibility-checker/" },
-      { label: "Search Engine Journal — SEO Pulse: AI Citation Share ships, new data doubts llms.txt", url: "https://www.searchenginejournal.com/seo-pulse-ai-citation-share-ships-new-data-doubts-llms-txt/579942/" },
-      { label: "Ahrefs — We analyzed 137K sites: 97% of llms.txt files never get read", url: "https://ahrefs.com/blog/llmstxt-study/" },
-      { label: "Ahrefs — Brand Radar", url: "https://ahrefs.com/brand-radar" }
+      { label: "Ahrefs — We analyzed 137K sites: 97% of llms.txt files never get read", url: "https://ahrefs.com/blog/llmstxt-study/" }
     ],
-    tags: ["aeo", "geo", "ai-search", "measurement", "llms-txt", "bing"],
+    tags: ["aeo", "geo", "ai-search", "measurement", "search-console", "bing", "llms-txt"],
     created: "2026-06-11",
-    updated: "2026-06-21"
+    updated: "2026-06-27"
   },
 
   {
