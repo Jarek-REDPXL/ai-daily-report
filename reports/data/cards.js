@@ -35,6 +35,97 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdev-ai-sdk-7-agents",
+    domains: ["web-dev", "ai-tooling"],
+    title: "Put a human-approval gate on your AI agent's risky actions — and make the agent survive a restart — with AI SDK 7",
+    action: "Upgrade to AI SDK 7 (`npm i ai@7`, run `npx @ai-sdk/codemod v7`), then add a `toolApproval` policy of `'user-approval'` to any tool that spends money, sends a message, or deletes data so the agent pauses for your yes/no before it runs.",
+    summary: "AI SDK 7 (Jun 25 2026, from Vercel — the most-used toolkit for building AI features in JavaScript apps) turns prototype agents into production ones. Two parts you can ship today: <b>tool approvals</b> (the agent must ask permission before running a risky action) and <b>durable workflows</b> (the agent's progress is saved to storage between steps, so a deploy, crash, or an approval that arrives hours later doesn't lose the work).",
+    why: "An AI agent that can act on the world — book, buy, email, delete — is one hallucination away from doing real damage with no undo. A built-in approval gate makes the dangerous step wait for a human, and durability means the agent can sit paused for hours (waiting on that human) and pick up exactly where it left off instead of starting over. This is the difference between a demo and something you'd let touch a customer account.",
+    how: [
+      "Upgrade: <code>npm i ai@7 @ai-sdk/openai@7</code> (needs Node 22+ and ESM — add <code>\"type\": \"module\"</code> to package.json), then run the auto-migration <code>npx @ai-sdk/codemod v7</code> to rewrite old code (it also renames <code>system</code> → <code>instructions</code>).",
+      "Build the agent with the new <code>ToolLoopAgent</code> (an agent that loops: think → call a tool → read the result → repeat until done): <code>import { ToolLoopAgent } from 'ai'</code>.",
+      "Gate the scary tools: on the <code>generateText</code>/<code>streamText</code> call (or the agent), set <code>toolApproval: { deleteFile: 'user-approval' }</code>. Options are <code>'user-approval'</code> (ask a human), <code>'auto-approve'</code>, <code>'auto-deny'</code>, or your own function that decides per-call.",
+      "Catch the pause in your UI: when a tool needs approval the run yields an approval request — show the user the exact action + arguments, then resume with their decision. For higher-stakes flows turn on <b>HMAC signing</b> (a cryptographic stamp that ties the approval to the exact tool inputs, so nothing can be swapped between 'approved' and 'run').",
+      "Make it durable: for long or human-gated jobs use <code>WorkflowAgent</code> from <code>@ai-sdk/workflow</code> — it saves state between steps to storage, so the agent survives a deploy or restart and a user can approve hours later and it resumes from that point.",
+      "Don't hand-write the migration if you're on v6: run <code>npx skills add vercel/ai --skill migrate-ai-sdk-v6-to-v7</code> and tell your coding agent to use that skill; review the changes against the official v7 migration guide before you ship.",
+      "Pair it with a hard spend cap on the model calls (card-webdev-ai-gateway-spend-limits / card-ai-tooling-model-portability) so an approved-but-runaway loop still can't burn the budget."
+    ],
+    confidence: "emerging",
+    status: "active",
+    thread_id: "thread-durable-execution",
+    supersedes: [],
+    related: ["card-webdev-vercel-cancelable-jobs", "card-webdev-vercel-workflow-nitro", "card-ai-tooling-model-portability", "card-webdev-ai-gateway-spend-limits"],
+    sources: [
+      { label: "Vercel Changelog — AI SDK 7 is now available", url: "https://vercel.com/changelog/ai-sdk-7" },
+      { label: "Vercel Blog — A new programming model for durable execution", url: "https://vercel.com/blog/a-new-programming-model-for-durable-execution" },
+      { label: "Vercel KB — Building human-in-the-loop agents with durable workflows", url: "https://vercel.com/kb/guide/building-human-in-the-loop-agents-for-community-moderation-with-durable-workflows" },
+      { label: "AI SDK — v6 → v7 migration guide", url: "https://ai-sdk.dev/docs/migration-guides/migration-guide-7-0" }
+    ],
+    tags: ["ai-sdk", "agents", "human-in-the-loop", "durable-workflows", "vercel", "javascript"],
+    created: "2026-06-28",
+    updated: "2026-06-28"
+  },
+
+  {
+    id: "card-email-reengagement-sunset",
+    domains: ["email"],
+    title: "Win back — then sunset — your dead subscribers, because mailing the unengaged is what drags your whole list to spam",
+    action: "Build one re-engagement flow for everyone who hasn't opened or clicked in 6+ months; if they ignore the whole series, stop mailing them (suppress), don't keep blasting them.",
+    summary: "Mailbox providers (Gmail, Yahoo, Outlook) decide where your mail lands by watching whether people actually <i>want</i> it. Keep sending to a big pool of people who never open and you teach them your mail is unwanted — so they start routing it to spam for your engaged buyers too. The fix is a standing lifecycle move: try to wake the sleepers, then quietly drop the ones who stay asleep. (Litmus, Jun 2026.)",
+    why: "Most teams obsess over subject lines while their real deliverability leak is list size: a 'delivery rate' of 98% can hide a spam-folder problem caused by months of dead weight. Cutting unengaged subscribers feels scary — you're shrinking the list on purpose — but it lifts the engagement signals that decide inbox placement, so your active customers actually see you. Smaller, awake list beats a big, ignored one.",
+    how: [
+      "Define 'disengaged' by <b>behavior, not just opens</b> (Apple Mail auto-opens inflate open rate): no click, no site visit, no purchase in <b>6+ months</b>. Build that as a segment in your ESP (Klaviyo, Omnisend, Mailchimp, HubSpot).",
+      "Send a short <b>re-engagement series</b> (2–3 emails over ~2 weeks): a plain 'still want these?' with a one-click confirm, a best-of/value reminder, and a last-chance + a real incentive if your margins allow.",
+      "Anyone who clicks or buys → move back to your active flows. Anyone who ignores the whole series → <b>suppress them</b> (stop sending), don't just leave them on the list.",
+      "Clean the obvious junk: remove hard-bounced and invalid addresses (some are <b>spam traps</b> — recycled addresses that flag senders who don't prune), so you're not mailing addresses that only hurt you.",
+      "Check the scoreboard: open Gmail's free <b>Postmaster Tools 'Deliverability analysis'</b> (card-email-postmaster-deliverability-analysis) before and ~3–4 weeks after — it grades 'do users want this mail,' which is exactly what suppressing dead weight improves.",
+      "Make it permanent: set the inactivity window as an <b>automated sunset flow</b> so subscribers roll through win-back → suppression on their own, and run a seed/spam-placement test (card-email-inbox-placement-audit) to confirm the lift."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    thread_id: "thread-email-deliverability",
+    supersedes: [],
+    related: ["card-email-postmaster-deliverability-analysis", "card-email-inbox-placement-audit", "card-email-dmarcbis-np"],
+    sources: [
+      { label: "Litmus — Why they're just not that into your emails, and how to fix it", url: "https://www.litmus.com/blog/why-theyre-just-not-that-into-your-emails-and-how-to-fix-it" }
+    ],
+    tags: ["email", "deliverability", "re-engagement", "sunset-flow", "list-hygiene", "lifecycle"],
+    created: "2026-06-28",
+    updated: "2026-06-28"
+  },
+
+  {
+    id: "card-paid-standard-shopping-max-value",
+    domains: ["paid"],
+    title: "Switch Standard Shopping to 'Maximize conversion value' — get revenue-optimized bidding without surrendering to Performance Max",
+    action: "In a Standard Shopping campaign's bid settings, choose 'Maximize conversion value' and leave the Target ROAS field empty, so Google bids for total revenue while you keep Standard Shopping's control and reporting.",
+    summary: "Google Ads (rolling out June 2026) now lets <b>Standard Shopping</b> campaigns use <b>Maximize conversion value</b> bidding <i>without</i> requiring a Target ROAS (target return on ad spend — revenue ÷ ad cost). Until now, getting value-based bidding usually meant moving to a feed-only Performance Max campaign and giving up visibility. Now you can optimize for revenue and still see and steer your Shopping campaign.",
+    why: "Maximizing <i>conversions</i> chases cheap orders; maximizing <i>conversion value</i> chases revenue — a real difference when a £200 order and a £20 order count the same to a conversion-count strategy. The catch used to be that 'value' bidding pushed you into PMax, a black box where you can't see search terms or control placements. This keeps you in the transparent campaign type. Tag block: google-ads.",
+    how: [
+      "First confirm you're tracking <b>conversion value</b> (revenue per order), not just conversion count — value bidding is blind without it. Check in Tools → Conversions that your purchase conversion passes a value.",
+      "Open the Standard Shopping campaign → <b>Settings → Bidding → Change bid strategy</b> → pick <b>Maximize conversion value</b>.",
+      "<b>Leave the optional Target ROAS box empty</b> to start — that tells Google to spend the full budget chasing the most revenue, no efficiency floor yet. (Heads-up on labels: as of June 2026 the old 'Maximize conversion value with a target ROAS' option is being renamed simply <b>'Target ROAS'</b> — same behavior, new name, so don't think it disappeared.)",
+      "Let it run on stable budget for <b>2–3 weeks</b> (it needs enough conversions to learn) before judging — then read revenue and ROAS, not click cost.",
+      "Once you trust the revenue level, add a <b>Target ROAS</b> to hold efficiency — set it near your recent achieved ROAS, not an aspirational number, or you'll choke delivery.",
+      "Use this to question feed-only PMax: if you only moved to PMax to unlock value bidding, you can now test the same goal in Standard Shopping and keep search-term visibility (run them as a guarded experiment — card-paid-aimax-dsa-experiment)."
+    ],
+    confidence: "emerging",
+    corroboration_count: 2,
+    status: "active",
+    thread_id: "thread-platform-ai-defaults",
+    supersedes: [],
+    related: ["card-paid-google-bidding-recalibration", "card-paid-aimax-dsa-experiment"],
+    sources: [
+      { label: "Search Engine Land — Google brings Maximize Conversion Value bidding to Standard Shopping", url: "https://searchengineland.com/google-brings-maximize-conversion-value-bidding-to-standard-shopping-481209" },
+      { label: "Search Engine Roundtable — Google Ads Maximize Conversion Value bidding for Standard Shopping", url: "https://www.seroundtable.com/google-ads-maximize-conversion-value-standard-shopping-41576.html" },
+      { label: "Google Ads Help — About Maximize conversion value bidding", url: "https://support.google.com/google-ads/answer/7684216" }
+    ],
+    tags: ["paid", "google-ads", "shopping", "smart-bidding", "value-based-bidding"],
+    created: "2026-06-28",
+    updated: "2026-06-28"
+  },
+
+  {
     id: "card-webdesign-figma-agent-skills",
     domains: ["web-design"],
     title: "Teach the Figma design agent your design system once — as a reusable Skill (slash command)",
@@ -1261,7 +1352,7 @@ window.AI_EDGE_CARDS = [
     title: "Route AI calls through a gateway with a backup model list so one yanked model can't take you down",
     action: "Put your LLM calls behind a gateway (OpenRouter / Vercel AI Gateway / Cloudflare) and give it a priority list of backup models from different providers.",
     summary: "A gateway is a middleman your app calls instead of one AI provider directly. You hand it a ranked list of models; if the first is pulled, retired, or rate-limited (blocked for sending too many requests), it automatically tries the next. So a model vanishing becomes a config change, not an outage that needs a code deploy.",
-    why: "On Jun 12 the US government ordered Anthropic to switch off Claude Fable 5 and Mythos 5 for every customer — the lesson in one headline: the AI capability you rent can disappear on someone else's order. A backup model list is cheap insurance: your feature stays up even when one provider doesn't.",
+    why: "On Jun 12 the US government ordered Anthropic to switch off Claude Fable 5 and Mythos 5 for every customer; by Jun 26 Mythos 5 came back but only for ~100+ 'trusted' US orgs (Fable 5 general access still suspended) — so the model you rent can vanish, or return gated to people who aren't you. The same week, the open-weight GLM-5.2 (downloadable, runs anywhere) drew notice for closing the gap on real work, which is exactly why a fallback list should include a model nobody can switch off (card-ai-tooling-glm-5-2-route). A backup model list is cheap insurance: your feature stays up even when one provider — or one government — says no.",
     how: [
       "Send your AI calls through a <b>gateway/router</b> — OpenRouter, Vercel AI Gateway, or Cloudflare AI Gateway — instead of one provider's SDK.",
       "With <b>OpenRouter</b>, pass a <code>models</code> array in priority order (up to 3); on an error it auto-tries the next, and you only pay for the one that actually ran.",
@@ -1274,15 +1365,16 @@ window.AI_EDGE_CARDS = [
     status: "active",
     thread_id: "thread-govern-ai-spend",
     supersedes: [],
-    related: ["card-webdev-ai-gateway-spend-limits", "card-ai-tooling-fable5-retention"],
+    related: ["card-webdev-ai-gateway-spend-limits", "card-ai-tooling-fable5-retention", "card-ai-tooling-glm-5-2-route"],
     sources: [
       { label: "OpenRouter — Model Fallbacks (automatic failover)", url: "https://openrouter.ai/docs/guides/routing/model-fallbacks" },
       { label: "Vercel — AI Gateway", url: "https://vercel.com/docs/ai-gateway" },
-      { label: "Anthropic — Statement on the US directive to suspend Fable 5 / Mythos 5", url: "https://www.anthropic.com/news/fable-mythos-access" }
+      { label: "Anthropic — Statement on the US directive to suspend Fable 5 / Mythos 5", url: "https://www.anthropic.com/news/fable-mythos-access" },
+      { label: "Engadget — US lets Anthropic redeploy Mythos to trusted US orgs (Jun 26)", url: "https://www.engadget.com/2203088/anthropic-redeploy-mythos-cybersecurity-ai-model/" }
     ],
     tags: ["llm", "resilience", "gateway", "openrouter", "failover"],
     created: "2026-06-13",
-    updated: "2026-06-13"
+    updated: "2026-06-28"
   },
 
   {
