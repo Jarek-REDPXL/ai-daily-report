@@ -35,6 +35,67 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdesign-customizable-select",
+    domains: ["web-design"],
+    title: "Delete your JavaScript dropdown — style the native <select> with CSS and keep accessibility for free",
+    action: "Set appearance:base-select on BOTH the <select> and its ::picker(select), style the parts, and wrap it in @supports (appearance: base-select) so older browsers fall back to the native dropdown.",
+    summary: "Styling a real <code>&lt;select&gt;</code> used to be a dead end, so teams rebuilt dropdowns in JavaScript and re-implemented (often broke) keyboard and screen-reader support. The customizable <code>&lt;select&gt;</code> ends that: from <b>Chrome 135</b>, opting in with <code>appearance: base-select</code> unlocks styling of the closed control, the open <code>::picker</code>, each <code>option</code>, the <code>::checkmark</code> and the arrow — and options can hold rich HTML (icons/SVG) — while the browser keeps all the built-in keyboard + accessibility behaviour. On <b>Jun 15 2026</b> WebKit confirmed it's coming to <b>Safari 27</b> (2nd engine; Firefox implementing) → path to Baseline.",
+    why: "Dropdowns (country pickers, plan selectors, filters) are where custom components quietly pile up JS weight and accessibility bugs. This deletes a dependency and a whole class of a11y bugs at once — and because unsupported browsers fall back to the perfectly-usable native control, you can adopt it today as pure progressive enhancement.",
+    how: [
+      "Start native: write a real <code>&lt;select&gt;&lt;option&gt;</code> with proper text in every option — that's your works-everywhere, accessible baseline.",
+      "Opt in to styling by setting it on <b>both</b> the element and its picker: <code>.brand-select, .brand-select::picker(select){ appearance: base-select; }</code> — styling only one does nothing.",
+      "Style the parts: <code>::picker(select)</code> (the open panel, positioned with CSS anchor positioning), <code>option</code>, <code>::checkmark</code> (selected tick), <code>::picker-icon</code> (arrow), <code>selectedcontent</code> (the closed-control label); you can animate the picker.",
+      "Add rich options where they help — drop an <code>&lt;svg&gt;</code> or <code>&lt;img&gt;</code> inside an <code>&lt;option&gt;</code> (e.g. flags in a country picker), which a plain native select always stripped.",
+      "Gate it as enhancement: wrap the upgraded styles in <code>@supports (appearance: base-select){ … }</code> so non-supporting browsers render the standard native dropdown.",
+      "Golden rule (WebKit): every <code>&lt;option&gt;</code> must keep real text content (you can hide it visually) so the choice stays in the accessibility tree.",
+      "Deploy tier: treat it as Chromium-only today (Chrome/Edge 135+) — ship as progressive enhancement now; once Safari 27 + Firefox ship to stable, it becomes a JS dropdown you can delete for everyone."
+    ],
+    confidence: "emerging",
+    status: "active",
+    thread_id: "thread-modern-css-primitives",
+    supersedes: [],
+    related: ["card-webdesign-anchor-positioning-menus", "card-webdesign-css-carousel", "card-webdesign-sibling-index"],
+    sources: [
+      { label: "Chrome for Developers — The <select> element can now be customized with CSS", url: "https://developer.chrome.com/blog/a-customizable-select" },
+      { label: "WebKit — The golden rule of Customizable Select (coming to Safari 27)", url: "https://webkit.org/blog/18117/the-golden-rule-of-customizable-select/" },
+      { label: "Can I use — appearance: base-select support", url: "https://caniuse.com/mdn-css_properties_appearance_base-select" }
+    ],
+    tags: ["css", "forms", "select", "accessibility", "progressive-enhancement", "baseline"],
+    created: "2026-06-29",
+    updated: "2026-06-29"
+  },
+
+  {
+    id: "card-graphic-recraft-brand-style-lock",
+    domains: ["graphic"],
+    title: "Teach Recraft your brand look once, then generate a whole asset set that actually matches",
+    action: "In Recraft open Styles → create a new style → upload 5–10 consistent on-brand images, name and save it, then generate your asset set with that Style selected.",
+    summary: "The core failure of AI image tools for brand work isn't quality, it's <b>consistency</b> — ask for ten assets and you get ten different looks because the 'style' lives in a prompt you re-type each time. Recraft's <b>Style</b> system makes the look a saved object: upload <b>5–10 consistent brand images</b> (or combine up to 5 saved styles) and it encodes your colour treatment, line weight, composition and detail level into a reusable <b>Style ('Style Lock')</b> that constrains every later generation. Styles save to your account and share across the team — brand-system management, not one-off prompting.",
+    why: "This is the difference between 'AI made a nice picture' and 'AI made OUR picture, fifty times.' For a campaign you can spin up a coherent set — spot illustrations, icons, social-card backgrounds, headers — that all read as one family in minutes, without a human re-establishing the look on each asset.",
+    how: [
+      "Gather references: pick <b>5–10 of your most on-brand, visually consistent</b> assets (same illustration style, palette, line treatment) — consistency of the set drives the result.",
+      "Create the style: in Recraft open <b>Styles → create a new style → upload reference images</b> (or combine up to 5 saved styles), let it encode the look, and <b>name it</b> clearly (e.g. <code>RedPxl-brand-illustration</code>).",
+      "Generate against it: with the Style selected, keep prompts about <i>content</i> ('a paper-plane icon', 'a hero illustration of a team shipping a launch') and let the Style carry the <i>look</i>.",
+      "Lock &amp; share: save the Style to your account and share it with the team so everyone generates against the same identity; iterate the reference set if the look drifts.",
+      "Keep it editable + on-token: for logos/icons use a <b>V4 Vector</b> model for true SVG (card-graphic-recraft-svg-vector), and set exact brand colours first (card-graphic-color-palette).",
+      "Human-in-the-loop: pick the 2–3 that fit, clean up, and confirm on-brand + licensed before shipping."
+    ],
+    confidence: "confirmed",
+    status: "active",
+    thread_id: "thread-structured-design-gen",
+    supersedes: [],
+    related: ["card-graphic-recraft-svg-vector", "card-graphic-canva-brand-kit-ai", "card-graphic-firefly-brand-batch-creatives", "card-graphic-color-palette"],
+    sources: [
+      { label: "Recraft Blog — New tools for brand style consistency and control", url: "https://www.recraft.ai/blog/new-tools-for-brand-style-consistency-and-control" },
+      { label: "Recraft Blog — How to create sets of consistent images", url: "https://www.recraft.ai/blog/how-to-create-image-sets" },
+      { label: "MindStudio — Recraft V4 brand assets & style consistency", url: "https://www.mindstudio.ai/blog/what-is-recraft-v4-ai-image-model-brand-assets" }
+    ],
+    tags: ["recraft", "brand", "style-reference", "consistency", "ai-image", "design-system"],
+    created: "2026-06-29",
+    updated: "2026-06-29"
+  },
+
+  {
     id: "card-webdev-ai-sdk-7-agents",
     domains: ["web-dev", "ai-tooling"],
     title: "Put a human-approval gate on your AI agent's risky actions — and make the agent survive a restart — with AI SDK 7",
@@ -1238,11 +1299,11 @@ window.AI_EDGE_CARDS = [
     domains: ["social"],
     title: "Make Instagram file each post under one clear topic people can opt into",
     action: "Open Instagram's 'Your Algorithm' topic list to see how it labels content, then name your post's topic in the first caption line, the on-screen text, and the first 3 seconds.",
-    summary: "Instagram's 'Your Algorithm' controls reached the main feed (Jun 12, 2026): an AI reads each person's behaviour, turns it into plain-language topics, and lets them add or remove topics. So your reach now depends on the AI confidently filing your post under a topic that people have chosen to see more of.",
-    why: "When viewers can say 'more of this topic' (and 'less of yours'), a muddy off-topic post isn't just ignored — it gets pushed away from the people who'd actually buy. Clear, consistent topic signals are the new distribution lever.",
+    summary: "Instagram's 'Your Algorithm' controls reached the main feed (Jun 12, 2026): an AI reads each person's behaviour, turns it into plain-language topics, and lets them add or remove topics. <b>Update (Jun 27, 2026):</b> Adam Mosseri demoed moving that control into in-feed gestures — pull DOWN on the feed for the topic menu, swipe UP on a Reel to tune it, and 'more / less like this' buttons under individual Reels — so viewers can steer the algorithm in the moment. Your reach now depends on the AI confidently filing your post under a topic people have chosen to see more of — and increasingly on viewers tapping 'more like this' on you.",
+    why: "When viewers can tap 'more of this topic' (and 'less of yours') right in the feed, a muddy off-topic post isn't just ignored — it gets a 'show less' and is pushed away from the people who'd actually buy. Clear, consistent topic signals are the new distribution lever.",
     how: [
       "On your own account, open <b>Your Algorithm</b> (Settings then the recommendation/topic controls) and read the topics Instagram has guessed — that's roughly how it's labelling content like yours.",
-      "Pick <b>one</b> topic per post and say it plainly: put the topic phrase in the <b>first line of the caption</b>, in <b>on-screen text</b>, and in the <b>first 3 seconds</b> of a Reel — give the AI unmistakable signals.",
+      "Pick <b>one</b> topic per post and say it plainly: put the topic phrase in the <b>first line of the caption</b>, in <b>on-screen text</b>, and in the <b>first 3 seconds</b> of a Reel — give the AI (and the viewer's 'more like this' tap) unmistakable signals.",
       "Hold a <b>consistent niche</b> across posts so your account builds a strong topic association people can opt into; keep off-topic personal posts in Stories.",
       "Give every post a 'send this to…' or save-worthy payoff so it also earns the shares and saves that still drive reach (pair with card-social-instagram-sends).",
       "Check after a week: are the topics in Your Algorithm sharpening toward your niche? If they're scattered, your signals are too mixed."
@@ -1252,13 +1313,14 @@ window.AI_EDGE_CARDS = [
     supersedes: [],
     related: ["card-social-instagram-sends", "card-social-linkedin-ai-citations"],
     sources: [
-      { label: "Search Engine Land — Instagram's Your Algorithm expands to the main feed", url: "https://searchengineland.com/instagram-your-algorithm-expands-main-feed-479922" },
-      { label: "Social Media Today — Instagram extends Your Algorithm to the main feed", url: "https://www.socialmediatoday.com/news/instagram-extends-your-algorithm-to-the-main-feed/822576/" },
-      { label: "Engadget — You can personalize your Instagram algorithm now", url: "https://www.engadget.com/2191695/you-can-personalize-your-instagram-algorithm-now/" }
+      { label: "TechCrunch — Instagram is testing more ways to customize Your Algorithm", url: "https://techcrunch.com/2026/06/27/instagram-is-testing-more-ways-for-users-to-customize-your-algorithm/" },
+      { label: "Social Media Today — Instagram tests more algorithm controls", url: "https://www.socialmediatoday.com/news/instagram-tests-more-algorithm-controls/823936/" },
+      { label: "India TV — Instagram testing new algorithm controls", url: "https://www.indiatvnews.com/technology/news/instagram-testing-new-algorithm-controls-here-s-how-you-can-personalise-your-feed-2026-06-29-1046501" },
+      { label: "Search Engine Land — Instagram's Your Algorithm expands to the main feed", url: "https://searchengineland.com/instagram-your-algorithm-expands-main-feed-479922" }
     ],
-    tags: ["instagram", "algorithm", "reach", "content-strategy"],
+    tags: ["instagram", "algorithm", "reach", "content-strategy", "reels"],
     created: "2026-06-13",
-    updated: "2026-06-13"
+    updated: "2026-06-29"
   },
 
   {
