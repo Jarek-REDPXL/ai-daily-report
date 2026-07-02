@@ -35,6 +35,67 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdev-vercel-dockerfile",
+    domains: ["web-dev"],
+    title: "Deploy any container on Vercel — drop a Dockerfile.vercel and git push (no separate always-on box)",
+    action: "Add a file named Dockerfile.vercel to your project, make the server listen on $PORT and stay stateless, then run `vercel deploy` (or git push) — Vercel builds, stores, deploys and autoscales the image on Fluid compute.",
+    summary: "The service Vercel couldn't auto-build — a Go/Rails/Spring Boot API, anything needing a system binary like <b>FFmpeg</b> or headless <b>Chromium</b>, or an unsupported framework — used to force a second always-on host you provisioned, secured and paid for 24/7. From <b>Jun 30 2026</b>, a <code>Dockerfile.vercel</code> at the project root lets Vercel treat your container like any other deploy: the CLI/git push <b>builds → stores → deploys → autoscales</b> the image on <b>Fluid compute</b>, billed on <b>Active CPU</b> (pay for execution time; idle near-free), with a preview URL per commit and built-in logs/traces/metrics. No local daemon, no registry, no cluster.",
+    why: "It deletes a whole class of infrastructure from a build. The 'we need one tiny separate service for thumbnails/PDFs/a legacy API' problem — the thing that quietly adds a second host, a second bill and a second thing to patch — collapses into one repo, one deploy, one platform. Same 'the platform absorbed the backend' move as Vercel WebSockets and durable Workflows, now for arbitrary containers.",
+    how: [
+      "Write a normal Dockerfile but name it <code>Dockerfile.vercel</code> at the project root.",
+      "Bind <code>$PORT</code> (defaults to 80) and speak plain HTTP — that's the one hard contract.",
+      "Keep it <b>stateless</b>: treat the filesystem as ephemeral; move sessions/uploads/room state and any persistence to a Vercel <b>Marketplace</b> backing service (Redis/Postgres/blob), because instances scale up and down.",
+      "Deploy with <code>vercel deploy</code>, then let every <code>git push</code> rebuild the image and hand you a fresh preview URL.",
+      "Use it for the right jobs first — a media pipeline needing FFmpeg, a Chromium screenshot/PDF service, a Go/Rails/Spring API, or an app you want to bring exactly as it runs — not work a normal Function already handles.",
+      "Watch the meter: Active-CPU billing rewards bursty/idle-heavy workloads; a container pinned at 100% CPU 24/7 can still be cheaper on a fixed-price box — cost it against your real traffic shape."
+    ],
+    confidence: "emerging",
+    status: "active",
+    thread_id: "thread-platform-absorbs-backend",
+    supersedes: [],
+    related: ["card-webdev-vercel-websockets", "card-webdev-vercel-cancelable-jobs", "card-webdev-vercel-workflow-nitro"],
+    sources: [
+      { label: "Vercel Blog — Run any Dockerfile on Vercel", url: "https://vercel.com/blog/dockerfile-on-vercel" },
+      { label: "Vercel Community — notes on the Dockerfile deploy steps", url: "https://community.vercel.com/t/possibly-missing-steps-on-run-any-dockerfile-on-vercel-blog-post/44957" }
+    ],
+    tags: ["vercel", "docker", "fluid-compute", "deployment", "backend", "containers"],
+    created: "2026-07-02",
+    updated: "2026-07-02"
+  },
+
+  {
+    id: "card-ai-tooling-sonnet-5-default",
+    domains: ["ai-tooling"],
+    title: "Re-point your model router to Claude Sonnet 5 — near-Opus agentic quality at ~40% lower price (eval it first)",
+    action: "Run 3–5 of your own real tasks through Claude Sonnet 5 vs your current default (Promptfoo makes it one file), then move the bulk/agentic/long-horizon work to Sonnet 5 and reserve Opus 4.8 for the ~10% that fails your eval.",
+    summary: "On <b>Jun 30 2026</b> Anthropic shipped <b>Claude Sonnet 5</b> (<code>claude-sonnet-5</code>) — the most agentic Sonnet yet (plans, drives browser/terminal tools, runs autonomously). Its higher-effort performance is 'close to Opus 4.8' on many tasks (an independent agentic-coding read: <b>63.2%</b> vs Opus 4.8 <b>69.2%</b>, Sonnet 4.6 <b>58.1%</b>) at <b>$3/$15 per M tokens</b> standard — ~40% under Opus 4.8's $5/$25 — with an <b>intro $2/$10 through Aug 31 2026</b>, plus up to 90% off with prompt caching / 50% with batch. It's the <b>default on Free/Pro</b> and available in Claude Code + the API (also AWS, Microsoft Foundry).",
+    why: "The cheap tier just moved up — a genuine margin win for the large middle of real work (bulk drafting, summarization, most agentic/coding loops, long-horizon jobs). But the trap is repricing your stack on a launch benchmark: the right move is to treat Sonnet 5 as a new router candidate and let your OWN eval decide, keeping Opus for the hardest tail.",
+    how: [
+      "Don't trust the headline — eval it: take 3–5 of your real tasks (a coding loop, a summarization, an extraction, an agent run) and diff Sonnet 5 vs your current default (Promptfoo).",
+      "Re-point the router: where Sonnet 5 passes, move bulk/agentic/long-horizon work to it; map each recurring task to the cheapest model that clears its bar (card-ai-tooling-glm-5-2-route, card-ai-tooling-model-portability).",
+      "Bank the discount deliberately: the $2/$10 intro runs only through <b>Aug 31 2026</b> (then $3/$15) — turn on prompt caching (up to 90% off repeated context) and batch (50% off) for anything non-interactive.",
+      "Re-check the two gates: capability/cost now passes for far more tasks, but re-verify the jurisdiction/provenance gate for regulated client work.",
+      "Re-run monthly: rankings and prices move weekly — set a standing note, don't set-and-forget."
+    ],
+    confidence: "confirmed",
+    corroboration_count: 3,
+    status: "active",
+    thread_id: "thread-open-weight-price-pressure",
+    supersedes: [],
+    related: ["card-ai-tooling-glm-5-2-route", "card-ai-tooling-model-portability", "card-ai-tooling-agent-sdk-credit"],
+    sources: [
+      { label: "Anthropic — Introducing Claude Sonnet 5", url: "https://www.anthropic.com/news/claude-sonnet-5" },
+      { label: "The New Stack — Claude Sonnet 5 closes the gap with Opus 4.8", url: "https://thenewstack.io/claude-sonnet-5-launch/" },
+      { label: "VentureBeat — Anthropic launches Claude Sonnet 5 at a steep discount", url: "https://venturebeat.com/technology/anthropic-launches-claude-sonnet-5-at-a-steep-discount-to-its-top-model-as-the-company-races-toward-a-blockbuster-ipo" },
+      { label: "MarkTechPost — Sonnet 5 vs Sonnet 4.6 vs Opus 4.8 (agentic benchmarks + pricing)", url: "https://www.marktechpost.com/2026/06/30/anthropic-claude-sonnet-5-vs-sonnet-4-6-vs-opus-4-8-agentic-coding-benchmarks-api-pricing-and-cost-performance-tradeoffs-compared/" },
+      { label: "Claude Platform — Pricing", url: "https://platform.claude.com/docs/en/about-claude/pricing" }
+    ],
+    tags: ["claude", "sonnet-5", "model-router", "agents", "pricing", "eval"],
+    created: "2026-07-02",
+    updated: "2026-07-02"
+  },
+
+  {
     id: "card-webdesign-customizable-select",
     domains: ["web-design"],
     title: "Delete your JavaScript dropdown — style the native <select> with CSS and keep accessibility for free",
@@ -320,7 +381,7 @@ window.AI_EDGE_CARDS = [
     how: [
       "Pull the data: Shopify <b>Admin → Orders → Export</b> (last 90 days) + note where GA4 shows the funnel dropping (product → cart → checkout → purchase).",
       "Ask the AI to diagnose: paste the order-value summary (use data-analysis mode for the raw CSV) and prompt 'Compute my AOV and modal order value, show the distribution shape, and tell me whether I lose more money to small baskets or checkout drop-off given this funnel.'",
-      "If the leak is basket size (AOV): set a free-shipping threshold just above your modal order value + a cart progress bar ('You're $X from free shipping') with one low-cost add-on beside it (card-cro-free-shipping-threshold for the margin math).",
+      "If the leak is basket size (AOV): set a free-shipping threshold just above your modal order value (sanity-check it lands ~15–25% over current AOV) + a <b>dynamic</b> cart progress bar ('You're $X from free shipping') with one low-cost add-on beside it — dynamic goal-gradient messaging converts markedly better than a static banner (card-cro-free-shipping-threshold for the margin math).",
       "If the leak is checkout drop-off: fix friction first — guest checkout (card-cro-guest-checkout), cut form fields (card-cro-minimise-form-fields), show full cost incl. shipping early (card-cro-show-total-cost-early).",
       "Bundle to the goal: ask the AI to mine co-purchase pairs from your export and propose 2–3 bundles priced to nudge orders over the threshold (card-cro-cross-sell-bundles).",
       "Ship ONE change and measure AOV, conversion AND margin for 3–4 weeks before the next — a higher AOV you fund with absorbed shipping can be a net loss."
@@ -331,11 +392,12 @@ window.AI_EDGE_CARDS = [
     related: ["card-cro-free-shipping-threshold", "card-cro-cross-sell-bundles", "card-cro-post-purchase-upsell", "card-cro-guest-checkout", "card-cro-show-total-cost-early"],
     sources: [
       { label: "Shopify — Average Order Value: formula, benchmarks & 7 ways to increase it (2026)", url: "https://www.shopify.com/blog/average-order-value" },
-      { label: "Baymard Institute — Cart Abandonment Rate (checkout friction)", url: "https://baymard.com/lists/cart-abandonment-rate" }
+      { label: "Baymard Institute — Cart Abandonment Rate (checkout friction; ~48% cite unexpected extra costs)", url: "https://baymard.com/lists/cart-abandonment-rate" },
+      { label: "Digital Applied — Free Shipping Threshold Strategy 2026 (peg to modal value, ~15–25% above AOV, dynamic progress bar)", url: "https://www.digitalapplied.com/blog/free-shipping-threshold-strategy-2026-ecommerce-playbook" }
     ],
-    tags: ["aov", "cro", "analytics", "ai-analysis", "ecommerce"],
+    tags: ["aov", "cro", "growth", "analytics", "ai-analysis", "ecommerce"],
     created: "2026-06-26",
-    updated: "2026-06-26"
+    updated: "2026-07-02"
   },
 
   {
