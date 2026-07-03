@@ -35,6 +35,130 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdesign-field-sizing",
+    domains: ["web-design"],
+    title: "Delete the auto-grow-textarea JavaScript — `field-sizing: content` is Baseline now",
+    action: "Add `field-sizing: content` (plus a min- and max- size) to the textareas/inputs/selects that should grow to their content, then remove the JS autosize library for those fields.",
+    summary: "Auto-sizing a <code>&lt;textarea&gt;</code> to its content used to mean a JS library or a <code>scrollHeight</code> resize handler. <b>CSS <code>field-sizing: content</code></b> does it natively: a textarea grows line-by-line as you type, a text <code>&lt;input&gt;</code> hugs its value (chip/tag/inline-edit fields), and a <code>&lt;select&gt;</code> sizes to the chosen option instead of the widest one. The default stays <code>fixed</code>, so it's opt-in — and on <b>Jun 16 2026</b> Firefox 152 (the last engine) shipped it, moving it to <b>Baseline Newly Available</b>, so you delete the dependency for ALL users, not just enhance.",
+    why: "It removes a whole class of JS (react-textarea-autosize / hand-rolled resize handlers) and the bugs it carries (paste, font-load, resize) for one line of CSS — and because it's Baseline you don't need an <code>@supports</code> guard or a fallback for current browsers. On the surfaces we ship most (comment boxes, chat composers, support forms, tag inputs, inline-edit cells) that's real bundle-size and bug-surface savings.",
+    how: [
+      "Add <code>field-sizing: content</code> only to the controls that should grow — message/comment <code>&lt;textarea&gt;</code>s, tag/inline-edit text <code>&lt;input&gt;</code>s, content-width <code>&lt;select&gt;</code>s (leave the rest on the default <code>fixed</code>).",
+      "ALWAYS bound it: e.g. <code>textarea { field-sizing: content; min-height: 3lh; max-height: 12lh; }</code> and <code>input { field-sizing: content; min-width: 6ch; max-width: 100%; }</code> — the <code>size</code>/<code>rows</code>/<code>cols</code> attributes are ignored once <code>content</code> is on, so size via CSS.",
+      "Remove the JS autosize library / <code>scrollHeight</code> handler for those fields — the browser now handles growth (including paste and font-load).",
+      "Check edges: min-height covers a placeholder line, a very long single word wraps (add <code>overflow-wrap: anywhere</code> if needed), and RTL/zoom look right.",
+      "No <code>@supports</code> needed for current Chrome/Edge/Safari/Firefox (Baseline). If you must support pre-2024 Chrome / pre-26.2 Safari / pre-152 Firefox, wrap the opt-in in <code>@supports (field-sizing: content)</code> — they keep the normal fixed-size control."
+    ],
+    confidence: "confirmed",
+    corroboration_count: 3,
+    status: "active",
+    thread_id: "thread-modern-css-primitives",
+    supersedes: [],
+    related: ["card-webdesign-customizable-select", "card-webdesign-anchor-positioning-menus"],
+    sources: [
+      { label: "web-features explorer — field-sizing (Baseline 2026-06-16)", url: "https://web-platform-dx.github.io/web-features-explorer/features/field-sizing/" },
+      { label: "MDN — field-sizing", url: "https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing" },
+      { label: "Stefan Judis — field-sizing is about more than textareas", url: "https://www.stefanjudis.com/today-i-learned/field-sizing-is-about-more-than-textareas/" },
+      { label: "Can I Use — field-sizing: content", url: "https://caniuse.com/mdn-css_properties_field-sizing_content" }
+    ],
+    tags: ["css", "forms", "field-sizing", "baseline", "accessibility"],
+    created: "2026-07-03",
+    updated: "2026-07-03"
+  },
+
+  {
+    id: "card-email-microsoft-snds",
+    domains: ["email"],
+    title: "Claim Microsoft SNDS — the free dashboard for how Outlook/Hotmail rate your sending IPs",
+    action: "Register your sending IP(s) at Microsoft's SNDS site, turn on JMRP for the same IPs, and check the filter status the same day you check Gmail Postmaster Tools.",
+    summary: "You watch Gmail's opinion of your mail; <b>Microsoft SNDS</b> (Smart Network Data Services) is the free counterpart for Outlook/Hotmail/Live (~350M inboxes) — but <b>IP-based</b> (you register the sending IPs you own/authorise) where Gmail is domain-based, so it's the missing half of your deliverability picture. Per IP it shows a plain <b>filter status</b> (green healthy / yellow warning / red junked-or-blocked), <b>spam-trap hits</b>, <b>complaint-rate</b> trend and <b>volume</b>. <b>Jun 2026 changes:</b> portal moved to a new URL (Jun 8), a new REST API with OAuth 2.0, automated CSV links now expire after 30 days, and the JMRP complaint feed is ARF-standardised + privacy-trimmed (headers only, no body).",
+    why: "If you send real consumer volume, roughly half your audience can sit behind Microsoft's filter — and you've probably been blind there. SNDS is a free gauge that maps a red status straight to a fix, and the June 2026 changes are the nudge to (re)claim access and repair any pipeline that pulls its data.",
+    how: [
+      "Request access at Microsoft's SNDS site (<code>sendersupport.olc.protection.outlook.com/snds</code>) and enter the sending IP(s) to monitor — your own, or ask your ESP which dedicated IPs carry your mail.",
+      "Verify ownership: Microsoft emails the IP range's admin contact to authorise you — coordinate with your ESP/infra owner so the approval isn't missed.",
+      "Turn on JMRP (Junk Mail Reporting Program) for the same IPs and wire complainers straight into your suppression list.",
+      "Read the gauge weekly (red daily): red filter status = fire (mail being junked/blocked — pause aggressive sends, check auth + recent list changes); yellow = investigate; any spam-trap hit = prune the stale segment behind it (pairs with card-email-reengagement-sunset).",
+      "Fix the Jun-2026 plumbing: update dead bookmarks to the new URL, move automated pulls to the new REST API (OAuth 2.0) or account for the 30-day CSV link expiry, and update complaint-mapping that assumed a full message body (JMRP is headers-only now).",
+      "Make 'read SNDS + Gmail Postmaster' one recurring ritual so you see BOTH big consumer filters' verdicts."
+    ],
+    confidence: "confirmed",
+    corroboration_count: 3,
+    status: "active",
+    thread_id: "thread-email-deliverability",
+    supersedes: [],
+    related: ["card-email-postmaster-deliverability-analysis", "card-email-dmarcbis-np", "card-email-inbox-placement-audit", "card-email-reengagement-sunset"],
+    sources: [
+      { label: "Litmus — What Is Microsoft SNDS (and the Jun 2026 changes)", url: "https://www.litmus.com/blog/what-is-microsoft-snds-why-your-deliverability-strategy-depends-on-it" },
+      { label: "Microsoft — Smart Network Data Services (SNDS)", url: "https://sendersupport.olc.protection.outlook.com/snds/index" },
+      { label: "Iterable — Monitoring deliverability with Microsoft SNDS", url: "https://iterable.com/blog/improve-deliverability-with-snds/" },
+      { label: "Twilio — What is Microsoft SNDS and do I need it?", url: "https://www.twilio.com/en-us/blog/insights/what-is-microsoft-smart-network-data-services" }
+    ],
+    tags: ["deliverability", "microsoft", "snds", "outlook", "sender-reputation", "jmrp"],
+    created: "2026-07-03",
+    updated: "2026-07-03"
+  },
+
+  {
+    id: "card-paid-pmax-channel-diagnostics",
+    domains: ["paid"],
+    title: "Crack open the PMax black box — read Channel Diagnostics to see WHY a channel isn't serving",
+    action: "In a Performance Max campaign, open Insights & Reports → Channel performance → Channel Diagnostics, then fix every flagged missing/rejected asset and pull any unrealistic target back toward trailing actuals.",
+    summary: "Performance Max spends across Search, YouTube, Display, Discover, Gmail and Maps and used to tell you almost nothing about why. Reported <b>Jul 2 2026</b> (rolling out): a new <b>Channel Diagnostics</b> view under <b>Insights &amp; Reports → Channel performance</b> shows diagnostic data across all channels AND per channel — flagging the fixable reasons a channel is limited or dark: <b>missing/rejected assets</b>, an <b>unrealistic target</b> (tCPA too low / tROAS too high), weak <b>Ad Strength</b>, or audience-signal/conversion-tracking problems. Honest read: a channel with NO issues that still isn't serving just means PMax is bidding elsewhere for higher ROI right now.",
+    why: "It's a rare window into the automation. Instead of arguing whether PMax 'wasted' budget on Display or 'never tried' YouTube, you open the diagnostics, see the real blocker (usually a missing asset ratio or a fantasy target), and fix a concrete input — then judge on cost-per-outcome, not channel-by-channel vanity.",
+    how: [
+      "In a PMax campaign go to Insights & Reports → Channel performance and open the Channel Diagnostics view (if it's absent, your account is still in the rollout queue — check back).",
+      "Fix rejected/missing assets first: supply what's flagged — most often a vertical (9:16) video and enough image ratios for YouTube/Discover/Gmail — and resolve disapprovals; thin asset groups are the #1 reason a channel can't serve.",
+      "Sanity-check targets: pull a too-low tCPA up or a too-high tROAS down toward trailing actuals (ties into card-paid-google-bidding-recalibration) — a fantasy target silently throttles delivery.",
+      "Verify the plumbing: confirm the audience signal is populated and conversion tracking is firing.",
+      "Read the 'no issues but dark' case correctly: don't force a channel PMax is skipping for ROI reasons — spend effort on flagged inputs, then judge on cost-per-outcome.",
+      "Make it a weekly 60-second triage per PMax campaign so a disapproved asset or starving target is caught before it burns a week of budget."
+    ],
+    confidence: "emerging",
+    corroboration_count: 3,
+    status: "active",
+    thread_id: "thread-platform-ai-defaults",
+    supersedes: [],
+    related: ["card-paid-google-bidding-recalibration", "card-paid-aimax-dsa-experiment"],
+    sources: [
+      { label: "Search Engine Land — Google adds Channel Diagnostics to Performance Max", url: "https://searchengineland.com/google-adds-channel-diagnostics-to-performance-max-481445" },
+      { label: "Search Engine Roundtable — Google Ads Channel Diagnostics for PMax", url: "https://www.seroundtable.com/google-ads-channel-diagnostics-41607.html" },
+      { label: "Google Ads Help — About the channel performance report for Performance Max", url: "https://support.google.com/google-ads/answer/16260130?hl=en" },
+      { label: "Google — Channel performance reporting for Performance Max", url: "https://blog.google/products/ads-commerce/channel-performance-reporting-coming-to-performance-max/" }
+    ],
+    tags: ["google-ads", "performance-max", "channel-diagnostics", "reporting", "pmax"],
+    created: "2026-07-03",
+    updated: "2026-07-03"
+  },
+
+  {
+    id: "card-paid-reddit-split-testing",
+    domains: ["paid"],
+    title: "Run a clean A/B on Reddit — native user-level Split Testing is now open to all advertisers",
+    action: "In Reddit Ads Manager, create a Split Test that changes exactly ONE variable (creative, audience, or bid), then let it run 2–6 weeks to the 65%-confidence winner.",
+    summary: "On <b>Jul 3 2026</b> Reddit made <b>Split Testing</b> generally available to all advertisers (after a partner beta). It's a proper controlled A/B in Ads Manager: it splits your audience <b>at the user level</b> (no overlap contamination), runs <b>two flights differing by one variable</b>, and declares a winner at <b>65% confidence</b> over <b>2–6 weeks</b>. Supported objectives: Awareness/Reach, Traffic, Conversions, Shopping, App Installs, Video Views. Minimum <b>$1,000/day</b> spend. Reddit's beta: 4 of 5 tests found a winning variant by ROAS.",
+    why: "If Reddit is (or could be) in a client's mix, this replaces eyeballing two campaigns that ran at different times to overlapping audiences. Change one thing, let the platform hold everything else constant, get a clean read — and most beta tests were decisive.",
+    how: [
+      "In Reddit Ads Manager create a Split Test and pick a supported objective.",
+      "Change exactly one variable between the two flights — creative OR audience OR bid/placement — never several at once, or you can't attribute the win.",
+      "Confirm you can clear the $1,000/day minimum and let it run its 2–6 week course to the 65%-confidence winner (don't peek-and-kill early).",
+      "Roll the winner into the scaled campaign, then start the next single-variable test — treat it as a standing iteration loop."
+    ],
+    confidence: "confirmed",
+    corroboration_count: 3,
+    status: "active",
+    thread_id: "thread-platform-ai-defaults",
+    supersedes: [],
+    related: ["card-paid-pmax-channel-diagnostics"],
+    sources: [
+      { label: "Social Media Today — Reddit rolls out split testing to all advertisers", url: "https://www.socialmediatoday.com/news/reddit-rolls-out-split-testing-to-all-advertisers/824298/" },
+      { label: "MediaPost — Reddit advertisers can compare ad variants via A/B testing", url: "https://www.mediapost.com/publications/article/416287/reddit-advertisers-can-compare-ad-variants-via-ab.html" },
+      { label: "Social Samosa — Reddit expands Split Testing to all advertisers", url: "https://www.socialsamosa.com/news-2/reddit-split-testing-advertisers-compare-campaigns-12126224" }
+    ],
+    tags: ["reddit-ads", "split-testing", "ab-testing", "experimentation"],
+    created: "2026-07-03",
+    updated: "2026-07-03"
+  },
+
+  {
     id: "card-webdev-vercel-dockerfile",
     domains: ["web-dev"],
     title: "Deploy any container on Vercel — drop a Dockerfile.vercel and git push (no separate always-on box)",
