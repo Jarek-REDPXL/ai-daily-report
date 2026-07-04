@@ -35,6 +35,103 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-graphic-higgsfield-product-photography",
+    domains: ["graphic"],
+    title: "Turn your existing product photos into an on-model catalog + video lookbook with Higgsfield — no studio",
+    action: "In Higgsfield AI Product Photography, upload your existing PDP product photo, lock one model with Soul 2.0 + Soul ID, then run AI Batch Catalog / AI Variant Sets to shoot the whole line — templated per garment type.",
+    summary: "A clothing store's biggest recurring cost is the shoot. <b>Higgsfield AI Product Photography</b> is a photo-to-catalog pipeline: upload a plain product photo (the same one on your PDP — it preserves the real product's details), pick a shot type (<b>studio / lifestyle / on-model / detail</b>), and batch-export marketplace-ready images in minutes. Apparel-specific: it puts garments on a model with <b>natural fit and drape</b>, makes <b>flat-lays + colorway variants</b> with no model shoot, and — the system-makers — <b>AI Batch Catalog</b> (uniform shots across many products) + <b>AI Variant Sets</b> (every colorway, consistent styling across SKUs). Lock ONE repeatable 'house model' across every shot with <b>Soul / Soul 2.0 + Soul ID</b>, then feed each still to <b>image-to-video</b> (Sora 2 / Kling / Veo / Seedance, one plan) for a video lookbook. Automate via the hosted <b>MCP server</b> (30+ models — drive from Claude Code) or the API.",
+    why: "It collapses catalog + social + ad creative for a clothing client into a same-day, on-brand pipeline at a fraction of shoot cost/time — 'brief-in, options-out' for a whole SKU range at once. This answers the team's Ask (Jarek's request to research Higgsfield for clothing-store image/video, best practices + automation).",
+    how: [
+      "Start with your REAL photos: upload the existing PDP product image(s) — no reshoot; Higgsfield preserves the product's details.",
+      "Lock a house model: generate/select a model with <b>Soul 2.0 + Soul ID</b> so the same face/body carries across the whole line (this is what makes 40 SKUs look like one shoot).",
+      "Template by garment type BEFORE you batch: e.g. all tops = studio walk-and-turn on white; all dresses = lifestyle outdoor — then run <b>AI Batch Catalog</b> for the uniform set and <b>AI Variant Sets</b> for every colorway/SKU.",
+      "Fix details + resize: <b>AI Relight and Shadow</b> / <b>Background Swap</b> for the scene, <b>AI Photo Upscaler</b> to 4K, <b>AI Product Resizer</b> to output 9:16 (Reels/Stories), 1:1 (catalog) and 4:5 (feed) from one generation.",
+      "Make the video lookbook: feed each hero still into image-to-video (Sora 2 / Kling / Veo / Seedance) for a walk-and-turn or lifestyle clip; template the motion per category too.",
+      "Automate the repeat work: connect the Higgsfield <b>MCP</b> to Claude Code (or use the API) so a new drop = one agent run from your product URLs, not manual clicks.",
+      "Keep a human gate: review fit/drape (structured fabrics — denim/tailored/shirts — render excellently; flowing fabrics — silk/chiffon/linen — are very good but check the drape), confirm <b>commercial-use rights</b> for your plan, and A/B the AI shots against your real control shots on actual conversion before replacing the studio."
+    ],
+    confidence: "emerging",
+    status: "active",
+    thread_id: "thread-brand-consistent-gen",
+    supersedes: [],
+    related: ["card-graphic-recraft-brand-style-lock", "card-graphic-firefly-brand-batch-creatives", "card-graphic-runway-aleph-figma-weave"],
+    sources: [
+      { label: "Higgsfield — AI Product Photography", url: "https://higgsfield.ai/ai-product-photography" },
+      { label: "Higgsfield — Soul (fashion-grade photo model + Soul ID)", url: "https://higgsfield.ai/soul" },
+      { label: "Higgsfield — hosted MCP server (Claude Code / any agent)", url: "https://higgsfield.ai/mcp" },
+      { label: "Higgsfield — pricing plans", url: "https://higgsfield.ai/pricing" },
+      { label: "Flowith — how fashion e-commerce brands use Higgsfield for video lookbooks", url: "https://flowith.io/blog/how-fashion-ecommerce-use-higgsfield-video-lookbooks/" },
+      { label: "OpenAI — Higgsfield (customer story)", url: "https://openai.com/index/higgsfield/" },
+      { label: "PR Newswire — Higgsfield $130M Series A + $200M run rate", url: "https://www.prnewswire.com/news-releases/higgsfield-announces-130m-series-a-and-reports-200m-annual-run-rate-302661805.html" }
+    ],
+    tags: ["higgsfield", "product-photography", "ai-video", "ecommerce", "fashion", "soul", "batch", "mcp"],
+    created: "2026-07-04",
+    updated: "2026-07-04"
+  },
+
+  {
+    id: "card-webdev-vercel-ai-gateway-routing",
+    domains: ["web-dev"],
+    title: "Let a routing RULE pick your LLM — Vercel AI Gateway routing rules rewrite expensive calls, block models, and fall over on outages",
+    action: "Front your LLM calls with Vercel AI Gateway, then add a team-wide routing rule that rewrites bulk jobs to a cheaper model + a model-fallback chain — instead of hard-coding a model at every call site.",
+    summary: "<b>Vercel AI Gateway</b> already gives you one API key for every model; the new <b>routing rules (beta)</b> move the router decision out of your code into a declarative, team-wide policy. A rule can <b>rewrite</b> a request from one model to another (quietly send bulk work to a cheaper model) or <b>deny</b> a model (block it entirely) — plus request-level BYOK, <b>model fallbacks</b>, sorting, an 'only' filter and provider options, with team-level Zero-Data-Retention + a provider allowlist. Fallbacks are the reliability half: on an error/rate-limit/timeout the gateway reissues to a healthy alternative — Vercel says ~<b>3.5%</b> of requests complete ONLY because of a fallback.",
+    why: "It's the 'never ship an LLM feature without a cost/continuity control' lesson made declarative — set the policy once (cheap tier for bulk, reserve the top model, fail over on outage) instead of hard-coding <code>model:</code> across ten routes and hoping nobody forgets. Reinforces the 5★-rated route-your-bulk-jobs play (card-ai-tooling-glm-5-2-route).",
+    how: [
+      "Point your AI SDK / OpenAI-compatible calls at <b>Vercel AI Gateway</b> (one key, every model) if you aren't already.",
+      "Write a COST rule: add a routing rule that <b>rewrites</b> your bulk/long-horizon model to a cheaper capable one (e.g. redirect summarization/extraction off the premium model) — at the team level, not per call site.",
+      "Deny what shouldn't ship: add a <b>deny</b> rule for any model you don't want in prod (too costly, wrong jurisdiction/provenance) so a stray call is blocked, not billed.",
+      "Add a FALLBACK chain: configure <b>model fallbacks</b> so an outage/rate-limit/timeout reroutes to a healthy alternative instead of erroring (treat Vercel's ~3.5% 'completed-via-fallback' as the uptime you're buying).",
+      "Set team guardrails: turn on the <b>provider allowlist</b> + <b>Zero-Data-Retention</b> for regulated client work; use BYOK where you must bring your own provider key.",
+      "Because it's BETA: keep routing rules off your highest-stakes path for now, keep your standing eval running against whatever the rule routes to, and pair with a hard dollar ceiling (Cloudflare AI Gateway spend limits, card-webdev-ai-gateway-spend-limits) where the budget — not just availability — is the risk."
+    ],
+    confidence: "emerging",
+    status: "active",
+    thread_id: "thread-govern-ai-spend",
+    supersedes: [],
+    related: ["card-webdev-ai-gateway-spend-limits", "card-ai-tooling-model-portability", "card-ai-tooling-glm-5-2-route"],
+    sources: [
+      { label: "Vercel — Routing rules now available on AI Gateway", url: "https://vercel.com/changelog/ai-gateway-routing-rules" },
+      { label: "Vercel Docs — AI Gateway Routing Rules", url: "https://vercel.com/docs/ai-gateway/models-and-providers/routing-rules" },
+      { label: "Vercel KB — Cost-aware model routing through AI Gateway", url: "https://vercel.com/kb/guide/cost-aware-model-routing-with-ai-gateway" },
+      { label: "Vercel — Model fallbacks in AI Gateway", url: "https://vercel.com/changelog/model-fallbacks-now-available-in-vercel-ai-gateway" }
+    ],
+    tags: ["vercel", "ai-gateway", "model-routing", "fallback", "cost-governance", "llmops"],
+    created: "2026-07-04",
+    updated: "2026-07-04"
+  },
+
+  {
+    id: "card-social-x-live-studio",
+    domains: ["social"],
+    title: "Run a client's X livestream like a show — Live Studio schedules, brands and measures it from one desktop dashboard",
+    action: "In X's Creator Studio → Live Studio, schedule the stream, add a title + thumbnail, gate access if needed, then read the viewer-peak/comment-peak analytics to schedule the NEXT stream into your audience's real peak window.",
+    summary: "X shipped <b>Live Studio</b> (announced by product chief Nikita Bier Jul 1, rolling out Jul 2 2026) — a desktop command center inside <b>Creator Studio</b> that moves livestreaming off the phone. <b>Schedule</b> a stream for a set day/time, add a <b>title + thumbnail</b> viewers see before it starts, <b>gate access</b> to subscribers or verified users, and manage a big room with <b>chat controls</b>. The operator gold is analytics in the same place: <b>viewer peaks, comment peaks, and audience demographics</b>. A <b>$1M creator payout fund</b> tied to live video is live now.",
+    why: "It turns 'when should we go live?' from a hunch into a read off a dashboard, and makes live a schedulable, measurable, reportable channel a social manager can actually run — the 'the dashboard is the analytics desk' pattern, now for live video on X. The $1M fund is a timed reason to pilot now.",
+    how: [
+      "Decide if live fits the client — only worth it where there's a real reason to go live on X (a drop, launch, AMA, live event); don't manufacture streams for a fund.",
+      "In <b>Creator Studio → Live Studio</b> (desktop): <b>schedule</b> the stream, write a clear <b>title</b>, and upload a <b>thumbnail</b> (your pre-roll hook — treat it like a video cover).",
+      "Pick your gate: open, or limit to <b>subscribers/verified</b> for a perk or a calmer room; set up <b>chat controls</b> before a big stream.",
+      "Stream into the peak: after stream one, read <b>viewer peaks + audience demographics</b> and schedule the next for that window; check the <b>comment peak</b> to see which segment drove engagement and lead with that.",
+      "Account for Premium: confirm which features your tier unlocks (advanced Live Studio = <b>X Premium</b>) and factor the subscription into the client budget.",
+      "Use the $1M fund as a test budget, not a plan — its long-term payout rules are undefined, so pilot low-risk while attention is highest, don't build strategy on it."
+    ],
+    confidence: "confirmed",
+    corroboration_count: 3,
+    status: "active",
+    thread_id: "thread-dashboard-analytics-desk",
+    supersedes: [],
+    related: ["card-social-edits-creator-analytics", "card-social-facebook-creator-assistant", "card-social-x-conversion-tracking"],
+    sources: [
+      { label: "Social Media Today — X launches livestream studio", url: "https://www.socialmediatoday.com/news/x-launches-livestream-studio-to-simplify-live-broadcasts/824300/" },
+      { label: "Engadget — X's fresh push for live video with creator payouts", url: "https://www.engadget.com/2206527/x-push-for-live-video-creator-payouts/" },
+      { label: "Digital Trends — X's new streaming hub + $1M fund", url: "https://www.digitaltrends.com/social-media/x-wants-you-to-go-live-with-its-new-streaming-hub-and-is-offering-1-million-to-make-it-worth-your-while/" }
+    ],
+    tags: ["x", "live-studio", "livestreaming", "creator-tools", "analytics"],
+    created: "2026-07-04",
+    updated: "2026-07-04"
+  },
+
+  {
     id: "card-webdesign-field-sizing",
     domains: ["web-design"],
     title: "Delete the auto-grow-textarea JavaScript — `field-sizing: content` is Baseline now",
