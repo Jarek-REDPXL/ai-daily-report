@@ -35,6 +35,74 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdesign-border-shape",
+    domains: ["web-design"],
+    title: "Ship non-rectangular UI — beveled tabs, notched tickets, scooped cards — with one line of CSS, no SVG",
+    action: "On a button/card you already round, add corner-shape: bevel (or notch / scoop / squircle) next to its border-radius and test in Chrome/Edge — unsupported browsers just show your normal rounded corner.",
+    summary: "Anything other than a rounded rectangle used to cost an SVG, a PNG mask, or a <code>clip-path</code> hack (which kills your border + shadow). <b>corner-shape</b> (Chrome/Edge/Opera 139+) reshapes any <code>border-radius</code> into a <b>bevel</b> (flat cut), <b>notch</b> (square inset), <b>scoop</b> (concave curve), <b>squircle</b>, or a maths <code>superellipse(k)</code> curve — with up to four values for per-corner control (<code>corner-shape: scoop scoop round round</code> = ticket). It <b>degrades gracefully</b> (border-radius is the fallback), so no <code>@supports</code> needed. The bigger, near-future property is <b>border-shape</b>: it redefines the box geometry itself, so <b>border, box-shadow, outline and pointer events all follow a fully custom edge</b> (speech-bubble tails, wavy banners) — but it's flag-only in Chrome Canary 146+ today.",
+    why: "Decorative structure that used to mean an asset or a JS/SVG dependency becomes one or two lines of CSS with a clean fallback — the 'app-like polish at near-zero bundle cost' lever, without the clip-path tradeoff of losing your border and shadow. Lead with corner-shape (ships today); stage border-shape behind a guard so components light up automatically as it lands.",
+    how: [
+      "Ship corner-shape now (safe): on a button/card you already round, add the shape next to the radius — <code>.btn { border-radius: 16px; corner-shape: bevel; }</code>. Unsupported browsers show the plain rounded corner; no guard needed.",
+      "Cut ticket + tab silhouettes with per-corner values: <code>.ticket { border-radius: 16px; corner-shape: scoop scoop round round; }</code> (concave top, round bottom). Use <b>notch</b> for coupon cut-outs, <b>bevel</b> for angled tabs.",
+      "Dial the curve precisely with <code>corner-shape: superellipse(1.5)</code> — lower = rounder, higher = squarer — when 'squircle' isn't exact enough.",
+      "Feature-detect anything you're unsure about for zero breakage: <code>@supports (corner-shape: squircle) { … }</code>.",
+      "Stage border-shape as a flagged enhancement for full custom edges: keep a base <code>border-radius</code> everyone gets, then <code>@supports (border-shape: circle()) { .callout { border-shape: shape(from 0 0, hline 100%, line to 50% calc(100% + 12px), line to 0 100%, close); } }</code> for a speech-bubble tail whose border + shadow follow the path.",
+      "Preview border-shape in Chrome Canary 146+ with <code>chrome://flags/#enable-experimental-web-platform-features</code> on — expect bugs and possible syntax changes; keep <code>clip-path</code> as your cross-browser fallback for hard shape needs."
+    ],
+    confidence: "emerging",
+    status: "active",
+    thread_id: "thread-modern-css-primitives",
+    corroboration_count: 3,
+    supersedes: [],
+    related: ["card-webdesign-squircle-corners", "card-webdesign-scroll-triggered-animations"],
+    sources: [
+      { label: "CSS-Tricks — Get Ready For the Powerful CSS border-shape Property (Jul 7 2026)", url: "https://css-tricks.com/get-ready-for-the-powerful-css-border-shape-property/" },
+      { label: "Una Kravets — border-shape: the future of the non-rectangular web", url: "https://una.im/border-shape" },
+      { label: "modern-css.com — CSS border-shape (flag-only status, syntax)", url: "https://modern-css.com/css-border-shape/" },
+      { label: "MDN — corner-shape (values, superellipse, Baseline status)", url: "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/corner-shape" },
+      { label: "Smashing Magazine — Beyond border-radius: what corner-shape unlocks", url: "https://www.smashingmagazine.com/2026/03/beyond-border-radius-css-corner-shape-property-ui/" }
+    ],
+    tags: ["css", "ui", "corner-shape", "border-shape", "progressive-enhancement"],
+    created: "2026-07-10",
+    updated: "2026-07-10"
+  },
+
+  {
+    id: "card-ai-tooling-gpt-live",
+    domains: ["ai-tooling"],
+    title: "Turn a walk into a real brainstorm with GPT-Live — a full-duplex voice partner that looks things up mid-conversation",
+    action: "Update the ChatGPT app (or open chatgpt.com), tap the Voice button, tell it 'be my brainstorm partner — look things up and keep talking,' then think out loud on a brief.",
+    summary: "On <b>Jul 8 2026</b> OpenAI shipped <b>GPT-Live</b>, replacing ChatGPT's old Advanced Voice Mode (which ran a ~2024-cutoff model and was useless for real thinking). GPT-Live is <b>full-duplex</b> — it listens and speaks at the same time, so you interrupt it like a colleague and it stops cleanly; pause mid-sentence and it waits. For anything needing fresh facts or reasoning it <b>silently delegates to GPT-5.5 in the background</b> and keeps talking, so voice finally has <b>current knowledge + live web search + memory</b>. Two tiers: GPT-Live-1 (Go/Plus/Pro) and GPT-Live-1 mini (Free), on iOS/Android/web + CarPlay.",
+    why: "It's a genuine hands-free thinking partner for the messy pre-writing phase of any craft — talk through a brief, positioning angle, or bug on a walk and have it pull live references without breaking rhythm, or run out-loud research interviews with it fetching support in the same session. The old voice couldn't do this because its model didn't know anything current.",
+    how: [
+      "Get it: update the ChatGPT app on iPhone/Android (or open chatgpt.com). Auto-enrolled, no toggle. Free = GPT-Live-1 mini; any paid tier (Go/Plus/Pro) = GPT-Live-1.",
+      "Enter it: tap the <b>Voice button</b> (waveform icon) in a normal chat — there's no separate 'GPT-Live' menu.",
+      "Prime it once, out loud: 'You're my brainstorm partner. Interrupt me only when you have something sharp. If you need facts, look them up and keep talking — don't go silent.'",
+      "Ideation pass: talk through the brief; deliberately pause mid-sentence to confirm it waits, and interrupt freely when it drifts.",
+      "Trigger live delegation: ask something needing fresh data — 'What did [competitor] ship this week? Pull it up while we keep going' — it runs a GPT-5.5 web search in the background and folds the answer in.",
+      "Research-interview mode: have it role-play a target customer, then flip — 'Now interview me about this campaign and probe the weak spots.'",
+      "Capture: end with 'Summarize our decisions and open questions as bullets' — the transcript persists in the text thread for your written handoff.",
+      "Guardrails: verify any web-fact it fetched before publishing, and keep confidential briefs OFF it (consumer-tier retention; excluded from Business/Enterprise/Edu)."
+    ],
+    confidence: "emerging",
+    status: "active",
+    thread_id: "thread-ai-voice-agents",
+    corroboration_count: 4,
+    supersedes: [],
+    related: ["card-ai-tooling-model-portability"],
+    sources: [
+      { label: "OpenAI — Introducing GPT-Live", url: "https://openai.com/index/introducing-gpt-live/" },
+      { label: "Simon Willison — GPT-Live hands-on", url: "https://simonwillison.net/2026/Jul/8/introducing-gptlive/" },
+      { label: "TechCrunch — OpenAI's new voice models (GPT-Live)", url: "https://techcrunch.com/2026/07/08/openai-releases-new-voice-models-for-more-natural-live-conversations/" },
+      { label: "TestingCatalog — GPT-Live plan gating + no video/screen-share at launch", url: "https://www.testingcatalog.com/openai-rolls-out-gpt-live-voice-for-chatgpt-on-web-and-mobile/" },
+      { label: "9to5Mac — GPT-Live access + CarPlay", url: "https://9to5mac.com/2026/07/08/openai-upgrading-chatgpt-with-all-new-voice-mode-experience-watch-here/" }
+    ],
+    tags: ["openai", "chatgpt", "voice", "gpt-live", "gpt-5-5", "brainstorming"],
+    created: "2026-07-10",
+    updated: "2026-07-10"
+  },
+
+  {
     id: "card-graphic-higgsfield-product-photography",
     domains: ["graphic"],
     title: "Turn your existing product photos into an on-model catalog + video lookbook with Higgsfield — no studio",
@@ -613,12 +681,13 @@ window.AI_EDGE_CARDS = [
     related: ["card-cro-free-shipping-threshold", "card-cro-cross-sell-bundles", "card-cro-post-purchase-upsell", "card-cro-guest-checkout", "card-cro-show-total-cost-early"],
     sources: [
       { label: "Shopify — Average Order Value: formula, benchmarks & 7 ways to increase it (2026)", url: "https://www.shopify.com/blog/average-order-value" },
-      { label: "Baymard Institute — Cart Abandonment Rate (checkout friction; ~48% cite unexpected extra costs)", url: "https://baymard.com/lists/cart-abandonment-rate" },
+      { label: "Baymard Institute — Cart Abandonment Rate (70.22% avg; top fixable reasons: 39% extra costs, 19% forced account, 18% too-long checkout, 14% no total shown)", url: "https://baymard.com/lists/cart-abandonment-rate" },
+      { label: "Shopify — Free Shipping strategies (~80% will meet a threshold; dynamic progress bar / goal-gradient)", url: "https://www.shopify.com/blog/free-shipping-and-conversion" },
       { label: "Digital Applied — Free Shipping Threshold Strategy 2026 (peg to modal value, ~15–25% above AOV, dynamic progress bar)", url: "https://www.digitalapplied.com/blog/free-shipping-threshold-strategy-2026-ecommerce-playbook" }
     ],
-    tags: ["aov", "cro", "growth", "analytics", "ai-analysis", "ecommerce"],
+    tags: ["aov", "cro", "growth", "analytics", "ai-analysis", "ecommerce", "team-ask"],
     created: "2026-06-26",
-    updated: "2026-07-02"
+    updated: "2026-07-10"
   },
 
   {
