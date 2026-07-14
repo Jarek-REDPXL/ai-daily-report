@@ -35,6 +35,68 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdev-cloudflare-precursor",
+    domains: ["web-dev"],
+    title: "Bots are now most of your traffic — turn on session-based agent detection, not a one-shot CAPTCHA",
+    action: "If a site you ship is on Cloudflare Bot Management, switch Precursor on for the zone in observation mode (log, don't block), read the human-vs-agent split for a week, then challenge unverified sessions on login/checkout/signup/API. Not on Bot Management? Ship free Turnstile on your riskiest forms today.",
+    summary: "Automated traffic now tops human traffic — Cloudflare puts bots at <b>~57% of all web requests</b>, and modern bots/AI agents render JS and fake a plausible session. On <b>Jul 13 2026</b> Cloudflare shipped <b>Precursor</b>: it injects lightweight JavaScript that scores a visitor across the <b>whole session</b> — mouse-movement arcs, keystroke <b>rhythm</b> (timing, NOT the keys), focus + tab-visibility — to tell a human from an agent in real time. Because the score builds over the session, an agent <b>can't reset its signature by reloading the page</b> (the flaw in per-request CAPTCHAs). Privacy framing: keystroke timing not keys, aggregate patterns not identity. Part of Bot Management (Enterprise), free to enable until GA later in 2026; no app changes (auto-injected). Turnstile (free, any plan) is the run-it-today equivalent for high-risk forms.",
+    why: "The sites you ship bleed from bot behaviour a one-time gate misses — skewed analytics/ad metrics, content scraping, credential-stuffing on login, fake signups, and AI agents transacting on flows never built for them. A snapshot challenge is beaten by a refresh; a continuous session signal raises the cost of faking a human without dropping a friction wall on every real visitor.",
+    how: [
+      "If your site is on Cloudflare <b>Bot Management</b>: enable Precursor for the zone from the dashboard in a <b>low-friction observation mode</b> first — it scores + logs but doesn't block. No code; Cloudflare auto-injects the script.",
+      "Read the split for ~a week: check how much traffic verifies as human vs unverified/agent on your key routes before enforcing — you're calibrating, not guessing.",
+      "Then enforce on sensitive routes only: require a challenge for unverified sessions on <b>login, checkout, signup, password-reset and public API/GraphQL</b>; leave content pages low-friction.",
+      "Keep your other layers: pair with server-side rate limiting, form auth, and WAF rules — Precursor is a behavioural signal, not a firewall.",
+      "Not on Enterprise Bot Management? Ship <b>Turnstile</b> (free, any Cloudflare plan) on your highest-risk forms today as the privacy-first CAPTCHA replacement; roadmap Precursor for when you need session-continuous detection.",
+      "Sanity-check privacy/consent: confirm behavioural-signal collection fits your cookie/consent posture before enabling in the EU."
+    ],
+    confidence: "emerging",
+    thread_id: "thread-agentic-web-defense",
+    corroboration_count: 3,
+    status: "active",
+    supersedes: [],
+    related: ["card-webdev-rotate-ai-toolchain", "card-webdev-cloudflare-temporary-accounts"],
+    sources: [
+      { label: "Cloudflare Blog — Introducing Precursor: detecting agentic behavior with continuous client-side signals (Jul 13 2026)", url: "https://blog.cloudflare.com/introducing-precursor/" },
+      { label: "SiliconANGLE — Cloudflare launches Precursor to catch bots by watching entire sessions", url: "https://siliconangle.com/2026/07/13/cloudflare-launches-precursor-catch-bots-watching-entire-sessions/" },
+      { label: "Help Net Security — Cloudflare Precursor uses continuous behavioral analysis to stop advanced bots", url: "https://www.helpnetsecurity.com/2026/07/13/cloudflare-precursor/" },
+      { label: "Cloudflare — Turnstile (free CAPTCHA replacement, any plan)", url: "https://www.cloudflare.com/application-services/products/turnstile/" }
+    ],
+    tags: ["cloudflare", "bot-management", "precursor", "turnstile", "security", "agentic-web"],
+    created: "2026-07-14",
+    updated: "2026-07-14"
+  },
+
+  {
+    id: "card-email-holiday-deliverability-prep",
+    domains: ["email"],
+    title: "Start your holiday deliverability prep NOW (mid-July) — the inbox grades you over weeks, not the week you need it",
+    action: "This week: audit SPF/DKIM/DMARC across every domain+IP (DMARC ≥ p=quarantine) and enroll Google Postmaster + Microsoft SNDS + Yahoo Sender Hub; run a list-validation pass and segment by clicks/purchases (not opens); then plan a September volume ramp — not an October spike.",
+    summary: "Mailbox providers grade sender reputation over <b>weeks of behaviour</b>, so the most expensive email mistake is building reputation in the same window you cash it in. A typical Q4 does exactly that — a modest year-round program triples volume for BFCM and providers read the <b>sudden spike as a spam signal</b>, throttling you at peak. Litmus's summer prep guide (Jul 9 2026) is the <b>calendar leg</b> of deliverability: start mid-July so September is a <b>gradual ramp</b>, not an October cliff. No new product — the value is the sequencing + the deadline, tying the auth / hygiene / engagement cards into one dated Q4 playbook.",
+    why: "Your biggest-revenue sends of the year land in the window where inbox placement is most fragile. Reputation is earned over time, not bought the week before — so prepping now is what lets the auth fixes, list cleaning and engagement signals compound into trust before the peak, instead of tripping red flags during it.",
+    how: [
+      "Auth audit today: verify SPF, DKIM and DMARC across <b>every</b> sending domain + IP; set DMARC to at least <code>p=quarantine</code> (ideally <code>p=reject</code>); enroll in <b>Google Postmaster Tools, Microsoft SNDS/JMRP and Yahoo Sender Hub</b> (see card-email-microsoft-snds, card-email-postmaster-deliverability-analysis).",
+      "Clean the list now: run a validation tool to drop invalid/risky addresses; <b>segment by clicks, purchases and site behaviour — never opens</b> (Apple Mail Privacy auto-opens lie). Old addresses are spam-trap risk (Yahoo purges inactive ~12 months, Gmail ~24 — directional).",
+      "Re-engage, then suppress: run a 2–3 email win-back to 6+ month non-engagers and <b>suppress</b> non-responders before peak (card-email-reengagement-sunset) — a smaller awake list out-earns a big ignored one.",
+      "Fix the fundamentals: set a <b>valid reply-to</b> (Microsoft requires it), stand up/promote a <b>preference center</b> for zero-party data, and run a reply-to engagement campaign for a fast positive signal.",
+      "Ramp on a schedule: begin gradual volume increases in <b>September</b> (not October), testing re-engagement in small increments; avoid sudden spikes that trip provider red flags.",
+      "Format for the modern inbox: front-load offers/CTAs, configure Gmail <b>Annotations manually</b> (don't rely on auto-generation), keep structure clean for accurate AI summarization."
+    ],
+    confidence: "confirmed",
+    thread_id: "thread-email-deliverability",
+    status: "active",
+    supersedes: [],
+    related: ["card-email-dmarcbis-np", "card-email-microsoft-snds", "card-email-postmaster-deliverability-analysis", "card-email-reengagement-sunset", "card-email-inbox-placement-audit"],
+    sources: [
+      { label: "Litmus — Your Holiday Emails Start Now: A Summer Deliverability Prep Guide (Jul 9 2026)", url: "https://www.litmus.com/blog/your-holiday-emails-start-now-a-summer-deliverability-prep-guide" },
+      { label: "Google Postmaster Tools", url: "https://postmaster.google.com/" },
+      { label: "Microsoft SNDS (Outlook/Hotmail sender IP reputation + JMRP)", url: "https://sendersupport.olc.protection.outlook.com/snds/" }
+    ],
+    tags: ["deliverability", "holiday", "q4-prep", "authentication", "list-hygiene", "warmup"],
+    created: "2026-07-14",
+    updated: "2026-07-14"
+  },
+
+  {
     id: "card-webdesign-border-shape",
     domains: ["web-design"],
     title: "Ship non-rectangular UI — beveled tabs, notched tickets, scooped cards — with one line of CSS, no SVG",
@@ -1852,15 +1914,15 @@ window.AI_EDGE_CARDS = [
     id: "card-growth-ai-visibility-check",
     domains: ["growth"],
     title: "Check today whether ChatGPT and Gemini actually mention your brand (free, no login)",
-    action: "Open Google Search Console → Performance → Generative AI to baseline your real AI Overviews / AI Mode impressions, then cross-check with Semrush's free AI Search Visibility Checker and your Bing AI Citation Share. Skip llms.txt: 97% of files go unread.",
-    summary: "AEO (Answer Engine Optimization — getting named in AI answers) is measurable, now first-party. NEW (clarified Jun 25 2026): Google Search Console has a Generative AI performance report — YOUR impressions inside AI Overviews/AI Mode/Discover, segmentable by page/country/device (impressions-only in beta, gated to a subset of properties). Mueller's counting rules: a real LINK to your page must be shown (a favicon doesn't count), expandable links count only once expanded, and the same site twice in one answer = one impression. Cross-check with the free estimators: Semrush's AI Search Visibility Checker (no login — 0–100 across ChatGPT/SearchGPT/Gemini/Google AI/Perplexity + a gap-prompt list) and Bing Webmaster Tools' AI Citation Share (preview, Bing/Copilot only). And skip llms.txt: Ahrefs (137k domains) found 97% of files get zero requests.",
-    why: "AEO advice is only worth acting on if you can see whether it worked — and buyers increasingly start at an AI answer, where most brands don't show up. Google's first-party report is the source of truth that replaces guessing from third-party estimates: measure where you're absent, fix exactly those pages, then re-measure. Part of that is NOT wasting the hour on llms.txt — the data says crawlers ignore it.",
+    action: "Open Google Search Console → Performance → Generative AI to baseline your real AI Overviews / AI Mode impressions, then run the free HubSpot AEO Grader + Semrush's free AI Search Visibility Checker across ChatGPT/Gemini/Perplexity (logged-out). Track mentions vs owned citations vs share-of-voice. Skip llms.txt: 97% of files go unread.",
+    summary: "AEO (Answer Engine Optimization — getting named in AI answers) is measurable, now first-party — and the stakes just got hard data. A Bocconi University study (arXiv, Jul 8 2026; Comscore panel of 45,000+ US households) found widening ChatGPT access cut weekly traditional-search queries <b>9.4%</b> immediately, rising to <b>17% after 20 weeks</b>, concentrated in informational content (academic −32.8%, reference −26.5%, developer −15.1%, news −13.4%); ChatGPT also sends a visitor to an outside site in only <b>5.2%</b> of sessions vs Google's <b>31.1%</b>. So top-of-funnel traffic is shrinking AND the click stays with the answer — you win by being the cited source and by measuring presence. Baseline in <b>Google Search Console → Generative AI</b> (impressions in AI Overviews/AI Mode/Discover); grade across engines with the free <b>HubSpot AEO Grader</b>, <b>Semrush's free AI Search Visibility Checker</b> and <b>Bing AI Citation Share</b>. Ranking ≠ citation: Semrush found the top organic result is cited only ~34% of the time on mobile / ~46% desktop. Skip llms.txt: Ahrefs (137k domains) found 97% get zero requests.",
+    why: "Buyers increasingly start at an AI answer, and new causal data shows that shift is measurably draining informational search traffic while the answer engine keeps the click — so publishing more explainer content into a shrinking pool is running to stand still. The durable move is to win the citation inside the answer and change your scoreboard from 'do I rank?' to 'am I the named source?' — which you can only do if you measure where you're absent, fix exactly those pages, and re-measure. Part of that is NOT wasting the hour on llms.txt.",
     how: [
-      "Open <b>Google Search Console → Performance → Generative AI</b> (rolling out to a subset of properties — if you don't see it, verify the property and check back). Pull your top-3 and bottom-3 URLs by AI-feature <b>impressions</b>, segment by Country/Device, and <b>export + date-stamp it as your baseline</b>.",
-      "Read it correctly (Mueller, Jun 25 2026): an impression fires only when a <b>link</b> to your page is shown (favicon alone doesn't count); expandable links count only once expanded; the same site twice in one AI answer = <b>one</b> impression — so the number can read lower than your true presence.",
-      "Cross-check with <b>Semrush's free AI Search Visibility Checker</b> (enter your domain, no sign-up) for the 0–100 score + the popular prompts where competitors get named and you don't — your prioritized target list.",
-      "Turn on <b>AI Citation Share</b> in <b>Bing Webmaster Tools → AI Performance</b> (preview) for your share of AI citations per grounding query vs competitors (Bing/Copilot only).",
-      "For each gap, run the AEO formatting pass on the most relevant money page (intent-matched title, a one-sentence answer up top, a list/table, an original first-party stat, and FAQ schema + a last-updated date).",
+      "Baseline first-party: open <b>Google Search Console → Performance → Generative AI</b> (rolling out to a subset of properties), pull top-3/bottom-3 URLs by AI-feature <b>impressions</b>, segment by Country/Device, and <b>export + date-stamp it</b>. Read it correctly (Mueller): an impression fires only when a <b>link</b> shows (favicon doesn't count); same site twice in one answer = one impression.",
+      "Define <b>unbranded, solution-seeking prompts</b> (~10–20) a buyer would actually ask — not keywords, not your brand name.",
+      "Grade your presence across engines (free): run the free <b>HubSpot AEO Grader</b> for a three-engine snapshot, cross-check with <b>Semrush's free AI Search Visibility Checker</b> (no login, 0–100 across ChatGPT/SearchGPT/Gemini/Google AI/Perplexity) and <b>Bing Webmaster Tools → AI Citation Share</b> (preview, Bing/Copilot only). Run prompts through <b>ChatGPT, Gemini and Perplexity in logged-out sessions</b> to avoid personalization skew.",
+      "Track the right KPIs: <b>mentions</b> (named, no link), <b>owned citations</b> (your page cited as a source), <b>share-of-voice</b> vs competitors, and <b>AI-referred traffic</b> — a spreadsheet is fine to start.",
+      "For each gap prompt, run the AEO formatting pass on the most relevant money page (intent-matched title, a one-sentence answer up top, a list/table, an original first-party stat, FAQ schema + a last-updated date).",
       "Don't invest in <b>llms.txt</b> for visibility (97% of files go unread — Ahrefs); leave any existing file in place but reallocate the effort to clean HTML structure + internal links.",
       "Re-run / re-export in ~2–4 weeks to confirm new mentions; there's no API field for the Google report yet, so log weekly totals manually to prove cause-and-effect after content changes."
     ],
@@ -1870,15 +1932,17 @@ window.AI_EDGE_CARDS = [
     supersedes: [],
     related: ["card-growth-aeo-content-formats", "card-growth-schema-aeo", "card-social-linkedin-ai-citations"],
     sources: [
+      { label: "Search Engine Journal — ChatGPT Access Tied To 9% Drop In Traditional Search (Bocconi study)", url: "https://www.searchenginejournal.com/chatgpt-access-tied-to-9-drop-in-traditional-search/582167/" },
+      { label: "PPC Land — Wider ChatGPT access cuts traditional search 9.4% (Comscore, 45k+ households; 5.2% vs 31.1% referrals)", url: "https://ppc.land/wider-chatgpt-search-access-cuts-traditional-search-9-4-study-finds/" },
+      { label: "HubSpot — How to track your brand's presence in AI search (4-step method + free AEO Grader)", url: "https://blog.hubspot.com/marketing/ai-search-presence" },
+      { label: "HubSpot — Free AEO Grader", url: "https://www.hubspot.com/aeo-grader" },
       { label: "Google Search Console Help — Generative AI performance report (Search)", url: "https://support.google.com/webmasters/answer/16984139" },
-      { label: "Google Search Console Help — Generative AI performance report (Discover)", url: "https://support.google.com/webmasters/answer/16983858" },
-      { label: "Search Engine Journal — Mueller explains how AI search impressions get counted", url: "https://www.searchenginejournal.com/googles-mueller-explains-how-ai-search-impressions-get-counted/580491/" },
       { label: "Semrush — Free AI Search Visibility Checker", url: "https://www.semrush.com/free-tools/ai-search-visibility-checker/" },
       { label: "Ahrefs — We analyzed 137K sites: 97% of llms.txt files never get read", url: "https://ahrefs.com/blog/llmstxt-study/" }
     ],
     tags: ["aeo", "geo", "ai-search", "measurement", "search-console", "bing", "llms-txt"],
     created: "2026-06-11",
-    updated: "2026-06-27"
+    updated: "2026-07-14"
   },
 
   {
