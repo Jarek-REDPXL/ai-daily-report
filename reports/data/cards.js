@@ -35,6 +35,100 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-webdesign-css-random",
+    domains: ["web-design"],
+    title: "Scatter, jitter and stagger a UI with pure CSS — the new random() function, no JavaScript",
+    action: "On a decorative element, set a base value then add random() next to it — e.g. .sticker { rotate: 0deg; rotate: random(-5deg, 5deg); } — and test in Safari; unsupported browsers just ignore the random line and keep the base.",
+    summary: "CSS now has a native <code>random()</code> function: <code>rotate: random(-4deg, 4deg)</code> gives each element its own tilt, <code>animation-delay: random(0s, 1.2s)</code> desyncs a row of animations, and a sharing key (<code>random(--k, 40px, 120px)</code>) reuses one roll across two properties on the same element. It deletes the little JS loops we write to fake hand-placed variety — confetti, sticker walls, taped-photo collages, drifting particles. Any dimensional type works (number/length/angle/time/percentage/integer) and by default <b>each element rolls independently</b>. It shipped <b>first in Safari 26.2</b> (WebKit led Chromium here), is <b>NOT Baseline</b> (Chrome/Firefox not on stable yet), and an unsupported browser simply ignores the declaration and falls back to your base value — so it's pure decorative progressive enhancement.",
+    why: "Organic, hand-placed visual variety used to mean a JavaScript loop assigning random inline styles to every element — a script, a bundle, layout thrash. random() moves that into the stylesheet: one declaration, no JS, no hydration. Same delete-the-JS win as the rest of the modern-CSS-primitives thread — and because it degrades gracefully, you can lead with it the day it hits one engine.",
+    how: [
+      "Use it ONLY for decorative properties, and set a base first: <code>.sticker { rotate: 0deg; rotate: random(-5deg, 5deg); }</code> — the plain value is the fallback, the random() line enhances it.",
+      "Desync animations: <code>animation-delay: random(0s, 1.5s); animation-duration: random(2s, 3.5s);</code> so no two dots/particles tick in lockstep.",
+      "Scatter positions for a collage: <code>top: random(0%, 60%); left: random(0%, 80%);</code> inside a positioned container.",
+      "Reuse one roll across related properties with a sharing key: <code>width: random(--s, 40px, 120px); height: random(--s, 40px, 120px);</code> keeps each item square while varying size element-to-element. (<code>element-shared</code> makes ALL elements share one value.)",
+      "Guard load-bearing uses with <code>@supports (rotate: random(0deg, 1deg)) { … }</code>; keep <code>clip-path</code>/JS only where the effect is essential rather than decorative.",
+      "Accessibility: never randomise text colour, contrast or opacity on text (a bad roll = unreadable low-contrast text); respect <code>prefers-reduced-motion</code> on any randomised motion."
+    ],
+    confidence: "emerging",
+    thread_id: "thread-modern-css-primitives",
+    corroboration_count: 3,
+    status: "active",
+    supersedes: [],
+    related: ["card-webdesign-sibling-index", "card-webdesign-scroll-triggered-animations", "card-webdesign-gap-decorations"],
+    sources: [
+      { label: "MDN — random() CSS function (grammar, sharing keys, 'not Baseline', @supports fallback + a11y warning)", url: "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/random" },
+      { label: "CSS-Tricks — random() almanac entry", url: "https://css-tricks.com/almanac/functions/r/random/" },
+      { label: "CSS-Tricks — What's !important #14 (random(), field-sizing, gap decorations)", url: "https://css-tricks.com/whats-important-14/" },
+      { label: "SitePoint — Native randomness in CSS without JavaScript (Safari 26.2, fallbacks)", url: "https://www.sitepoint.com/css-mathrandom-in-production-native-randomness-without-javascript/" }
+    ],
+    tags: ["css", "random", "modern-css", "progressive-enhancement", "animation"],
+    created: "2026-07-15",
+    updated: "2026-07-15"
+  },
+
+  {
+    id: "card-paid-chatgpt-ads-measurement",
+    domains: ["paid"],
+    title: "Judge ChatGPT ads on revenue — wire up conversions + your feed to read Sales ROAS per product",
+    action: "In ChatGPT/OpenAI Ads Manager, create a Product-feed campaign (Conversions objective), complete the 4-step conversion pipeline (data source → conversion events with value → log via API → link to campaign), upload your Merchant Center feed via SFTP, then read Sales ROAS at the product level.",
+    summary: "OpenAI's ChatGPT Ads Manager added <b>Attributed Sales Value</b>, <b>Sales ROAS</b> and <b>product-level reporting</b> (reported <b>Jul 14 2026</b>) — the answer-engine ad surface now reports revenue like Google/Meta, not just impressions/clicks/CPC. So you can finally optimise it: put budget behind the SKUs whose Sales ROAS clears your target and cut the rest. Setup mirrors Google Merchant Center: a Product-feed campaign, a 4-step conversion pipeline (with a 'Use Codex' code generator), and an SFTP catalog upload. Complements the onboarding play (card-paid-chatgpt-ads-feed) — this is the measurement half.",
+    why: "Buyers increasingly start product research inside ChatGPT, and it's still an uncrowded ad surface — but 'uncrowded' is only worth chasing if you can prove return. Until now you could spend but only see clicks/CPC, which you can't defend to a client or CFO. Revenue + per-product reporting turns ChatGPT ads from a faith-based experiment into a channel you optimise on money.",
+    how: [
+      "Create the campaign as a <b>Product-feed</b> type with the <b>Conversions</b> objective; choose your <b>budget type (daily vs total) deliberately — it locks at creation</b>.",
+      "Build the <b>4-step conversion pipeline</b>: add a <b>data source</b> → create <b>conversion events</b> (Purchase with value + currency) → <b>log events via the API</b> (the UI offers <b>'Use Codex'</b> to generate the snippet and flags setup gaps) → <b>link events</b> to the campaign.",
+      "Upload your catalog via <b>SFTP</b> — reuse the same title/image/price/availability feed you send <b>Google Merchant Center</b>; keep it synced.",
+      "Read <b>Sales ROAS at the product level</b> and reallocate: scale SKUs that clear your ROAS target, pause the ones that don't, benchmark vs the same products' Google Shopping numbers.",
+      "During launch, trust your <b>billing statement for spend</b> (dashboard spend lags) and <b>reconcile attributed sales against your own GA4/analytics</b> before you fully believe the ROAS — treat early figures as directional.",
+      "Optional independent read: tag destination URLs with UTMs (<code>utm_source=chatgpt</code>) so GA4 confirms the conversions."
+    ],
+    confidence: "emerging",
+    thread_id: "thread-ai-ad-surfaces",
+    corroboration_count: 2,
+    status: "active",
+    supersedes: [],
+    related: ["card-paid-chatgpt-ads-feed", "card-paid-server-side-tracking"],
+    sources: [
+      { label: "Search Engine Roundtable — ChatGPT Ads Manager adds Attributed Sales Value & Sales ROAS + product reporting (Jul 14 2026)", url: "https://www.seroundtable.com/chatgpt-ads-attributed-sales-value-and-sales-roas-41674.html" },
+      { label: "Optimixed — ChatGPT Ads Manager adds revenue metrics + product reporting", url: "https://www.optimixed.com/chatgpt-ads-manager-adds-attributed-sales-value-sales-roas-and-product-reporting/" },
+      { label: "Receptive Media — Inside the OpenAI/ChatGPT Ads Manager (campaign wizard, 4-step conversion pipeline, SFTP feed, budget locks)", url: "https://receptivemedia.co.uk/openai-ads-manager-first-look/" },
+      { label: "OpenAI Help — Create campaigns from product feeds", url: "https://help.openai.com/en/articles/20001268-create-campaigns-from-product-feeds" }
+    ],
+    tags: ["chatgpt-ads", "openai", "measurement", "roas", "product-feed", "conversions", "ecommerce"],
+    created: "2026-07-15",
+    updated: "2026-07-15"
+  },
+
+  {
+    id: "card-social-instagram-reel-translations",
+    domains: ["social"],
+    title: "Dub your best Reel into another language in your own AI voice — with lip-sync, free from the composer",
+    action: "Post a Reel that carries on substance (a demo/tip/story, not a native-language pun), open the auto-translation option in the Reels composer (needs 1,000+ followers), pick up to two languages, PREVIEW it, switch off lip-sync if it looks off, then publish.",
+    summary: "Meta expanded Reels AI translations on <b>Jul 14 2026</b> to <b>Japanese, Korean, French, German and Italian</b> (on top of English/Spanish/Hindi/Portuguese + several Indian languages). It <b>auto-dubs</b> your voice in a tone that mimics you and can <b>lip-sync</b> your mouth to the new audio, so the Reel reads as if you filmed it natively — a near-zero-effort way to earn a second, non-English audience with no re-shoot, voice actor, or third-party dubbing tool. Enable it in the Reels composer (1,000+ followers to create; all public accounts can watch translated Reels), pick up to two target languages, and you can <b>preview, turn off syncing, or abandon the translation entirely before posting</b>.",
+    why: "Reels distribution has always been capped by language — a great English demo never surfaces to a Japanese or German viewer. This lets one strong video reach five major new markets for free, and it plugs into the 'brief for the signal the platform ranks' discipline (a clear, on-topic Reel now travels across languages). The catch is quality: AI dub + lip-sync are imperfect, so it's review-before-publish, not fire-and-forget.",
+    how: [
+      "Pick a Reel that translates well — a demo, tutorial, tip or story that carries on substance, <b>not</b> a clip built on a pun, rhyme or slang that won't survive dubbing.",
+      "Open the <b>auto-translation option in the Reels composer</b> (needs 1,000+ followers) and select up to <b>two target languages</b> (JA, KO, FR, DE, IT, ES, HI, PT, + Indian languages).",
+      "<b>Preview every translation before posting</b>: listen to the dubbed audio, and if the AI <b>lip-sync</b> looks off, turn syncing off (dub-only still works) — or abandon the translation if the meaning is wrong.",
+      "Keep on-screen text short and literal and put the key claim in the first 3 seconds so it survives translation and files your Reel under the right topic in each market.",
+      "Measure per language: track reach, watch-time/retention and follows on the translated versions, then make more for the markets that respond.",
+      "Don't rely on it for compliance-sensitive or legal copy — have a native speaker check anything where a mistranslation carries risk."
+    ],
+    confidence: "confirmed",
+    corroboration_count: 3,
+    status: "active",
+    supersedes: [],
+    related: ["card-social-instagram-your-algorithm", "card-social-edits-creator-analytics"],
+    sources: [
+      { label: "Social Media Today — Instagram Reels adds more AI translations (Jul 14 2026)", url: "https://www.socialmediatoday.com/news/instagram-reels-adds-more-ai-translations/825258/" },
+      { label: "Instagram for Creators — Meta AI translations for Reels (voice-mimicking dub + lip-sync)", url: "https://creators.instagram.com/blog/meta-ai-translations" },
+      { label: "WERSM — Meta expands AI translation for Reels to more languages", url: "https://wersm.com/meta-makes-reels-easier-to-watch-across-languages/" }
+    ],
+    tags: ["instagram", "reels", "ai-translation", "dubbing", "lip-sync", "creator", "reach"],
+    created: "2026-07-15",
+    updated: "2026-07-15"
+  },
+
+  {
     id: "card-webdev-cloudflare-precursor",
     domains: ["web-dev"],
     title: "Bots are now most of your traffic — turn on session-based agent detection, not a one-shot CAPTCHA",
@@ -2596,22 +2690,24 @@ window.AI_EDGE_CARDS = [
       "Connect the same structured product feed you send to <b>Google Shopping</b> (title, image, price, attributes) — no need to build a new one.",
       "Provide the required ~100-product sample to start; once connected, the system supports up to ~1,000,000 SKUs per advertiser.",
       "Let it auto-generate an ad per SKU, then <b>review the drafts</b> — confirm titles and images map to the right products before going live.",
-      "Start with your best-margin or best-converting SKUs, benchmark performance against your Google Shopping numbers, and scale the feed once you see which products land."
+      "Start with your best-margin or best-converting SKUs, benchmark performance against your Google Shopping numbers, and scale the feed once you see which products land.",
+      "<b>Now measurable on revenue (Jul 14 2026):</b> the Ads Manager added <b>Attributed Sales Value</b>, <b>Sales ROAS</b> and <b>product-level reporting</b> — wire up conversions and read Sales ROAS per SKU to optimise on money, not clicks. See card-paid-chatgpt-ads-measurement for the setup."
     ],
     confidence: "emerging",
     status: "active",
     thread_id: "thread-ai-ad-surfaces",
     corroboration_count: 3,
     supersedes: [],
-    related: ["card-paid-aimax-dsa-experiment"],
+    related: ["card-paid-aimax-dsa-experiment", "card-paid-chatgpt-ads-measurement"],
     sources: [
       { label: "OpenAI — New ways to buy ChatGPT ads", url: "https://openai.com/index/new-ways-to-buy-chatgpt-ads/" },
       { label: "OpenAI Help — Create campaigns from product feeds", url: "https://help.openai.com/en/articles/20001268-create-campaigns-from-product-feeds" },
-      { label: "Search Engine Land — OpenAI launches product feed ads in Ads Manager beta", url: "https://searchengineland.com/openai-launches-product-feed-ads-in-ads-manager-beta-479900" }
+      { label: "Search Engine Land — OpenAI launches product feed ads in Ads Manager beta", url: "https://searchengineland.com/openai-launches-product-feed-ads-in-ads-manager-beta-479900" },
+      { label: "Search Engine Roundtable — ChatGPT Ads Manager adds Attributed Sales Value & Sales ROAS + product reporting (Jul 14 2026)", url: "https://www.seroundtable.com/chatgpt-ads-attributed-sales-value-and-sales-roas-41674.html" }
     ],
     tags: ["chatgpt-ads", "openai", "shopping", "product-feed", "ecommerce"],
     created: "2026-06-14",
-    updated: "2026-06-14"
+    updated: "2026-07-15"
   },
 
   {
