@@ -35,6 +35,97 @@
 window.AI_EDGE_CARDS = [
 
   {
+    id: "card-ai-tooling-gemini-3-6-flash-route",
+    domains: ["ai-tooling"],
+    title: "Route your bulk AI work to Gemini 3.6 Flash — same job, about a third less cost per task",
+    action: "Behind your one gateway, run gemini-3.6-flash against 3–5 of your real recurring bulk tasks and compare cost per FINISHED task (not per token); re-point your cheap lane to it if it holds your quality bar.",
+    summary: "Google's <b>Gemini 3.6 Flash</b> (<code>gemini-3.6-flash</code>, shipped Jul 21 2026) is a drop-in upgrade to the cheap/fast tier. Output pricing fell to <b>$1.50/$7.50</b> per million tokens (out was $9), but the real win is <b>token efficiency</b> — it reaches the same answer using ~17% fewer output tokens on the Artificial Analysis Index (up to ~65% fewer on coding evals), so effective <b>cost-per-completed-task drops ~31%</b> (up to ~71% on agentic coding). Two siblings: <b>Flash-Lite</b> ($0.30/$2.50) for high-volume classify/extract, and <b>Flash Cyber</b> (tuned to find/patch vulnerabilities, government/trusted-partners only — you can't self-serve it).",
+    why: "The cheap tier is where the VOLUME of your AI work lives — drafting, extraction, tagging, agent steps — so the tier's unit cost drives your bill. A model that finishes the same task in fewer tokens beats one with a lower per-token price, because you pay per token, not per task. But you only capture the win if it still passes YOUR bar, which is something you measure on your own tasks, not something you read off a launch slide.",
+    how: [
+      "Add <code>gemini-3.6-flash</code> as a candidate behind your single gateway (Google AI Studio / the Gemini API, or your router like OpenRouter/Vercel AI Gateway) — don't hard-code it at ten call sites.",
+      "Pick 3–5 of your REAL recurring bulk/agentic tasks (the everyday jobs, not the hardest ~10%) and run them head-to-head against your current cheap model.",
+      "Score on <b>cost-per-COMPLETED-task</b> = tokens used × price to reach a correct result — the token-efficiency gain only shows up here, not in the sticker price.",
+      "Re-point your cheap/fast lane to it if it clears your quality bar; keep Opus / GPT-5.x for the hardest tier; set <b>Flash-Lite</b> for the highest-volume trivial jobs (classify/extract).",
+      "Re-check monthly — this tier moves weekly; treat all prices/benchmarks as directional. (Flash Cyber is gated, so you can't route to it.)"
+    ],
+    confidence: "emerging",
+    thread_id: "thread-open-weight-price-pressure",
+    corroboration_count: 3,
+    status: "active",
+    supersedes: [],
+    related: ["card-ai-tooling-glm-5-2-route", "card-ai-tooling-sonnet-5-default", "card-ai-tooling-model-portability"],
+    sources: [
+      { label: "Google — Gemini 3.6 Flash, 3.5 Flash-Lite & 3.5 Flash Cyber", url: "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/" },
+      { label: "9to5Google — Google launches Gemini 3.6 Flash and 3.5 Flash-Lite", url: "https://9to5google.com/2026/07/21/gemini-3-6-flash-launch/" },
+      { label: "Artificial Analysis — Gemini 3.6 Flash intelligence/price analysis", url: "https://artificialanalysis.ai/models/gemini-3-6-flash" },
+      { label: "buildfastwithai — Gemini 3.6 Flash review (token efficiency, cost-per-task)", url: "https://www.buildfastwithai.com/blogs/gemini-3-6-flash-review-benchmarks-price" }
+    ],
+    tags: ["gemini", "google", "model-router", "cost", "agentic-coding", "flash"],
+    created: "2026-07-24",
+    updated: "2026-07-24"
+  },
+
+  {
+    id: "card-webdev-dependabot-cooldown",
+    domains: ["web-dev"],
+    title: "Let Dependabot wait 3 days before it updates you — the default that blocks a poisoned package",
+    action: "Confirm Dependabot version updates are on for your repos (the 3-day cooldown is now automatic), then add a longer cooldown block to .github/dependabot.yml and commit your lockfile to close the install-layer gap.",
+    summary: "Most dependency supply-chain attacks work in the first hours: a maintainer account is compromised, a poisoned version ships, and automated updaters open a PR within minutes. GitHub changed Dependabot's default (Jul 14 2026) so <b>version-update PRs now wait until a release has sat on the registry for at least 3 days</b> ('cooldown') before it proposes them — on by default across all ecosystems on github.com (and GHES 3.23), no config required. <b>Security updates still open immediately</b>, so real CVE fixes are never delayed.",
+    why: "The delay is the whole point — it buys time for scanners, the community and the maintainer to catch a bad release before it reaches your merge queue, on every client repo, for free, with zero code. But it's one layer, not the wall: the cooldown governs Dependabot's PRs only. It does NOT slow a fresh malicious version reaching you the moment you run <code>npm install</code>/<code>pip install</code>, resolve a floating range, or pull it as a transitive dependency.",
+    how: [
+      "If Dependabot version updates are enabled, you already have the 3-day cooldown — confirm it's on for your client repos (Settings → Code security, or the presence of <code>.github/dependabot.yml</code>).",
+      "To tune it, add a <code>cooldown:</code> block to <code>.github/dependabot.yml</code>: set a longer <code>default-days</code>, or different windows per semver level (patch vs minor vs major), and include/exclude specific packages.",
+      "Leave <b>security updates</b> on their immediate path — they bypass the cooldown so critical fixes aren't held back.",
+      "Close the install-layer gap: commit your lockfile, avoid floating ranges, and add a <b>minimum-package-age</b> gate in CI / at install time so a brand-new version can't slip in outside Dependabot.",
+      "Keep the rest of the hygiene: 2FA on maintainer accounts, and provenance/attestation checks where the registry supports them."
+    ],
+    confidence: "confirmed",
+    thread_id: "thread-supply-chain-defense",
+    corroboration_count: 3,
+    status: "active",
+    supersedes: [],
+    related: ["card-webdev-rotate-ai-toolchain"],
+    sources: [
+      { label: "GitHub Changelog — Dependabot version updates introduce a default package cooldown", url: "https://github.blog/changelog/2026-07-14-dependabot-version-updates-introduce-default-package-cooldown/" },
+      { label: "StepSecurity — Dependabot cooldown & group support (config syntax)", url: "https://www.stepsecurity.io/blog/announcing-dependabot-configuration-enhancements-cooldown-and-group-support" },
+      { label: "TECHi — GitHub's Dependabot cooldown has an install-layer gap", url: "https://www.techi.com/github-dependabot-cooldown-install-layer-gap/" },
+      { label: "GitHub Docs — Dependabot version updates", url: "https://docs.github.com/en/code-security/concepts/supply-chain-security/dependabot-version-updates" }
+    ],
+    tags: ["github", "dependabot", "supply-chain", "security", "dependencies", "npm"],
+    created: "2026-07-24",
+    updated: "2026-07-24"
+  },
+
+  {
+    id: "card-graphic-nano-banana-video-to-image",
+    domains: ["graphic"],
+    title: "Turn one video into a dozen on-brand thumbnails and posters with Nano Banana 2",
+    action: "In Google AI Studio, pick gemini-3.1-flash-image, attach your video (upload or a public YouTube URL) plus your brand reference images, and prompt for the exact thumbnail/poster/infographic sizes you need.",
+    summary: "Google's <b>Nano Banana 2</b> (Gemini 3.1 Flash Image, <code>gemini-3.1-flash-image</code>) takes a <b>video</b> as input — a direct upload or a public YouTube URL — alongside a text prompt, watches the footage, and generates <b>thumbnails, cinematic posters, or summary infographics</b> from it. Feed up to <b>14 reference images</b> to hold your brand look and get legible in-image text (a real jump over the old garbled-text problem). The pixel-perfect-typography sibling is <b>Nano Banana Pro</b> (Gemini 3 Pro Image).",
+    why: "The most-repeated content chore — cutting one long video into a dozen platform-sized covers, or a webinar into a recap infographic — is exactly the grunt work that eats a designer's afternoon. Letting the model pull the hero frame and lay on your brand collapses it into a prompt, so you spend your time art-directing the 2–3 keepers instead of scrubbing a timeline.",
+    how: [
+      "Open Google AI Studio (or call the Gemini API with model <code>gemini-3.1-flash-image</code>).",
+      "Attach the video — upload the file or paste a public YouTube URL — as multimodal context alongside your prompt.",
+      "Prompt for the exact asset, e.g. \"From this video, make 6 YouTube thumbnails at 1280×720: a bold 3-word hook, our brand colors #E4002B/#111, the speaker's face sharp, high contrast\"; attach up to 14 brand reference images to lock the look.",
+      "Regenerate the 2–3 that fit, upscale, and resize per platform (Shorts/Reels vertical, YouTube 16:9, etc.).",
+      "Human gate before publishing: check faces/likeness, that text is spelled correctly, and confirm commercial-use rights (outputs carry an imperceptible SynthID watermark)."
+    ],
+    confidence: "emerging",
+    thread_id: "thread-structured-design-gen",
+    status: "active",
+    supersedes: [],
+    related: ["card-graphic-ideogram-json-layout", "card-graphic-recraft-brand-style-lock", "card-graphic-canva-brand-kit-ai"],
+    sources: [
+      { label: "Google — Gemini API changelog (Nano Banana 2 video-to-image; gemini-3.1-flash-image)", url: "https://ai.google.dev/gemini-api/docs/changelog" },
+      { label: "Google — Nano Banana (image generation) docs", url: "https://ai.google.dev/gemini-api/docs/nanobanana" },
+      { label: "Google — Nano Banana Pro (Gemini 3 Pro Image) for higher-fidelity text", url: "https://blog.google/innovation-and-ai/products/nano-banana-pro/" }
+    ],
+    tags: ["nano-banana", "gemini", "google", "video-to-image", "thumbnails", "brand"],
+    created: "2026-07-24",
+    updated: "2026-07-24"
+  },
+
+  {
     id: "card-webdesign-css-random",
     domains: ["web-design"],
     title: "Scatter, jitter and stagger a UI with pure CSS — the new random() function, no JavaScript",
